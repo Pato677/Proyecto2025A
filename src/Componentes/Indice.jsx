@@ -12,7 +12,15 @@ const Indice = () => {
         <li>
           <Link to="/Login">Login</Link>
         </li>
-        {/* Agrega más enlaces según tus componentes */}
+        <li>
+          <Link to="/TicketPage">Ticket Page</Link>
+        </li>
+        <li>
+          <Link to="/RealTimeMap">Mapa</Link>
+        </li>
+        <li>
+          <Link to="/DashboardAdmin">Dashboard Admin</Link>
+        </li>
       </ul>
     </div>
   );
