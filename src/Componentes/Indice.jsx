@@ -21,6 +21,9 @@ const Indice = () => {
         <li>
           <Link to="/DashboardAdmin">Dashboard Admin</Link>
         </li>
+        <li>
+          <Link to="/RegisterUnits">Registrar Unidades</Link>
+        </li>
       </ul>
     </div>
   );

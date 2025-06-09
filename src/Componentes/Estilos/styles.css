@@ -13,23 +13,48 @@ body {
 }
 
 .header {
-  width: 100%;
-  padding: 10px 30px;
-  border-bottom: 1px solid #ccc;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
+    width: 100%;
+    padding: 10px 30px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    background-color: #f9fcfe;
 }
+
 .header-left {
   display: flex;
   align-items: center;
 }
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
 
-.logo {
-  width: 50px;
-  height: auto;
-  margin-right: 10px;
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-item button {
+    background: none;
+    border: none;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.nav-item button:hover {
+    text-decoration: underline;
+}
+
+.link-simulado {
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .title {
@@ -181,11 +206,14 @@ body {
 }
 
 .modules-grid {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
 }
+
 
 .module-card {
   background-color: #e8f6ff;
@@ -226,4 +254,55 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+/* --------------------------------------------------------------------------- */
+.register-units-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.units-table-box {
+  flex: 1;
+  min-width: 400px;
+  border: 2px solid #c5def0;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.units-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.units-table th,
+.units-table td {
+  border-bottom: 2px solid #a7c5df;
+  padding: 10px;
+  text-align: center;
+}
+
+.units-table th {
+  font-weight: bold;
+}
+
+.units-image-box {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.units-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 2px solid #c5def0;
 }

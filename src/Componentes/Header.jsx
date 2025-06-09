@@ -1,30 +1,56 @@
 import React from 'react';
 import './Estilos/styles.css';
+import Logo from './Imagenes/Logo.png';
+import { FaSearch, FaGlobe, FaUserCircle } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
-function Header({ showStep = false }) {
-  return (
-    <header className="header">
-      <div className="header-left">
-        <img src="https://i.imgur.com/MpM2YN2.png" alt="Logo" className="logo" />
-        <span className="title">Transportes EC</span>
-      </div>
+function Header({
+    showSearch = true,
+    showLanguage = true,
+    showUser = true,
+    onLoginClick = null,
+    userLabel = "Iniciar Sesión"
+}) {
+    const navigate = useNavigate();
 
-      {showStep && (
-        <div className="step-indicator">
-          <span>Paso 5 de 5</span>
-          <div className="progress-bar"></div>
-        </div>
-      )}
+    const handleLoginClick = () => {
+        if (onLoginClick) {
+            onLoginClick();
+        } else {
+            navigate("/login");
+        }
+    };
 
-      <div className="top-options">
-        <span role="img" aria-label="search">🔍</span> AB4M3
-        <span className="separator">|</span>
-        <span role="img" aria-label="globe">🌐</span> Español
-        <span className="separator">|</span>
-        <span role="img" aria-label="user">👤</span> Iniciar Sesión
-      </div>
-    </header>
-  );
+    return (
+        <header className="header">
+            <div className="logo">
+                <img src={Logo} alt="Logo" />
+            </div>
+
+            <nav className="nav">
+                {showSearch && (
+                    <div className="nav-item">
+                        <FaSearch className="icon" />
+                        <span className="link-simulado">Buscar viaje</span>
+                    </div>
+                )}
+
+                {showLanguage && (
+                    <div className="nav-item">
+                        <FaGlobe className="icon" />
+                        <span>Español</span>
+                    </div>
+                )}
+
+                {showUser && (
+                    <div className="nav-item">
+                        <FaUserCircle className="icon" />
+                        <button onClick={handleLoginClick}>{userLabel}</button>
+                    </div>
+                )}
+            </nav>
+        </header>
+    );
 }
 
 export default Header;

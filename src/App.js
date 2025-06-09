@@ -6,6 +6,7 @@ import Login from './Componentes/Login'; // Agrega esta línea
 import TicketPage from './Componentes/Ticket (12)/TicketPage'; // Asegúrate de que la ruta sea correcta
 import LiveLocationPage from './Componentes/LiveLocationPage';
 import DashboardPage from './Componentes/DashboardPage';
+import RegisterUnitsPage from './Componentes/RegisterUnitsPage';
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
           <Route path="/TicketPage" element={<TicketPage />} />
           <Route path="/RealTimeMap" element={<LiveLocationPage/>} />
           <Route path="/DashboardAdmin" element={<DashboardPage />} />
-          
+          <Route path="/RegisterUnits" element={<RegisterUnitsPage />} />           
         </Routes>
       </BrowserRouter>
     </div>

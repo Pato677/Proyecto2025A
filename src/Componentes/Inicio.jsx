@@ -1,41 +1,27 @@
 import "./Inicio.css";
+import Header from "./Header";
+import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
-import Logo from './Imagenes/Logo.png';
+
+import Logo from './Imagenes/Logo.png'; // ya no necesitas aquí, Header ya lo importa internamente
 import BusEcuador from './Imagenes/BusEcuador.png';
 import BusIda from './Imagenes/BusdeIda.png';
 import BusVuelta from './Imagenes/Busderegreso.png';
 import Calendario from './Imagenes/Calendario.png';
 import Personasicon from './Imagenes/Personasicon.png';
-import { FaSearch, FaGlobe, FaUserCircle } from "react-icons/fa";
 
 const Inicio = () => {
     const navigate = useNavigate();
 
     return (
         <div className="inicio-container">
-            <header className="header">
-                <div className="logo">
-                    <img src={Logo} alt="Logo" />
-
-                </div>
-                <nav className="nav">
-                    <div className="nav-item">
-                        <FaSearch className="icon" />
-                        <span className="link-simulado">Buscar viaje</span>
-                    </div>
-
-                    <div className="nav-item">
-                        <FaGlobe className="icon" />
-                        <span>Español</span>
-                    </div>
-                    
-                    <div className="nav-item">
-                        <FaUserCircle className="icon" />
-                        <button onClick={() => navigate("/login")}>Iniciar Sesión</button>
-                    </div>
-                </nav>
-            </header>
-
+            {/* Usamos el Header parametrizado */}
+            <Header 
+                showSearch={true} 
+                showLanguage={true} 
+                showUser={true} 
+                onLoginClick={() => navigate("/login")} 
+            />
 
             <div className="formulario-viaje">
                 <div className="tipo-viaje">
@@ -75,7 +61,6 @@ const Inicio = () => {
                 </div>
             </div>
 
-
             <div className="promocion">
                 <img src={BusEcuador} alt="Bus" />
                 <div className="promo-info">
@@ -87,11 +72,8 @@ const Inicio = () => {
                 </div>
             </div>
 
-            <footer className="footer">
-                <p>© 2025 Todos los derechos reservados.</p>
-                <p>Av. Eloy Alfaro y República, Quito, Ecuador</p>
-                <p>contacto@transportesec.com | Tel: +593 2 600 1234</p>
-            </footer>
+            {/* Footer reutilizado */}
+            <Footer />
         </div>
     );
 };
