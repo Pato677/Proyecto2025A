@@ -1,0 +1,204 @@
+.inicio-container {
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+  max-width: 1200px; /* nuevo */
+  margin: 0 auto; /* centrado horizontal */
+  padding: 1rem;
+}
+
+/* Header más compacto y responsivo */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* nuevo */
+  gap: 1rem;        /* nuevo */
+  padding: 1rem 0;
+}
+
+/* Logo flexible */
+.logo img {
+  width: 150px;
+  height: auto;
+}
+
+.logo span {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Menú superior adaptativo */
+.top-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.top-nav a,
+.top-nav span,
+.top-nav button {
+  color: #007bff;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Busqueda */
+.formulario-viaje {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+/* Campos búsqueda */
+.campos-busqueda {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.campo {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 1rem;
+  min-width: 150px;
+}
+
+/* Botón */
+.btn-buscar {
+  background-color: #3297cf;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Promo */
+.promocion {
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.promocion img {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  object-fit: cover;
+}
+
+.promo-info {
+  background: #cde4ff;
+  padding: 2rem;
+  flex: 1;
+  min-width: 300px;
+}
+
+.promo-info h1 {
+  font-size: 3rem;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #555;
+  font-size: 0.9rem;
+  border-top: 1px solid #ccc;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .campos-busqueda {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .promocion {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .header {
+    flex-direction: column;
+  }
+
+  .top-nav {
+    justify-content: center;
+  }
+
+  .promo-info h1 {
+    font-size: 2rem;
+  }
+
+  .promo-info h2 {
+    font-size: 1.2rem;
+  }
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #cbe1f1;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.nav-item .icon {
+  font-size: 1rem;
+  color: #3297cf;
+}
+
+.nav-item a,
+.nav-item span,
+.nav-item button {
+  all: unset;
+  cursor: pointer;
+  color: #000;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.campo-opcion input {
+  width: 70px;
+  padding: 0.4rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+}
+
+.icono-personas {
+  width: 60px; /* aumentamos el tamaño del icono */
+  height: 50px;
+}

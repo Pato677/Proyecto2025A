@@ -36,3 +36,88 @@
     transform: rotate(360deg);
   }
 }
+
+/*Agregamos el estilo para */
+.tipo-viaje {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #888;
+  margin-bottom: 1rem;
+}
+
+.tipo-viaje .ida-activo {
+  font-weight: bold;
+  color: #00b300;
+  margin-right: 0.5rem;
+}
+
+.contenedor-busqueda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 18px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.campo-opcion {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fdfdfd;
+  border: 1px solid #999;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  min-width: 180px;
+  height: 40px;
+}
+
+.campo-opcion img {
+  width: 28px;
+  height: 28px;
+}
+
+.campo-opcion small {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.campo-opcion strong {
+  font-size: 1rem;
+  color: #111;
+}
+
+.btn-buscar-estilo {
+  background: #3297cf;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid white;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-buscar-estilo:hover {
+  background-color: #217bb0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contenedor-busqueda {
+    flex-direction: column;
+  }
+
+  .campo-opcion {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .btn-buscar-estilo {
+    width: 100%;
+  }
+}
