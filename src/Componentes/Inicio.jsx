@@ -28,7 +28,7 @@ const Inicio = () => {
                         <FaGlobe className="icon" />
                         <span>Español</span>
                     </div>
-                    
+
                     <div className="nav-item">
                         <FaUserCircle className="icon" />
                         <button onClick={() => navigate("/login")}>Iniciar Sesión</button>
@@ -39,7 +39,10 @@ const Inicio = () => {
 
             <div className="formulario-viaje">
                 <div className="tipo-viaje">
-                    <span className="ida-activo">🟢 Ida</span>
+                    <span className="boton-ida">
+                        <span className="icono-circulo"></span>
+                        <strong>Ida</strong>
+                    </span>
                     <span className="subtitulo">Selecciona el origen, fecha de ida y número de pasajeros</span>
                 </div>
 
@@ -79,13 +82,17 @@ const Inicio = () => {
             <div className="promocion">
                 <img src={BusEcuador} alt="Bus" />
                 <div className="promo-info">
+                  
+
                     <h2>¡Cada viaje es una experiencia única<br />hacia tu próximo destino!</h2>
                     <p>Quito, Guayaquil, Manta, Loja, Cuenca, Cayambe y muchos lugares más por conocer</p>
-                    <h3>Por trayectos desde</h3>
+                    <h4>Por trayectos desde</h4>
                     <h1>USD 8</h1>
-                    <button>Compra ya</button>
+                    <button className="btn-comprar">Compra ya</button>
                 </div>
+
             </div>
+
 
             <footer className="footer">
                 <p>© 2025 Todos los derechos reservados.</p>
