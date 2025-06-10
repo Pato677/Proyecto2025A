@@ -2,15 +2,6 @@ import React from "react";
 import "./Estilos/TripDetails.css";
 
 
-const features = [
-  "Asientos disponibles: 12",
-  "Aire Acondicionado",
-  "Conexión WI-FI",
-  "Conexión USB",
-  "Baño a bordo",
-  "Televisión",
-  "Asientos reclinables",
-];
 
 const TripDetails = () => {
   return (
