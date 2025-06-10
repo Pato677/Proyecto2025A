@@ -26,7 +26,7 @@ function App() {
           <Route path="/RealTimeMap" element={<LiveLocationPage/>} />
           <Route path="/DashboardAdmin" element={<DashboardPage />} />
           <Route path="/RegisterUnits" element={<RegisterUnitsPage />} />
-          <Route path="seleccionViaje" element={<TripSelectionPage/>}/>
+
       
         </Routes>
       </BrowserRouter>
