@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 import React from "react";
 import { FaUser, FaLock, FaSignInAlt } from "react-icons/fa";
 import "./Estilos/Login.css";
@@ -38,4 +36,3 @@ const Login = ({ cerrar, abrirRegistro }) => {
 };
 
 export default Login;
->>>>>>> Stashed changes
