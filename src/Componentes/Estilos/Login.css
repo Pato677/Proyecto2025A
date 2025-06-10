@@ -1,0 +1,104 @@
+.login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+}
+
+.login-box {
+  background: linear-gradient(to bottom right, #a8d0f0, #91c6f4);
+  border-radius: 24px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  position: relative;
+  text-align: center;
+}
+
+.login-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.login-icon {
+  font-size: 2rem;
+  color: #347bb5;
+  margin-bottom: 1rem;
+}
+
+.login-box h2 {
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.login-field {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+}
+
+.login-field input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  color: white;
+  font-weight: 500;
+}
+
+.field-icon {
+  margin-right: 0.5rem;
+  color: white;
+}
+
+.login-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.btn-ingresar,
+.btn-admin {
+  background: white;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-ingresar:hover,
+.btn-admin:hover {
+  background: #f0f0f0;
+}
+
+.login-register {
+  font-size: 0.9rem;
+  color: white;
+}
+
+.login-register span {
+  color: #004ca3;
+  text-decoration: underline;
+  cursor: pointer;
+}
