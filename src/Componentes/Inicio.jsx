@@ -1,26 +1,33 @@
-import "./Inicio.css";
+import React, { useState } from "react";
+import "./Estilos/Inicio.css";
 import Header from "./Header";
 import Footer from "./Footer";
-import { useNavigate } from "react-router-dom";
-
-import Logo from './Imagenes/Logo.png'; // ya no necesitas aquí, Header ya lo importa internamente
+import Login from "./Login";
+import Registro from "./Registro";
 import BusEcuador from './Imagenes/BusEcuador.png';
 import BusIda from './Imagenes/BusdeIda.png';
 import BusVuelta from './Imagenes/Busderegreso.png';
 import Calendario from './Imagenes/Calendario.png';
 import Personasicon from './Imagenes/Personasicon.png';
+import RegistroCooperativa from "./RegistroCooperativa";
+
 
 const Inicio = () => {
-    const navigate = useNavigate();
+    const [mostrarLogin, setMostrarLogin] = useState(false);
+    const [mostrarRegistro, setMostrarRegistro] = useState(false);
+    const [mostrarRegistroCooperativa, setMostrarRegistroCooperativa] = useState(false);
+
+
 
     return (
         <div className="inicio-container">
             {/* Usamos el Header parametrizado */}
-            <Header 
-                showSearch={true} 
-                showLanguage={true} 
-                showUser={true} 
-                onLoginClick={() => navigate("/login")} 
+
+            <Header
+                showSearch={true}
+                showLanguage={true}
+                showUser={true}
+                onLoginClick={() => setMostrarLogin(true)} // 👈 en vez de navigate
             />
 
             <div className="formulario-viaje">
@@ -68,11 +75,36 @@ const Inicio = () => {
                     <p>Quito, Guayaquil, Manta, Loja, Cuenca, Cayambe y muchos lugares más por conocer</p>
                     <h3>Por trayectos desde</h3>
                     <h1>USD 8</h1>
-                    <button>Compra ya</button>
+                    <button className="btn-comprar">Compra ya</button>
                 </div>
             </div>
 
             {/* Footer reutilizado */}
+
+            {mostrarLogin && (
+                <Login
+                    cerrar={() => setMostrarLogin(false)}
+                    abrirRegistro={() => {
+                        setMostrarLogin(false);
+                        setMostrarRegistro(true);
+                    }}
+                />
+            )}
+
+            {mostrarRegistro && (
+                <Registro
+                    cerrar={() => setMostrarRegistro(false)}
+                    abrirCooperativa={() => {
+                        setMostrarRegistro(false);
+                        setMostrarRegistroCooperativa(true);
+                    }}
+                />
+            )}
+
+            {mostrarRegistroCooperativa && (
+                <RegistroCooperativa cerrar={() => setMostrarRegistroCooperativa(false)} />
+            )}
+
             <Footer />
         </div>
     );
