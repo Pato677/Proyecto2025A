@@ -1,0 +1,186 @@
+body,html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+}
+.trip-selection-page {
+  font-family: 'Inter', sans-serif;
+  background: #fff;
+  padding: 16px 24px;
+  width: 95%;
+  height: 100%;
+
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;  
+}
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.acciones-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.btn-sesion {
+  background: none;
+  border: 1px solid #ccc;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.titulo-viaje {
+  text-align: center;
+  margin: 20px 0 12px;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.filtros {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 18px 4px;
+}
+
+.filtrar-label {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #222;
+}
+
+.filtro-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;              /* control altura y espacio lateral */
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #000000;                  /* mismo azul del borde */
+  background-color: #fff;
+  border: 2px solid #3077c6;       /* borde azul alrededor */
+  border-radius: 20px;             /* forma ovalada */
+  cursor: pointer;
+}
+
+.filtro-btn::after {
+  content: "+";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;                /* separación respecto al texto */
+  background-color: #444f57;       /* color muy suave detrás del “+” */
+  color: #000000;                  /* mismo azul para el “+” */
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 50%;              /* círculo perfecto */
+  line-height: 1;
+}
+
+
+.lista-viajes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+
+}
+
+.viaje-item {
+  display: flex;
+  flex-direction: column;
+  width:65%;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.viaje-item:hover {
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.viaje-seleccionado {
+  border: 2px solid #4caf50;
+  box-shadow: 0 0 0 2px #d0f0d5;
+}
+
+.botones-finales {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 40px 20px 32px 20px;
+  padding: 0 16px;
+}
+
+.btn-atras,
+.btn-aceptar {
+  position: relative;
+  display: inline-block;
+  padding: 8px 32px;              /* controla el alto y el acolchado lateral */
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #000;
+  background: transparent;        /* el fondo real lo dibuja ::after */
+  border: none;
+  cursor: pointer;
+
+  /* subrayado grueso como en tu mockup */
+  text-decoration: underline solid #000 3px;
+  text-underline-offset: 4px;
+
+  /* para que el pseudo-elemento redondeado siga la forma */
+  border-radius: 50px;
+  z-index: 1;
+}
+
+.btn-atras::before,
+.btn-aceptar::before {
+  content: "";
+  position: absolute;
+  top: -3px;     /* grosor del degradado arriba */
+  bottom: -7px;  /* grosor del degradado abajo (más ancho) */
+  left: -7px;    /* grosor del degradado izquierda */
+  right: -7px;   /* grosor del degradado derecha */
+  border-radius: 50px;
+  background: linear-gradient(90deg, #c6ffe3 0%, #b3ccff 100%);
+  z-index: -2;   /* detrás de todo */
+}
+
+.btn-atras::after,
+.btn-aceptar::after {
+  content: "";
+  position: absolute;
+  inset: 0;      /* rellena exactamente el tamaño del botón */
+  border-radius: 50px;
+  background: #fff;  /* fondo blanco interior */
+  z-index: -1;       /* justo encima del degradado */
+}
+
+
+.footer {
+  border-top: 1px solid #ccc;
+  text-align: center;
+  font-size: 0.85rem;
+  padding-top: 16px;
+  color: #555;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
