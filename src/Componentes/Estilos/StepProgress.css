@@ -1,0 +1,27 @@
+.step-progress-container {
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.step-progress-label {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.step-progress-track {
+  flex: 1;
+  margin: 0 16px;
+  background-color: #e5e7eb; /* gray-200 */
+  border-radius: 9999px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.step-progress-filled {
+  background-color: #16a34a; /* green-600 */
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
