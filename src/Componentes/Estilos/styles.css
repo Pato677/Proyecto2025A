@@ -129,7 +129,10 @@ body {
 
 .button-group {
   display: flex;
-  justify-content: center;
+  margin: 20px auto;
+  width: 100%;
+  max-width: 900px;
+  justify-content: top;
   gap: 20px;
 }
 

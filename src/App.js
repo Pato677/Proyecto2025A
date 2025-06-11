@@ -7,6 +7,7 @@ import TicketPage from './Componentes/Ticket (12)/TicketPage'; // Asegúrate de 
 import LiveLocationPage from './Componentes/LiveLocationPage';
 import DashboardPage from './Componentes/DashboardPage';
 import RegisterUnitsPage from './Componentes/RegisterUnitsPage';
+import RegisterRoutes from './Componentes/RegisterRoutes';
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
           <Route path="/TicketPage" element={<TicketPage />} />
           <Route path="/RealTimeMap" element={<LiveLocationPage/>} />
           <Route path="/DashboardAdmin" element={<DashboardPage />} />
-          <Route path="/RegisterUnits" element={<RegisterUnitsPage />} />           
+          <Route path="/RegisterUnits" element={<RegisterUnitsPage />} /> 
+          <Route path="/RegisterRoutes" element={<RegisterRoutes />} />      
         </Routes>
       </BrowserRouter>
     </div>
