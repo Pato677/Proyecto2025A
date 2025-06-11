@@ -1,0 +1,123 @@
+body,html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+
+}
+.pago-resumen-page {
+  display: flex;
+  flex-direction: column;
+  background-color: #f9fcfd;
+  font-family: Arial, sans-serif;
+
+
+
+
+}
+
+.contenido-pago {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: center;
+    width: 100%;
+}
+
+.titulo-pago {
+  font-size: 26px;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+
+/* Forma de pago */
+.forma-pago-box {
+  border: 2px solid #3b90c7;
+  border-radius: 25px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  background-color: white;
+  justify-content: center;
+  width: 70%;
+}
+
+.forma-pago-box select {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 2px solid #3b90c7;
+  outline: none;
+}
+.lbl-forma-pago {
+    flex: 1.2;
+  font-weight: bold;
+  color: #2a7bbd;
+  margin-right: 10px;
+}
+.select-forma-pago {
+  flex: 1.8;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 2px solid #3b90c7;
+  outline: none;
+}
+
+
+/* Botones */
+.contenedor-botones{
+  display: flex;
+  justify-content: space-between;
+  margin: 40px 20px 32px 20px;
+  padding: 0 16px;
+}
+
+.btn-atras,
+.btn-aceptar {
+  position: relative;
+  display: inline-block;
+  padding: 8px 32px;              /* controla el alto y el acolchado lateral */
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #000;
+  background: transparent;        /* el fondo real lo dibuja ::after */
+  border: none;
+  cursor: pointer;
+
+  /* subrayado grueso como en tu mockup */
+  text-decoration: underline solid #000 3px;
+  text-underline-offset: 4px;
+
+  /* para que el pseudo-elemento redondeado siga la forma */
+  border-radius: 50px;
+  z-index: 1;
+}
+
+.btn-atras::before,
+.btn-aceptar::before {
+  content: "";
+  position: absolute;
+  top: -3px;     /* grosor del degradado arriba */
+  bottom: -7px;  /* grosor del degradado abajo (más ancho) */
+  left: -7px;    /* grosor del degradado izquierda */
+  right: -7px;   /* grosor del degradado derecha */
+  border-radius: 50px;
+  background: linear-gradient(90deg, #c6ffe3 0%, #b3ccff 100%);
+  z-index: -2;   /* detrás de todo */
+}
+
+.btn-atras::after,
+.btn-aceptar::after {
+  content: "";
+  position: absolute;
+  inset: 0;      /* rellena exactamente el tamaño del botón */
+  border-radius: 50px;
+  background: #fff;  /* fondo blanco interior */
+  z-index: -1;       /* justo encima del degradado */
+}
+
+
+

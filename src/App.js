@@ -10,6 +10,12 @@ import DashboardPage from './Componentes/DashboardPage';
 import RegisterUnitsPage from './Componentes/RegisterUnitsPage';
 import TripSelectionPage from './Componentes/TripSelectionPage';
 
+import FormasDePagoPage from './Componentes/FormasDePagoPage';
+import SeatSelector from './Componentes/SeatSelector';
+import SeleccionAsientosPage from './Componentes/SeleccionAsientosPage';  
+import StepProgress from './Componentes/StepProgress';
+
+
 
 
 function App() {
@@ -28,6 +34,8 @@ function App() {
           <Route path="/DashboardAdmin" element={<DashboardPage />} />
           <Route path="/RegisterUnits" element={<RegisterUnitsPage />} />
           <Route path="/SeleccionViaje" element={<TripSelectionPage />} /> 
+          <Route path="/Pasajeros" element={<FormasDePagoPage/>} />
+          <Route path="/Seat" element={<SeleccionAsientosPage />} />
 
       
         </Routes>
