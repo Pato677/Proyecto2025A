@@ -1,8 +1,8 @@
 import React from 'react';
-import './Estilos/SeleccionAsientosPage.css';
+
 import SeatSelector from './SeatSelector';
 import StepProgress from './StepProgress'; // Asegúrate de que la ruta sea correcta
-
+import './Estilos/SeleccionAsientosPage.css';
 import Footer from './Footer';
 import Logo from './Imagenes/Logo.png';
 
@@ -23,7 +23,7 @@ const SeleccionAsientosPage = () => {
         <div className="step-info">
           <span>1 Adulto</span>
           <div className="step-progress">
-                <StepProgress currentStep={5} totalSteps={5} />
+                <StepProgress currentStep={4} totalSteps={5} />
           </div>
    
           <button className="precio">USD 12,<sup>25</sup></button>
@@ -33,13 +33,16 @@ const SeleccionAsientosPage = () => {
       
 
       <div className="main">
-        <div>
+        <div className="title-container">
           <h2>Selecciona tus asientos</h2>
            <p>Elige como quieres viajar, ventana o pasillo</p>
         </div>
         <section className="info-section">
-          <div>
-            <button className="ruta-btn">UIO - GYE</button>
+          <div className='ruta-info'>
+            <div className='ruta-button'>
+              <button className="ruta-btn">UIO - GYE</button>
+            </div>
+            
 
             <div className="card transporte">
               <span className="circle-te">TE</span>
@@ -48,7 +51,6 @@ const SeleccionAsientosPage = () => {
                 <a href="#" className="seleccionar-link">Seleccionar asiento</a>
               </div>
             </div>
-
             <div className="legend">
               <div><span className="legend-dot green"></span> Asiento seleccionado</div>
               <div><span className="legend-dot gray"></span> Asiento no disponible</div>
@@ -57,7 +59,7 @@ const SeleccionAsientosPage = () => {
         
 
           
-          <div>
+          <div className='seat-selector'>
             <SeatSelector />
           </div>
 
@@ -74,9 +76,9 @@ const SeleccionAsientosPage = () => {
            
       </div>
 
-      <footer className="footer">
+    
         <Footer />
-      </footer>
+      
     </div>
   );
 };
