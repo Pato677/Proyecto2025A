@@ -1,3 +1,74 @@
+/* HEADER ADMIN EXACTAMENTE IGUAL A LA IMAGEN */
+.header-admin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-bottom: 1.5px solid #b7d6f7;
+  min-height: 70px;
+  padding: 0 32px 0 32px;
+}
+
+.header-admin__left {
+  display: flex;
+  align-items: center;
+}
+
+.header-admin__logo {
+  width: 60px;
+  margin-right: 10px;
+}
+
+.header-admin__brand {
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.header-admin__right {
+  display: flex;
+  align-items: center;
+  font-size: 1.13rem;
+  color: #222;
+  gap: 12px;
+}
+
+.header-admin__option {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #222;
+}
+
+.header-admin__icon {
+  font-size: 1.25rem;
+  color: #3a8edb;
+}
+
+.header-admin__icon.user {
+  color: #5ba3d9;
+}
+
+.header-admin__divider {
+  color: #b0b0b0;
+  font-weight: 300;
+  font-size: 1.2rem;
+  margin: 0 8px;
+}
+
+@media (max-width: 700px) {
+  .header-admin {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 10px;
+    min-height: 110px;
+  }
+  .header-admin__right {
+    margin-top: 10px;
+    gap: 10px;
+  }
+}
+
 /* PANEL DE RUTAS */
 .rutas-panel {
   max-width: 960px;

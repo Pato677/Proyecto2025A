@@ -1,7 +1,6 @@
 import React from 'react';
 import './Estilos/styles.css';
 import Logo from './Imagenes/Logo.png';
-import { FaSearch, FaGlobe, FaUserCircle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 
 function Header({
@@ -9,7 +8,9 @@ function Header({
     showLanguage = true,
     showUser = true,
     onLoginClick = null,
-    userLabel = "Iniciar Sesión"
+    userLabel = "Iniciar Sesión",
+    currentStep = 1,
+    totalSteps = 5
 }) {
     const navigate = useNavigate();
 
@@ -21,23 +22,30 @@ function Header({
         }
     };
 
-     return (
-    <header className="ticket-header">
-      <img src={Logo} alt="Logo" className="ticket-logo" />
-      <span className="ticket-title">Transportes EC</span>
-      <div className="ticket-step-indicator">
-        <span>Paso 5 de 5</span>
-        <div className="ticket-progress-bar">
-          <div className="ticket-progress-bar-fill"></div>
-        </div>
-      </div>
-      <div className="ticket-top-options">
-        <span role="img" aria-label="globe" className="ticket-globe">🌐</span> Español
-        <span className="ticket-separator">|</span>
-        <span role="img" aria-label="user" className="ticket-user">🔵</span> Iniciar Sesión
-      </div>
-    </header>
-  );
+    // Calcula el porcentaje para la barra de progreso
+    const progressPercent = Math.max(0, Math.min(100, ((currentStep - 1) / (totalSteps - 1)) * 100));
+
+    return (
+        <header className="ticket-header">
+            <img src={Logo} alt="Logo" className="ticket-logo" />
+            <span className="ticket-title">Transportes EC</span>
+            <div className="ticket-step-indicator">
+                <span>Paso {currentStep} de {totalSteps}</span>
+                <div className="ticket-progress-bar">
+                    <div
+                        className="ticket-progress-bar-fill"
+                        style={{ width: `${progressPercent}%` }}
+                    ></div>
+                </div>
+            </div>
+            <div className="ticket-top-options">
+                <span role="img" aria-label="globe" className="ticket-globe">🌐</span> Español
+                <span className="ticket-separator">|</span>
+                <span role="img" aria-label="user" className="ticket-user">🔵</span>
+                <span className="ticket-login" onClick={handleLoginClick} style={{ cursor: 'pointer' }}>{userLabel}</span>
+            </div>
+        </header>
+    );
 }
 
 export default Header;

@@ -1,29 +1,32 @@
 import React from 'react';
-import Header from './Header';
+import HeaderAdmin from './HeaderAdmin';
 import Footer from './Footer';
-import './Estilos/styles.css';
+import './Estilos/DashboardAdmin.css';
+import Unidades from './Imagenes/Unidades.png'; // Asegúrate de que la ruta sea correcta
+import Horarios from './Imagenes/Horarios.png'; // Asegúrate de que la ruta sea correcta
+import Rutas from './Imagenes/RutasAdmin.png'; // Asegúrate de que la ruta sea correcta
 
 function DashboardPage() {
   return (
-    <div className="ticket-page">
-      <Header showStep={false} />
+    <div className="dashboard-admin-page">
+      <HeaderAdmin />
 
-      <main className="main-content">
-        <div className="dashboard-box">
-          <h2>Módulos</h2>
-          <hr className="divider" />
-          <div className="modules-grid">
-            <div className="module-card">
-              <img src="https://i.imgur.com/nZkTvcF.png" alt="Unidades" className="module-icon" />
-              <a href="#" className="module-button">Unidades</a>
+      <main className="dashboard-admin-main">
+        <div className="dashboard-admin-box">
+          <h2 className="dashboard-admin-title">Módulos</h2>
+          <hr className="dashboard-admin-divider" />
+          <div className="dashboard-admin-modules">
+            <div className="dashboard-admin-module-card">
+              <img src={Unidades} alt="Unidades" className="dashboard-admin-module-icon" />
+              <a href="#" className="dashboard-admin-module-button">Unidades</a>
             </div>
-            <div className="module-card">
-              <img src="https://i.imgur.com/ErO2aXZ.png" alt="Horarios" className="module-icon" />
-              <a href="#" className="module-button">Horarios</a>
+            <div className="dashboard-admin-module-card">
+              <img src={Horarios} alt="Horarios" className="dashboard-admin-module-icon" />
+              <a href="#" className="dashboard-admin-module-button">Horarios</a>
             </div>
-            <div className="module-card">
-              <img src="https://i.imgur.com/NxyTfLf.png" alt="Rutas" className="module-icon" />
-              <a href="#" className="module-button">Rutas</a>
+            <div className="dashboard-admin-module-card">
+              <img src={Rutas} alt="Rutas" className="dashboard-admin-module-icon" />
+              <a href="#" className="dashboard-admin-module-button">Rutas</a>
             </div>
           </div>
         </div>

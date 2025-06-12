@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Estilos/SeleccionAsientosPage.css';
 import SeatSelector from './SeatSelector';
 import StepProgress from './StepProgress'; // Asegúrate de que la ruta sea correcta
+import Header from './Header'; // Asegúrate de que la ruta sea correcta
 import Footer from './Footer';
 import Logo from './Imagenes/Logo.png';
 
@@ -10,6 +11,7 @@ import Logo from './Imagenes/Logo.png';
 const SeleccionAsientosPage = () => {
   return (
     <div className="page-container">
+
       <header className="header">
         <div className="logo-info">
           <img src={Logo} alt="Logo" className="logo" />

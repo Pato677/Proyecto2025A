@@ -15,14 +15,15 @@ body ,html{
 }
 
 .header {
-    width: 100%;
-    padding: 10px 30px;
-    border-bottom: 1px solid #ccc;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box;
-    background-color: #f9fcfe;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .header-left {
@@ -373,6 +374,44 @@ body ,html{
   border: 2px solid #c5def0;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #cbe1f1;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f9fcff;
+}
+
+.logo img {
+  max-width: 140px; /* evita que la imagen se desborde */
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+
+/* Asegura que el header ocupe todo el ancho y los elementos estén separados desde el inicio */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  min-width: 100vw;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #cbe1f1;
+  background-color: #f9fcff;
+  margin-left: calc(50% - 50vw); /* Hace que el header inicie desde el borde izquierdo de la ventana */
+  z-index: 1000;
+}
 
 
 

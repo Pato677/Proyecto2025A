@@ -1,7 +1,7 @@
 import React from 'react';
-import logo from './Imagenes/Logo.png'; // Asegúrate de que la ruta sea correcta
+import logo from './Imagenes/Logo.png';
 import { FiGlobe, FiUser } from 'react-icons/fi';
-import './Estilos/Admin.css'; 
+import './Estilos/Admin.css';
 
 const HeaderAdmin = () => (
   <header className="header-admin">
@@ -10,12 +10,15 @@ const HeaderAdmin = () => (
       <span className="header-admin__brand">Transportes EC</span>
     </div>
     <div className="header-admin__right">
-      <button className="header-admin__btn">
-        <FiGlobe /> Español
-      </button>
-      <button className="header-admin__btn">
-        <FiUser /> Administrador
-      </button>
+      <div className="header-admin__option">
+        <FiGlobe className="header-admin__icon" />
+        <span>Español</span>
+      </div>
+      <span className="header-admin__divider">|</span>
+      <div className="header-admin__option">
+        <FiUser className="header-admin__icon user" />
+        <span>Administrador</span>
+      </div>
     </div>
   </header>
 );

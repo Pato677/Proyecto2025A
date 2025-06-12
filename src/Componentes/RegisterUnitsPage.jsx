@@ -1,20 +1,18 @@
 import React from 'react';
-import Header from './Header';
+import HeaderAdmin from './HeaderAdmin';
 import Footer from './Footer';
-import Button from './Button';
-import './Estilos/styles.css';
+import './Estilos/RegisterUnits.css';
 
 function RegisterUnitsPage() {
   return (
-    <div className="ticket-page">
-      <Header showStep={false} />
+    <div className="register-units-page">
+      <HeaderAdmin />
 
-      <main className="main-content">
-        <h1>Registrar Unidades</h1>
-
-        <div className="register-units-container">
-          <div className="units-table-box">
-            <table className="units-table">
+      <main className="register-units-main">
+        <h1 className="register-units-title">Registrar Unidades</h1>
+        <div className="register-units-content">
+          <div className="register-units-table-box">
+            <table className="register-units-table">
               <thead>
                 <tr>
                   <th>Placa</th>
@@ -27,7 +25,7 @@ function RegisterUnitsPage() {
               </thead>
               <tbody>
                 <tr>
-                  <td>IU132C</td>
+                  <td>PBXZ1234</td>
                   <td>20</td>
                   <td>Juan Perez</td>
                   <td>Carlos Rodriguez</td>
@@ -43,26 +41,25 @@ function RegisterUnitsPage() {
               </tbody>
             </table>
           </div>
-
-          <div className="units-image-box">
+          <div className="register-units-image-box">
             <img
-              src="https://i.imgur.com/E5AzGU4.jpg" // imagen de ejemplo
+              src="https://multipasajes.travel/wp-content/uploads/2021/06/velotax1.jpg"
               alt="Bus"
-              className="units-image"
+              className="register-units-image"
             />
-            <button className="custom-button">Subir imagen</button>
+            <button className="register-units-upload-btn">Subir imagen</button>
           </div>
         </div>
 
-        <div className="button-group">
-          <Button text="Agregar" />
-          <Button text="Eliminar" />
-          <Button text="Actualizar" />
+        <div className="register-units-btn-group">
+          <button className="register-units-btn">Agregar</button>
+          <button className="register-units-btn">Eliminar</button>
+          <button className="register-units-btn">Actualizar</button>
         </div>
 
-        <div className="button-group">
-          <Button text="ATRÁS" />
-          <Button text="Ver ubicación" />
+        <div className="register-units-btn-group">
+          <button className="register-units-btn back"><b>ATRÁS</b></button>
+          <button className="register-units-btn location"><b>Ver ubicación</b></button>
         </div>
       </main>
 

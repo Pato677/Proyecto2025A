@@ -23,7 +23,9 @@ const TripSelectionPage = () => {
 
   return (
     <div className="trip-selection-page">
-      <Header/>
+      <Header
+      currentStep={1} totalSteps={5}
+      />
 
       <DateCarousel />
 

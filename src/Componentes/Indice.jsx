@@ -1,31 +1,53 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Estilos/Indice.css';
 
 const Indice = () => {
   return (
-    <div>
-      <h2>Índice de Componentes</h2>
-      <ul>
+    <div className="indice-container">
+      <h2>Índice de Navegación</h2>
+      <ul className="indice-list">
         <li>
-          <Link to="/Inicio">Inicio</Link>
+          <Link className="indice-link" to="/Inicio">🏠 Página de Inicio</Link>
         </li>
         <li>
-          <Link to="/Login">Login</Link>
+          <Link className="indice-link" to="/Login">🔑 Login</Link>
         </li>
         <li>
-          <Link to="/TicketPage">Ticket Page</Link>
+          <Link className="indice-link" to="/PasajeroForm">🛣️ Registrar Pasajero</Link>
         </li>
         <li>
-          <Link to="/RealTimeMap">Mapa</Link>
+          <Link className="indice-link" to="/RegistroCooperativa">🛣️ Registrar Cooperativa</Link>
         </li>
         <li>
-          <Link to="/DashboardAdmin">Dashboard Admin</Link>
+          <Link className="indice-link" to="/TripSelectionPage">🚌 Selección de Viaje</Link>
         </li>
         <li>
-          <Link to="/RegisterUnits">Registrar Unidades</Link>
+          <Link className="indice-link" to="/RegistroPasajerosPage">👤 Registro de Pasajeros</Link>
         </li>
         <li>
-          <Link to="/RegisterRoutes">Registrar Rutas</Link>
+          <Link className="indice-link" to="/SeleccionAsientosPage">💺 Selección de Asientos</Link>
+        </li>
+        <li>
+          <Link className="indice-link" to="/TablaPasajeros">📋 Tabla de Pasajeros</Link>
+        </li>
+        <li>
+          <Link className="indice-link" to="/TicketPage">🎫 Ticket (Boleto)</Link>
+        </li>
+        <li>
+          <Link className="indice-link" to="/RealTimeMap">🗺️ Mapa en Tiempo Real</Link>
+        </li>
+        <li>
+          <Link className="indice-link" to="/DashboardAdmin">📊 Dashboard Administrador</Link>
+        </li>
+        <li>
+          <Link className="indice-link" to="/RegisterUnits">🚌 Registrar Unidades</Link>
+        </li>
+        <li>
+          <Link className="indice-link" to="/RutasPanel">🗺️ Tabla de Rutas</Link>
+        </li>
+        <li>
+          <Link className="indice-link" to="/RutaForm">📝 Formulario de Ruta</Link>
         </li>
       </ul>
     </div>
