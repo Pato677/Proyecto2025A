@@ -1,276 +1,176 @@
-.inicio-container {
+/* === ESTILOS GLOBALES === */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
   font-family: 'Segoe UI', sans-serif;
-  color: #333;
-  max-width: 1200px; /* nuevo */
-  margin: 0 auto; /* centrado horizontal */
+  background-color: #f4faff;
+}
+
+/* === CONTENEDOR FLEX === */
+.inicio-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
   padding: 1rem;
-}
-
-/* Header más compacto y responsivo */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap; /* nuevo */
-  gap: 1rem;        /* nuevo */
-  padding: 1rem 0;
-}
-
-/* Logo flexible */
-.logo img {
-  width: 150px;
-  height: auto;
-}
-
-.logo span {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-/* Menú superior adaptativo */
-.top-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: center;
-  font-size: 0.95rem;
-}
-
-.top-nav a,
-.top-nav span,
-.top-nav button {
-  color: #007bff;
-  text-decoration: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* Busqueda */
-.formulario-viaje {
-  margin: 2rem 0;
-  text-align: center;
-}
-
-/* Campos búsqueda */
-.campos-busqueda {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  border-bottom: 2px solid #cbe1f1;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+/* === FORMULARIO DE VIAJE === */
+.formulario-viaje {
+  margin-top: 1rem;
+  padding: 1rem;
 }
 
-
-
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.95rem;
-}
-
-.nav-item .icon {
-  font-size: 1rem;
-  color: #3297cf;
-}
-
-.nav-item a,
-.nav-item span,
-.nav-item button {
-  all: unset;
-  cursor: pointer;
-  color: #000;
-  text-decoration: underline;
-  font-weight: 500;
-}
-
-.campo-opcion input {
-  width: 70px;
-  padding: 0.4rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 2px solid #ccc;
-}
-
-.icono-personas {
-  width: 60px; /* aumentamos el tamaño del icono */
-  height: 50px;
-}
-
-/*añadimos estilo al boton de ida y vuelta*/
 .tipo-viaje {
   display: flex;
+  gap: 1rem;
   align-items: center;
-  justify-content: left;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  padding-left: 10rem;
-}
-
-.boton-ida {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.3rem 0.8rem;
-  border: 1.5px solid #00c04b;
-  border-radius: 12px;
-  background-color: white;
-  color: #000;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.icono-circulo {
-  width: 14px;
-  height: 14px;
-  border-radius: 70%;
-  border: 4px solid #00c04b;
-  background: white;
-  display: inline-block;
-}
-
-.subtitulo {
-  color: #888;
-  font-size: 0.95rem;
-}
-
-/* estilodefinitivo para la promocion */
-
-.promocion {
-  display: flex;
-  flex-wrap: wrap;
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  margin: 2rem auto;
-  max-width: 1000px;
-}
-
-.promocion > img {
-  width: 100%;
-  max-width: 600px;
-  height: auto;
-  object-fit: cover;
-  flex: 1 1 300px;
-}
-
-.promo-info {
-  flex: 1 1 300px;
-  padding: 2rem;
-  background: linear-gradient(to right, #d7e9ff, #c2ddff);
-  position: relative;
-}
-
-.promo-info h2 {
-  font-size: 1.4rem;
-  font-weight: bold;
-  margin-bottom: 0.75rem;
-}
-
-.promo-info p {
-  color: #666;
-  font-size: 0.95rem;
   margin-bottom: 1rem;
 }
 
-.promo-info h4 {
-  font-size: 0.9rem;
-  color: #444;
-  margin-bottom: 0.5rem;
-}
-
-.promo-info h1 {
-  font-size: 3rem;
+.ida-activo {
+  color: green;
   font-weight: bold;
-  margin: 0 0 1rem 0;
 }
 
-.btn-comprar {
-  background: white;
-  color: #000;
-  padding: 0.6rem 1.2rem;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: background 0.3s;
-  margin-left: auto; /* 👈 empuja el botón a la derecha */
-  display: block;
+.subtitulo {
+  color: #555;
 }
 
-
-.btn-comprar:hover {
-  background: #f2f2f2;
-}
-
-/* pie de pagina */
-.footer {
+.contenedor-busqueda {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
-  background: linear-gradient(to bottom, #e6f4ff, #d4ecfd);
-  padding: 1.5rem 2rem;
-  font-size: 0.9rem;
-  color: #222;
-  border-top: 2px solid #cbe1f1;
+  gap: 1rem;
+  align-items: center;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
 }
 
-.footer p {
-  margin: 0.3rem 0;
-  flex: 1 1 300px;
+.campo-opcion {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fafafa;
+  min-width: 140px;
+}
+
+.btn-buscar-estilo {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* === PROMOCIÓN === */
+.promocion {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: #e0f0ff;
+  padding: 1rem;
+  border-radius: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.promocion img {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 12px;
+}
+
+.promo-info {
+  max-width: 500px;
   text-align: center;
 }
 
-@media (max-width: 768px) {
-  .footer {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+.promo-info h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.promo-info h1 {
+  font-size: 2.5rem;
+  margin: 0.5rem 0;
 }
 
 .btn-comprar {
-  background-color: #ffffff;
-  color: #000000;
-  font-weight: 600;
-  font-size: 0.95rem;
+  background-color: white;
+  border: 1px solid #ccc;
   padding: 0.5rem 1.2rem;
-  border-radius: 12px;
-  border: none;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-  margin-top: 1rem;
 }
 
-.btn-comprar:hover {
-  background-color: #f2f2f2;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+/* === FOOTER PEGADO ABAJO === */
+footer {
+  background-color: #e6f3ff;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  border-top: 1px solid #ccc;
 }
 
+/* === RESPONSIVE (MÓVIL) === */
+@media (max-width: 768px) {
+  .contenedor-busqueda {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .campo-opcion {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .promocion {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .promo-info {
+    padding: 1rem;
+  }
+
+  .promocion img {
+    width: 90%;
+  }
+
+  .btn-buscar-estilo,
+  .btn-comprar {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .promo-info h2 {
+    font-size: 1.2rem;
+  }
+
+  .promo-info h1 {
+    font-size: 2rem;
+  }
+
+  .tipo-viaje {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

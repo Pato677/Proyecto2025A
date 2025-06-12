@@ -10,7 +10,7 @@ import RegisterUnitsPage from './Componentes/RegisterUnitsPage';
 import RegisterRoutes from './Componentes/RegisterRoutes';
 
 function App() {
-  return (
+  return (  
     <div className="App">
       <BrowserRouter>
         <Routes>
