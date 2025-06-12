@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import React, { useState } from 'react';
+import React from 'react';
 import Inicio from './Componentes/Inicio';
 import Indice from './Componentes/Indice';
 import Login from './Componentes/Login'; // Agrega esta línea

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import StepProgress from './StepProgress';
 import DateCarousel from './DateCarousel';
 import TripCard from './TripCard';
 import TripDetails from './TripDetails';
