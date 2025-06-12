@@ -154,6 +154,7 @@ html, body {
 }
 
 .promocion {
+  margin-top: 2rem;
   display: flex;
   background: #fff;
   border-radius: 24px;
