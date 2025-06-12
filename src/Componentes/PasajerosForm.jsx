@@ -35,7 +35,7 @@ const PasajerosForm = ({ onRegistroExitoso }) => {
         <input type="tel" placeholder="Teléfono*" />
       </div>
 
-      <button type="submit">Registrar pasajero</button>
+
     </form>
   );
 };

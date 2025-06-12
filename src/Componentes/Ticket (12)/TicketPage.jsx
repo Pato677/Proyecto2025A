@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
 import '../Estilos/Ticket.css';
+import Button from '../Button';
 
 function TicketPage() {
   return (
@@ -47,15 +48,8 @@ function TicketPage() {
           Obtendrá una copia del mismo directamente a su correo electrónico.
         </p>
         <div className="ticket-button-group">
-          <button className="ticket-btn ticket-btn-back">
-            <b>ATRÁS</b>
-          </button>
-          <button className="ticket-btn ticket-btn-print">
-            <span role="img" aria-label="printer" className="ticket-btn-icon">
-              🖨️
-            </span>
-            <b>IMPRIMIR</b>
-          </button>
+          <Button text="Atras" width='150px'/>
+          <Button text="Imprimir" width='150px'/>
         </div>
       </main>
       <Footer />

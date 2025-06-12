@@ -5,6 +5,7 @@ import TripDetails from './TripDetails';
 import Footer from './Footer';
 import Header from './Header';
 import './Estilos/TripSelectionPage.css';
+import Button from './Button';
 
 const TripSelectionPage = () => {
   const [selectedTrip, setSelectedTrip] = useState(1);
@@ -51,8 +52,8 @@ const TripSelectionPage = () => {
       </div>
 
       <div className="botones-finales">
-        <button className="btn-atras">ATRÁS</button>
-        <button className="btn-aceptar">ACEPTAR</button>
+        <Button text="Atras" width='150px' />
+        <Button text="Aceptar" width='150px' />
       </div>
 
       <Footer></Footer>

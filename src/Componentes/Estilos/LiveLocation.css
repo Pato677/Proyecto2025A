@@ -113,11 +113,24 @@
 
 .live-button-group {
   display: flex;
-  justify-content: space-between;
-  width: 600px;
-  max-width: 90vw;
-  margin: 38px 0 0 0;
-  gap: 40px;
+  flex-direction: row;
+
+  flex-wrap: nowrap;
+  width: 100%;
+
+ 
+}
+.btnAtras {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  
+}
+.btnCompartir {
+  flex: 2;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .live-btn {

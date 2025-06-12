@@ -1,6 +1,7 @@
 import React from 'react';
 import Footer from './Footer';
 import Maps from './Imagenes/Maps.png';
+import Button from './Button';
 import { FaSearch, FaGlobe, FaUserCircle } from "react-icons/fa";
 import './Estilos/LiveLocation.css';
 
@@ -42,8 +43,14 @@ function LiveLocationPage() {
           />
         </div>
         <div className="live-button-group">
-          <button className="live-btn"><b>Compartir ubicación</b></button>
-          <button className="live-btn"><b>ATRÁS</b></button>
+          <div className="btnCompartir">
+            <Button  text="Compartir Ubicación" />
+
+          </div>
+          <div className="btnAtras">
+            <Button  text="Atras" />
+
+          </div>
         </div>
       </main>
       <Footer />

@@ -2,6 +2,7 @@ import React from 'react';
 import HeaderAdmin from './HeaderAdmin';
 import Footer from './Footer';
 import './Estilos/RegisterUnits.css';
+import Button from './Button';
 
 function RegisterUnitsPage() {
   return (
@@ -58,8 +59,8 @@ function RegisterUnitsPage() {
         </div>
 
         <div className="register-units-btn-group">
-          <button className="register-units-btn back"><b>ATRÁS</b></button>
-          <button className="register-units-btn location"><b>Ver ubicación</b></button>
+          <Button text="Atras" width='200px'/>
+          <Button text="Ver Ubicacion" width='200px'/>
         </div>
       </main>
 

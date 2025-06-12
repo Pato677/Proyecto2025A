@@ -26,7 +26,7 @@ body,html {
 
 /* Título principal */
 .titulo-pasajeros {
-  
+  margin: 20px;
   font-size: 28px;
   color: #222;
   margin-bottom: 20px;

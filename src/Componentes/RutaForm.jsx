@@ -2,7 +2,7 @@
 import React from 'react';
 import './Estilos/Admin.css'; 
 import mapImage from './Imagenes/rutas.png'; // Pon tu mapa en assets/map.png
-
+import Button from './Button'; // Asegúrate de que la ruta sea correcta
 const RutaForm = () => (
   <section className="ruta-form">
     <header className="ruta-form__header">Ruta Quito - Guayaquil</header>
@@ -39,7 +39,7 @@ const RutaForm = () => (
           <input type="time" />
         </div>
 
-        <button className="btn-add-parada">Añadir Parada</button>
+        <Button text="Añadir Parada"></Button>
 
         <div className="form-group">
           <label>Parada</label>
@@ -48,7 +48,7 @@ const RutaForm = () => (
           </select>
         </div>
 
-        <button className="btn-remove-parada">Eliminar Parada</button>
+        <Button text="EliminarParada" />
       </div>
     </div>
   </section>

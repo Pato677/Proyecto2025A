@@ -21,9 +21,10 @@ body, html {
 
 .grupo {
   display: flex;
-  gap: 20px;
+  gap: 10px;
   margin-bottom: 15px;
   flex-wrap: wrap;
+  margin: 10PX;
 }
 
 .grupo input {

@@ -4,6 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 import PasajerosForm from './PasajerosForm';
 import './Estilos/RegistroPasajerosPage.css';
+import Button from './Button';
 
 const RegistroPasajerosPage = () => {
   const navigate = useNavigate();
@@ -30,8 +31,8 @@ const RegistroPasajerosPage = () => {
         </div>
 
         <div className="contenedor-botones">
-          <button className="btn-atras">ATRÁS</button>
-          <button className="btn-aceptar">ACEPTAR</button>
+          <Button text="Atras" width='150px' />
+          <Button text="Aceptar" width='150px' />
         </div>
       </main>
 

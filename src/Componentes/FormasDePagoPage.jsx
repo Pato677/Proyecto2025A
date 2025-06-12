@@ -4,6 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 import TablaPasajeros from './TablaPasajeros';
 import TicketInfo from './Ticket (12)/TicketInfo';
+import Button from './Button';
 
 const FormasDePagoPage = () => {
   return (
@@ -20,7 +21,6 @@ const FormasDePagoPage = () => {
 
         <div className="ticket-info-box">
             <TicketInfo/>
-
         </div>
 
         {/* Forma de pago */}
@@ -36,8 +36,8 @@ const FormasDePagoPage = () => {
 
         {/* Botones */}
         <div className="contenedor-botones">
-          <button className="btn-atras">ATRÁS</button>
-          <button className="btn-aceptar">ACEPTAR</button>
+          <Button text="Atras" width='150px' />
+          <Button text="Aceptar" width='150px'/>
         </div>
       </div>
 
