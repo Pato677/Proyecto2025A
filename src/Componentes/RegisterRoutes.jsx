@@ -1,5 +1,5 @@
 
-import RoutesPanel from './RutasPanel';
+import RutasPanel from './RutasPanel';
 import Header from './Header';
 import Footer from './Footer';
 import Button from './Button';
@@ -15,7 +15,7 @@ const RegisterRoutes = () => {
                 showUser={true} // 👈 en vez de navigate
                 userLabel="Administrador"
             />
-            <RoutesPanel />
+            <RutasPanel />
             <div className="button-group">
                 <Button text="ATRÁS" />
             </div>

@@ -45,7 +45,7 @@ const Indice = () => {
           <Link to="/RegisterUnits">🚌 Registrar Unidades</Link>
         </li>
         <li>
-          <Link to="/RoutesTable">🗺️ Tabla de Rutas</Link>
+          <Link to="/RutasPanel">🗺️ Tabla de Rutas</Link>
         </li>
         <li>
           <Link to="/RutaForm">📝 Formulario de Ruta</Link>

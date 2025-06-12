@@ -15,7 +15,6 @@ import TripSelectionPage from './Componentes/TripSelectionPage';
 import RegistroPasajerosPage from './Componentes/RegistroPasajerosPage';
 import SeleccionAsientosPage from './Componentes/SeleccionAsientosPage';
 import TablaPasajeros from './Componentes/TablaPasajeros';
-import RoutesTable from './Componentes/RoutesTable';
 import RutaForm from './Componentes/RutaForm';
 
 function App() {
@@ -39,7 +38,7 @@ function App() {
           <Route path="/RealTimeMap" element={<LiveLocationPage />} />
           <Route path="/DashboardAdmin" element={<DashboardPage />} />
           <Route path="/RegisterUnits" element={<RegisterUnitsPage />} />
-          <Route path="/RoutesTable" element={<RoutesTable />} />
+          <Route path="/RutasPanel" element={<RutasPanel />} />
           <Route path="/RutaForm" element={<RutaForm />} />
         </Routes>
       </BrowserRouter>

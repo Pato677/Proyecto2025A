@@ -5,7 +5,7 @@ import ParadasModal from './ParadasModal';
 import RutaForm from './RutaForm';
 import './Estilos/Admin.css'; 
 
-const RoutesPanel = () => {
+const RutasPanel = () => {
   // 1️⃣ Estado para mostrar/ocultar modal
   const [showModal, setShowModal] = useState(false);
   const [isAddingRoute, setIsAddingRoute] = useState(false);
@@ -42,4 +42,4 @@ const RoutesPanel = () => {
   );
 };
 
-export default RoutesPanel;
+export default RutasPanel;
