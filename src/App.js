@@ -8,6 +8,10 @@ import TicketPage from './Componentes/Ticket (12)/TicketPage'; // Asegúrate de 
 import LiveLocationPage from './Componentes/LiveLocationPage';
 import DashboardPage from './Componentes/DashboardPage';
 import RutasPanel from './Componentes/RutasPanel'; // Asegúrate de que la ruta sea correcta
+import TripSelectionPage from './Componentes/TripSelectionPage';
+import SeleccionAsientosPage from './Componentes/SeleccionAsientosPage';
+import RegistroPasajerosPage from './Componentes/RegistroPasajerosPage';
+import FormasDePagoPage from './Componentes/FormasDePagoPage'; // Asegúrate de que la ruta sea correcta
 
 
 function App() {
@@ -25,8 +29,10 @@ function App() {
           <Route path="/RealTimeMap" element={<LiveLocationPage/>} />
           <Route path="/DashboardAdmin" element={<DashboardPage />} />
           <Route path="/RegisterUnits" element={<RutasPanel/>} />
-
-      
+          <Route path="/SeleccionViaje" element={<TripSelectionPage/>} />
+          <Route path="/SeleccionAsientos" element={<SeleccionAsientosPage />} />
+          <Route path="/RegistroPasajeros" element={<RegistroPasajerosPage/>} />
+          <Route path="/FormasDePago" element={<FormasDePagoPage />} />
         </Routes>
       </BrowserRouter>
     </div>

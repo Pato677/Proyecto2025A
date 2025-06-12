@@ -6,7 +6,7 @@ body,html {
   width: 100%;
 }
 .pasajeros-box {
-  border: 2px solid #3b90c7;
+  border: 2px solid #b5d4e6;
   border-radius: 20px;
   padding: 15px 25px;
   margin-bottom: 40px;
@@ -34,6 +34,6 @@ body,html {
 }
 
 .tabla-pasajeros th {
-  background-color: #f2faff;
+  background-color: #fdfdfd;
   color: #333;
 }

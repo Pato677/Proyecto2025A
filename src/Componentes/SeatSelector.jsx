@@ -14,7 +14,7 @@ const seatLayout = [
   ['10A', '10B', '10C', '10D'],
 ];
 
-const occupiedSeats = ['1C', '1D', '3A', '5C', '5D', '6B', '7C']; // Personaliza esto
+const occupiedSeats = ['1C', '1D', '3A', '5C', '5D', '6B', '7C'];
 
 const SeatSelector = () => {
   const [selectedSeat, setSelectedSeat] = useState(null);
@@ -28,19 +28,23 @@ const SeatSelector = () => {
   return (
     <div className="seat-selector">
       <div className="seat-header">
-        <span>A</span><span>B</span><span>C</span><span>D</span>
-      </div>
+        <span className="header-title">A</span>
+        <span className="header-title">B</span>
+        <span className="header-title">C</span>
+        <span className="header-title">D</span>
 
-      {seatLayout.map((row, index) => (
-        <div className="seat-row" key={index}>
+      </div>
+      {seatLayout.map((row, rowIdx) => (
+        <div className="seat-row" key={rowIdx}>
           {row.map((seat) => {
             const isOccupied = occupiedSeats.includes(seat);
             const isSelected = selectedSeat === seat;
-
             return (
               <button
                 key={seat}
-                className={`seat ${isOccupied ? 'occupied' : ''} ${isSelected ? 'selected' : ''}`}
+                className={`seat 
+                  ${isOccupied ? 'occupied' : ''} 
+                  ${isSelected ? 'selected' : ''}`}
                 onClick={() => handleSeatClick(seat)}
                 disabled={isOccupied}
               >

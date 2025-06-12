@@ -30,7 +30,7 @@ const FormasDePagoPage = () => {
             <option value="" >Seleccione una opción</option>
           </select>
         </div>
-        <div>
+        <div className="tabla-pasajeros-box">
             <TablaPasajeros />
         </div>
 
