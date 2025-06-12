@@ -6,7 +6,7 @@ import '../Estilos/Ticket.css';
 function TicketPage() {
   return (
     <div className="ticket-page">
-      <Header />
+      <Header currentStep={5} totalSteps={5} />
       <main className="ticket-main">
         <h1 className="ticket-main-title">
           Boleto: <span className="ticket-code">AB4M3</span>
