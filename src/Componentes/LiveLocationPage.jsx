@@ -1,31 +1,51 @@
 import React from 'react';
-import Header from './Header';
 import Footer from './Footer';
-import Button from './Button';
+import Maps from './Imagenes/Maps.png';
+import { FaSearch, FaGlobe, FaUserCircle } from "react-icons/fa";
+import './Estilos/LiveLocation.css';
+
+function LiveLocationHeader() {
+  return (
+    <header className="live-header">
+      <div className="live-header-left">
+        <img src={require('./Imagenes/Logo.png')} alt="Logo" className="live-logo" />
+        <span className="live-title">Transportes EC</span>
+      </div>
+      <div className="live-header-right">
+        <div className="live-search">
+          <FaSearch className="live-search-icon" />
+        </div>
+        <span className="live-ticket-code">AB4M3</span>
+        <span className="live-separator">|</span>
+        <FaGlobe className="live-globe" />
+        <span className="live-language">Español</span>
+        <span className="live-separator">|</span>
+        <FaUserCircle className="live-user" />
+        <span className="live-user-label">Iniciar Sesión</span>
+      </div>
+    </header>
+  );
+}
 
 function LiveLocationPage() {
   return (
     <div className="ticket-page">
-      <Header showStep={false} />
-
-      <main className="main-content">
-        <h1>Ubicación en Tiempo Real</h1>
-        <p className="estimated-time">Hora de llegada aproximada: 21:35</p>
-
-        <div className="map-container">
+      <LiveLocationHeader />
+      <main className="live-main-content">
+        <h1 className="live-title-main">Ubicación en Tiempo Real</h1>
+        <p className="live-estimated-time">Hora de llegada aproximada: 21:35</p>
+        <div className="live-map-container">
           <img
-            src="https://i.imgur.com/7Q2XPKX.png"
+            src={Maps}
             alt="Mapa en tiempo real"
-            className="map-image"
+            className="live-map-image"
           />
         </div>
-
-        <div className="button-group">
-          <Button text="Compartir ubicación" />
-          <Button text="ATRÁS" />
+        <div className="live-button-group">
+          <button className="live-btn"><b>Compartir ubicación</b></button>
+          <button className="live-btn"><b>ATRÁS</b></button>
         </div>
       </main>
-
       <Footer />
     </div>
   );

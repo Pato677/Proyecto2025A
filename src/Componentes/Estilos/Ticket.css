@@ -1,0 +1,265 @@
+.ticket-page {
+  background: #f9fbfd;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket-header {
+  display: flex;
+  align-items: center;
+  padding: 18px 0 0 0;
+  position: relative;
+  background: #fff;
+  border-bottom: 1.5px solid #e6eef5;
+  min-height: 70px;
+}
+
+.ticket-logo {
+  width: 60px;
+  margin-left: 32px;
+  margin-right: 10px;
+}
+
+.ticket-title {
+  font-size: 1.45rem;
+  font-weight: 600;
+  margin-right: 30px;
+  color: #111;
+}
+
+.ticket-step-indicator {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 30px;
+}
+
+.ticket-step-indicator > span {
+  font-size: 1.05rem;
+  color: #222;
+  margin-bottom: 2px;
+}
+
+.ticket-progress-bar {
+  width: 160px;
+  height: 10px;
+  background: #e6eef5;
+  border-radius: 8px;
+  margin-top: 2px;
+  overflow: hidden;
+}
+
+.ticket-progress-bar-fill {
+  width: 100%;
+  height: 100%;
+  background: #1db954;
+  border-radius: 8px;
+}
+
+.ticket-top-options {
+  display: flex;
+  align-items: center;
+  font-size: 1.05rem;
+  color: #222;
+  margin-right: 32px;
+  gap: 7px;
+}
+
+.ticket-globe, .ticket-user {
+  font-size: 1.2rem;
+  margin-right: 3px;
+}
+
+.ticket-separator {
+  margin: 0 10px;
+  color: #b0b0b0;
+  font-weight: 300;
+  font-size: 1.2rem;
+}
+
+.ticket-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 0 0 0;
+}
+
+.ticket-main-title {
+  font-size: 2.1rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+  color: #222;
+  letter-spacing: 0.5px;
+}
+
+.ticket-code {
+  letter-spacing: 2px;
+  color: #111;
+}
+
+.ticket-itinerary {
+  background: #fff;
+  border: 1.5px solid #b7d6f7;
+  border-radius: 16px;
+  width: 700px;
+  max-width: 95vw;
+  margin-bottom: 30px;
+  margin-top: 0;
+  box-shadow: 0 2px 8px rgba(180,200,230,0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 0 10px 0;
+}
+
+.ticket-itinerary-title {
+  color: #3a8edb;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.ticket-itinerary-divider {
+  width: 95%;
+  height: 2px;
+  background: #e6eef5;
+  margin-bottom: 10px;
+}
+
+.ticket-itinerary-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px 18px;
+  width: 95%;
+  font-size: 1.05rem;
+  color: #222;
+  margin-bottom: 5px;
+}
+
+.ticket-itinerary-details > div {
+  margin-bottom: 2px;
+}
+
+.ticket-qr-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 22px 0 0 0;
+}
+
+.ticket-qr {
+  border: 3px solid #b7d6f7;
+  border-radius: 10px;
+  background: #fff;
+  padding: 7px;
+  width: 180px;
+  height: 180px;
+  box-shadow: 0 2px 8px rgba(180,200,230,0.10);
+}
+
+.ticket-instructions {
+  text-align: center;
+  font-size: 1.13rem;
+  color: #444;
+  margin: 28px 0 0 0;
+  font-weight: 500;
+}
+
+.ticket-button-group {
+  display: flex;
+  justify-content: space-between;
+  width: 700px;
+  max-width: 95vw;
+  margin: 38px 0 0 0;
+}
+
+.ticket-btn {
+  border: 2.5px solid #3a8edb;
+  background: #fff;
+  color: #111;
+  font-size: 1.18rem;
+  font-weight: 600;
+  border-radius: 22px;
+  padding: 10px 38px;
+  cursor: pointer;
+  box-shadow: 0 2px 0 #b7d6f7;
+  transition: background 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.ticket-btn:hover {
+  background: #e6eef5;
+  color: #3a8edb;
+}
+
+.ticket-btn-print {
+  color: #111;
+}
+
+.ticket-btn-icon {
+  font-size: 1.25rem;
+  margin-right: 5px;
+}
+
+.ticket-footer {
+  background: #e6f2fb;
+  color: #222;
+  font-size: 1.01rem;
+  text-align: center;
+  padding: 18px 0 8px 0;
+  margin-top: 40px;
+  border-top: 1.5px solid #b7d6f7;
+  letter-spacing: 0.2px;
+}
+
+@media (max-width: 800px) {
+  .ticket-itinerary, .ticket-button-group {
+    width: 98vw;
+    max-width: 98vw;
+  }
+  .ticket-main {
+    padding: 20px 0 0 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .ticket-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 10px;
+    min-height: 110px;
+  }
+  .ticket-logo {
+    margin-left: 0;
+    margin-bottom: 5px;
+  }
+  .ticket-title {
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+  .ticket-step-indicator {
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+  .ticket-top-options {
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+  .ticket-itinerary-details {
+    grid-template-columns: 1fr;
+    gap: 5px 0;
+  }
+  .ticket-button-group {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+}
