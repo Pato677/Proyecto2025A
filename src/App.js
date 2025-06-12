@@ -13,7 +13,7 @@ import PasajeroForm from './Componentes/PasajerosForm';
 import RegistroCooperativa from './Componentes/RegistroCooperativa';
 import TripSelectionPage from './Componentes/TripSelectionPage';
 import RegistroPasajerosPage from './Componentes/RegistroPasajerosPage';
-import SeatSelector from './Componentes/SeatSelector';
+import SeleccionAsientosPage from './Componentes/SeleccionAsientosPage';
 import TablaPasajeros from './Componentes/TablaPasajeros';
 import RoutesTable from './Componentes/RoutesTable';
 import RutaForm from './Componentes/RutaForm';
@@ -33,7 +33,7 @@ function App() {
           <Route path="/RegistroCooperativa" element={<RegistroCooperativa />} />
           <Route path="/TripSelectionPage" element={<TripSelectionPage />} />
           <Route path="/RegistroPasajerosPage" element={<RegistroPasajerosPage />} />
-          <Route path="/SeatSelector" element={<SeatSelector />} />
+          <Route path="/SeleccionAsientosPage" element={<SeleccionAsientosPage/>} />
           <Route path="/TablaPasajeros" element={<TablaPasajeros />} />
           <Route path="/TicketPage" element={<TicketPage />} />
           <Route path="/RealTimeMap" element={<LiveLocationPage />} />

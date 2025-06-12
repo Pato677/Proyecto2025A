@@ -27,7 +27,7 @@ const Indice = () => {
           <Link to="/RegistroPasajerosPage">👤 Registro de Pasajeros</Link>
         </li>
         <li>
-          <Link to="/SeatSelector">💺 Selección de Asientos</Link>
+          <Link to="/SeleccionAsientosPage">💺 Selección de Asientos</Link>
         </li>
         <li>
           <Link to="/TablaPasajeros">📋 Tabla de Pasajeros</Link>
