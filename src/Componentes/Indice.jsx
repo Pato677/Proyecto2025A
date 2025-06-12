@@ -14,7 +14,7 @@ const Indice = () => {
           <Link className="indice-link" to="/Login">🔑 Login</Link>
         </li>
         <li>
-          <Link className="indice-link" to="/PasajeroForm">🛣️ Registrar Pasajero</Link>
+          <Link className="indice-link" to="/PasajeroForm">🛣️ Registrar Usuario</Link>
         </li>
         <li>
           <Link className="indice-link" to="/RegistroCooperativa">🛣️ Registrar Cooperativa</Link>

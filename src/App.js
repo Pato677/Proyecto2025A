@@ -16,6 +16,7 @@ import RegistroPasajerosPage from './Componentes/RegistroPasajerosPage';
 import SeleccionAsientosPage from './Componentes/SeleccionAsientosPage';
 import TablaPasajeros from './Componentes/TablaPasajeros';
 import RutaForm from './Componentes/RutaForm';
+import Registro from './Componentes/Registro';
 
 function App() {
 
@@ -28,7 +29,7 @@ function App() {
           <Route path="/" element={<Indice />} />
           <Route path="/Inicio" element={<Inicio />} />
           <Route path="/Login" element={<Login />} />
-          <Route path="/PasajeroForm" element={<PasajeroForm />} />
+          <Route path="/PasajeroForm" element={<Registro />} />
           <Route path="/RegistroCooperativa" element={<RegistroCooperativa />} />
           <Route path="/TripSelectionPage" element={<TripSelectionPage />} />
           <Route path="/RegistroPasajerosPage" element={<RegistroPasajerosPage />} />
