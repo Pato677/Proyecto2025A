@@ -104,8 +104,9 @@ const Inicio = () => {
             {mostrarRegistroCooperativa && (
                 <RegistroCooperativa cerrar={() => setMostrarRegistroCooperativa(false)} />
             )}
-
+            <footer>
             <Footer />
+            </footer>
         </div>
     );
 };
