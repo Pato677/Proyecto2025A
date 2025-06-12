@@ -1,0 +1,119 @@
+.dashboard-admin-page {
+  background: #f9fbfd;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0 0 0;
+}
+
+.dashboard-admin-box {
+  background: #fff;
+  border: 2px solid #b7d6f7;
+  border-radius: 16px;
+  width: 90vw;
+  max-width: 1100px;
+  min-width: 320px;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(180,200,230,0.07);
+  padding: 32px 24px 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard-admin-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.dashboard-admin-divider {
+  width: 95%;
+  height: 2px;
+  background: #e6eef5;
+  border: none;
+  margin: 18px 0 32px 0;
+}
+
+.dashboard-admin-modules {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  width: 100%;
+}
+
+.dashboard-admin-module-card {
+  background: #e6f2fd;
+  border-radius: 32px;
+  width: 180px;
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(180,200,230,0.07);
+  transition: box-shadow 0.2s;
+}
+
+.dashboard-admin-module-card:hover {
+  box-shadow: 0 4px 16px rgba(58,142,219,0.12);
+}
+
+.dashboard-admin-module-icon {
+  max-width: 110px;
+  height: 90px;
+  margin-bottom: 18px;
+  margin-top: 10px;
+}
+
+.dashboard-admin-module-button {
+  display: block;
+  background: #56aee9;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  padding: 7px 28px;
+  margin-top: 10px;
+  text-align: center;
+  text-decoration: underline;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.dashboard-admin-module-button:hover {
+  background: #3a8edb;
+  color: #fff;
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .dashboard-admin-modules {
+    gap: 24px;
+  }
+  .dashboard-admin-box {
+    padding: 18px 4vw 30px 4vw;
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-admin-modules {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .dashboard-admin-module-card {
+    width: 90vw;
+    max-width: 320px;
+  }
+}
