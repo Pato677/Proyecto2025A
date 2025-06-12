@@ -1,10 +1,10 @@
 import React from "react";
 import { FaUser, FaLock, FaSignInAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+
 import "./Estilos/Login.css";
 
 const Login = ({ cerrar, abrirRegistro }) => {
-  const navigate = useNavigate();
+
 
   return (
     <div className="login-overlay" onClick={cerrar}>

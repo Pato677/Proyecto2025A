@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Estilos/SeleccionAsientosPage.css';
 import SeatSelector from './SeatSelector';
 import StepProgress from './StepProgress'; // Asegúrate de que la ruta sea correcta
-import Header from './Header'; // Asegúrate de que la ruta sea correcta
+
 import Footer from './Footer';
 import Logo from './Imagenes/Logo.png';
 
