@@ -35,7 +35,7 @@ function App() {
           <Route path="/RegisterUnits" element={<RegisterUnitsPage />} />
           <Route path="/SeleccionViaje" element={<TripSelectionPage />} /> 
           <Route path="/Pasajeros" element={<FormasDePagoPage/>} />
-          <Route path="/Seat" element={<SeleccionAsientosPage />} />
+
 
       
         </Routes>
