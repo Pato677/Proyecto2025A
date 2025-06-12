@@ -3,6 +3,7 @@ import RoutesTable from './RoutesTable';
 import ActionButtons from './ActionButtons';
 import ParadasModal from './ParadasModal';
 import RutaForm from './RutaForm';
+import Footer from './Footer';
 import './Estilos/Admin.css'; 
 
 const RutasPanel = () => {
@@ -20,6 +21,7 @@ const RutasPanel = () => {
   if (isAddingRoute) {
     return <RutaForm onBack={() => setIsAddingRoute(false)} />;
   }
+  
   return (
     <section className="rutas-panel">
       <h1 className="rutas-title">Rutas</h1>
@@ -35,11 +37,12 @@ const RutasPanel = () => {
           onUpdate={() => {/* tu lógica de actualizar */}}
         />
       </div>
-
       {/* 3️⃣ Mismo modal, sin cambios de estilo */}
       {showModal && <ParadasModal onClose={cerrarParadas} />}
     </section>
+    
   );
+  
 };
 
 export default RutasPanel;
