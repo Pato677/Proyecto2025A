@@ -15,7 +15,7 @@ const RutasPanel = () => {
   const abrirFormRuta = () => setIsAddingRoute(true);
 
   // Volver a lista (quizá más tarde lo manejes con router)
-  const volverALaLista = () => setIsAddingRoute(false);
+//  const volverALaLista = () => setIsAddingRoute(false);
 
   if (isAddingRoute) {
     return <RutaForm onBack={() => setIsAddingRoute(false)} />;
