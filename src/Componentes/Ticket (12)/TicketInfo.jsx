@@ -1,5 +1,5 @@
 import React from 'react';
-import '../Estilos/styles.css';
+import '../Estilos/TicketInfo.css';
 
 function TicketInfo() {
   return (
@@ -16,8 +16,6 @@ function TicketInfo() {
           <div className="info-item"><strong>Andén:</strong> 11</div>
           <div className="info-item"><strong>Fecha de viaje:</strong> 27/05/2025</div>
         </div>
-        
-        
       </div>
     </div>
   );
