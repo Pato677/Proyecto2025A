@@ -1,9 +1,8 @@
 import React from 'react';
 import './Estilos/StepProgress.css';
 
-export default function StepProgress() {
-  const currentStep = 1;
-  const totalSteps = 5;
+export default function StepProgress({currentStep, totalSteps}) {
+
   const percent = (currentStep / totalSteps) * 100;
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Estilos/SeatSelector.css';
 
+
 const seatLayout = [
   ['1A', '1B', '1C', '1D'],
   ['2A', '2B', '2C', '2D'],
@@ -26,14 +27,9 @@ const SeatSelector = () => {
   };
 
   return (
-    <div className="seat-selector">
-      <div className="seat-header">
-        <span className="header-title">A</span>
-        <span className="header-title">B</span>
-        <span className="header-title">C</span>
-        <span className="header-title">D</span>
 
-      </div>
+    <div className="seat-selector">
+      
       {seatLayout.map((row, rowIdx) => (
         <div className="seat-row" key={rowIdx}>
           {row.map((seat) => {
@@ -55,6 +51,7 @@ const SeatSelector = () => {
         </div>
       ))}
     </div>
+
   );
 };
 
