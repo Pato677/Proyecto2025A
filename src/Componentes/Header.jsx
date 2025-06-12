@@ -28,7 +28,7 @@ function Header({
     return (
         <header className="ticket-header">
             <img src={Logo} alt="Logo" className="ticket-logo" />
-            <span className="ticket-title">Transportes EC</span>
+            
             <div className="ticket-step-indicator">
                 <span>Paso {currentStep} de {totalSteps}</span>
                 <div className="ticket-progress-bar">

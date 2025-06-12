@@ -415,3 +415,22 @@ body ,html{
 
 
 
+/* Mantener el footer siempre en la parte inferior de la página */
+.ticket-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1 0 auto;
+}
+
+.footer {
+  flex-shrink: 0;
+  width: 100%;
+  margin: 0;
+  position: static;
+  left: 0;
+  bottom: 0;
+}
