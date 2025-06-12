@@ -29,10 +29,6 @@ const Indice = () => {
           <Link className="indice-link" to="/SeleccionAsientosPage">💺 Selección de Asientos</Link>
         </li>
         <li>
-          <Link className="indice-link" to="/TablaPasajeros">📋 Tabla de Pasajeros</Link>
-        
-        </li>
-        <li>
           <Link className="indice-link" to="/FormasDePagoPage">💳 Formas de Pago</Link>
         </li>
         <li>
