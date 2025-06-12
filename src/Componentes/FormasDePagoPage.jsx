@@ -10,7 +10,7 @@ const FormasDePagoPage = () => {
   return (
     <div className="pago-resumen-page">
       <header >
-        <Header />
+        <Header currentStep={5} totalSteps={5} />
       </header>
 
       <div className="contenido-pago">

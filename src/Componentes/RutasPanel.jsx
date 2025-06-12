@@ -3,9 +3,13 @@ import RoutesTable from './RoutesTable';
 import ActionButtons from './ActionButtons';
 import ParadasModal from './ParadasModal';
 import RutaForm from './RutaForm';
+<<<<<<< HEAD
 import Header from './Header';
 import Footer from './Footer';
 import Button from './Button';
+=======
+import Footer from './Footer';
+>>>>>>> 70e017f5727133b147f6b7b8150802aa7b2a0008
 import './Estilos/Admin.css'; 
 
 const RutasPanel = () => {
@@ -23,6 +27,7 @@ const RutasPanel = () => {
   if (isAddingRoute) {
     return <RutaForm onBack={() => setIsAddingRoute(false)} />;
   }
+  
   return (
     <div>
       <Header userLabel='Administrador'></Header>
@@ -40,6 +45,7 @@ const RutasPanel = () => {
             onUpdate={() => {/* tu lógica de actualizar */}}
           />
         </div>
+<<<<<<< HEAD
 
         {/* 3️⃣ Mismo modal, sin cambios de estilo */}
         {showModal && <ParadasModal onClose={cerrarParadas} />}
@@ -51,7 +57,21 @@ const RutasPanel = () => {
       </div>
       <Footer></Footer>
     </div>
+=======
+        {/* 2️⃣ Click en Agregar dispara abrirParadas (más tarde lo cambiarás por navegación) */}
+        <ActionButtons
+          onAdd={abrirFormRuta}
+          onDelete={() => {/* tu lógica de eliminar */}}
+          onUpdate={() => {/* tu lógica de actualizar */}}
+        />
+      </div>
+      {/* 3️⃣ Mismo modal, sin cambios de estilo */}
+      {showModal && <ParadasModal onClose={cerrarParadas} />}
+    </section>
+    
+>>>>>>> 70e017f5727133b147f6b7b8150802aa7b2a0008
   );
+  
 };
 
 export default RutasPanel;
