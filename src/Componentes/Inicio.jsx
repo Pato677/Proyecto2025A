@@ -23,6 +23,7 @@ const Inicio = () => {
                 showLanguage={true}
                 showUser={true}
                 onLoginClick={() => setMostrarLogin(true)}
+                currentStep={1} totalSteps={5}
             />
 
             <div className="inicio-main-content">

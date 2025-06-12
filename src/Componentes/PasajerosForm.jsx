@@ -1,9 +1,15 @@
 import React from 'react';
 import './Estilos/PasajeroForm.css';
 
-const PasajeroForm = () => {
+const PasajerosForm = ({ onRegistroExitoso }) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // ... lógica de validación y registro ...
+    if (onRegistroExitoso) onRegistroExitoso();
+  };
+
   return (
-    <div className="formulario-pasajero">
+    <form onSubmit={handleSubmit} className="formulario-pasajero">
       <h3>Pasajero 1 (Titular)</h3>
       
       <div className="grupo">
@@ -28,8 +34,10 @@ const PasajeroForm = () => {
         <input type="email" placeholder="Correo Electrónico*" />
         <input type="tel" placeholder="Teléfono*" />
       </div>
-    </div>
+
+      <button type="submit">Registrar pasajero</button>
+    </form>
   );
 };
 
-export default PasajeroForm;
+export default PasajerosForm;

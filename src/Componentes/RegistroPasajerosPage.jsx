@@ -1,10 +1,18 @@
 import React from 'react';
-import Header from './Header';  // Asegúrate de importar esto correctamente
+import { useNavigate } from 'react-router-dom';
+import Header from './Header';
 import Footer from './Footer';
-import PasajerosForm from './PasajerosForm';  // Asegúrate de importar el formulario de pasajeros
+import PasajerosForm from './PasajerosForm';
 import './Estilos/RegistroPasajerosPage.css';
 
 const RegistroPasajerosPage = () => {
+  const navigate = useNavigate();
+
+  // Esta función se pasará al formulario
+  const handleRegistroExitoso = () => {
+    navigate('/TripSelectionPage');
+  };
+
   return (
     <div className="registro-pasajeros-page">
       <header>
@@ -18,7 +26,7 @@ const RegistroPasajerosPage = () => {
         </p>
 
         <div className="contenedor-formulario">
-          <PasajerosForm />
+          <PasajerosForm onRegistroExitoso={handleRegistroExitoso} />
         </div>
 
         <div className="contenedor-botones">
