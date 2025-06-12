@@ -1,0 +1,45 @@
+.date-carousel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+}
+
+.date-carousel-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.date-carousel-container {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  width: 100%;
+  justify-content: center;
+}
+
+.date-carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+.date-item {
+  flex: 0 0 auto;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.date-item:hover {
+  background-color: #f3f4f6; /* gray-100 */
+}
+
+.date-item.active {
+  background-color: #ecfdf5; /* green-50 */
+  border-color: #16a34a;   /* green-600 */
+}

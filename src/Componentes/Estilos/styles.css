@@ -1,8 +1,10 @@
-body {
+body ,html{
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #f9fcfe;
   min-height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 
 .ticket-page {
@@ -85,7 +87,7 @@ body {
 }
 
 .separator {
-  margin: 0 8px;
+  margin: 0 10px;
 }
 
 .main-content {
@@ -93,27 +95,57 @@ body {
   margin: 20px auto;
   text-align: center;
   flex-grow: 1;
+  
 }
 
 .ticket-info {
-  border: 1px solid #c5def0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #b5d0e0;
   border-radius: 10px;
   padding: 20px;
-  margin: 20px 0;
+  width: 100%;
+  margin: 0 auto;
+  font-family: sans-serif;
 }
 
-.ticket-info h2 {
-  color: #2176ab;
+.titulo-itinerario {
+  text-align: center;
+  color: #2a7bbd;
+  margin-top: 0;
   margin-bottom: 10px;
+  font-size: 18px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
 }
 
 .info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  gap: 10px 40px;
   font-size: 16px;
 }
+
+.info-item-1{
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+
+}
+.info-item-2 {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+
 
 .qr-code img {
   width: 150px;

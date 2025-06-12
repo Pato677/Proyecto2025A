@@ -1,0 +1,47 @@
+.seat-selector {
+  border: 1px solid #b5d0e0;
+  border-radius: 10px;
+  padding: 20px;
+  width: fit-content;
+  margin: auto;
+  font-family: sans-serif;
+}
+
+.seat-header {
+  display: flex;
+  justify-content: space-around;
+  font-weight: bold;
+  margin-bottom: px;
+}
+
+.seat-row {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+
+.seat {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 5px;
+  border: none;
+  background-color: #00a6c9; /* asiento disponible */
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.seat:hover {
+  background-color: #007d94;
+}
+
+.seat.selected {
+  background-color: #00cc66; /* verde */
+}
+
+.seat.occupied {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

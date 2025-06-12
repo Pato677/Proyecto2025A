@@ -1,0 +1,51 @@
+import React from 'react';
+import './Estilos/FormasDePagoPage.css';
+import Header from './Header';
+import Footer from './Footer';
+import TablaPasajeros from './TablaPasajeros';
+import TicketInfo from './Ticket (12)/TicketInfo';
+
+const FormasDePagoPage = () => {
+  return (
+    <div className="pago-resumen-page">
+      <header >
+        <Header />
+      </header>
+
+      <div className="contenido-pago">
+        <div>
+            <h2 className="titulo-pago">Formas de Pago</h2>
+
+        </div>
+
+        <div className="ticket-info-box">
+            <TicketInfo/>
+
+        </div>
+
+        {/* Forma de pago */}
+        <div className="forma-pago-box">
+          <label className='lblFormadepago'>Forma de pago</label>
+          <select className='select-forma-pago'>
+            <option value="" >Seleccione una opción</option>
+          </select>
+        </div>
+        <div>
+            <TablaPasajeros />
+        </div>
+
+        {/* Botones */}
+        <div className="contenedor-botones">
+          <button className="btn-atras">ATRÁS</button>
+          <button className="btn-aceptar">ACEPTAR</button>
+        </div>
+      </div>
+
+      <footer>
+        <Footer />
+      </footer>
+    </div>
+  );
+};
+
+export default FormasDePagoPage;

@@ -1,15 +1,19 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import React from 'react';
 import Inicio from './Componentes/Inicio';
 import Indice from './Componentes/Indice';
 import Login from './Componentes/Login'; // Agrega esta línea
 import TicketPage from './Componentes/Ticket (12)/TicketPage'; // Asegúrate de que la ruta sea correcta
 import LiveLocationPage from './Componentes/LiveLocationPage';
 import DashboardPage from './Componentes/DashboardPage';
-import RegisterUnitsPage from './Componentes/RegisterUnitsPage';
-import RegisterRoutes from './Componentes/RegisterRoutes';
+import RutasPanel from './Componentes/RutasPanel'; // Asegúrate de que la ruta sea correcta
+
 
 function App() {
+  
+
+  
   return (
     <div className="App">
       <BrowserRouter>
@@ -20,8 +24,9 @@ function App() {
           <Route path="/TicketPage" element={<TicketPage />} />
           <Route path="/RealTimeMap" element={<LiveLocationPage/>} />
           <Route path="/DashboardAdmin" element={<DashboardPage />} />
-          <Route path="/RegisterUnits" element={<RegisterUnitsPage />} /> 
-          <Route path="/RegisterRoutes" element={<RegisterRoutes />} />      
+          <Route path="/RegisterUnits" element={<RutasPanel/>} />
+
+      
         </Routes>
       </BrowserRouter>
     </div>
