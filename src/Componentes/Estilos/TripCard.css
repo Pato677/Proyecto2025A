@@ -1,0 +1,152 @@
+.tripcard-container {
+  display: flex;
+  background: #fff;
+  border-radius: 12px 30px 12px 12px;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 1px 6px #0001;
+  font-family: 'Inter', Arial, sans-serif;
+  width: 100%;
+  height: 85px;
+  overflow: hidden;
+  align-items: center;
+
+}
+
+.tripcard-left {
+  flex: 2;
+  padding: 15px 18px 10px 18px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  
+}
+
+.tripcard-row {
+  display: flex;
+  align-items: center;
+  padding: 2px 0; 
+  flex: 2.2;
+  justify-content: center;
+}
+
+.tripcard-hour {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 58px;
+}
+
+.hour-big {
+  font-size: 1.17rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: -1px;
+}
+
+.city {
+  font-size: 0.95rem;
+  color: #222;
+  font-weight: 500;
+}
+
+.city-bold {
+  font-weight: 700;
+}
+
+.tripcard-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  gap: 3px;
+  flex: 2;
+}
+
+.tripcard-dot {
+  width: 10px;
+  height: 10px;
+  background: #5ca6dc;
+  border-radius: 3px;
+}
+
+.tripcard-bar {
+  flex: 1;
+  height: 4px;
+  background: #5ca6dc;
+  border-radius: 4px;
+  margin: 0 2px;
+}
+
+.tripcard-info {
+  display: flex;
+  flex-direction: column;
+  
+  align-items: center;
+  flex: 0.8;
+  
+
+  margin-top: 0px;
+}
+
+.company {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #363636;
+  line-height: 1.1;
+}
+
+.time-info {
+  font-size: 0.83rem;
+  color: #8d8787;
+  margin-top: 1px;
+}
+
+.tripcard-pricepill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  background: linear-gradient(90deg, #c6ffe3 0%, #b3ccff 100%);
+  border-radius: 0 28px 28px 0;
+  min-width: 140px;
+  position: relative;
+  justify-content: center;
+}
+
+.pill-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 22px 13px 0;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.pill-usd {
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: #23775d;
+  margin-bottom: -2px;
+}
+
+.pill-price {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1c243b;
+  line-height: 1.05;
+}
+
+.pill-arrow {
+  display: flex;
+  position: absolute;
+  right: 10%;
+  bottom: 50%;
+  font-size: 1.2rem;
+  color: #44536d;
+  line-height: 0;
+  font-weight: 1000;
+  pointer-events: none;
+}
