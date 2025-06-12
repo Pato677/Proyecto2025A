@@ -17,6 +17,7 @@ import SeleccionAsientosPage from './Componentes/SeleccionAsientosPage';
 import TablaPasajeros from './Componentes/TablaPasajeros';
 import RutaForm from './Componentes/RutaForm';
 import Registro from './Componentes/Registro';
+import FormasDePagoPage from './Componentes/FormasDePagoPage';
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
           <Route path="/RegisterUnits" element={<RegisterUnitsPage />} />
           <Route path="/RutasPanel" element={<RutasPanel />} />
           <Route path="/RutaForm" element={<RutaForm />} />
+          <Route path="/FormasDePagoPage" element={<FormasDePagoPage />} />
         </Routes>
       </BrowserRouter>
     </div>
