@@ -21,36 +21,23 @@ function Header({
         }
     };
 
-    return (
-        <header className="header">
-            <div className="logo">
-                <img src={Logo} alt="Logo" />
-            </div>
-
-            <nav className="nav">
-                {showSearch && (
-                    <div className="nav-item">
-                        <FaSearch className="icon" />
-                        <span className="link-simulado">Buscar viaje</span>
-                    </div>
-                )}
-
-                {showLanguage && (
-                    <div className="nav-item">
-                        <FaGlobe className="icon" />
-                        <span>Español</span>
-                    </div>
-                )}
-
-                {showUser && (
-                    <div className="nav-item">
-                        <FaUserCircle className="icon" />
-                        <button onClick={handleLoginClick}>{userLabel}</button>
-                    </div>
-                )}
-            </nav>
-        </header>
-    );
+     return (
+    <header className="ticket-header">
+      <img src={Logo} alt="Logo" className="ticket-logo" />
+      <span className="ticket-title">Transportes EC</span>
+      <div className="ticket-step-indicator">
+        <span>Paso 5 de 5</span>
+        <div className="ticket-progress-bar">
+          <div className="ticket-progress-bar-fill"></div>
+        </div>
+      </div>
+      <div className="ticket-top-options">
+        <span role="img" aria-label="globe" className="ticket-globe">🌐</span> Español
+        <span className="ticket-separator">|</span>
+        <span role="img" aria-label="user" className="ticket-user">🔵</span> Iniciar Sesión
+      </div>
+    </header>
+  );
 }
 
 export default Header;
