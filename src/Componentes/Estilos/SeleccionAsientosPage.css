@@ -357,3 +357,16 @@ body, html {
     text-align: center;
   }
 }
+
+/* Ajuste de ancho para que la interfaz principal y la de selección de asientos sean consistentes */
+@media (min-width: 1200px) {
+  .main,
+  .info-section,
+  .card.transporte,
+  .legend {
+    width: 80% !important;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

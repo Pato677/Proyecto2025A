@@ -251,3 +251,22 @@ html, body {
     padding: 1.2rem;
   }
 }
+
+/* Sticky footer: el footer siempre en el extremo inferior */
+.inicio-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.inicio-main-content {
+  flex: 1 0 auto;
+}
+
+.ticket-footer {
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+
+

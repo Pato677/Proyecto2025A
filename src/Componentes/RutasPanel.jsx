@@ -6,14 +6,9 @@ import RoutesTable from './RoutesTable';
 import ActionButtons from './ActionButtons';
 import ParadasModal from './ParadasModal';
 import RutaForm from './RutaForm';
-<<<<<<< HEAD
-import Header from './Header';
 import Footer from './Footer';
 import Button from './Button';
 import './Estilos/Admin.css'; 
-=======
-import Footer from './Footer';
->>>>>>> c43da899812204d4b79e19fa4020ac13d6e6e4b7
 
 const RutasPanel = () => {
   const [showModal, setShowModal] = useState(false);
