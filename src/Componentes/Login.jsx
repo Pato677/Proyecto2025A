@@ -4,7 +4,10 @@ import { FaUser, FaLock, FaSignInAlt } from "react-icons/fa";
 import "./Estilos/Login.css";
 
 const Login = ({ cerrar, abrirRegistro }) => {
-
+  // El CRUD de Pasajero (usuarios) normalmente se implementa en un componente aparte, por ejemplo PasajeroCRUD.jsx o Usuarios.jsx.
+  // El componente Login solo se encarga de la autenticación (inicio de sesión).
+  // Así mantienes la lógica separada y el código más limpio.
+  // Aquí solo necesitas manejar el login, no el CRUD de pasajeros.
 
   return (
     <div className="login-overlay" onClick={cerrar}>
