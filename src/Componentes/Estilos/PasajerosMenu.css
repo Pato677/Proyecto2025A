@@ -1,0 +1,118 @@
+.pasajeros-menu {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  z-index: 20;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  padding: 28px 22px 18px 22px;
+  min-width: 320px;
+  width: 340px;
+  border: 2px solid #e6f4fb;
+}
+
+.pasajeros-title {
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 18px;
+}
+
+.pasajero-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.pasajero-label {
+  font-weight: 600;
+  font-size: 1.08rem;
+}
+
+.pasajero-desc {
+  font-size: 0.95rem;
+  color: #888;
+}
+
+.pasajero-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pasajero-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #222;
+  background: #fff;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #222;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pasajero-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pasajero-cantidad {
+  font-size: 1.18rem;
+  font-weight: 600;
+  width: 24px;
+  text-align: center;
+}
+
+.pasajeros-confirmar {
+  width: 100%;
+  margin: 18px 0 8px 0;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 22px;
+  padding: 12px 0;
+  font-size: 1.18rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pasajeros-confirmar:hover {
+  background: #222;
+}
+
+.pasajeros-info {
+  background: #f6fafd;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.98rem;
+  color: #222;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pasajeros-info-icon {
+  background: #00bcd4;
+  color: #fff;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.pasajeros-info-link {
+  color: #00bcd4;
+  text-decoration: underline;
+  margin-right: 3px;
+}

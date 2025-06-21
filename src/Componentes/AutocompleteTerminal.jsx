@@ -17,17 +17,19 @@ const AutocompleteTerminal = ({ value, onChange }) => {
       setSuggestions([]);
       return;
     }
-    // Genera una sugerencia por cada terminal de cada ciudad que coincida
-    const filtered = allTerminales
-      .filter(t =>
-        t.ciudad.toLowerCase().includes(input.toLowerCase())
-      )
-      .flatMap(t =>
-        t.terminales.map(terminal => ({
+    const lowerInput = input.toLowerCase();
+    // Busca por ciudad o por terminal
+    const filtered = allTerminales.flatMap(t =>
+      t.terminales
+        .filter(terminal =>
+          t.ciudad.toLowerCase().includes(lowerInput) ||
+          terminal.toLowerCase().includes(lowerInput)
+        )
+        .map(terminal => ({
           ciudad: t.ciudad,
           terminal
         }))
-      );
+    );
     setSuggestions(filtered);
   }, [input, allTerminales]);
 
@@ -41,7 +43,7 @@ const AutocompleteTerminal = ({ value, onChange }) => {
     <div className="autocomplete-terminal">
       <input
         type="text"
-        placeholder="Escribe la ciudad de origen"
+        placeholder="Escribe ciudad o terminal"
         value={input}
         onChange={e => setInput(e.target.value)}
         className="autocomplete-input"

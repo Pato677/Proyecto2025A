@@ -11,12 +11,17 @@ import Calendario from './Imagenes/Calendario.png';
 import Personasicon from './Imagenes/Personasicon.png';
 import RegistroCooperativa from "./RegistroCooperativa";
 import AutocompleteTerminal from './AutocompleteTerminal';
+import DatePicker from './DatePicker';
+import PasajerosMenu from './PasajerosMenu';
 
 const Inicio = () => {
     const [mostrarLogin, setMostrarLogin] = useState(false);
     const [mostrarRegistro, setMostrarRegistro] = useState(false);
     const [mostrarRegistroCooperativa, setMostrarRegistroCooperativa] = useState(false);
     const [origen, setOrigen] = useState('');
+    const [fecha, setFecha] = useState(new Date());
+    const [mostrarMenuPasajeros, setMostrarMenuPasajeros] = useState(false);
+    const [pasajeros, setPasajeros] = useState([1, 0, 0, 0]); // Adultos, Jóvenes, Niños, Bebés
 
     return (
         <div className="inicio-container">
@@ -46,29 +51,47 @@ const Inicio = () => {
                                 <AutocompleteTerminal
                                 value={origen}
                                 onChange={(ciudad, terminal) => setOrigen(`${ciudad} (${terminal})`)}
-                                 />
+                                />
                             </div>
                         </button>
                         <button className="campo-opcion-btn">
                             <img src={BusVuelta} alt="Destino" />
                             <div>
                                 <small>Destino</small><br />
-                                <strong>GUAYAQUIL (GYE)</strong>
+                                <AutocompleteTerminal
+                                value={origen}
+                                onChange={(ciudad, terminal) => setOrigen(`${ciudad} (${terminal})`)}
+                                />
                             </div>
                         </button>
                         <button className="campo-opcion-btn">
                             <img src={Calendario} alt="Fecha" />
                             <div>
                                 <small>Ida</small><br />
-                                <strong>30/04/2025</strong>
+                                <DatePicker value={fecha} onChange={setFecha} />
                             </div>
                         </button>
-                        <div className="campo-opcion-btn pasajeros">
-                            <img src={Personasicon} alt="Pasajeros" className="icono-personas" />
+                        <div className="campo-opcion-btn pasajeros" style={{ position: 'relative' }}>
+                            <img
+                                src={Personasicon}
+                                alt="Pasajeros"
+                                className="icono-personas"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => setMostrarMenuPasajeros(v => !v)}
+                            />
                             <div>
                                 <small>&nbsp;</small><br />
-                                <input type="number" min="1" defaultValue={1} className="input-pasajeros" />
+                                <span className="input-pasajeros" style={{ fontWeight: 600 }}>
+                                    {pasajeros.reduce((a, b) => a + b, 0)}
+                                </span>
                             </div>
+                            {mostrarMenuPasajeros && (
+                                <PasajerosMenu
+                                    valores={pasajeros}
+                                    setValores={setPasajeros}
+                                    onConfirmar={() => setMostrarMenuPasajeros(false)}
+                                />
+                            )}
                         </div>
                       
                         <button className="btn-buscar-estilo">BUSCAR</button>

@@ -1,0 +1,19 @@
+
+.datepicker-input {
+  width: 170px;
+  padding: 10px 14px;
+  border: 2px solid #b7d6f7;
+  border-radius: 12px;
+  font-size: 1.08rem;
+  color: #222;
+  background: #f9fbfd;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  box-shadow: 0 2px 0 #e6f4fb;
+}
+
+.datepicker-input:focus {
+  border-color: #56aee9;
+  box-shadow: 0 0 0 2px #cbe1f1;
+  background: #fff;
+}
