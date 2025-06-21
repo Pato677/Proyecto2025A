@@ -8,8 +8,13 @@ import {
   FaPhoneAlt,
   FaIdCard,
 } from "react-icons/fa";
+import axios from "axios";
+
 
 const Registro = ({ cerrar, abrirCooperativa }) => {
+
+
+  
   return (
     <div className="registro-overlay" onClick={cerrar}>
       <div className="registro-box" onClick={(e) => e.stopPropagation()}>

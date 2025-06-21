@@ -1,0 +1,15 @@
+{
+  "UsuarioPasajero": [
+    {
+      "id": 1,
+      "nombres": "Juan Carlos",
+      "apellidos": "Pérez Gómez",
+      "fechaNacimiento": "1995-06-20",
+      "cedula": "0102030405",
+      "correo": "juan.perez@example.com",
+      "telefono": "0991234567",
+      "contrasena": "abc123",
+      "confirmarContrasena": "abc123"
+    }
+  ]
+}
