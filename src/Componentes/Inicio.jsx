@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Estilos/Inicio.css";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -15,6 +16,7 @@ import DatePicker from './DatePicker';
 import PasajerosMenu from './PasajerosMenu';
 
 const Inicio = () => {
+    const navigate = useNavigate();
     const [mostrarLogin, setMostrarLogin] = useState(false);
     const [mostrarRegistro, setMostrarRegistro] = useState(false);
     const [mostrarRegistroCooperativa, setMostrarRegistroCooperativa] = useState(false);
@@ -65,7 +67,16 @@ const Inicio = () => {
 
         setError(mensaje);
         if (mensaje) return;
-        // Aquí va la lógica para continuar la búsqueda
+
+        // Si pasa todas las validaciones, navega a SeleccionViaje
+        navigate('/SeleccionViaje', {
+            state: {
+                origen: origenSeleccionado,
+                destino: destinoSeleccionado,
+                fecha,
+                pasajeros
+            }
+        });
     };
 
     return (
