@@ -46,8 +46,8 @@ const PasajerosMenu = ({ valores, setValores, onConfirmar }) => {
       <button className="pasajeros-confirmar" onClick={onConfirmar}>Confirmar</button>
       <div className="pasajeros-info">
         <span className="pasajeros-info-icon">i</span>
-        <a
-          href="#"
+        <button
+          type="button"
           className="pasajeros-info-link"
           onClick={e => {
             e.preventDefault();
@@ -55,7 +55,7 @@ const PasajerosMenu = ({ valores, setValores, onConfirmar }) => {
           }}
         >
           Conoce
-        </a>
+        </button>
         la política para jóvenes.
       </div>
       {mostrarModal && (
