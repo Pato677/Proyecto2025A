@@ -33,5 +33,27 @@
       "contrasena": "pa2302",
       "confirmarContrasena": "pa2302"
     }
+  ],
+    "TerminalesInterprovinciales": [
+    { "id": "1", "ciudad": "Quito", "terminales": ["Quitumbe", "Carcelén"] },
+    { "id": "2", "ciudad": "Guayaquil", "terminales": ["Terminal Terrestre de Guayaquil"] },
+    { "id": "3", "ciudad": "Cuenca", "terminales": ["Terminal Terrestre de Cuenca"] },
+    { "id": "4", "ciudad": "Ambato", "terminales": ["Terminal Terrestre de Ambato"] },
+    { "id": "5", "ciudad": "Ibarra", "terminales": ["Terminal Terrestre de Ibarra"] },
+    { "id": "6", "ciudad": "Loja", "terminales": ["Terminal Terrestre de Loja"] },
+    { "id": "7", "ciudad": "Riobamba", "terminales": ["Terminal Terrestre de Riobamba"] },
+    { "id": "8", "ciudad": "Babahoyo", "terminales": ["Terminal Terrestre de Babahoyo"] },
+    { "id": "9", "ciudad": "Manta", "terminales": ["Terminal Terrestre de Manta"] },
+    { "id": "10", "ciudad": "Machala", "terminales": ["Terminal Terrestre de Machala"] },
+    { "id": "11", "ciudad": "Portoviejo", "terminales": ["Terminal Terrestre de Portoviejo"] },
+    { "id": "12", "ciudad": "Santo Domingo", "terminales": ["Terminal Terrestre de Santo Domingo"] },
+    { "id": "13", "ciudad": "Durán", "terminales": ["Terminal Terrestre de Durán"] },
+    { "id": "14", "ciudad": "Atacames", "terminales": ["Terminal Terrestre de Atacames"] },
+    { "id": "15", "ciudad": "Baños", "terminales": ["Terminal Terrestre de Baños"] },
+    { "id": "16", "ciudad": "Coca", "terminales": ["Terminal Terrestre de Coca"] },
+    { "id": "17", "ciudad": "Macas", "terminales": ["Terminal Terrestre de Macas"] },
+    { "id": "18", "ciudad": "Puyo", "terminales": ["Terminal Terrestre de Puyo"] },
+    { "id": "19", "ciudad": "Quevedo", "terminales": ["Terminal Terrestre de Quevedo"] },
+    { "id": "20", "ciudad": "Tulcán", "terminales": ["Terminal Terrestre de Tulcán"] }
   ]
 }

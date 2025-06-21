@@ -10,11 +10,13 @@ import BusVuelta from './Imagenes/Busderegreso.png';
 import Calendario from './Imagenes/Calendario.png';
 import Personasicon from './Imagenes/Personasicon.png';
 import RegistroCooperativa from "./RegistroCooperativa";
+import AutocompleteTerminal from './AutocompleteTerminal';
 
 const Inicio = () => {
     const [mostrarLogin, setMostrarLogin] = useState(false);
     const [mostrarRegistro, setMostrarRegistro] = useState(false);
     const [mostrarRegistroCooperativa, setMostrarRegistroCooperativa] = useState(false);
+    const [origen, setOrigen] = useState('');
 
     return (
         <div className="inicio-container">
@@ -41,7 +43,10 @@ const Inicio = () => {
                             <img src={BusIda} alt="Origen" />
                             <div>
                                 <small>Origen</small><br />
-                                <strong>QUITO (UIO)</strong>
+                                <AutocompleteTerminal
+                                value={origen}
+                                onChange={(ciudad, terminal) => setOrigen(`${ciudad} (${terminal})`)}
+                                 />
                             </div>
                         </button>
                         <button className="campo-opcion-btn">
@@ -65,6 +70,7 @@ const Inicio = () => {
                                 <input type="number" min="1" defaultValue={1} className="input-pasajeros" />
                             </div>
                         </div>
+                      
                         <button className="btn-buscar-estilo">BUSCAR</button>
                     </div>
                 </div>
