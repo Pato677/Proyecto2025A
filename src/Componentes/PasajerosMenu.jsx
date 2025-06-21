@@ -8,6 +8,8 @@ const categorias = [
 ];
 
 const PasajerosMenu = ({ valores, setValores, onConfirmar }) => {
+  const [mostrarModal, setMostrarModal] = useState(false);
+
   const handleChange = (idx, delta) => {
     setValores(valores =>
       valores.map((v, i) =>
@@ -44,8 +46,34 @@ const PasajerosMenu = ({ valores, setValores, onConfirmar }) => {
       <button className="pasajeros-confirmar" onClick={onConfirmar}>Confirmar</button>
       <div className="pasajeros-info">
         <span className="pasajeros-info-icon">i</span>
-        <a href="#" className="pasajeros-info-link">Conoce</a> la política para jóvenes.
+        <a
+          href="#"
+          className="pasajeros-info-link"
+          onClick={e => {
+            e.preventDefault();
+            setMostrarModal(true);
+          }}
+        >
+          Conoce
+        </a>
+        la política para jóvenes.
       </div>
+      {mostrarModal && (
+        <div className="pasajeros-modal-overlay">
+          <div className="pasajeros-modal">
+            <div className="pasajeros-modal-title">Política para niños</div>
+            <div className="pasajeros-modal-text">
+              Los niños que no puedan ir cargados en brazos deberán pagar su propio asiento.
+            </div>
+            <button
+              className="pasajeros-modal-confirmar"
+              onClick={() => setMostrarModal(false)}
+            >
+              Confirmar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

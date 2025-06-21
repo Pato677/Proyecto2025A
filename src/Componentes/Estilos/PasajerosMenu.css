@@ -116,3 +116,51 @@
   text-decoration: underline;
   margin-right: 3px;
 }
+
+.pasajeros-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.pasajeros-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 22px 18px 22px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  min-width: 300px;
+  max-width: 90vw;
+  text-align: center;
+}
+
+.pasajeros-modal-title {
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+.pasajeros-modal-text {
+  font-size: 1.05rem;
+  color: #444;
+  margin-bottom: 22px;
+}
+
+.pasajeros-modal-confirmar {
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 22px;
+  padding: 10px 36px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.pasajeros-modal-confirmar:hover {
+  background: #222;
+}
