@@ -19,9 +19,54 @@ const Inicio = () => {
     const [mostrarRegistro, setMostrarRegistro] = useState(false);
     const [mostrarRegistroCooperativa, setMostrarRegistroCooperativa] = useState(false);
     const [origen, setOrigen] = useState('');
-    const [fecha, setFecha] = useState(new Date());
+    const [destino, setDestino] = useState('');
+    const [origenSeleccionado, setOrigenSeleccionado] = useState({ ciudad: '', terminal: '' });
+    const [destinoSeleccionado, setDestinoSeleccionado] = useState({ ciudad: '', terminal: '' });
+    const [fecha, setFecha] = useState('');
     const [mostrarMenuPasajeros, setMostrarMenuPasajeros] = useState(false);
     const [pasajeros, setPasajeros] = useState([1, 0, 0, 0]); // Adultos, Jóvenes, Niños, Bebés
+    const [error, setError] = useState('');
+
+    const handleOrigenChange = (ciudad, terminal) => {
+        setOrigen(ciudad && terminal ? `${ciudad} (${terminal})` : '');
+        setOrigenSeleccionado({ ciudad, terminal });
+    };
+
+    const handleDestinoChange = (ciudad, terminal) => {
+        setDestino(ciudad && terminal ? `${ciudad} (${terminal})` : '');
+        setDestinoSeleccionado({ ciudad, terminal });
+    };
+
+    const handleBuscar = () => {
+        let mensaje = '';
+        // Obtén la fecha de hoy en formato yyyy-mm-dd
+        const hoy = new Date();
+        const yyyy = hoy.getFullYear();
+        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+        const dd = String(hoy.getDate()).padStart(2, '0');
+        const hoyStr = `${yyyy}-${mm}-${dd}`;
+
+        if (!origenSeleccionado.ciudad && !destinoSeleccionado.ciudad) {
+            mensaje = 'Debe seleccionar una terminal de origen y una de destino.';
+        } else if (!origenSeleccionado.ciudad) {
+            mensaje = 'Debe seleccionar una terminal de origen.';
+        } else if (!destinoSeleccionado.ciudad) {
+            mensaje = 'Debe seleccionar una terminal de destino.';
+        } else if (
+            origenSeleccionado.ciudad === destinoSeleccionado.ciudad &&
+            origenSeleccionado.terminal === destinoSeleccionado.terminal
+        ) {
+            mensaje = 'El origen y el destino deben ser diferentes.';
+        } else if (!fecha) {
+            mensaje = 'Debe seleccionar una fecha de viaje.';
+        } else if (fecha < hoyStr) {
+            mensaje = 'La fecha de viaje debe ser igual o mayor al día de hoy.';
+        }
+
+        setError(mensaje);
+        if (mensaje) return;
+        // Aquí va la lógica para continuar la búsqueda
+    };
 
     return (
         <div className="inicio-container">
@@ -49,8 +94,8 @@ const Inicio = () => {
                             <div>
                                 <small>Origen</small><br />
                                 <AutocompleteTerminal
-                                value={origen}
-                                onChange={(ciudad, terminal) => setOrigen(`${ciudad} (${terminal})`)}
+                                    value={origen}
+                                    onChange={handleOrigenChange}
                                 />
                             </div>
                         </button>
@@ -59,8 +104,8 @@ const Inicio = () => {
                             <div>
                                 <small>Destino</small><br />
                                 <AutocompleteTerminal
-                                value={origen}
-                                onChange={(ciudad, terminal) => setOrigen(`${ciudad} (${terminal})`)}
+                                    value={destino}
+                                    onChange={handleDestinoChange}
                                 />
                             </div>
                         </button>
@@ -72,33 +117,33 @@ const Inicio = () => {
                             </div>
                         </button>
                         <div
-                        className="campo-opcion-btn pasajeros"
-                        style={{ position: 'relative' }}
-                        onClick={() => setMostrarMenuPasajeros(v => !v)}
+                            className="campo-opcion-btn pasajeros"
+                            style={{ position: 'relative' }}
+                            onClick={() => setMostrarMenuPasajeros(v => !v)}
                         >
-                        <img
-                            src={Personasicon}
-                            alt="Pasajeros"
-                            className="icono-personas"
-                            style={{ cursor: 'pointer' }}
-                        />
-                        <div>
-                            <small>&nbsp;</small><br />
-                            <span className="input-pasajeros" style={{ fontWeight: 600 }}>
-                            {pasajeros.reduce((a, b) => a + b, 0)}
-                            </span>
-                        </div>
-                        {mostrarMenuPasajeros && (
-                            <PasajerosMenu
-                            valores={pasajeros}
-                            setValores={setPasajeros}
-                            onConfirmar={() => setMostrarMenuPasajeros(false)}
+                            <img
+                                src={Personasicon}
+                                alt="Pasajeros"
+                                className="icono-personas"
+                                style={{ cursor: 'pointer' }}
                             />
-                        )}
+                            <div>
+                                <small>&nbsp;</small><br />
+                                <span className="input-pasajeros" style={{ fontWeight: 600 }}>
+                                    {pasajeros.reduce((a, b) => a + b, 0)}
+                                </span>
+                            </div>
+                            {mostrarMenuPasajeros && (
+                                <PasajerosMenu
+                                    valores={pasajeros}
+                                    setValores={setPasajeros}
+                                    onConfirmar={() => setMostrarMenuPasajeros(false)}
+                                />
+                            )}
                         </div>
-                      
-                        <button className="btn-buscar-estilo">BUSCAR</button>
+                        <button className="btn-buscar-estilo" onClick={handleBuscar}>BUSCAR</button>
                     </div>
+                    {error && <div className="error-mensaje">{error}</div>}
                 </div>
 
                 <div className="promocion">

@@ -13,8 +13,14 @@ const AutocompleteTerminal = ({ value, onChange }) => {
   }, []);
 
   useEffect(() => {
+    setInput(value || '');
+  }, [value]);
+
+  useEffect(() => {
     if (input.length === 0) {
       setSuggestions([]);
+      // Si el usuario borra el texto, notifica al padre que no hay selección
+      if (onChange) onChange('', '');
       return;
     }
     const lowerInput = input.toLowerCase();
@@ -31,7 +37,7 @@ const AutocompleteTerminal = ({ value, onChange }) => {
         }))
     );
     setSuggestions(filtered);
-  }, [input, allTerminales]);
+  }, [input, allTerminales, onChange]);
 
   const handleSelect = (ciudad, terminal) => {
     setInput(`${ciudad} (${terminal})`);
@@ -46,6 +52,7 @@ const AutocompleteTerminal = ({ value, onChange }) => {
         placeholder="Escribe ciudad o terminal"
         value={input}
         onChange={e => setInput(e.target.value)}
+        onFocus={e => e.target.select()}
         className="autocomplete-input"
         autoComplete="off"
       />
