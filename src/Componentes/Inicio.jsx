@@ -71,27 +71,30 @@ const Inicio = () => {
                                 <DatePicker value={fecha} onChange={setFecha} />
                             </div>
                         </button>
-                        <div className="campo-opcion-btn pasajeros" style={{ position: 'relative' }}>
-                            <img
-                                src={Personasicon}
-                                alt="Pasajeros"
-                                className="icono-personas"
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => setMostrarMenuPasajeros(v => !v)}
+                        <div
+                        className="campo-opcion-btn pasajeros"
+                        style={{ position: 'relative' }}
+                        onClick={() => setMostrarMenuPasajeros(v => !v)}
+                        >
+                        <img
+                            src={Personasicon}
+                            alt="Pasajeros"
+                            className="icono-personas"
+                            style={{ cursor: 'pointer' }}
+                        />
+                        <div>
+                            <small>&nbsp;</small><br />
+                            <span className="input-pasajeros" style={{ fontWeight: 600 }}>
+                            {pasajeros.reduce((a, b) => a + b, 0)}
+                            </span>
+                        </div>
+                        {mostrarMenuPasajeros && (
+                            <PasajerosMenu
+                            valores={pasajeros}
+                            setValores={setPasajeros}
+                            onConfirmar={() => setMostrarMenuPasajeros(false)}
                             />
-                            <div>
-                                <small>&nbsp;</small><br />
-                                <span className="input-pasajeros" style={{ fontWeight: 600 }}>
-                                    {pasajeros.reduce((a, b) => a + b, 0)}
-                                </span>
-                            </div>
-                            {mostrarMenuPasajeros && (
-                                <PasajerosMenu
-                                    valores={pasajeros}
-                                    setValores={setPasajeros}
-                                    onConfirmar={() => setMostrarMenuPasajeros(false)}
-                                />
-                            )}
+                        )}
                         </div>
                       
                         <button className="btn-buscar-estilo">BUSCAR</button>

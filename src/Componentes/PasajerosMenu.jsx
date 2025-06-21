@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import './Estilos/PasajerosMenu.css';
 
 const categorias = [
-  { label: 'Adultos', desc: 'Desde 15 años', min: 1 },
-  { label: 'Jóvenes', desc: 'De 12 a 14 años', min: 0 },
-  { label: 'Niños', desc: 'De 2 a 11 años', min: 0 },
-  { label: 'Bebés', desc: 'Menores de 2 años', min: 0 },
+  { label: 'Pasajero', desc: 'Desde 12 años', min: 1 },
+  { label: 'Niños', desc: 'De 1 a 12 años', min: 0 },
+  { label: 'Bebés', desc: 'Menores de 1 años', min: 0 },
 ];
 
 const PasajerosMenu = ({ valores, setValores, onConfirmar }) => {
@@ -20,7 +19,7 @@ const PasajerosMenu = ({ valores, setValores, onConfirmar }) => {
   };
 
   return (
-    <div className="pasajeros-menu">
+    <div className="pasajeros-menu" onClick={e => e.stopPropagation()}>
       <div className="pasajeros-title">¿Quiénes viajan?</div>
       {categorias.map((cat, idx) => (
         <div className="pasajero-row" key={cat.label}>
