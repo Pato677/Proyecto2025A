@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 const RegistroPasajerosPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const formRef = useRef();
 
   // Obtener número de pasajeros de la URL
   const params = new URLSearchParams(location.search);
@@ -44,6 +45,12 @@ const RegistroPasajerosPage = () => {
     );
   };
 
+  const handleAceptar = () => {
+    if (formRef.current && formRef.current.validar()) {
+      // El formulario es válido y onRegistroExitoso ya navega
+    }
+  };
+
   return (
     <div className="registro-pasajeros-page">
       <header>
@@ -65,6 +72,7 @@ const RegistroPasajerosPage = () => {
           </button>
           <div className="formulario-pasajero">
             <PasajerosForm
+              ref={formRef}
               key={formIndex}
               numeroPasajero={formIndex + 1}
               datos={datosPasajeros[formIndex]}
@@ -86,7 +94,7 @@ const RegistroPasajerosPage = () => {
         </div>
         <div className="contenedor-botones">
           <Button text="Atras" width='150px' onClick={() => navigate(-1)} />
-          <Button text="Aceptar" width='150px' />
+          <Button text="Aceptar" width='150px' onClick={handleAceptar} />
         </div>
       </main>
       <footer>

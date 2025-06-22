@@ -100,3 +100,10 @@ body, html {
   flex: 1 1 0;
   min-width: 0;
 }
+
+.error {
+  color: #d32f2f;
+  font-size: 0.95em;
+  margin-top: 2px;
+  display: block;
+}
