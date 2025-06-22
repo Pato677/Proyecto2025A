@@ -164,6 +164,7 @@ html, body {
   margin: 2.5rem auto 0 auto;
   max-width: 1100px;
   min-height: 260px;
+  position: relative;
 }
 
 .promocion > img {
@@ -242,6 +243,24 @@ html, body {
   font-weight: 500;
 }
 
+.promo-img-wrapper {
+  flex: 1 1 0;
+  width: 100%;
+  min-width: 0;
+  min-height: 220px; /* O el mínimo que desees */
+  display: flex;
+  align-items: stretch;
+  position: relative;
+}
+
+.promo-img-full {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: relative; /* <-- Quita absolute */
+}
+
 @media (max-width: 900px) {
   .contenedor-busqueda {
     flex-direction: column;
@@ -261,6 +280,10 @@ html, body {
   }
   .promo-info {
     padding: 1.2rem;
+  }
+  .promo-img-wrapper {
+    min-height: 140px;
+    height: 140px;
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Estilos/Inicio.css";
-import "./Estilos/Footer.css";
+import "./Estilos/Footer.css"
 import Header from "./Header";
 import Footer from "./Footer";
 import Login from "./Login";
@@ -159,13 +159,25 @@ const Inicio = () => {
                 </div>
 
                 <div className="promocion">
-                    <img src={BusEcuador} alt="Bus" />
+                    <div className="promo-img-wrapper">
+                        <img src={BusEcuador} alt="Bus" className="promo-img-full" />
+                    </div>
                     <div className="promo-info">
                         <h2>¡Cada viaje es una experiencia única<br />hacia tu próximo destino!</h2>
                         <p>Quito, Guayaquil, Manta, Loja, Cuenca, Cayambe y muchos lugares más por conocer</p>
                         <h3>Por trayectos desde</h3>
                         <h1>USD 8</h1>
-                        <button className="btn-comprar">Compra ya</button>
+                        <button
+                            className="btn-comprar"
+                            onClick={() => {
+                                //Aqui se debería redirigir a la página de ofertas
+                                handleBuscar();
+                                    }
+                                }
+                        >
+                        
+                            Compra ya
+                        </button>
                     </div>
                 </div>
             </div>
