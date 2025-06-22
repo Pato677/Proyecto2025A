@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Estilos/UnidadModal.css';
 
 const initialState = {
@@ -11,9 +11,14 @@ const initialState = {
   imagen: ''
 };
 
-const UnidadModal = ({ open, onClose, onSave }) => {
-  const [form, setForm] = useState(initialState);
+const UnidadModal = ({ open, onClose, onSave, initialData, mode }) => {
+  const [form, setForm] = useState(initialData || initialState);
   const [errores, setErrores] = useState({});
+
+  useEffect(() => {
+    if (initialData) setForm(initialData);
+    else setForm(initialState);
+  }, [initialData, open]);
 
   if (!open) return null;
 
@@ -65,7 +70,7 @@ const UnidadModal = ({ open, onClose, onSave }) => {
   return (
     <div className="modal-unidad-overlay">
       <div className="modal-unidad">
-        <h2>Agregar Unidad</h2>
+        <h2>{mode === 'edit' ? 'Actualizar Unidad' : 'Agregar Unidad'}</h2>
         <form onSubmit={handleSubmit} className="modal-unidad-form">
           <label>
             Placa*

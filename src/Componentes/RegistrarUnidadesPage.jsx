@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import HeaderAdmin from './HeaderAdmin';
 import Footer from './Footer';
@@ -10,6 +10,9 @@ function RegisterUnitsPage() {
   const [unidades, setUnidades] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState('add'); // 'add' o 'edit'
+  const [unidadEdit, setUnidadEdit] = useState(null);
+  const fileInputRef = useRef(null);
 
   // Cargar unidades al inicio
   useEffect(() => {
@@ -28,14 +31,70 @@ function RegisterUnitsPage() {
 
   // Guardar nueva unidad
   const handleSaveUnidad = (nuevaUnidad) => {
-    // Generar un id único (puedes mejorarlo según tu lógica)
-    const newId = unidades.length > 0 ? Math.max(...unidades.map(u => Number(u.id))) + 1 : 1;
-    const unidadConId = { ...nuevaUnidad, id: newId };
-    axios.post('http://localhost:3000/unidades', unidadConId)
+    if (modalMode === 'add') {
+      const newId = unidades.length > 0 ? Math.max(...unidades.map(u => Number(u.id))) + 1 : 1;
+      const unidadConId = { ...nuevaUnidad, id: newId };
+      axios.post('http://localhost:3000/unidades', unidadConId)
+        .then(res => {
+          setUnidades(prev => [...prev, res.data]);
+          setShowModal(false);
+          setSelectedId(res.data.id);
+        });
+    } else if (modalMode === 'edit' && unidadEdit) {
+      axios.put(`http://localhost:3000/unidades/${unidadEdit.id}`, { ...nuevaUnidad, id: unidadEdit.id })
+        .then(res => {
+          setUnidades(prev => prev.map(u => u.id === unidadEdit.id ? res.data : u));
+          setShowModal(false);
+          setSelectedId(unidadEdit.id);
+          setUnidadEdit(null);
+        });
+    }
+  };
+
+  // Manejar selección de imagen local
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const localUrl = URL.createObjectURL(file);
+      setUnidades(prev =>
+        prev.map(u =>
+          u.id === selectedId ? { ...u, imagen: localUrl } : u
+        )
+      );
+    }
+  };
+
+  // Abrir modal para agregar
+  const handleAgregar = () => {
+    setModalMode('add');
+    setUnidadEdit(null);
+    setShowModal(true);
+  };
+
+  // Abrir modal para editar y cargar datos
+  const handleActualizar = () => {
+    if (!selectedId) return;
+    axios.get(`http://localhost:3000/unidades/${selectedId}`)
       .then(res => {
-        setUnidades(prev => [...prev, res.data]);
-        setShowModal(false);
-        setSelectedId(res.data.id);
+        setUnidadEdit(res.data);
+        setModalMode('edit');
+        setShowModal(true);
+      });
+  };
+
+  // Eliminar unidad seleccionada
+  const handleEliminar = () => {
+    if (!selectedId) return;
+    axios.delete(`http://localhost:3000/unidades/${selectedId}`)
+      .then(() => {
+        setUnidades(prev => prev.filter(u => u.id !== selectedId));
+        // Seleccionar otra unidad si hay más
+        setTimeout(() => {
+          setSelectedId(prev => {
+            const restantes = unidades.filter(u => u.id !== selectedId);
+            return restantes.length > 0 ? restantes[0].id : null;
+          });
+        }, 0);
       });
   };
 
@@ -89,14 +148,14 @@ function RegisterUnitsPage() {
               alt="Bus"
               className="register-units-image"
             />
-            <button className="register-units-upload-btn">Subir imagen</button>
+            {/* Botón para subir imagen eliminado */}
           </div>
         </div>
 
         <div className="register-units-btn-group">
-          <button className="register-units-btn" onClick={() => setShowModal(true)}>Agregar</button>
-          <button className="register-units-btn">Eliminar</button>
-          <button className="register-units-btn">Actualizar</button>
+          <button className="register-units-btn" onClick={handleAgregar}>Agregar</button>
+          <button className="register-units-btn" onClick={handleEliminar}>Eliminar</button>
+          <button className="register-units-btn" onClick={handleActualizar}>Actualizar</button>
         </div>
 
         <div className="register-units-btn-group">
@@ -109,8 +168,10 @@ function RegisterUnitsPage() {
 
       <UnidadModal
         open={showModal}
-        onClose={() => setShowModal(false)}
+        onClose={() => { setShowModal(false); setUnidadEdit(null); }}
         onSave={handleSaveUnidad}
+        initialData={modalMode === 'edit' ? unidadEdit : null}
+        mode={modalMode}
       />
     </div>
   );

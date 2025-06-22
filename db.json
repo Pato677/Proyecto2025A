@@ -179,7 +179,7 @@
   ],
   "unidades": [
     {
-      "id": 1,
+      "id": "1",
       "placa": "PBXZ1234",
       "numeroUnidad": 20,
       "conductor": "Juan Perez",
@@ -189,7 +189,7 @@
       "imagen": "https://carroceriasjacome.com/images/buses/santa-martha_2.jpg"
     },
     {
-      "id": 2,
+      "id": "2",
       "placa": "ABC1234",
       "numeroUnidad": 21,
       "conductor": "Luis Torres",
@@ -199,7 +199,7 @@
       "imagen": "https://multipasajes.travel/wp-content/uploads/2021/06/velotax1.jpg"
     },
     {
-      "id": 3,
+      "id": "3",
       "placa": "XYZ5678",
       "numeroUnidad": 22,
       "conductor": "Pedro Gómez",
@@ -209,7 +209,7 @@
       "imagen": "https://multipasajes.travel/wp-content/uploads/2019/07/cristobal1.jpg"
     },
     {
-      "id": 4,
+      "id": "4",
       "placa": "DEF4321",
       "numeroUnidad": 23,
       "conductor": "Carlos Ruiz",
@@ -219,7 +219,7 @@
       "imagen": "https://movilidadmanta.gob.ec/imagenes_cooperativa/cooperativa202407235307.jpg"
     },
     {
-      "id": 5,
+      "id": "5",
       "placa": "GHI8765",
       "numeroUnidad": 24,
       "conductor": "Sofía López",
@@ -229,7 +229,7 @@
       "imagen": "https://multipasajes.travel/wp-content/uploads/2020/11/macuchi2.jpg"
     },
     {
-      "id": 6,
+      "id": "6",
       "placa": "JKL2468",
       "numeroUnidad": 25,
       "conductor": "Miguel Castro",
@@ -239,7 +239,7 @@
       "imagen": "https://multipasajes.travel/wp-content/uploads/2020/11/cita5.jpg"
     },
     {
-      "id": 7,
+      "id": "7",
       "placa": "MNO1357",
       "numeroUnidad": 26,
       "conductor": "Andrea Ríos",
@@ -249,7 +249,7 @@
       "imagen": "https://multipasajes.travel/wp-content/uploads/2020/11/azuay-head.jpg"
     },
     {
-      "id": 8,
+      "id": "8",
       "placa": "PQR9753",
       "numeroUnidad": 27,
       "conductor": "Esteban Vera",
@@ -259,17 +259,17 @@
       "imagen": "https://multipasajes.travel/wp-content/uploads/2021/06/velotax1.jpg"
     },
     {
-      "id": 9,
+      "id": "9",
       "placa": "STU8642",
       "numeroUnidad": 28,
       "conductor": "Daniela Cedeño",
-      "controlador": "Ricardo Peña",
+      "controlador": "Ricardo Peñas",
       "pisos": 2,
       "asientos": 58,
       "imagen": "https://multipasajes.travel/wp-content/uploads/2020/11/Vencedores4.jpg"
     },
     {
-      "id": 10,
+      "id": "10",
       "placa": "VWX7531",
       "numeroUnidad": 29,
       "conductor": "Fernando Silva",
@@ -277,22 +277,11 @@
       "pisos": 1,
       "asientos": 44,
       "imagen": "https://multipasajes.travel/wp-content/uploads/2020/11/expreso1.jpeg"
-    },
-    {
-      "id": 11,
-      "placa": "POM0337",
-      "numeroUnidad": "41",
-      "conductor": "Marco Polo",
-      "controlador": "Juan Serrano",
-      "pisos": "1",
-      "asientos": "25",
-      "imagen": "https://multipasajes.travel/wp-content/uploads/2019/07/santa1.jpg",
-      "undefined": "S"
     }
   ],
   "Viajes": [
     {
-      "id": 1,
+      "id": "1",
       "origenCiudad": "Quito",
       "origenTerminal": "Quitumbe",
       "destinoCiudad": "Guayaquil",
@@ -303,7 +292,7 @@
       "precio": 12.25
     },
     {
-      "id": 2,
+      "id": "2",
       "origenCiudad": "Quito",
       "origenTerminal": "Quitumbe",
       "destinoCiudad": "Guayaquil",
@@ -314,7 +303,7 @@
       "precio": 14.83
     },
     {
-      "id": 3,
+      "id": "3",
       "origenCiudad": "Quito",
       "origenTerminal": "Carcelén",
       "destinoCiudad": "Guayaquil",
@@ -325,7 +314,7 @@
       "precio": 17.85
     },
     {
-      "id": 4,
+      "id": "4",
       "origenCiudad": "Quito",
       "origenTerminal": "Carcelén",
       "destinoCiudad": "Guayaquil",
@@ -336,7 +325,7 @@
       "precio": 18.5
     },
     {
-      "id": 5,
+      "id": "5",
       "origenCiudad": "Quito",
       "origenTerminal": "Quitumbe",
       "destinoCiudad": "Cuenca",
@@ -347,7 +336,7 @@
       "precio": 15.75
     },
     {
-      "id": 6,
+      "id": "6",
       "origenCiudad": "Quito",
       "origenTerminal": "Carcelén",
       "destinoCiudad": "Cuenca",
@@ -358,7 +347,7 @@
       "precio": 13.4
     },
     {
-      "id": 7,
+      "id": "7",
       "origenCiudad": "Quito",
       "origenTerminal": "Quitumbe",
       "destinoCiudad": "Cuenca",
@@ -369,7 +358,7 @@
       "precio": 20
     },
     {
-      "id": 8,
+      "id": "8",
       "origenCiudad": "Quito",
       "origenTerminal": "Carcelén",
       "destinoCiudad": "Cuenca",
@@ -380,7 +369,7 @@
       "precio": 16.9
     },
     {
-      "id": 9,
+      "id": "9",
       "origenCiudad": "Guayaquil",
       "origenTerminal": "Terminal Terrestre de Guayaquil",
       "destinoCiudad": "Quito",
@@ -391,7 +380,7 @@
       "precio": 13
     },
     {
-      "id": 10,
+      "id": "10",
       "origenCiudad": "Guayaquil",
       "origenTerminal": "Terminal Terrestre de Guayaquil",
       "destinoCiudad": "Quito",
@@ -402,7 +391,7 @@
       "precio": 14.5
     },
     {
-      "id": 11,
+      "id": "11",
       "origenCiudad": "Guayaquil",
       "origenTerminal": "Terminal Terrestre de Guayaquil",
       "destinoCiudad": "Quito",
@@ -413,7 +402,7 @@
       "precio": 15
     },
     {
-      "id": 12,
+      "id": "12",
       "origenCiudad": "Guayaquil",
       "origenTerminal": "Terminal Terrestre de Guayaquil",
       "destinoCiudad": "Quito",
@@ -424,7 +413,7 @@
       "precio": 16
     },
     {
-      "id": 13,
+      "id": "13",
       "origenCiudad": "Cuenca",
       "origenTerminal": "Terminal Terrestre de Cuenca",
       "destinoCiudad": "Quito",
@@ -435,7 +424,7 @@
       "precio": 15.5
     },
     {
-      "id": 14,
+      "id": "14",
       "origenCiudad": "Cuenca",
       "origenTerminal": "Terminal Terrestre de Cuenca",
       "destinoCiudad": "Quito",
@@ -446,7 +435,7 @@
       "precio": 13.9
     },
     {
-      "id": 15,
+      "id": "15",
       "origenCiudad": "Cuenca",
       "origenTerminal": "Terminal Terrestre de Cuenca",
       "destinoCiudad": "Quito",
@@ -457,7 +446,7 @@
       "precio": 19
     },
     {
-      "id": 16,
+      "id": "16",
       "origenCiudad": "Cuenca",
       "origenTerminal": "Terminal Terrestre de Cuenca",
       "destinoCiudad": "Quito",
@@ -468,7 +457,7 @@
       "precio": 17.2
     },
     {
-      "id": 17,
+      "id": "17",
       "origenCiudad": "Ambato",
       "origenTerminal": "Terminal Terrestre de Ambato",
       "destinoCiudad": "Manta",
@@ -479,7 +468,7 @@
       "precio": 6.64
     },
     {
-      "id": 18,
+      "id": "18",
       "origenCiudad": "Ambato",
       "origenTerminal": "Terminal Terrestre de Ambato",
       "destinoCiudad": "Durán",
@@ -490,7 +479,7 @@
       "precio": 8.36
     },
     {
-      "id": 19,
+      "id": "19",
       "origenCiudad": "Ambato",
       "origenTerminal": "Terminal Terrestre de Ambato",
       "destinoCiudad": "Coca",
@@ -501,7 +490,7 @@
       "precio": 15.63
     },
     {
-      "id": 20,
+      "id": "20",
       "origenCiudad": "Ambato",
       "origenTerminal": "Terminal Terrestre de Ambato",
       "destinoCiudad": "Tulcán",
@@ -512,7 +501,7 @@
       "precio": 8.23
     },
     {
-      "id": 21,
+      "id": "21",
       "origenCiudad": "Ambato",
       "origenTerminal": "Terminal Terrestre de Ambato",
       "destinoCiudad": "Loja",
@@ -523,7 +512,7 @@
       "precio": 19.46
     },
     {
-      "id": 22,
+      "id": "22",
       "origenCiudad": "Ibarra",
       "origenTerminal": "Terminal Terrestre de Ibarra",
       "destinoCiudad": "Baños",
@@ -534,7 +523,7 @@
       "precio": 14.11
     },
     {
-      "id": 23,
+      "id": "23",
       "origenCiudad": "Ibarra",
       "origenTerminal": "Terminal Terrestre de Ibarra",
       "destinoCiudad": "Portoviejo",
@@ -545,7 +534,7 @@
       "precio": 14.83
     },
     {
-      "id": 24,
+      "id": "24",
       "origenCiudad": "Ibarra",
       "origenTerminal": "Terminal Terrestre de Ibarra",
       "destinoCiudad": "Puyo",
@@ -556,7 +545,7 @@
       "precio": 10.75
     },
     {
-      "id": 25,
+      "id": "25",
       "origenCiudad": "Ibarra",
       "origenTerminal": "Terminal Terrestre de Ibarra",
       "destinoCiudad": "Macas",
@@ -567,7 +556,7 @@
       "precio": 15.2
     },
     {
-      "id": 26,
+      "id": "26",
       "origenCiudad": "Ibarra",
       "origenTerminal": "Terminal Terrestre de Ibarra",
       "destinoCiudad": "Quevedo",
@@ -578,7 +567,7 @@
       "precio": 15.44
     },
     {
-      "id": 27,
+      "id": "27",
       "origenCiudad": "Loja",
       "origenTerminal": "Terminal Terrestre de Loja",
       "destinoCiudad": "Manta",
@@ -589,7 +578,7 @@
       "precio": 11.27
     },
     {
-      "id": 28,
+      "id": "28",
       "origenCiudad": "Loja",
       "origenTerminal": "Terminal Terrestre de Loja",
       "destinoCiudad": "Atacames",
@@ -600,7 +589,7 @@
       "precio": 11.91
     },
     {
-      "id": 29,
+      "id": "29",
       "origenCiudad": "Loja",
       "origenTerminal": "Terminal Terrestre de Loja",
       "destinoCiudad": "Santo Domingo",
@@ -611,7 +600,7 @@
       "precio": 10.03
     },
     {
-      "id": 30,
+      "id": "30",
       "origenCiudad": "Loja",
       "origenTerminal": "Terminal Terrestre de Loja",
       "destinoCiudad": "Babahoyo",
@@ -622,7 +611,7 @@
       "precio": 10.67
     },
     {
-      "id": 31,
+      "id": "31",
       "origenCiudad": "Loja",
       "origenTerminal": "Terminal Terrestre de Loja",
       "destinoCiudad": "Machala",
