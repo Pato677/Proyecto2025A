@@ -55,5 +55,15 @@
     { "id": "18", "ciudad": "Puyo", "terminales": ["Terminal Terrestre de Puyo"] },
     { "id": "19", "ciudad": "Quevedo", "terminales": ["Terminal Terrestre de Quevedo"] },
     { "id": "20", "ciudad": "Tulcán", "terminales": ["Terminal Terrestre de Tulcán"] }
+  ],
+   "Viajes": [
+    { "id": 1, "horaSalida": "13:30", "horaLlegada": "21:30", "empresa": "Velotax", "precio": 12.25 },
+    { "id": 2, "horaSalida": "14:20", "horaLlegada": "22:30", "empresa": "Panamericana", "precio": 14.83 },
+    { "id": 3, "horaSalida": "15:30", "horaLlegada": "23:30", "empresa": "Flota Imbabura", "precio": 17.85 },    
+    { "id": 4, "horaSalida": "16:00", "horaLlegada": "23:45", "empresa": "Transportes Loja", "precio": 18.50 },
+    { "id": 5, "horaSalida": "12:15", "horaLlegada": "19:20", "empresa": "Santa", "precio": 15.75 },
+    { "id": 6, "horaSalida": "10:00", "horaLlegada": "17:30", "empresa": "Cooperativa Esmeraldas", "precio": 13.40 },
+    { "id": 7, "horaSalida": "18:45", "horaLlegada": "04:30", "empresa": "CIFERAL", "precio": 20.00 },
+    { "id": 8, "horaSalida": "07:00", "horaLlegada": "14:15", "empresa": "Reina del Camino", "precio": 16.90 }
   ]
 }

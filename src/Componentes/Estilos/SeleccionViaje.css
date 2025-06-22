@@ -1,15 +1,15 @@
-body,html {
+body, html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   height: 100%;
   width: 100%;
 }
+
 .trip-selection-page {
   font-family: 'Inter', sans-serif;
   background: #fff;
-  padding: 0; /* Quita el padding lateral para que llegue al borde */
-  width: 100vw;            /* Ocupa todo el ancho de la ventana */
+  width: 100vw;
   min-height: 100vh;
   margin: 0;
   box-sizing: border-box;
@@ -20,7 +20,6 @@ body,html {
 .contenido-viajes {
   flex: 1 0 auto;
   width: 100%;
-  /* Si quieres centrar el contenido, usa un div hijo con max-width y margin auto */
 }
 
 .trip-selection-page > .footer,
@@ -36,27 +35,7 @@ body,html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;  
-}
-
-.logo {
-  font-size: 1.3rem;
-  font-weight: 700;
-}
-
-.acciones-header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.btn-sesion {
-  background: none;
-  border: 1px solid #ccc;
-  padding: 6px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 0.95rem;
+  margin-bottom: 20px;
 }
 
 .titulo-viaje {
@@ -80,35 +59,23 @@ body,html {
 }
 
 .filtro-btn {
-  position: relative;
   display: inline-flex;
   align-items: center;
-  padding: 6px 14px;              /* control altura y espacio lateral */
+  padding: 6px 14px;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #000000;                  /* mismo azul del borde */
+  color: #000;
   background-color: #fff;
-  border: 2px solid #3077c6;       /* borde azul alrededor */
-  border-radius: 20px;             /* forma ovalada */
+  border: 2px solid #3077c6;
+  border-radius: 20px;
   cursor: pointer;
 }
 
-.filtro-btn::after {
-  content: "+";
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  margin-left: 8px;                /* separación respecto al texto */
-  background-color: #444f57;       /* color muy suave detrás del “+” */
-  color: #000000;                  /* mismo azul para el “+” */
-  font-size: 0.85rem;
-  font-weight: 700;
-  border-radius: 50%;              /* círculo perfecto */
-  line-height: 1;
+.cargando {
+  text-align: center;
+  margin: 20px;
+  color: gray;
 }
-
 
 .lista-viajes {
   display: flex;
@@ -116,17 +83,19 @@ body,html {
   gap: 16px;
   align-items: center;
   width: 100%;
-
+  /* max-height y overflow-y solo si quieres scroll interno */
 }
 
 .viaje-item {
   display: flex;
   flex-direction: column;
-  width:65%;
+  width: 65%;
   border-radius: 12px;
   overflow: hidden;
   transition: border 0.2s, box-shadow 0.2s;
   cursor: pointer;
+  background: #fff;
+  z-index: 1;
 }
 
 .viaje-item:hover {
@@ -146,48 +115,29 @@ body,html {
   padding: 0 16px;
 }
 
-.btn-atras,
-.btn-aceptar {
-  position: relative;
-  display: inline-block;
-  padding: 8px 32px;              /* controla el alto y el acolchado lateral */
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #000;
-  background: transparent;        /* el fondo real lo dibuja ::after */
-  border: none;
+.paginacion {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 18px 0 24px 0;
+}
+
+.pagina-btn {
+  background: none;
+  border: 1.5px solid #3077c6;
+  color: #3077c6;
+  border-radius: 6px;
+  padding: 4px 12px;
   cursor: pointer;
-
-  /* subrayado grueso como en tu mockup */
-  text-decoration: underline solid #000 3px;
-  text-underline-offset: 4px;
-
-  /* para que el pseudo-elemento redondeado siga la forma */
-  border-radius: 50px;
-  z-index: 1;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s;
 }
 
-.btn-atras::before,
-.btn-aceptar::before {
-  content: "";
-  position: absolute;
-  top: -3px;     /* grosor del degradado arriba */
-  bottom: -7px;  /* grosor del degradado abajo (más ancho) */
-  left: -7px;    /* grosor del degradado izquierda */
-  right: -7px;   /* grosor del degradado derecha */
-  border-radius: 50px;
-  background: linear-gradient(90deg, #c6ffe3 0%, #b3ccff 100%);
-  z-index: -2;   /* detrás de todo */
+.pagina-btn.activa,
+.pagina-btn:hover {
+  background: #3077c6;
+  color: #fff;
 }
-
-.btn-atras::after,
-  .btn-aceptar::after {
-    content: "";
-    position: absolute;
-    inset: 0;      /* rellena exactamente el tamaño del botón */
-    border-radius: 50px;
-    background: #fff;  /* fondo blanco interior */
-    z-index: -1;       /* justo encima del degradado */
-  }
 
 

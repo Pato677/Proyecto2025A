@@ -1,33 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import DateCarousel from './DateCarousel';
 import TripCard from './TripCard';
 import TripDetails from './TripDetails';
 import Footer from './Footer';
 import Header from './Header';
-import "./Estilos/Footer.css";
-import "./Estilos/SeleccionViaje.css";
+import './Estilos/Footer.css';
+import './Estilos/SeleccionViaje.css';
 import Button from './Button';
 
 const TripSelectionPage = () => {
   const [selectedTrip, setSelectedTrip] = useState(1);
   const [showDetails, setShowDetails] = useState(true);
+  const [viajes, setViajes] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [orden, setOrden] = useState(''); // '', 'precio', 'hora'
+  const viajesPorPagina = 4;
 
-  const viajes = [
-    { id: 1, horaSalida: '13:30', horaLlegada: '21:30', empresa: 'Velotax', precio: '12.25' },
-    { id: 2, horaSalida: '14:20', horaLlegada: '22:30', empresa: 'Panamericana', precio: '14.83' },
-    { id: 3, horaSalida: '15:30', horaLlegada: '23:30', empresa: 'Flota Imbabura', precio: '17.85' },
-  ];
+  useEffect(() => {
+    axios.get('http://localhost:3000/Viajes')
+      .then(res => setViajes(res.data))
+      .catch(() => setViajes([]));
+  }, []);
 
   const handleSelectTrip = (id) => {
     setSelectedTrip(id);
     setShowDetails(true);
   };
 
+  // Ordenar los viajes según el filtro seleccionado
+  let viajesOrdenados = [...viajes];
+  if (orden === 'precio') {
+    viajesOrdenados.sort((a, b) => a.precio - b.precio);
+  } else if (orden === 'hora') {
+    viajesOrdenados.sort((a, b) => {
+      // Asume formato "HH:mm"
+      const [ha, ma] = a.horaSalida.split(':').map(Number);
+      const [hb, mb] = b.horaSalida.split(':').map(Number);
+      return ha !== hb ? ha - hb : ma - mb;
+    });
+  }
+
+  const totalPaginas = Math.ceil(viajesOrdenados.length / viajesPorPagina);
+
+  const viajesPagina = viajesOrdenados.slice(
+    (currentPage - 1) * viajesPorPagina,
+    currentPage * viajesPorPagina
+  );
+
   return (
     <div className="trip-selection-page">
-      <Header
-      currentStep={2} totalSteps={5}
-      />
+      <Header currentStep={2} totalSteps={5} />
 
       <main className="contenido-viajes">
         <DateCarousel />
@@ -36,29 +59,56 @@ const TripSelectionPage = () => {
 
         <div className="filtros">
           <span className="filtrar-label">Filtrar por:</span>
-          <button className="filtro-btn">Mejor precio</button>
-          <button className="filtro-btn">Más reciente</button>
+          <button
+            className={`filtro-btn${orden === 'precio' ? ' activa' : ''}`}
+            onClick={() => { setOrden('precio'); setCurrentPage(1); }}
+          >
+            Mejor precio
+          </button>
+          <button
+            className={`filtro-btn${orden === 'hora' ? ' activa' : ''}`}
+            onClick={() => { setOrden('hora'); setCurrentPage(1); }}
+          >
+            Más reciente
+          </button>
         </div>
 
         <div className="lista-viajes">
-          {viajes.map((viaje) => (
+          {viajesPagina.map((viaje) => (
             <div
               key={viaje.id}
               className={`viaje-item ${selectedTrip === viaje.id ? 'viaje-seleccionado' : ''}`}
               onClick={() => handleSelectTrip(viaje.id)}
             >
-              <TripCard />
+              <TripCard
+                horaSalida={viaje.horaSalida}
+                horaLlegada={viaje.horaLlegada}
+                empresa={viaje.empresa}
+                precio={viaje.precio}
+              />
               {selectedTrip === viaje.id && showDetails && <TripDetails />}
             </div>
           ))}
         </div>
 
+        <div className="paginacion">
+          {Array.from({ length: totalPaginas }, (_, i) => (
+            <button
+              key={i + 1}
+              className={`pagina-btn${currentPage === i + 1 ? ' activa' : ''}`}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+
         <div className="botones-finales">
-          <Button text="Atras" width='150px' />
-          <Button text="Aceptar" width='150px' />
+          <Button text="Atras" width="150px" />
+          <Button text="Aceptar" width="150px" />
         </div>
       </main>
-      
+
       <footer>
         <Footer />
       </footer>
