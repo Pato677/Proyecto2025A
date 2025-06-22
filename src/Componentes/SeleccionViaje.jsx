@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import DateCarousel from './DateCarousel';
 import TripCard from './TripCard';
 import TripDetails from './TripDetails';
+import Modal from './Modal';
 import Footer from './Footer';
 import Header from './Header';
 import './Estilos/Footer.css';
@@ -22,11 +23,12 @@ const TripSelectionPage = () => {
   const fechaSeleccionada = params.get('fecha');
   const pasajeros = params.get('pasajeros');
 
-  const [selectedTrip, setSelectedTrip] = useState(1);
+  const [selectedTrip, setSelectedTrip] = useState(null); // <-- Cambia 1 por null
   const [showDetails, setShowDetails] = useState(true);
   const [viajes, setViajes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [orden, setOrden] = useState(''); // '', 'precio', 'hora'
+    const [showModal, setShowModal] = useState(false);
   const viajesPorPagina = 4;
 
   useEffect(() => {
@@ -157,10 +159,34 @@ const TripSelectionPage = () => {
               navigate(`/Inicio?${params}`);
             }}
           />
-          <Button text="Aceptar" width="150px" />
+          <Button
+            text="Aceptar"
+            width="150px"
+            disabled={!selectedTrip}
+            onClick={() => {
+              if (!selectedTrip) {
+                setShowModal(true);
+                return;
+              }
+              const params = new URLSearchParams({
+                origenCiudad,
+                origenTerminal,
+                destinoCiudad,
+                destinoTerminal,
+                fecha: fechaSeleccionada,
+                pasajeros,
+                viajeId: selectedTrip
+              }).toString();
+              navigate(`/RegistroPasajerosPage?${params}`);
+            }}
+          />
         </div>
       </main>
-
+             <Modal open={showModal} onClose={() => setShowModal(false)}>
+              <div style={{ marginBottom: 16, fontSize: '1.1rem', color: '#3077c6', textAlign: 'center' }}>
+                Por favor, selecciona un viaje antes de continuar.
+              </div>
+            </Modal>
       <footer>
         <Footer />
       </footer>
