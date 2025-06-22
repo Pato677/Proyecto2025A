@@ -56,7 +56,7 @@ const PasajerosMenu = ({ valores, setValores, onConfirmar }) => {
         >
           Conoce
         </button>
-        la política para jóvenes.
+        la política para niños.
       </div>
       {mostrarModal && (
         <div className="pasajeros-modal-overlay">

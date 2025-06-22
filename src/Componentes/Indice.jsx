@@ -20,7 +20,7 @@ const Indice = () => {
           <Link className="indice-link" to="/RegistroCooperativa">🛣️ Registrar Cooperativa</Link>
         </li>
         <li>
-          <Link className="indice-link" to="/TripSelectionPage">🚌 Selección de Viaje</Link>
+          <Link className="indice-link" to="/SeleccionViaje">🚌 Selección de Viaje</Link>
         </li>
         <li>
           <Link className="indice-link" to="/RegistroPasajerosPage">👤 Registro de Pasajeros</Link>

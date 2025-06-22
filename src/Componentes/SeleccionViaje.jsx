@@ -4,7 +4,8 @@ import TripCard from './TripCard';
 import TripDetails from './TripDetails';
 import Footer from './Footer';
 import Header from './Header';
-import './Estilos/TripSelectionPage.css';
+import "./Estilos/Footer.css";
+import "./Estilos/SeleccionViaje.css";
 import Button from './Button';
 
 const TripSelectionPage = () => {
@@ -28,35 +29,39 @@ const TripSelectionPage = () => {
       currentStep={1} totalSteps={5}
       />
 
-      <DateCarousel />
+      <main className="contenido-viajes">
+        <DateCarousel />
 
-      <h2 className="titulo-viaje">Viaje: Quito - Guayaquil</h2>
+        <h2 className="titulo-viaje">Viaje: Quito - Guayaquil</h2>
 
-      <div className="filtros">
-        <span className="filtrar-label">Filtrar por:</span>
-        <button className="filtro-btn">Mejor precio</button>
-        <button className="filtro-btn">Más reciente</button>
-      </div>
+        <div className="filtros">
+          <span className="filtrar-label">Filtrar por:</span>
+          <button className="filtro-btn">Mejor precio</button>
+          <button className="filtro-btn">Más reciente</button>
+        </div>
 
-      <div className="lista-viajes">
-        {viajes.map((viaje) => (
-          <div
-            key={viaje.id}
-            className={`viaje-item ${selectedTrip === viaje.id ? 'viaje-seleccionado' : ''}`}
-            onClick={() => handleSelectTrip(viaje.id)}
-          >
-            <TripCard />
-            {selectedTrip === viaje.id && showDetails && <TripDetails />}
-          </div>
-        ))}
-      </div>
+        <div className="lista-viajes">
+          {viajes.map((viaje) => (
+            <div
+              key={viaje.id}
+              className={`viaje-item ${selectedTrip === viaje.id ? 'viaje-seleccionado' : ''}`}
+              onClick={() => handleSelectTrip(viaje.id)}
+            >
+              <TripCard />
+              {selectedTrip === viaje.id && showDetails && <TripDetails />}
+            </div>
+          ))}
+        </div>
 
-      <div className="botones-finales">
-        <Button text="Atras" width='150px' />
-        <Button text="Aceptar" width='150px' />
-      </div>
-
-      <Footer></Footer>
+        <div className="botones-finales">
+          <Button text="Atras" width='150px' />
+          <Button text="Aceptar" width='150px' />
+        </div>
+      </main>
+      
+      <footer>
+        <Footer />
+      </footer>
     </div>
   );
 };

@@ -8,11 +8,28 @@ body,html {
 .trip-selection-page {
   font-family: 'Inter', sans-serif;
   background: #fff;
-  padding: 16px 24px;
-  width: 95%;
-  height: 100%;
+  padding: 0; /* Quita el padding lateral para que llegue al borde */
+  width: 100vw;            /* Ocupa todo el ancho de la ventana */
+  min-height: 100vh;
+  margin: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
 
-  margin: 0 auto;
+.contenido-viajes {
+  flex: 1 0 auto;
+  width: 100%;
+  /* Si quieres centrar el contenido, usa un div hijo con max-width y margin auto */
+}
+
+.trip-selection-page > .footer,
+.trip-selection-page > footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  width: 100vw;
+  box-sizing: border-box;
+  padding: 0;
 }
 
 .header {
@@ -172,17 +189,5 @@ body,html {
     background: #fff;  /* fondo blanco interior */
     z-index: -1;       /* justo encima del degradado */
   }
-
-
-.footer {
-  border-top: 1px solid #ccc;
-  text-align: center;
-  font-size: 0.85rem;
-  padding-top: 16px;
-  color: #555;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
 
 

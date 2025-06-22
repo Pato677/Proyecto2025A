@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Estilos/Inicio.css";
+import "./Estilos/Footer.css";
 import Header from "./Header";
 import Footer from "./Footer";
 import Login from "./Login";
