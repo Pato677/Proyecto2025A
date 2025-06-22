@@ -10,9 +10,10 @@ function RegisterUnitsPage() {
   const [unidades, setUnidades] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState('add'); // 'add' o 'edit'
+  const [modalMode, setModalMode] = useState('add'); 
   const [unidadEdit, setUnidadEdit] = useState(null);
-  const fileInputRef = useRef(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const unidadesPorPagina = 8;
 
   // Cargar unidades al inicio
   useEffect(() => {
@@ -25,6 +26,12 @@ function RegisterUnitsPage() {
       })
       .catch(() => setUnidades([]));
   }, []);
+
+  // Calcular paginación
+  const totalPaginas = Math.ceil(unidades.length / unidadesPorPagina);
+  const startIdx = (currentPage - 1) * unidadesPorPagina;
+  const endIdx = startIdx + unidadesPorPagina;
+  const unidadesPagina = unidades.slice(startIdx, endIdx);
 
   // Buscar la unidad seleccionada en el array
   const unidadSeleccionada = unidades.find(u => u.id === selectedId);
@@ -48,19 +55,6 @@ function RegisterUnitsPage() {
           setSelectedId(unidadEdit.id);
           setUnidadEdit(null);
         });
-    }
-  };
-
-  // Manejar selección de imagen local
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const localUrl = URL.createObjectURL(file);
-      setUnidades(prev =>
-        prev.map(u =>
-          u.id === selectedId ? { ...u, imagen: localUrl } : u
-        )
-      );
     }
   };
 
@@ -88,7 +82,6 @@ function RegisterUnitsPage() {
     axios.delete(`http://localhost:3000/unidades/${selectedId}`)
       .then(() => {
         setUnidades(prev => prev.filter(u => u.id !== selectedId));
-        // Seleccionar otra unidad si hay más
         setTimeout(() => {
           setSelectedId(prev => {
             const restantes = unidades.filter(u => u.id !== selectedId);
@@ -96,6 +89,14 @@ function RegisterUnitsPage() {
           });
         }, 0);
       });
+  };
+
+  // Cambiar página
+  const handlePageChange = (num) => {
+    setCurrentPage(num);
+    // Seleccionar el primer elemento de la nueva página si existe
+    const nuevaUnidad = unidades[(num - 1) * unidadesPorPagina];
+    if (nuevaUnidad) setSelectedId(nuevaUnidad.id);
   };
 
   return (
@@ -118,8 +119,8 @@ function RegisterUnitsPage() {
                 </tr>
               </thead>
               <tbody>
-                {unidades.length > 0 ? (
-                  unidades.map((unidad) => (
+                {unidadesPagina.length > 0 ? (
+                  unidadesPagina.map((unidad) => (
                     <tr
                       key={unidad.id}
                       className={selectedId === unidad.id ? 'selected-row' : ''}
@@ -141,6 +142,30 @@ function RegisterUnitsPage() {
                 )}
               </tbody>
             </table>
+            {/* Paginación */}
+            <div className="pagination">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                &lt;
+              </button>
+              {Array.from({ length: totalPaginas }, (_, i) => (
+                <button
+                  key={i + 1}
+                  className={currentPage === i + 1 ? 'active' : ''}
+                  onClick={() => handlePageChange(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPaginas}
+              >
+                &gt;
+              </button>
+            </div>
           </div>
           <div className="register-units-image-box">
             <img
@@ -148,7 +173,6 @@ function RegisterUnitsPage() {
               alt="Bus"
               className="register-units-image"
             />
-            {/* Botón para subir imagen eliminado */}
           </div>
         </div>
 

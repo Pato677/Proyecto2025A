@@ -141,6 +141,32 @@
   background-color: #e3f0ff;
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+}
+.pagination button {
+  padding: 4px 10px;
+  border: 1px solid #3077c6;
+  background: #fff;
+  color: #3077c6;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.pagination button.active,
+.pagination button:hover {
+  background: #3077c6;
+  color: #fff;
+}
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @media (max-width: 1100px) {
   .register-units-content {
     flex-direction: column;
