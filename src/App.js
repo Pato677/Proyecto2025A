@@ -7,7 +7,7 @@ import Login from './Componentes/Login';
 import TicketPage from './Componentes/Ticket (12)/TicketPage';
 import LiveLocationPage from './Componentes/LiveLocationPage';
 import DashboardPage from './Componentes/DashboardPage';
-import RegisterUnitsPage from './Componentes/RegisterUnitsPage';
+import RegisterUnitsPage from './Componentes/RegistrarUnidadesPage';
 import RutasPanel from './Componentes/RutasPanel';
 import RegistroCooperativa from './Componentes/RegistroCooperativa';
 import SeleccionViaje from './Componentes/SeleccionViaje';
