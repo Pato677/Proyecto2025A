@@ -17,7 +17,7 @@ const RegistroPasajerosPage = () => {
   return (
     <div className="registro-pasajeros-page">
       <header>
-        <Header currentStep={2} totalSteps={5} />
+        <Header currentStep={3} totalSteps={5} />
       </header>
 
       <main className="contenido-pasajeros">

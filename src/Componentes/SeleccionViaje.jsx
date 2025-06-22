@@ -26,7 +26,7 @@ const TripSelectionPage = () => {
   return (
     <div className="trip-selection-page">
       <Header
-      currentStep={1} totalSteps={5}
+      currentStep={2} totalSteps={5}
       />
 
       <main className="contenido-viajes">
