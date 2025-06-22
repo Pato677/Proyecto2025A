@@ -57,13 +57,184 @@
     { "id": "20", "ciudad": "Tulcán", "terminales": ["Terminal Terrestre de Tulcán"] }
   ],
    "Viajes": [
-    { "id": 1, "horaSalida": "13:30", "horaLlegada": "21:30", "empresa": "Velotax", "precio": 12.25 },
-    { "id": 2, "horaSalida": "14:20", "horaLlegada": "22:30", "empresa": "Panamericana", "precio": 14.83 },
-    { "id": 3, "horaSalida": "15:30", "horaLlegada": "23:30", "empresa": "Flota Imbabura", "precio": 17.85 },    
-    { "id": 4, "horaSalida": "16:00", "horaLlegada": "23:45", "empresa": "Transportes Loja", "precio": 18.50 },
-    { "id": 5, "horaSalida": "12:15", "horaLlegada": "19:20", "empresa": "Santa", "precio": 15.75 },
-    { "id": 6, "horaSalida": "10:00", "horaLlegada": "17:30", "empresa": "Cooperativa Esmeraldas", "precio": 13.40 },
-    { "id": 7, "horaSalida": "18:45", "horaLlegada": "04:30", "empresa": "CIFERAL", "precio": 20.00 },
-    { "id": 8, "horaSalida": "07:00", "horaLlegada": "14:15", "empresa": "Reina del Camino", "precio": 16.90 }
+    {
+      "id": 1,
+      "origenCiudad": "Quito",
+      "origenTerminal": "Quitumbe",
+      "destinoCiudad": "Guayaquil",
+      "destinoTerminal": "Terminal Terrestre de Guayaquil",
+      "horaSalida": "13:30",
+      "horaLlegada": "21:30",
+      "empresa": "Velotax",
+      "precio": 12.25
+    },
+    {
+      "id": 2,
+      "origenCiudad": "Quito",
+      "origenTerminal": "Quitumbe",
+      "destinoCiudad": "Guayaquil",
+      "destinoTerminal": "Terminal Terrestre de Guayaquil",
+      "horaSalida": "14:20",
+      "horaLlegada": "22:30",
+      "empresa": "Panamericana",
+      "precio": 14.83
+    },
+    {
+      "id": 3,
+      "origenCiudad": "Quito",
+      "origenTerminal": "Carcelén",
+      "destinoCiudad": "Guayaquil",
+      "destinoTerminal": "Terminal Terrestre de Guayaquil",
+      "horaSalida": "15:30",
+      "horaLlegada": "23:30",
+      "empresa": "Flota Imbabura",
+      "precio": 17.85
+    },
+    {
+      "id": 4,
+      "origenCiudad": "Quito",
+      "origenTerminal": "Carcelén",
+      "destinoCiudad": "Guayaquil",
+      "destinoTerminal": "Terminal Terrestre de Guayaquil",
+      "horaSalida": "16:00",
+      "horaLlegada": "23:45",
+      "empresa": "Transportes Loja",
+      "precio": 18.50
+    },
+
+    {
+      "id": 5,
+      "origenCiudad": "Quito",
+      "origenTerminal": "Quitumbe",
+      "destinoCiudad": "Cuenca",
+      "destinoTerminal": "Terminal Terrestre de Cuenca",
+      "horaSalida": "12:15",
+      "horaLlegada": "19:20",
+      "empresa": "Santa",
+      "precio": 15.75
+    },
+    {
+      "id": 6,
+      "origenCiudad": "Quito",
+      "origenTerminal": "Carcelén",
+      "destinoCiudad": "Cuenca",
+      "destinoTerminal": "Terminal Terrestre de Cuenca",
+      "horaSalida": "10:00",
+      "horaLlegada": "17:30",
+      "empresa": "Cooperativa Esmeraldas",
+      "precio": 13.40
+    },
+    {
+      "id": 7,
+      "origenCiudad": "Quito",
+      "origenTerminal": "Quitumbe",
+      "destinoCiudad": "Cuenca",
+      "destinoTerminal": "Terminal Terrestre de Cuenca",
+      "horaSalida": "18:45",
+      "horaLlegada": "04:30",
+      "empresa": "CIFERAL",
+      "precio": 20.00
+    },
+    {
+      "id": 8,
+      "origenCiudad": "Quito",
+      "origenTerminal": "Carcelén",
+      "destinoCiudad": "Cuenca",
+      "destinoTerminal": "Terminal Terrestre de Cuenca",
+      "horaSalida": "07:00",
+      "horaLlegada": "14:15",
+      "empresa": "Reina del Camino",
+      "precio": 16.90
+    },
+
+    {
+      "id": 9,
+      "origenCiudad": "Guayaquil",
+      "origenTerminal": "Terminal Terrestre de Guayaquil",
+      "destinoCiudad": "Quito",
+      "destinoTerminal": "Quitumbe",
+      "horaSalida": "09:00",
+      "horaLlegada": "17:00",
+      "empresa": "Cooperativa Andina",
+      "precio": 13.00
+    },
+    {
+      "id": 10,
+      "origenCiudad": "Guayaquil",
+      "origenTerminal": "Terminal Terrestre de Guayaquil",
+      "destinoCiudad": "Quito",
+      "destinoTerminal": "Carcelén",
+      "horaSalida": "11:30",
+      "horaLlegada": "19:30",
+      "empresa": "Panamericana",
+      "precio": 14.50
+    },
+    {
+      "id": 11,
+      "origenCiudad": "Guayaquil",
+      "origenTerminal": "Terminal Terrestre de Guayaquil",
+      "destinoCiudad": "Quito",
+      "destinoTerminal": "Quitumbe",
+      "horaSalida": "13:00",
+      "horaLlegada": "21:00",
+      "empresa": "Flota Imbabura",
+      "precio": 15.00
+    },
+    {
+      "id": 12,
+      "origenCiudad": "Guayaquil",
+      "origenTerminal": "Terminal Terrestre de Guayaquil",
+      "destinoCiudad": "Quito",
+      "destinoTerminal": "Carcelén",
+      "horaSalida": "15:00",
+      "horaLlegada": "23:00",
+      "empresa": "Transportes Loja",
+      "precio": 16.00
+    },
+
+    {
+      "id": 13,
+      "origenCiudad": "Cuenca",
+      "origenTerminal": "Terminal Terrestre de Cuenca",
+      "destinoCiudad": "Quito",
+      "destinoTerminal": "Quitumbe",
+      "horaSalida": "08:00",
+      "horaLlegada": "16:00",
+      "empresa": "Santa",
+      "precio": 15.50
+    },
+    {
+      "id": 14,
+      "origenCiudad": "Cuenca",
+      "origenTerminal": "Terminal Terrestre de Cuenca",
+      "destinoCiudad": "Quito",
+      "destinoTerminal": "Carcelén",
+      "horaSalida": "10:30",
+      "horaLlegada": "18:30",
+      "empresa": "Cooperativa Esmeraldas",
+      "precio": 13.90
+    },
+    {
+      "id": 15,
+      "origenCiudad": "Cuenca",
+      "origenTerminal": "Terminal Terrestre de Cuenca",
+      "destinoCiudad": "Quito",
+      "destinoTerminal": "Quitumbe",
+      "horaSalida": "12:00",
+      "horaLlegada": "20:00",
+      "empresa": "CIFERAL",
+      "precio": 19.00
+    },
+    {
+      "id": 16,
+      "origenCiudad": "Cuenca",
+      "origenTerminal": "Terminal Terrestre de Cuenca",
+      "destinoCiudad": "Quito",
+      "destinoTerminal": "Carcelén",
+      "horaSalida": "14:00",
+      "horaLlegada": "22:00",
+      "empresa": "Reina del Camino",
+      "precio": 17.20
+    }
   ]
 }

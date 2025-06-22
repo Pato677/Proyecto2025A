@@ -13,9 +13,12 @@ import Button from './Button';
 const TripSelectionPage = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const fechaSeleccionada = params.get('fecha'); // formato: 'YYYY-MM-DD'
-
-  const { origen, destino, pasajeros } = location.state || {};
+  const origenCiudad = params.get('origenCiudad');
+  const origenTerminal = params.get('origenTerminal');
+  const destinoCiudad = params.get('destinoCiudad');
+  const destinoTerminal = params.get('destinoTerminal');
+  const fechaSeleccionada = params.get('fecha');
+  const pasajeros = params.get('pasajeros');
 
   const [selectedTrip, setSelectedTrip] = useState(1);
   const [showDetails, setShowDetails] = useState(true);
@@ -25,10 +28,16 @@ const TripSelectionPage = () => {
   const viajesPorPagina = 4;
 
   useEffect(() => {
-    axios.get('http://localhost:3000/Viajes')
+    if (!origenCiudad || !destinoCiudad) return;
+    axios.get(`http://localhost:3000/Viajes`, {
+      params: {
+        origenCiudad,
+        destinoCiudad
+      }
+    })
       .then(res => setViajes(res.data))
       .catch(() => setViajes([]));
-  }, []);
+  }, [origenCiudad, destinoCiudad]);
 
   const handleSelectTrip = (id) => {
     setSelectedTrip(id);
@@ -62,7 +71,9 @@ const TripSelectionPage = () => {
       <main className="contenido-viajes">
         <DateCarousel fechaSeleccionada={fechaSeleccionada} />
 
-        <h2 className="titulo-viaje">Viaje: Quito - Guayaquil</h2>
+        <h2 className="titulo-viaje">
+          Viaje: {origenCiudad} - {destinoCiudad}
+        </h2>
 
         <div className="filtros">
           <span className="filtrar-label">Filtrar por:</span>
