@@ -42,6 +42,10 @@ body, html {
   padding: 10px 15px;
   display: inline-block;
   width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
 .grupo-fecha label {
@@ -50,6 +54,8 @@ body, html {
   margin-bottom: 8px;
   color: #a0a2a3;
   text-align: start;
+  margin-bottom: 8px;
+  font-weight: 500;
 }
 
 .fecha {
@@ -57,7 +63,11 @@ body, html {
   flex-direction: row;
   gap: 10px;
   width: 100%;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 
 .fecha select {
@@ -66,5 +76,27 @@ body, html {
   border: 2px solid #3b90c7;
   outline: none;
   width: 100%;
+}
 
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.campo select {
+  text-align: center;
+}
+
+.grupo.campos-principales {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: nowrap;
+  margin: 10px 0;
+}
+
+.grupo.campos-principales .campo {
+  flex: 1 1 0;
+  min-width: 0;
 }
