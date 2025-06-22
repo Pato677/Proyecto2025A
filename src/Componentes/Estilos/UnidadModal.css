@@ -1,0 +1,62 @@
+.modal-unidad-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-unidad {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  min-width: 320px;
+  max-width: 95vw;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+}
+.modal-unidad-form label {
+  display: block;
+  margin-bottom: 12px;
+}
+.modal-unidad-form input {
+  width: 100%;
+  padding: 6px 8px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+}
+.modal-unidad-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 1rem;
+}
+.modal-unidad-actions button {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 4px;
+  background: #3077c6;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.modal-unidad-actions button[type="button"] {
+  background: #bbb;
+  color: #222;
+}
+.modal-unidad-actions button:hover {
+  background: #225a99;
+}
+.modal-unidad-actions button[type="button"]:hover {
+  background: #999;
+}
+.error {
+  color: #d32f2f;
+  font-size: 0.9em;
+  display: block;
+  margin-top: 2px;
+}

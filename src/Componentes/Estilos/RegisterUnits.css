@@ -137,6 +137,10 @@
   font-weight: bold;
 }
 
+.selected-row {
+  background-color: #e3f0ff;
+}
+
 @media (max-width: 1100px) {
   .register-units-content {
     flex-direction: column;
