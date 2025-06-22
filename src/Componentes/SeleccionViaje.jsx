@@ -9,6 +9,7 @@ import Header from './Header';
 import './Estilos/Footer.css';
 import './Estilos/SeleccionViaje.css';
 import Button from './Button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const TripSelectionPage = () => {
   const location = useLocation();
@@ -110,6 +111,14 @@ const TripSelectionPage = () => {
         </div>
 
         <div className="paginacion">
+          <button
+            className="pagina-btn"
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            aria-label="Página anterior"
+          >
+            <ChevronLeft size={18} />
+          </button>
           {Array.from({ length: totalPaginas }, (_, i) => (
             <button
               key={i + 1}
@@ -119,6 +128,14 @@ const TripSelectionPage = () => {
               {i + 1}
             </button>
           ))}
+          <button
+            className="pagina-btn"
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPaginas || totalPaginas === 0}
+            aria-label="Página siguiente"
+          >
+            <ChevronRight size={18} />
+          </button>
         </div>
 
         <div className="botones-finales">

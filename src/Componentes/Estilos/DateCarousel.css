@@ -1,14 +1,25 @@
 .date-carousel {
   display: flex;
   align-items: center;
-  gap: 8px;
-
+  gap: 0;
+  justify-content: center;
 }
 
 .date-carousel-button {
   background: none;
   border: none;
   cursor: pointer;
+  padding: 6px 4px; /* Reduce el espacio lateral para pegar la flecha al carrusel */
+  display: flex;
+  align-items: center;
+  color: #3077c6;
+  font-size: 1.2rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.date-carousel-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .date-carousel-container {
@@ -16,8 +27,11 @@
   gap: 12px;
   overflow-x: auto;
   scrollbar-width: none;
-  width: 100%;
-  justify-content: center;
+  /* Elimina width: 100% y justify-content: center para que el ancho sea solo el de los botones */
+  width: auto;
+  justify-content: flex-start;
+  padding: 0;
+  margin: 0;
 }
 
 .date-carousel-container::-webkit-scrollbar {

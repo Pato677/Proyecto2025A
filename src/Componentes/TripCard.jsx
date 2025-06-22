@@ -1,6 +1,24 @@
 import React from "react";
 import "./Estilos/TripCard.css";
 
+function calcularDuracion(horaSalida, horaLlegada) {
+  // Formato esperado: "HH:mm"
+  const [hs, ms] = horaSalida.split(":").map(Number);
+  const [hl, ml] = horaLlegada.split(":").map(Number);
+
+  let inicio = hs * 60 + ms;
+  let fin = hl * 60 + ml;
+
+  // Si la llegada es menor que la salida, asume que es al día siguiente
+  if (fin < inicio) fin += 24 * 60;
+
+  const duracionMin = fin - inicio;
+  const horas = Math.floor(duracionMin / 60);
+  const minutos = duracionMin % 60;
+
+  return `${horas}h ${minutos}min`;
+}
+
 const TripCard = ({ horaSalida, horaLlegada, empresa, precio }) => {
   return (
     <div className="tripcard-container">
@@ -23,8 +41,7 @@ const TripCard = ({ horaSalida, horaLlegada, empresa, precio }) => {
         <div className="tripcard-info">
           <span className="company">{empresa}</span>
           <span className="time-info">
-            {/* Si tienes el tiempo de viaje, pásalo como prop, si no, puedes calcularlo aquí */}
-            {/* Ejemplo: */} Tiempo de Viaje: {/* ... */}
+            Tiempo de Viaje: {calcularDuracion(horaSalida, horaLlegada)}
           </span>
         </div>
       </div>

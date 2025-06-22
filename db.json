@@ -235,6 +235,172 @@
       "horaLlegada": "22:00",
       "empresa": "Reina del Camino",
       "precio": 17.20
-    }
+    },
+    {
+    "id": 17,
+    "origenCiudad": "Ambato",
+    "origenTerminal": "Terminal Terrestre de Ambato",
+    "destinoCiudad": "Manta",
+    "destinoTerminal": "Terminal Terrestre de Manta",
+    "horaSalida": "07:03",
+    "horaLlegada": "15:03",
+    "empresa": "San Cristóbal",
+    "precio": 6.64
+  },
+  {
+    "id": 18,
+    "origenCiudad": "Ambato",
+    "origenTerminal": "Terminal Terrestre de Ambato",
+    "destinoCiudad": "Durán",
+    "destinoTerminal": "Terminal Terrestre de Durán",
+    "horaSalida": "15:52",
+    "horaLlegada": "19:52",
+    "empresa": "Expreso Nacional",
+    "precio": 8.36
+  },
+  {
+    "id": 19,
+    "origenCiudad": "Ambato",
+    "origenTerminal": "Terminal Terrestre de Ambato",
+    "destinoCiudad": "Coca",
+    "destinoTerminal": "Terminal Terrestre de Coca",
+    "horaSalida": "06:25",
+    "horaLlegada": "15:25",
+    "empresa": "TransEsmeraldas",
+    "precio": 15.63
+  },
+  {
+    "id": 20,
+    "origenCiudad": "Ambato",
+    "origenTerminal": "Terminal Terrestre de Ambato",
+    "destinoCiudad": "Tulcán",
+    "destinoTerminal": "Terminal Terrestre de Tulcán",
+    "horaSalida": "17:24",
+    "horaLlegada": "23:24",
+    "empresa": "Expreso Nacional",
+    "precio": 8.23
+  },
+  {
+    "id": 21,
+    "origenCiudad": "Ambato",
+    "origenTerminal": "Terminal Terrestre de Ambato",
+    "destinoCiudad": "Loja",
+    "destinoTerminal": "Terminal Terrestre de Loja",
+    "horaSalida": "15:54",
+    "horaLlegada": "01:54",
+    "empresa": "San Cristóbal",
+    "precio": 19.46
+  },
+  {
+    "id": 22,
+    "origenCiudad": "Ibarra",
+    "origenTerminal": "Terminal Terrestre de Ibarra",
+    "destinoCiudad": "Baños",
+    "destinoTerminal": "Terminal Terrestre de Baños",
+    "horaSalida": "13:18",
+    "horaLlegada": "22:18",
+    "empresa": "Expreso Nacional",
+    "precio": 14.11
+  },
+  {
+    "id": 23,
+    "origenCiudad": "Ibarra",
+    "origenTerminal": "Terminal Terrestre de Ibarra",
+    "destinoCiudad": "Portoviejo",
+    "destinoTerminal": "Terminal Terrestre de Portoviejo",
+    "horaSalida": "08:20",
+    "horaLlegada": "17:20",
+    "empresa": "TransEsmeraldas",
+    "precio": 14.83
+  },
+  {
+    "id": 24,
+    "origenCiudad": "Ibarra",
+    "origenTerminal": "Terminal Terrestre de Ibarra",
+    "destinoCiudad": "Puyo",
+    "destinoTerminal": "Terminal Terrestre de Puyo",
+    "horaSalida": "10:57",
+    "horaLlegada": "17:57",
+    "empresa": "San Cristóbal",
+    "precio": 10.75
+  },
+  {
+    "id": 25,
+    "origenCiudad": "Ibarra",
+    "origenTerminal": "Terminal Terrestre de Ibarra",
+    "destinoCiudad": "Macas",
+    "destinoTerminal": "Terminal Terrestre de Macas",
+    "horaSalida": "12:37",
+    "horaLlegada": "19:37",
+    "empresa": "Cooperativa Baños",
+    "precio": 15.2
+  },
+  {
+    "id": 26,
+    "origenCiudad": "Ibarra",
+    "origenTerminal": "Terminal Terrestre de Ibarra",
+    "destinoCiudad": "Quevedo",
+    "destinoTerminal": "Terminal Terrestre de Quevedo",
+    "horaSalida": "08:10",
+    "horaLlegada": "17:10",
+    "empresa": "Viajeros del Sur",
+    "precio": 15.44
+  },
+  {
+    "id": 27,
+    "origenCiudad": "Loja",
+    "origenTerminal": "Terminal Terrestre de Loja",
+    "destinoCiudad": "Manta",
+    "destinoTerminal": "Terminal Terrestre de Manta",
+    "horaSalida": "06:28",
+    "horaLlegada": "12:28",
+    "empresa": "Expreso Nacional",
+    "precio": 11.27
+  },
+  {
+    "id": 28,
+    "origenCiudad": "Loja",
+    "origenTerminal": "Terminal Terrestre de Loja",
+    "destinoCiudad": "Atacames",
+    "destinoTerminal": "Terminal Terrestre de Atacames",
+    "horaSalida": "07:40",
+    "horaLlegada": "13:40",
+    "empresa": "San Cristóbal",
+    "precio": 11.91
+  },
+  {
+    "id": 29,
+    "origenCiudad": "Loja",
+    "origenTerminal": "Terminal Terrestre de Loja",
+    "destinoCiudad": "Santo Domingo",
+    "destinoTerminal": "Terminal Terrestre de Santo Domingo",
+    "horaSalida": "07:56",
+    "horaLlegada": "13:56",
+    "empresa": "Viajeros del Sur",
+    "precio": 10.03
+  },
+  {
+    "id": 30,
+    "origenCiudad": "Loja",
+    "origenTerminal": "Terminal Terrestre de Loja",
+    "destinoCiudad": "Babahoyo",
+    "destinoTerminal": "Terminal Terrestre de Babahoyo",
+    "horaSalida": "09:31",
+    "horaLlegada": "18:31",
+    "empresa": "Viajeros del Sur",
+    "precio": 10.67
+  },
+  {
+    "id": 31,
+    "origenCiudad": "Loja",
+    "origenTerminal": "Terminal Terrestre de Loja",
+    "destinoCiudad": "Machala",
+    "destinoTerminal": "Terminal Terrestre de Machala",
+    "horaSalida": "07:50",
+    "horaLlegada": "15:50",
+    "empresa": "Viajeros del Sur",
+    "precio": 20.62
+  }
+
   ]
 }

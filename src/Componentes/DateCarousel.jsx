@@ -17,10 +17,36 @@ function formatFecha(date) {
   return `${dias[date.getDay()]} ${date.getDate()} de ${meses[date.getMonth()]}`;
 }
 
+function parseLocalDate(fechaStr) {
+  // fechaStr: "2025-06-23"
+  const [year, month, day] = fechaStr.split('-').map(Number);
+  return new Date(year, month - 1, day); // Mes base 0
+}
+
 export default function DateCarousel({ fechaSeleccionada }) {
   // Si no hay fechaSeleccionada, usa hoy
-  const baseDate = fechaSeleccionada ? new Date(fechaSeleccionada) : new Date();
-  baseDate.setHours(0, 0, 0, 0);
+  const initialBaseDate = fechaSeleccionada
+    ? parseLocalDate(fechaSeleccionada)
+    : new Date();
+  initialBaseDate.setHours(0, 0, 0, 0);
+
+  // Imprime en consola la fecha seleccionada y la fecha base
+  console.log("fechaSeleccionada prop:", fechaSeleccionada);
+  console.log("initialBaseDate:", initialBaseDate.toISOString());
+
+  const [baseDate, setBaseDate] = useState(initialBaseDate);
+  const [selected, setSelected] = useState(initialBaseDate);
+
+  // Si cambia la prop, actualiza el seleccionado y baseDate
+  useEffect(() => {
+    if (fechaSeleccionada) {
+      const nueva = parseLocalDate(fechaSeleccionada);
+      nueva.setHours(0, 0, 0, 0);
+      setSelected(nueva);
+      setBaseDate(nueva);
+      console.log("useEffect - nueva fecha seleccionada:", nueva.toISOString());
+    }
+  }, [fechaSeleccionada]);
 
   // Genera 7 fechas: 3 antes, la base, 3 después
   const dates = [];
@@ -32,34 +58,25 @@ export default function DateCarousel({ fechaSeleccionada }) {
     });
   }
 
-  const [selected, setSelected] = useState(baseDate);
-  const containerRef = useRef();
-
-  // Si cambia la prop, actualiza el seleccionado
-  useEffect(() => {
-    if (fechaSeleccionada) {
-      const nueva = new Date(fechaSeleccionada);
-      nueva.setHours(0, 0, 0, 0);
-      setSelected(nueva);
-    }
-  }, [fechaSeleccionada]);
-
   // Fecha de hoy (sin horas)
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
+
+  // Avanzar o retroceder el carrusel
+  const handlePrev = () => setBaseDate(addDays(baseDate, -3));
+  const handleNext = () => setBaseDate(addDays(baseDate, 3));
 
   return (
     <div className="date-carousel">
       <button
         className="date-carousel-button"
-        onClick={() =>
-          containerRef.current.scrollBy({ left: -150, behavior: 'smooth' })
-        }
+        onClick={handlePrev}
+        aria-label="Fechas anteriores"
       >
         <ChevronLeft size={24} />
       </button>
 
-      <div className="date-carousel-container" ref={containerRef}>
+      <div className="date-carousel-container">
         {dates.map((d, i) => {
           const active = d.value.getTime() === selected.getTime();
           const disabled = d.value < hoy;
@@ -78,9 +95,8 @@ export default function DateCarousel({ fechaSeleccionada }) {
 
       <button
         className="date-carousel-button"
-        onClick={() =>
-          containerRef.current.scrollBy({ left: 150, behavior: 'smooth' })
-        }
+        onClick={handleNext}
+        aria-label="Fechas siguientes"
       >
         <ChevronRight size={24} />
       </button>
