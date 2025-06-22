@@ -30,10 +30,6 @@ export default function DateCarousel({ fechaSeleccionada }) {
     : new Date();
   initialBaseDate.setHours(0, 0, 0, 0);
 
-  // Imprime en consola la fecha seleccionada y la fecha base
-  console.log("fechaSeleccionada prop:", fechaSeleccionada);
-  console.log("initialBaseDate:", initialBaseDate.toISOString());
-
   const [baseDate, setBaseDate] = useState(initialBaseDate);
   const [selected, setSelected] = useState(initialBaseDate);
 
@@ -44,7 +40,7 @@ export default function DateCarousel({ fechaSeleccionada }) {
       nueva.setHours(0, 0, 0, 0);
       setSelected(nueva);
       setBaseDate(nueva);
-      console.log("useEffect - nueva fecha seleccionada:", nueva.toISOString());
+      
     }
   }, [fechaSeleccionada]);
 

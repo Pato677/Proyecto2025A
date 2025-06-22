@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Estilos/AutocompleteTerminal.css'; 
+
 const AutocompleteTerminal = ({ value, onChange }) => {
   const [input, setInput] = useState(value || '');
   const [suggestions, setSuggestions] = useState([]);
   const [allTerminales, setAllTerminales] = useState([]);
+  const isUserInput = useRef(false);
 
   useEffect(() => {
     // Carga los terminales desde el backend (json-server)
@@ -13,14 +15,18 @@ const AutocompleteTerminal = ({ value, onChange }) => {
   }, []);
 
   useEffect(() => {
-    setInput(value || '');
+    // Solo actualiza el input si el cambio viene del padre
+    if (!isUserInput.current) {
+      setInput(value || '');
+    }
+    isUserInput.current = false;
   }, [value]);
 
   useEffect(() => {
     if (input.length === 0) {
       setSuggestions([]);
-      // Si el usuario borra el texto, notifica al padre que no hay selección
-      if (onChange) onChange('', '');
+      // Solo notifica al padre si el usuario borró el campo manualmente
+      if (onChange && isUserInput.current) onChange('', '');
       return;
     }
     const lowerInput = input.toLowerCase();
@@ -39,6 +45,11 @@ const AutocompleteTerminal = ({ value, onChange }) => {
     setSuggestions(filtered);
   }, [input, allTerminales, onChange]);
 
+  const handleInputChange = e => {
+    isUserInput.current = true;
+    setInput(e.target.value);
+  };
+
   const handleSelect = (ciudad, terminal) => {
     setInput(`${ciudad} (${terminal})`);
     setSuggestions([]);
@@ -51,7 +62,7 @@ const AutocompleteTerminal = ({ value, onChange }) => {
         type="text"
         placeholder="Escribe ciudad o terminal"
         value={input}
-        onChange={e => setInput(e.target.value)}
+        onChange={handleInputChange}
         onFocus={e => e.target.select()}
         className="autocomplete-input"
         autoComplete="off"

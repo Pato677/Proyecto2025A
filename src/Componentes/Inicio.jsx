@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Estilos/Inicio.css";
 import "./Estilos/Footer.css"
 import Header from "./Header";
@@ -18,6 +18,8 @@ import PasajerosMenu from './PasajerosMenu';
 
 const Inicio = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
     const [mostrarLogin, setMostrarLogin] = useState(false);
     const [mostrarRegistro, setMostrarRegistro] = useState(false);
     const [mostrarRegistroCooperativa, setMostrarRegistroCooperativa] = useState(false);
@@ -29,6 +31,52 @@ const Inicio = () => {
     const [mostrarMenuPasajeros, setMostrarMenuPasajeros] = useState(false);
     const [pasajeros, setPasajeros] = useState([1, 0, 0, 0]); // Adultos, Jóvenes, Niños, Bebés
     const [error, setError] = useState('');
+
+    // Cargar valores desde la URL si existen
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const origenCiudad = params.get('origenCiudad');
+        const origenTerminal = params.get('origenTerminal');
+        const destinoCiudad = params.get('destinoCiudad');
+        const destinoTerminal = params.get('destinoTerminal');
+        const fechaUrl = params.get('fecha');
+        const pasajerosUrl = params.get('pasajeros');
+
+        // Cargar origen
+        let nuevoOrigen = '';
+        if (origenCiudad && origenTerminal) {
+            nuevoOrigen = `${origenCiudad} (${origenTerminal})`;
+        } else if (origenCiudad) {
+            nuevoOrigen = origenCiudad;
+        }
+        if (nuevoOrigen !== origen) {
+            setOrigen(nuevoOrigen);
+            setOrigenSeleccionado({ ciudad: origenCiudad || '', terminal: origenTerminal || '' });
+        }
+
+        // Cargar destino
+        let nuevoDestino = '';
+        if (destinoCiudad && destinoTerminal) {
+            nuevoDestino = `${destinoCiudad} (${destinoTerminal})`;
+        } else if (destinoCiudad) {
+            nuevoDestino = destinoCiudad;
+        }
+        if (nuevoDestino !== destino) {
+            setDestino(nuevoDestino);
+            setDestinoSeleccionado({ ciudad: destinoCiudad || '', terminal: destinoTerminal || '' });
+        }
+
+        // Cargar fecha
+        if (fechaUrl && fechaUrl !== fecha) {
+            setFecha(fechaUrl);
+        }
+
+        // Cargar pasajeros
+        if (pasajerosUrl && !isNaN(Number(pasajerosUrl)) && pasajeros[0] !== Number(pasajerosUrl)) {
+            setPasajeros([Number(pasajerosUrl), 0, 0, 0]);
+        }
+        // eslint-disable-next-line
+    }, [location.search]);
 
     const handleOrigenChange = (ciudad, terminal) => {
         setOrigen(ciudad && terminal ? `${ciudad} (${terminal})` : '');

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import DateCarousel from './DateCarousel';
 import TripCard from './TripCard';
 import TripDetails from './TripDetails';
@@ -12,6 +12,7 @@ import Button from './Button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const TripSelectionPage = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const origenCiudad = params.get('origenCiudad');
@@ -139,7 +140,23 @@ const TripSelectionPage = () => {
         </div>
 
         <div className="botones-finales">
-          <Button text="Atras" width="150px" />
+          <Button
+            text="Atrás"
+            width="150px"
+            onClick={() => {
+              console.log('Volviendo al inicio');
+              // Mantén los parámetros en el URL al volver al inicio
+              const params = new URLSearchParams({
+                origenCiudad,
+                origenTerminal,
+                destinoCiudad,
+                destinoTerminal,
+                fecha: fechaSeleccionada,
+                pasajeros
+              }).toString();
+              navigate(`/Inicio?${params}`);
+            }}
+          />
           <Button text="Aceptar" width="150px" />
         </div>
       </main>
