@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 import DateCarousel from './DateCarousel';
 import TripCard from './TripCard';
 import TripDetails from './TripDetails';
@@ -10,6 +11,12 @@ import './Estilos/SeleccionViaje.css';
 import Button from './Button';
 
 const TripSelectionPage = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const fechaSeleccionada = params.get('fecha'); // formato: 'YYYY-MM-DD'
+
+  const { origen, destino, pasajeros } = location.state || {};
+
   const [selectedTrip, setSelectedTrip] = useState(1);
   const [showDetails, setShowDetails] = useState(true);
   const [viajes, setViajes] = useState([]);
@@ -53,7 +60,7 @@ const TripSelectionPage = () => {
       <Header currentStep={2} totalSteps={5} />
 
       <main className="contenido-viajes">
-        <DateCarousel />
+        <DateCarousel fechaSeleccionada={fechaSeleccionada} />
 
         <h2 className="titulo-viaje">Viaje: Quito - Guayaquil</h2>
 

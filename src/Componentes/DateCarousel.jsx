@@ -1,19 +1,52 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './Estilos/DateCarousel.css';
 
-export default function DateCarousel() {
-  const dates = [
-    { label: 'Sáb. 24 de May.', value: new Date(2025, 4, 24) },
-    { label: 'Dom. 25 de May.', value: new Date(2025, 4, 25) },
-    { label: 'Lun. 26 de May.', value: new Date(2025, 4, 26) },
-    { label: 'Mar. 27 de May.', value: new Date(2025, 4, 27) },
-    { label: 'Mié. 28 de May.', value: new Date(2025, 4, 28) },
-    { label: 'Jue. 29 de May.', value: new Date(2025, 4, 29) },
-    { label: 'Vie. 30 de May.', value: new Date(2025, 4, 30) },
+function addDays(date, days) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+function formatFecha(date) {
+  const dias = ['Dom.', 'Lun.', 'Mar.', 'Mié.', 'Jue.', 'Vie.', 'Sáb.'];
+  const meses = [
+    'Ene.', 'Feb.', 'Mar.', 'Abr.', 'May.', 'Jun.',
+    'Jul.', 'Ago.', 'Sep.', 'Oct.', 'Nov.', 'Dic.'
   ];
-  const [selected, setSelected] = useState(dates[3].value);
+  return `${dias[date.getDay()]} ${date.getDate()} de ${meses[date.getMonth()]}`;
+}
+
+export default function DateCarousel({ fechaSeleccionada }) {
+  // Si no hay fechaSeleccionada, usa hoy
+  const baseDate = fechaSeleccionada ? new Date(fechaSeleccionada) : new Date();
+  baseDate.setHours(0, 0, 0, 0);
+
+  // Genera 7 fechas: 3 antes, la base, 3 después
+  const dates = [];
+  for (let i = -3; i <= 3; i++) {
+    const d = addDays(baseDate, i);
+    dates.push({
+      label: formatFecha(d),
+      value: d
+    });
+  }
+
+  const [selected, setSelected] = useState(baseDate);
   const containerRef = useRef();
+
+  // Si cambia la prop, actualiza el seleccionado
+  useEffect(() => {
+    if (fechaSeleccionada) {
+      const nueva = new Date(fechaSeleccionada);
+      nueva.setHours(0, 0, 0, 0);
+      setSelected(nueva);
+    }
+  }, [fechaSeleccionada]);
+
+  // Fecha de hoy (sin horas)
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
 
   return (
     <div className="date-carousel">
@@ -29,11 +62,11 @@ export default function DateCarousel() {
       <div className="date-carousel-container" ref={containerRef}>
         {dates.map((d, i) => {
           const active = d.value.getTime() === selected.getTime();
-          const disabled = i === 6; // el último (Vie. 30) lo mostramos grayed
+          const disabled = d.value < hoy;
           return (
             <button
               key={d.label}
-              className={`date-item ${active ? 'active' : ''}`}
+              className={`date-item${active ? ' active' : ''}${disabled ? ' disabled' : ''}`}
               onClick={() => !disabled && setSelected(d.value)}
               disabled={disabled}
             >

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Estilos/Indice.css';
-
 const Indice = () => {
   return (
     <div className="indice-container">

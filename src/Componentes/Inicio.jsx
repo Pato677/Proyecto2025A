@@ -42,7 +42,6 @@ const Inicio = () => {
 
     const handleBuscar = () => {
         let mensaje = '';
-        // Obtén la fecha de hoy en formato yyyy-mm-dd
         const hoy = new Date();
         const yyyy = hoy.getFullYear();
         const mm = String(hoy.getMonth() + 1).padStart(2, '0');
@@ -69,15 +68,17 @@ const Inicio = () => {
         setError(mensaje);
         if (mensaje) return;
 
-        // Si pasa todas las validaciones, navega a SeleccionViaje
-        navigate('/SeleccionViaje', {
-            state: {
-                origen: origenSeleccionado,
-                destino: destinoSeleccionado,
-                fecha,
-                pasajeros
-            }
-        });
+        // Construir query params
+        const params = new URLSearchParams({
+            origenCiudad: origenSeleccionado.ciudad,
+            origenTerminal: origenSeleccionado.terminal,
+            destinoCiudad: destinoSeleccionado.ciudad,
+            destinoTerminal: destinoSeleccionado.terminal,
+            fecha,
+            pasajeros: pasajeros.reduce((a, b) => a + b, 0)
+        }).toString();
+
+        navigate(`/SeleccionViaje?${params}`);
     };
 
     return (
