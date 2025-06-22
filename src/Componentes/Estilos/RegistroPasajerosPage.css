@@ -13,11 +13,12 @@ body,html {
   font-family: Arial, sans-serif;
 }
 
-/* Contenido principal */
 .contenido-pasajeros {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  flex: 1 1 auto;         /* Permite crecer y ocupar el espacio disponible */
+  min-height: 0;          /* Evita overflow en flexbox */
+  justify-content: center;/* Centra verticalmente el contenido */
   padding: 40px 20px;
   width: 95%;
   margin: auto;
@@ -42,9 +43,54 @@ body,html {
 /* Contenedor del formulario */
 .contenedor-formulario {
   display: flex;
+  align-items: stretch;
   justify-content: center;
+  gap: 1rem;
   width: 100%;
+  max-width: 7000px;
+  margin: 0 auto 2rem auto;
+  box-sizing: border-box;
+}
 
+/* Estilos para el formulario de pasajero */
+.formulario-pasajero {
+  flex: 1 1 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 2rem ;
+  min-width: 0;
+  max-width: 85%;
+  box-sizing: border-box;
+}
+
+/* Flechas de navegación */
+.flecha-pasajero {
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex: 0 0 auto;
+  padding: 0 0.5rem;
+  color: #3077c6;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  height: auto;
+}
+.flecha-pasajero:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Información del pasajero */
+.info-pasajero {
+  text-align: center;
+  margin-top: 0.5rem;
+  color: #3077c6;
+  font-weight: 500;
 }
 
 /* Botones */
@@ -122,5 +168,35 @@ footer {
   .btn-atras,
   .btn-aceptar {
     width: 80%;
+  }
+}
+
+@media (max-width: 900px) {
+  .contenedor-formulario {
+    max-width: 98vw;
+    gap: 0.5rem;
+  }
+  .formulario-pasajero {
+    padding: 1.2rem 0.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .contenedor-formulario {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    max-width: 100vw;
+  }
+  .formulario-pasajero {
+    padding: 1rem 0.2rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  }
+  .flecha-pasajero {
+    align-self: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.2rem 0;
   }
 }
