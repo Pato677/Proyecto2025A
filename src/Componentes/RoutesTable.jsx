@@ -11,7 +11,7 @@ const RoutesTable = ({ rutas, selectedId, setSelectedId, onViewRoute, onEditRout
         <th>Terminal Destino</th>
         <th>Hora Salida</th>
         <th>Hora Llegada</th>
-        <th>Acciones</th>
+        <th>Paradas</th>
       </tr>
     </thead>
     <tbody>
