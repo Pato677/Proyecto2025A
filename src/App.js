@@ -18,6 +18,7 @@ import RutaForm from './Componentes/RutaForm';
 import Registro from './Componentes/Registro';
 import FormasDePagoPage from './Componentes/FormasDePagoPage';
 import Button from './Componentes/Button';
+import PerfilUsuario from './Componentes/PerfilUsuario';
 
 function App() {
 
@@ -43,6 +44,7 @@ function App() {
           <Route path="/RutasPanel" element={<RutasPanel />} />
           <Route path="/RutaForm" element={<RutaForm />} />
           <Route path="/FormasDePagoPage" element={<FormasDePagoPage />} />
+          <Route path="/PerfilUsuario" element ={<PerfilUsuario />} />
           <Route path="/boton" element={<Button text="Atras" />} />
         </Routes>
       </BrowserRouter>

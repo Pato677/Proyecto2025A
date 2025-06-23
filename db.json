@@ -12,17 +12,6 @@
       "confirmarContrasena": "abc123"
     },
     {
-      "id": "b4e2",
-      "nombres": "Patricio Vladimir",
-      "apellidos": "Sánchez Espinoza",
-      "fechaNacimiento": "",
-      "cedula": "1725917452",
-      "correo": "patriciosanchez677@gmail.com",
-      "telefono": "0982821204",
-      "contrasena": "Pato",
-      "confirmarContrasena": "Pato"
-    },
-    {
       "id": "ceda",
       "nombres": "Jaime",
       "apellidos": "Sanchez",
@@ -53,6 +42,16 @@
       "correo": "patriciosanchezd677@gmail.com",
       "telefono": "0982821204",
       "contrasena": "pato123456"
+    },
+    {
+      "id": "0aad",
+      "nombres": "Patricio Vladimir",
+      "apellidos": "Sánchez Espinoza",
+      "fechaNacimiento": "2025-06-02",
+      "cedula": "1725917452",
+      "correo": "patriciosanchez677@gmail.com",
+      "telefono": "0982821204",
+      "contrasena": "Pato123456"
     }
   ],
   "TerminalesInterprovinciales": [

@@ -1,0 +1,155 @@
+/* Fondo desenfocado */
+.perfil-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+/* Caja del formulario */
+.perfil-box {
+  background: linear-gradient(to bottom right, #a8d0f0, #91c6f4);
+  border-radius: 24px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 900px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  position: relative;
+  text-align: center;
+}
+
+/* Botón volver */
+.perfil-volver {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Título */
+.perfil-box h2 {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 2rem;
+}
+
+/* Formulario grid */
+.perfil-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+/* Campos */
+.perfil-form label {
+  display: block;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 0.3rem;
+}
+
+.perfil-form .campo {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+}
+
+.perfil-form .campo input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  color: white;
+  font-weight: 500;
+}
+
+.perfil-form .campo input::placeholder {
+  color: #ffffff;
+}
+
+/* Íconos */
+.perfil-form .campo svg {
+  margin-right: 0.6rem;
+  color: rgb(65, 70, 111);
+}
+
+/* Botones de acción */
+.botones-perfil {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.btn-actualizar,
+.btn-eliminar {
+  padding: 0.6rem 1.4rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-actualizar {
+  background: white;
+  color: #000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-actualizar:hover {
+  background: #f0f0f0;
+}
+
+.btn-eliminar {
+  background: #e74c3c;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background: #c0392b;
+}
+
+/* Mensaje */
+.mensaje {
+  background: rgba(255, 255, 255, 0.85);
+  color: green;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Mensajes de error */
+.error-message {
+  color: #ffe5e5;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+  display: block;
+}

@@ -53,7 +53,7 @@ const Inicio = () => {
     const [fecha, setFecha] = useState('');
     const [mostrarMenuPasajeros, setMostrarMenuPasajeros] = useState(false);
     const [pasajeros, setPasajeros] = useState([1, 0, 0, 0]);
-    const [error, setError] = useState('');
+    const [error] = useState('');
     const [usuario, setUsuario] = useState(() => {
         const saved = localStorage.getItem('usuario');
         return saved ? JSON.parse(saved) : null;
