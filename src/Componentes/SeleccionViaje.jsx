@@ -16,6 +16,8 @@ const TripSelectionPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
+  
+  // Parámetros de búsqueda
   const origenCiudad = params.get('origenCiudad');
   const origenTerminal = params.get('origenTerminal');
   const destinoCiudad = params.get('destinoCiudad');
@@ -23,46 +25,60 @@ const TripSelectionPage = () => {
   const fechaSeleccionada = params.get('fecha');
   const pasajeros = params.get('pasajeros');
 
-  const [selectedTrip, setSelectedTrip] = useState(null); // <-- Cambia 1 por null
+  // Estados
+  const [selectedTrip, setSelectedTrip] = useState(null);
   const [showDetails, setShowDetails] = useState(true);
   const [viajes, setViajes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [orden, setOrden] = useState(''); // '', 'precio', 'hora'
-    const [showModal, setShowModal] = useState(false);
+  const [orden, setOrden] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [usuario, setUsuario] = useState(null);
   const viajesPorPagina = 4;
 
+  // Cargar usuario
+  useEffect(() => {
+    const usuarioStorage = JSON.parse(localStorage.getItem('usuario'));
+    if (usuarioStorage) {
+      setUsuario(usuarioStorage);
+    }
+  }, []);
+
+  // Cargar viajes
   useEffect(() => {
     if (!origenCiudad || !destinoCiudad) return;
+    
     axios.get(`http://localhost:3000/Viajes`, {
-      params: {
-        origenCiudad,
-        destinoCiudad
-      }
+      params: { origenCiudad, destinoCiudad }
     })
-      .then(res => setViajes(res.data))
-      .catch(() => setViajes([]));
+    .then(res => setViajes(res.data))
+    .catch(() => setViajes([]));
   }, [origenCiudad, destinoCiudad]);
 
+  // Manejadores
   const handleSelectTrip = (id) => {
     setSelectedTrip(id);
     setShowDetails(true);
   };
 
-  // Ordenar los viajes según el filtro seleccionado
+  const handleLogout = () => {
+    localStorage.removeItem('usuario');
+    setUsuario(null);
+  };
+
+  // Ordenar viajes
   let viajesOrdenados = [...viajes];
   if (orden === 'precio') {
     viajesOrdenados.sort((a, b) => a.precio - b.precio);
   } else if (orden === 'hora') {
     viajesOrdenados.sort((a, b) => {
-      // Asume formato "HH:mm"
       const [ha, ma] = a.horaSalida.split(':').map(Number);
       const [hb, mb] = b.horaSalida.split(':').map(Number);
       return ha !== hb ? ha - hb : ma - mb;
     });
   }
 
+  // Paginación
   const totalPaginas = Math.ceil(viajesOrdenados.length / viajesPorPagina);
-
   const viajesPagina = viajesOrdenados.slice(
     (currentPage - 1) * viajesPorPagina,
     currentPage * viajesPorPagina
@@ -70,7 +86,12 @@ const TripSelectionPage = () => {
 
   return (
     <div className="trip-selection-page">
-      <Header currentStep={2} totalSteps={5} />
+      <Header 
+        currentStep={2} 
+        totalSteps={5}
+        usuario={usuario}
+        onLogout={handleLogout}
+      />
 
       <main className="contenido-viajes">
         <DateCarousel fechaSeleccionada={fechaSeleccionada} />
@@ -146,8 +167,6 @@ const TripSelectionPage = () => {
             text="Atrás"
             width="150px"
             onClick={() => {
-              console.log('Volviendo al inicio');
-              // Mantén los parámetros en el URL al volver al inicio
               const params = new URLSearchParams({
                 origenCiudad,
                 origenTerminal,
@@ -182,11 +201,13 @@ const TripSelectionPage = () => {
           />
         </div>
       </main>
-             <Modal open={showModal} onClose={() => setShowModal(false)}>
-              <div style={{ marginBottom: 16, fontSize: '1.1rem', color: '#3077c6', textAlign: 'center' }}>
-                Por favor, selecciona un viaje antes de continuar.
-              </div>
-            </Modal>
+
+      <Modal open={showModal} onClose={() => setShowModal(false)}>
+        <div style={{ marginBottom: 16, fontSize: '1.1rem', color: '#3077c6', textAlign: 'center' }}>
+          Por favor, selecciona un viaje antes de continuar.
+        </div>
+      </Modal>
+
       <footer>
         <Footer />
       </footer>

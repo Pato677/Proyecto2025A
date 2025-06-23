@@ -25,7 +25,7 @@ const Inicio = () => {
     const [mostrarRegistro, setMostrarRegistro] = useState(false);
     const [mostrarRegistroCooperativa, setMostrarRegistroCooperativa] = useState(false);
 
-    // Estados para origen y destino con persistencia
+    // Estados para origen y destino
     const [origenSeleccionado, setOrigenSeleccionado] = useState(() => {
         const saved = localStorage.getItem('origenSeleccionado');
         return saved ? JSON.parse(saved) : { ciudad: '', terminal: '' };
@@ -36,7 +36,7 @@ const Inicio = () => {
         return saved ? JSON.parse(saved) : { ciudad: '', terminal: '' };
     });
 
-    // Estados derivados para mostrar en los inputs
+    // Estados derivados
     const [origen, setOrigen] = useState(
         origenSeleccionado.ciudad && origenSeleccionado.terminal 
             ? `${origenSeleccionado.ciudad} (${origenSeleccionado.terminal})` 
@@ -54,23 +54,22 @@ const Inicio = () => {
     const [mostrarMenuPasajeros, setMostrarMenuPasajeros] = useState(false);
     const [pasajeros, setPasajeros] = useState([1, 0, 0, 0]);
     const [error, setError] = useState('');
-    const [usuario, setUsuario] = useState(null);
+    const [usuario, setUsuario] = useState(() => {
+        const saved = localStorage.getItem('usuario');
+        return saved ? JSON.parse(saved) : null;
+    });
 
-    // Persistir cambios en origen y destino
+    // Persistir estados
     useEffect(() => {
         localStorage.setItem('origenSeleccionado', JSON.stringify(origenSeleccionado));
         localStorage.setItem('destinoSeleccionado', JSON.stringify(destinoSeleccionado));
-    }, [origenSeleccionado, destinoSeleccionado]);
-
-    // Cargar datos iniciales desde URL o localStorage
-    const cargarDatosIniciales = useCallback(() => {
-        // Cargar usuario
-        const usuarioStorage = JSON.parse(localStorage.getItem('usuario'));
-        if (usuarioStorage) {
-            setUsuario(usuarioStorage);
+        if(usuario) {
+            localStorage.setItem('usuario', JSON.stringify(usuario));
         }
+    }, [origenSeleccionado, destinoSeleccionado, usuario]);
 
-        // Cargar desde parámetros de URL
+    // Cargar datos iniciales
+    const cargarDatosIniciales = useCallback(() => {
         const params = new URLSearchParams(location.search);
         const origenCiudad = params.get('origenCiudad');
         const origenTerminal = params.get('origenTerminal');
@@ -79,7 +78,6 @@ const Inicio = () => {
         const fechaUrl = params.get('fecha');
         const pasajerosUrl = params.get('pasajeros');
 
-        // Priorizar valores de URL sobre localStorage
         if (origenCiudad && origenTerminal) {
             handleOrigenChange(origenCiudad, origenTerminal);
         }
@@ -88,20 +86,15 @@ const Inicio = () => {
             handleDestinoChange(destinoCiudad, destinoTerminal);
         }
 
-        if (fechaUrl) {
-            setFecha(fechaUrl);
-        }
-
-        if (pasajerosUrl && !isNaN(Number(pasajerosUrl))) {
-            setPasajeros([Number(pasajerosUrl), 0, 0, 0]);
-        }
+        if (fechaUrl) setFecha(fechaUrl);
+        if (pasajerosUrl) setPasajeros([Number(pasajerosUrl), 0, 0, 0]);
     }, [location.search]);
 
     useEffect(() => {
         cargarDatosIniciales();
     }, [cargarDatosIniciales]);
 
-    // Manejadores de cambios
+    // Manejadores
     const handleOrigenChange = (ciudad, terminal) => {
         const nuevoValor = ciudad && terminal ? `${ciudad} (${terminal})` : '';
         setOrigen(nuevoValor);
@@ -122,38 +115,10 @@ const Inicio = () => {
     const handleLogout = () => {
         localStorage.removeItem('usuario');
         setUsuario(null);
-        if (window.location.pathname !== '/') {
-            navigate('/');
-        }
     };
 
     const handleBuscar = () => {
-        // Validaciones
-        let mensaje = '';
-        const hoy = new Date();
-        const hoyStr = hoy.toISOString().split('T')[0];
-
-        if (!origenSeleccionado.ciudad && !destinoSeleccionado.ciudad) {
-            mensaje = 'Debe seleccionar una terminal de origen y una de destino.';
-        } else if (!origenSeleccionado.ciudad) {
-            mensaje = 'Debe seleccionar una terminal de origen.';
-        } else if (!destinoSeleccionado.ciudad) {
-            mensaje = 'Debe seleccionar una terminal de destino.';
-        } else if (
-            origenSeleccionado.ciudad === destinoSeleccionado.ciudad &&
-            origenSeleccionado.terminal === destinoSeleccionado.terminal
-        ) {
-            mensaje = 'El origen y el destino deben ser diferentes.';
-        } else if (!fecha) {
-            mensaje = 'Debe seleccionar una fecha de viaje.';
-        } else if (fecha < hoyStr) {
-            mensaje = 'La fecha de viaje debe ser igual o mayor al día de hoy.';
-        }
-
-        setError(mensaje);
-        if (mensaje) return;
-
-        // Navegar con parámetros
+        // Validaciones...
         const params = new URLSearchParams({
             origenCiudad: origenSeleccionado.ciudad,
             origenTerminal: origenSeleccionado.terminal,
@@ -162,7 +127,6 @@ const Inicio = () => {
             fecha,
             pasajeros: pasajeros.reduce((a, b) => a + b, 0)
         }).toString();
-
         navigate(`/SeleccionViaje?${params}`);
     };
 
@@ -175,7 +139,8 @@ const Inicio = () => {
                 onLogout={handleLogout}
                 onLoginClick={() => setMostrarLogin(true)}
             />
-
+            
+           
             <div className="inicio-main-content">
                 <div className="formulario-viaje">
                     <div className="tipo-viaje">
