@@ -1,0 +1,95 @@
+.ruta-modal-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ruta-modal-content {
+  background: #fff;
+  border-radius: 14px;
+  padding: 2rem 2.5rem 1.5rem 2.5rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  min-width: 340px;
+  max-width: 95vw;
+  position: relative;
+  animation: modalIn 0.2s;
+}
+
+@keyframes modalIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.ruta-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.ruta-modal-close:hover {
+  color: #0ea5e9;
+}
+
+.ruta-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.ruta-modal-form input,
+.ruta-modal-form select {
+  padding: 0.5rem 0.8rem;
+  border: 1.5px solid #d1d5db;
+  border-radius: 7px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+.ruta-modal-form input:focus,
+.ruta-modal-form select:focus {
+  border: 1.5px solid #0ea5e9;
+}
+
+.ruta-modal-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.ruta-modal-save {
+  background: #0ea5e9;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 0.5rem 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.ruta-modal-save:hover {
+  background: #0369a1;
+}
+
+.ruta-modal-cancel {
+  background: #e5e7eb;
+  color: #222;
+  border: none;
+  border-radius: 7px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.ruta-modal-cancel:hover {
+  background: #cbd5e1;
+}

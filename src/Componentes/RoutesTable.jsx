@@ -1,38 +1,43 @@
 import React from 'react';
-import './Estilos/Admin.css'; 
 
-const sampleData = [
-  { ruta: '15A25B1239', origen: 'UIO(Quitumbe)', destino: 'GYE(Sur)', salida: '22:00', llegada: '6:00', paradas: 6 }
-];
-const emptyRows = Array(4).fill({ ruta: '', origen: '', destino: '', salida: '', llegada: '', paradas: '' });
-const RoutesTable = ({ onParadasClick }) => (
+const RoutesTable = ({ rutas, selectedId, setSelectedId }) => (
   <table className="rutas-table">
     <thead>
       <tr>
-        <th>Nro de Ruta</th>
-        <th>Origen</th>
-        <th>Destino</th>
-        <th>Hora de salida</th>
-        <th>Hora estimada de llegada</th>
+        <th>Número de Ruta</th>
+        <th>Ciudad Origen</th>
+        <th>Terminal Origen</th>
+        <th>Ciudad Destino</th>
+        <th>Terminal Destino</th>
+        <th>Hora Salida</th>
+        <th>Hora Llegada</th>
         <th>Paradas</th>
       </tr>
     </thead>
     <tbody>
-      {[...sampleData, ...emptyRows].map((row, i) => (
-        <tr key={i}>
-          <td>{row.ruta}</td>
-          <td>{row.origen}</td>
-          <td>{row.destino}</td>
-          <td>{row.salida}</td>
-          <td>{row.llegada}</td>
-          <td
-            className={`paradas-cell${row.paradas ? '' : ' empty'}`}
-            onClick={() => row.paradas && onParadasClick()}
+      {rutas.length > 0 ? (
+        rutas.map((ruta) => (
+          <tr
+            key={ruta.id}
+            className={selectedId === ruta.id ? 'selected-row' : ''}
+            onClick={() => setSelectedId(ruta.id)}
+            style={{ cursor: 'pointer' }}
           >
-            {row.paradas}
-            </td>
+            <td>{ruta.numeroRuta}</td>
+            <td>{ruta.ciudadOrigen}</td>
+            <td>{ruta.terminalOrigen}</td>
+            <td>{ruta.ciudadDestino}</td>
+            <td>{ruta.terminalDestino}</td>
+            <td>{ruta.horaSalida}</td>
+            <td>{ruta.horaLlegada}</td>
+            <td>{ruta.paradas}</td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan={8} style={{ textAlign: 'center' }}>No hay rutas registradas</td>
         </tr>
-      ))}
+      )}
     </tbody>
   </table>
 );
