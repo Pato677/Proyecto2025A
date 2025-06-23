@@ -4,20 +4,21 @@ import RoutesTable from './RoutesTable';
 import ActionButtons from './ActionButtons';
 import ParadasModal from './ParadasModal';
 import RutaModal from './RutasModal';
+import RutaForm from './RutaForm';
 import Footer from './Footer';
 import './Estilos/RutasPanel.css';
 import './Estilos/Footer.css';
 import axios from 'axios';
 
 const rutasPorPagina = 4;
-const RutasPanel = () => {
-  const [rutas, setRutas] = useState([]);
+const RutasPanel = () => {  const [rutas, setRutas] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [rutaEdit, setRutaEdit] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [showParadas, setShowParadas] = useState(false);
+  const [showRutaForm, setShowRutaForm] = useState(false);
   const [terminales, setTerminales] = useState([]);
 
   // Cargar rutas al inicio
@@ -59,13 +60,14 @@ const RutasPanel = () => {
     }
   };
 
-    // Abrir modal para agregar
+  // Abrir modal para agregar
   const handleAgregar = () => {
     setModalMode('add');
     setRutaEdit(null);
     setShowModal(true);
   };
-    // Abrir modal para editar y cargar datos
+
+  // Abrir modal para editar y cargar datos
   const handleActualizar = () => {
     if (!selectedId) return;
     const ruta = rutas.find(r => r.id === selectedId);
@@ -73,6 +75,16 @@ const RutasPanel = () => {
     setRutaEdit(ruta);
     setModalMode('edit');
     setShowModal(true);
+  };
+  // Funciones para los botones de la tabla
+  const handleViewRoute = (ruta) => {
+    setShowParadas(true);
+  };
+
+  const handleEditRoute = (ruta) => {
+    setRutaEdit(ruta);
+    setModalMode('edit');
+    setShowRutaForm(true);
   };
 
     // Eliminar ruta seleccionada
@@ -100,11 +112,12 @@ const RutasPanel = () => {
         <section className="rutas-panel">
           <h1 className="rutas-title">Rutas</h1>
           <div className="rutas-content">
-            <div className="rutas-table-wrapper">
-              <RoutesTable
+            <div className="rutas-table-wrapper">              <RoutesTable
                 rutas={rutasPagina}
                 selectedId={selectedId}
                 setSelectedId={setSelectedId}
+                onViewRoute={handleViewRoute}
+                onEditRoute={handleEditRoute}
               />
               {/* Paginación */}
               <div className="pagination">
@@ -125,9 +138,31 @@ const RutasPanel = () => {
               onAdd={handleAgregar}
               onDelete={handleEliminar}
               onUpdate={handleActualizar}
-            />
-          </div>
+            />          </div>
           {showParadas && <ParadasModal onClose={() => setShowParadas(false)} />}
+          {showRutaForm && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <button 
+                  className="modal-close-button" 
+                  onClick={() => setShowRutaForm(false)}
+                  style={{
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '24px',
+                    cursor: 'pointer',
+                    zIndex: 1001
+                  }}
+                >
+                  ×
+                </button>
+                <RutaForm />
+              </div>
+            </div>
+          )}
         </section>
       </main>
       <footer>

@@ -215,7 +215,7 @@
 
 /* Mejorar el botón de Paradas (ya lo tienes, pero puedes reforzar) */
 .rutas-table button {
-  background: #2176ab;
+  background: #ffffff;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -224,6 +224,31 @@
   cursor: pointer;
   transition: background 0.2s;
 }
-.rutas-table button:hover {
-  background: #14507b;
+
+/* Modal para RutaForm */
+.modal-content {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1001;
+  color: #666;
+}
+
+.modal-close-button:hover {
+  color: #000;
 }
