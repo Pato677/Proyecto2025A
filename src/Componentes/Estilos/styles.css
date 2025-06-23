@@ -434,3 +434,46 @@ body ,html{
   left: 0;
   bottom: 0;
 }
+
+
+/* Estilos para el dropdown del usuario */
+.user-dropdown {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 4px;
+}
+
+.dropdown-content div {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content div:hover {
+    background-color: #f1f1f1;
+}
+
+.user-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.ticket-login {
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.user-dropdown:hover .ticket-login {
+    background-color: #f0f0f0;
+}

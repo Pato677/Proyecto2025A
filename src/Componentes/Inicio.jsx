@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./Estilos/Inicio.css";
 import "./Estilos/Footer.css"
@@ -29,11 +29,16 @@ const Inicio = () => {
     const [destinoSeleccionado, setDestinoSeleccionado] = useState({ ciudad: '', terminal: '' });
     const [fecha, setFecha] = useState('');
     const [mostrarMenuPasajeros, setMostrarMenuPasajeros] = useState(false);
-    const [pasajeros, setPasajeros] = useState([1, 0, 0, 0]); // Adultos, Jóvenes, Niños, Bebés
+    const [pasajeros, setPasajeros] = useState([1, 0, 0, 0]);
     const [error, setError] = useState('');
+    const [usuario, setUsuario] = useState(null);
 
-    // Cargar valores desde la URL si existen
-    useEffect(() => {
+    const cargarDatosIniciales = useCallback(() => {
+        const usuarioStorage = JSON.parse(localStorage.getItem('usuario'));
+        if (usuarioStorage) {
+            setUsuario(usuarioStorage);
+        }
+
         const params = new URLSearchParams(location.search);
         const origenCiudad = params.get('origenCiudad');
         const origenTerminal = params.get('origenTerminal');
@@ -42,7 +47,6 @@ const Inicio = () => {
         const fechaUrl = params.get('fecha');
         const pasajerosUrl = params.get('pasajeros');
 
-        // Cargar origen
         let nuevoOrigen = '';
         if (origenCiudad && origenTerminal) {
             nuevoOrigen = `${origenCiudad} (${origenTerminal})`;
@@ -54,7 +58,6 @@ const Inicio = () => {
             setOrigenSeleccionado({ ciudad: origenCiudad || '', terminal: origenTerminal || '' });
         }
 
-        // Cargar destino
         let nuevoDestino = '';
         if (destinoCiudad && destinoTerminal) {
             nuevoDestino = `${destinoCiudad} (${destinoTerminal})`;
@@ -66,17 +69,34 @@ const Inicio = () => {
             setDestinoSeleccionado({ ciudad: destinoCiudad || '', terminal: destinoTerminal || '' });
         }
 
-        // Cargar fecha
         if (fechaUrl && fechaUrl !== fecha) {
             setFecha(fechaUrl);
         }
 
-        // Cargar pasajeros
-        if (pasajerosUrl && !isNaN(Number(pasajerosUrl)) && pasajeros[0] !== Number(pasajerosUrl)) {
-            setPasajeros([Number(pasajerosUrl), 0, 0, 0]);
+        if (pasajerosUrl && !isNaN(Number(pasajerosUrl))) {
+            const totalPasajeros = Number(pasajerosUrl);
+            if (pasajeros[0] !== totalPasajeros) {
+                setPasajeros([totalPasajeros, 0, 0, 0]);
+            }
         }
-        // eslint-disable-next-line
-    }, [location.search]);
+    }, [location.search, origen, destino, fecha, pasajeros]);
+
+    useEffect(() => {
+        cargarDatosIniciales();
+    }, [cargarDatosIniciales]);
+
+    const handleLoginExitoso = (usuarioData) => {
+        setUsuario(usuarioData);
+        setMostrarLogin(false);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('usuario');
+        setUsuario(null);
+        if (window.location.pathname !== '/') {
+            navigate('/');
+        }
+    };
 
     const handleOrigenChange = (ciudad, terminal) => {
         setOrigen(ciudad && terminal ? `${ciudad} (${terminal})` : '');
@@ -116,7 +136,6 @@ const Inicio = () => {
         setError(mensaje);
         if (mensaje) return;
 
-        // Construir query params
         const params = new URLSearchParams({
             origenCiudad: origenSeleccionado.ciudad,
             origenTerminal: origenSeleccionado.terminal,
@@ -136,7 +155,10 @@ const Inicio = () => {
                 showLanguage={true}
                 showUser={true}
                 onLoginClick={() => setMostrarLogin(true)}
-                currentStep={1} totalSteps={5}
+                currentStep={1} 
+                totalSteps={5}
+                usuario={usuario}
+                onLogout={handleLogout}
             />
 
             <div className="inicio-main-content">
@@ -218,13 +240,8 @@ const Inicio = () => {
                         <h1>USD 8</h1>
                         <button
                             className="btn-comprar"
-                            onClick={() => {
-                                //Aqui se debería redirigir a la página de ofertas
-                                handleBuscar();
-                                    }
-                                }
+                            onClick={handleBuscar}
                         >
-                        
                             Compra ya
                         </button>
                     </div>
@@ -238,6 +255,7 @@ const Inicio = () => {
                         setMostrarLogin(false);
                         setMostrarRegistro(true);
                     }}
+                    onLoginExitoso={handleLoginExitoso}
                 />
             )}
 
