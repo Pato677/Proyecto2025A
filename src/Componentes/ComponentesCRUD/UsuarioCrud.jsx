@@ -69,6 +69,17 @@ const UsuarioCrud = {
     }
   },
 
+    // En UsuarioCrud.js
+    verificarCredenciales: async (correo, contrasena) => {
+        try {
+            const response = await axios.get(`${API_URL}?correo=${correo}&contrasena=${contrasena}`);
+            return response.data.length > 0 ? response.data[0] : null;
+        } catch (error) {
+            console.error("Error al verificar credenciales:", error);
+            throw error;
+        }
+    },
+
   // Verificar si una cédula ya existe
   verificarCedulaExistente: async (cedula) => {
     try {
@@ -79,6 +90,7 @@ const UsuarioCrud = {
       throw error;
     }
   }
+  
 };
 
 export default UsuarioCrud;
