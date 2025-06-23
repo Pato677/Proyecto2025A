@@ -32,6 +32,27 @@
       "telefono": "0847564854",
       "contrasena": "pa2302",
       "confirmarContrasena": "pa2302"
+    },
+    {
+      "id": "882b",
+      "nombres": "Jaimeae",
+      "apellidos": "Sanchezaa",
+      "fechaNacimiento": "2000-06-02",
+      "cedula": "1708975625",
+      "correo": "pa@gmail.com",
+      "telefono": "0847564854",
+      "contrasena": "123456",
+      "confirmarContrasena": "123456"
+    },
+    {
+      "id": "60b3",
+      "nombres": "Patricio Vladimir",
+      "apellidos": "Sánchez Espinoza",
+      "fechaNacimiento": "2025-06-12",
+      "cedula": "1725917451",
+      "correo": "patriciosanchezd677@gmail.com",
+      "telefono": "0982821204",
+      "contrasena": "pato123456"
     }
   ],
   "TerminalesInterprovinciales": [

@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import UsuarioCrud from "./ComponentesCRUD/UsuarioCrud";
 import { FaUser, FaCalendarAlt, FaIdCard, FaEnvelope, FaPhoneAlt, FaLock } from "react-icons/fa";
 
 const Registro = ({ cerrar, abrirCooperativa }) => {
@@ -14,32 +14,77 @@ const Registro = ({ cerrar, abrirCooperativa }) => {
     confirmarContrasena: "",
   });
 
+  const [errores, setErrores] = React.useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setusuariosState((prev) => ({
       ...prev,
       [name]: value,
     }));
+    
+    // Limpiar errores cuando se edita
+    if (errores[name]) {
+      setErrores(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
- const handleSubmit = (e) => {
-  e.preventDefault();
-  if (usuariosState.contrasena !== usuariosState.confirmarContrasena) {
-    alert("Las contraseñas no coinciden");
-    return;
-  }
+  const validarFormulario = () => {
+    const nuevosErrores = {};
+    
+    if (!usuariosState.nombres.trim()) nuevosErrores.nombres = "Nombres son requeridos";
+    if (!usuariosState.apellidos.trim()) nuevosErrores.apellidos = "Apellidos son requeridos";
+    if (!usuariosState.fechaNacimiento) nuevosErrores.fechaNacimiento = "Fecha de nacimiento es requerida";
+    if (!usuariosState.cedula.trim()) nuevosErrores.cedula = "Cédula es requerida";
+    if (!usuariosState.correo.trim()) nuevosErrores.correo = "Correo es requerido";
+    else if (!/^\S+@\S+\.\S+$/.test(usuariosState.correo)) nuevosErrores.correo = "Correo no válido";
+    if (!usuariosState.telefono.trim()) nuevosErrores.telefono = "Teléfono es requerido";
+    if (!usuariosState.contrasena) nuevosErrores.contrasena = "Contraseña es requerida";
+    else if (usuariosState.contrasena.length < 6) nuevosErrores.contrasena = "Contraseña debe tener al menos 6 caracteres";
+    if (usuariosState.contrasena !== usuariosState.confirmarContrasena) nuevosErrores.confirmarContrasena = "Las contraseñas no coinciden";
+    
+    setErrores(nuevosErrores);
+    return Object.keys(nuevosErrores).length === 0;
+  };
 
-  axios.post("http://localhost:3000/UsuarioPasajero", usuariosState)
-    .then((response) => {
-      console.log("Registro exitoso:", response.data);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validarFormulario()) return;
+    
+    try {
+      // Verificar si el correo ya existe
+      const correoExiste = await UsuarioCrud.verificarCorreoExistente(usuariosState.correo);
+      if (correoExiste) {
+        setErrores(prev => ({ ...prev, correo: "Este correo ya está registrado" }));
+        return;
+      }
+      
+      // Verificar si la cédula ya existe
+      const cedulaExiste = await UsuarioCrud.verificarCedulaExistente(usuariosState.cedula);
+      if (cedulaExiste) {
+        setErrores(prev => ({ ...prev, cedula: "Esta cédula ya está registrada" }));
+        return;
+      }
+      
+      // Crear el usuario
+      await UsuarioCrud.crearUsuario({
+        nombres: usuariosState.nombres,
+        apellidos: usuariosState.apellidos,
+        fechaNacimiento: usuariosState.fechaNacimiento,
+        cedula: usuariosState.cedula,
+        correo: usuariosState.correo,
+        telefono: usuariosState.telefono,
+        contrasena: usuariosState.contrasena
+      });
+      
       alert("Registro exitoso");
       cerrar();
-    })
-    .catch((error) => {
+    } catch (error) {
       console.error("Error al registrar:", error);
       alert("Error al registrar. Intente nuevamente.");
-    });
-};
+    }
+  };
 
   return (
     <div className="registro-overlay" onClick={cerrar}>
@@ -60,6 +105,7 @@ const Registro = ({ cerrar, abrirCooperativa }) => {
                 onChange={handleChange}
               />
             </div>
+            {errores.nombres && <span className="error-message">{errores.nombres}</span>}
           </div>
 
           <div>
@@ -74,6 +120,7 @@ const Registro = ({ cerrar, abrirCooperativa }) => {
                 onChange={handleChange}
               />
             </div>
+            {errores.apellidos && <span className="error-message">{errores.apellidos}</span>}
           </div>
 
           <div>
@@ -87,6 +134,7 @@ const Registro = ({ cerrar, abrirCooperativa }) => {
                 onChange={handleChange}
               />
             </div>
+            {errores.fechaNacimiento && <span className="error-message">{errores.fechaNacimiento}</span>}
           </div>
 
           <div>
@@ -101,6 +149,7 @@ const Registro = ({ cerrar, abrirCooperativa }) => {
                 onChange={handleChange}
               />
             </div>
+            {errores.cedula && <span className="error-message">{errores.cedula}</span>}
           </div>
 
           <div>
@@ -115,6 +164,7 @@ const Registro = ({ cerrar, abrirCooperativa }) => {
                 onChange={handleChange}
               />
             </div>
+            {errores.correo && <span className="error-message">{errores.correo}</span>}
           </div>
 
           <div>
@@ -129,6 +179,7 @@ const Registro = ({ cerrar, abrirCooperativa }) => {
                 onChange={handleChange}
               />
             </div>
+            {errores.telefono && <span className="error-message">{errores.telefono}</span>}
           </div>
 
           <div>
@@ -143,6 +194,7 @@ const Registro = ({ cerrar, abrirCooperativa }) => {
                 onChange={handleChange}
               />
             </div>
+            {errores.contrasena && <span className="error-message">{errores.contrasena}</span>}
           </div>
 
           <div>
@@ -157,6 +209,7 @@ const Registro = ({ cerrar, abrirCooperativa }) => {
                 onChange={handleChange}
               />
             </div>
+            {errores.confirmarContrasena && <span className="error-message">{errores.confirmarContrasena}</span>}
           </div>
 
           <button type="submit" className="btn-registrarse">REGISTRARSE</button>
