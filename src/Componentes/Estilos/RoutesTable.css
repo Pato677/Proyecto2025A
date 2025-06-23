@@ -1,0 +1,55 @@
+/* Estilos para la tabla de rutas */
+.rutas-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.selected-row {
+  background-color: #f0f8ff;
+}
+
+/* Contenedor de botones de acciones */
+.actions-container {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+/* Botones de acciones */
+.action-button {
+  background: white;
+  border: 1px solid #dee2e6;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-button:hover {
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
+}
+
+/* Botón ver ruta */
+.view-button {
+  color: #007bff;
+}
+
+.view-button:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+/* Botón editar ruta */
+.edit-button {
+  color: #ffc107;
+}
+
+.edit-button:hover {
+  background-color: rgba(255, 193, 7, 0.1);
+}
