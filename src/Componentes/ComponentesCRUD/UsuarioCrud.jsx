@@ -24,19 +24,7 @@ const UsuarioCrud = {
       throw error;
     }
   },
-
-  // Obtener un usuario por ID
-  obtenerUsuarioPorId: async (id) => {
-    try {
-      const response = await axios.get(`${API_URL}/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error al obtener usuario:", error);
-      throw error;
-    }
-  },
-
-  // Actualizar un usuario
+    // Actualizar un usuario
   actualizarUsuario: async (id, usuarioData) => {
     try {
       const response = await axios.put(`${API_URL}/${id}`, usuarioData);
@@ -57,6 +45,19 @@ const UsuarioCrud = {
       throw error;
     }
   },
+
+  // Obtener un usuario por ID
+  obtenerUsuarioPorId: async (id) => {
+    try {
+      const response = await axios.get(`${API_URL}/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener usuario:", error);
+      throw error;
+    }
+  },
+
+
 
   // Verificar si un correo ya existe
   verificarCorreoExistente: async (correo) => {
