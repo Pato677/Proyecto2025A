@@ -1,25 +1,97 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import HeaderAdmin from './HeaderAdmin';
 import RoutesTable from './RoutesTable';
 import ActionButtons from './ActionButtons';
 import ParadasModal from './ParadasModal';
-import RutaForm from './RutaForm';
+import RutaModal from './RutasModal';
 import Footer from './Footer';
 import './Estilos/RutasPanel.css';
 import './Estilos/Footer.css';
+import axios from 'axios';
 
+const rutasPorPagina = 4;
 const RutasPanel = () => {
+  const [rutas, setRutas] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [isAddingRoute, setIsAddingRoute] = useState(false);
+  const [modalMode, setModalMode] = useState('add');
+  const [rutaEdit, setRutaEdit] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showParadas, setShowParadas] = useState(false);
+  const [terminales, setTerminales] = useState([]);
 
-  const abrirParadas = () => setShowModal(true);
-  const cerrarParadas = () => setShowModal(false);
-  const abrirFormRuta = () => setIsAddingRoute(true);
-  const cerrarFormRuta = () => setIsAddingRoute(false);
+  // Cargar rutas al inicio
+  useEffect(() => {
+    axios.get('http://localhost:3000/Rutas')
+      .then(res => setRutas(res.data))
+      .catch(() => setRutas([]));
+    axios.get('http://localhost:3000/TerminalesInterprovinciales')
+      .then(res => setTerminales(res.data))
+      .catch(() => setTerminales([]));
+  }, []);
 
-  if (isAddingRoute) {
-    return <RutaForm onBack={cerrarFormRuta} />;
-  }
+  const totalPaginas = Math.ceil(rutas.length / rutasPorPagina);
+  const startIdx = (currentPage - 1) * rutasPorPagina;
+  const endIdx = startIdx + rutasPorPagina;
+  const rutasPagina = rutas.slice(startIdx, endIdx);
+
+    // Guardar nueva o editar ruta
+  const handleSaveRuta = (nuevaRuta) => {
+    if (modalMode === 'add') {
+      const newId = rutas.length > 0 ? Math.max(...rutas.map(r => Number(r.id || 0))) + 1 : 1;
+      const rutaConId = { ...nuevaRuta, id: newId };
+      axios.post('http://localhost:3000/Rutas', rutaConId)
+        .then(res => {
+          setRutas(prev => [...prev, res.data]);
+          setShowModal(false);
+        });
+    } else if (modalMode === 'edit' && rutaEdit) {
+      const id = rutaEdit.id;
+      axios.put("http://localhost:3000/Rutas/"+id , { ...nuevaRuta, id })
+        .then(res => {
+          setRutas(prev => prev.map(r => r.id === id ? res.data : r));
+          setShowModal(false);
+          setRutaEdit(null);
+        })
+        .catch(err => {
+          alert("Error al actualizar la ruta. Verifica que el id exista en la base de datos.");
+        });
+    }
+  };
+
+    // Abrir modal para agregar
+  const handleAgregar = () => {
+    setModalMode('add');
+    setRutaEdit(null);
+    setShowModal(true);
+  };
+    // Abrir modal para editar y cargar datos
+  const handleActualizar = () => {
+    if (!selectedId) return;
+    const ruta = rutas.find(r => r.id === selectedId);
+    if (!ruta) return;
+    setRutaEdit(ruta);
+    setModalMode('edit');
+    setShowModal(true);
+  };
+
+    // Eliminar ruta seleccionada
+  const handleEliminar = () => {
+    if (!selectedId) return;
+    const ruta = rutas.find(r => r.id === selectedId);
+    if (!ruta) return;
+    console.log("Eliminando ruta:"+ ruta.id);
+    axios.delete("http://localhost:3000/Rutas/" + ruta.id)
+      .then(() => {
+        setRutas(prev => prev.filter(r => r.id !== ruta.id));
+        setSelectedId(null);
+      });
+  };
+    const handlePageChange = (num) => {
+    setCurrentPage(num);
+    setSelectedId(null);
+  };
+
 
   return (
     <div className="rutas-panel-container">
@@ -27,32 +99,48 @@ const RutasPanel = () => {
       <main className="rutas-panel-main">
         <section className="rutas-panel">
           <h1 className="rutas-title">Rutas</h1>
-
           <div className="rutas-content">
-            {/* Tabla de rutas */}
             <div className="rutas-table-wrapper">
-              <RoutesTable onParadasClick={abrirParadas} />
+              <RoutesTable
+                rutas={rutasPagina}
+                selectedId={selectedId}
+                setSelectedId={setSelectedId}
+              />
+              {/* Paginación */}
+              <div className="pagination">
+                <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>&lt;</button>
+                {Array.from({ length: totalPaginas }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    className={currentPage === i + 1 ? 'active' : ''}
+                    onClick={() => handlePageChange(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+                <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPaginas}>&gt;</button>
+              </div>
             </div>
-
-            {/* Botones de acción */}
             <ActionButtons
-              onAdd={abrirFormRuta}
-              onDelete={() => {
-                /* tu lógica de eliminar */
-              }}
-              onUpdate={() => {
-                /* tu lógica de actualizar */
-              }}
+              onAdd={handleAgregar}
+              onDelete={handleEliminar}
+              onUpdate={handleActualizar}
             />
           </div>
-
-          {/* Modal de paradas */}
-          {showModal && <ParadasModal onClose={cerrarParadas} />}
+          {showParadas && <ParadasModal onClose={() => setShowParadas(false)} />}
         </section>
       </main>
       <footer>
         <Footer />
       </footer>
+      <RutaModal
+        open={showModal}
+        onClose={() => { setShowModal(false); setRutaEdit(null); }}
+        onSave={handleSaveRuta}
+        initialData={modalMode === 'edit' ? rutaEdit : null}
+        mode={modalMode}
+        terminales={terminales}
+      />
     </div>
   );
 };
