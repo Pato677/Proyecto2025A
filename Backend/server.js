@@ -12,6 +12,10 @@ app.use(express.json());
 const usuariosRouter = require('./routes/usuario');
 app.use('/UsuarioPasajero', usuariosRouter);
 
+//Unidades
+const unidadesRouter = require('./routes/unidades');
+app.use('/Unidades', unidadesRouter);
+
 // Inicio del servidor
 app.listen(port, () => {
   console.log(`Servidor backend corriendo en http://localhost:${port}`);
