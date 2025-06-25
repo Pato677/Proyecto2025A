@@ -642,7 +642,10 @@
       "terminalDestino": "Terminal Terrestre de Guayaquil",
       "horaSalida": "13:30",
       "horaLlegada": "21:30",
-      "paradas": ""
+      "paradas": [
+        "Machachi",
+        "Riobamba"
+      ]
     },
     {
       "id": "3",
@@ -653,7 +656,7 @@
       "terminalDestino": "Terminal Terrestre de Guayaquil",
       "horaSalida": "15:30",
       "horaLlegada": "23:30",
-      "paradas": ""
+      "paradas": []
     },
     {
       "id": "4",
@@ -664,7 +667,10 @@
       "terminalDestino": "Terminal Terrestre de Guayaquil",
       "horaSalida": "16:00",
       "horaLlegada": "23:45",
-      "paradas": ""
+      "paradas": [
+        "Santo Domingo",
+        "Quevedo"
+      ]
     },
     {
       "id": "5",
@@ -675,7 +681,7 @@
       "terminalDestino": "Terminal Terrestre de Cuenca",
       "horaSalida": "12:15",
       "horaLlegada": "19:20",
-      "paradas": ""
+      "paradas": []
     },
     {
       "id": "6",
@@ -686,7 +692,10 @@
       "terminalDestino": "Terminal Terrestre de Cuenca",
       "horaSalida": "10:00",
       "horaLlegada": "17:30",
-      "paradas": ""
+      "paradas": [
+        "Ambato",
+        "Riobamba"
+      ]
     },
     {
       "id": "7",
@@ -697,7 +706,7 @@
       "terminalDestino": "Terminal Terrestre de Cuenca",
       "horaSalida": "18:45",
       "horaLlegada": "04:30",
-      "paradas": ""
+      "paradas": []
     },
     {
       "id": "8",
@@ -708,7 +717,9 @@
       "terminalDestino": "Terminal Terrestre de Cuenca",
       "horaSalida": "07:00",
       "horaLlegada": "14:15",
-      "paradas": ""
+      "paradas": [
+        "Latacunga"
+      ]
     },
     {
       "id": "9",
@@ -719,7 +730,7 @@
       "terminalDestino": "Quitumbe",
       "horaSalida": "09:00",
       "horaLlegada": "17:00",
-      "paradas": ""
+      "paradas": []
     },
     {
       "id": "10",
@@ -730,7 +741,10 @@
       "terminalDestino": "Carcelén",
       "horaSalida": "11:30",
       "horaLlegada": "19:30",
-      "paradas": ""
+      "paradas": [
+        "Milagro",
+        "Babahoyo"
+      ]
     },
     {
       "id": "11",
@@ -741,7 +755,7 @@
       "terminalDestino": "Quitumbe",
       "horaSalida": "13:00",
       "horaLlegada": "21:00",
-      "paradas": ""
+      "paradas": []
     },
     {
       "id": "12",
@@ -752,7 +766,7 @@
       "terminalDestino": "Carcelén",
       "horaSalida": "15:00",
       "horaLlegada": "23:00",
-      "paradas": ""
+      "paradas": []
     },
     {
       "id": "13",
@@ -763,7 +777,10 @@
       "terminalDestino": "Quitumbe",
       "horaSalida": "08:00",
       "horaLlegada": "16:00",
-      "paradas": ""
+      "paradas": [
+        "Azogues",
+        "Cañar"
+      ]
     },
     {
       "id": "14",
@@ -774,7 +791,7 @@
       "terminalDestino": "Carcelén",
       "horaSalida": "10:30",
       "horaLlegada": "18:30",
-      "paradas": ""
+      "paradas": []
     },
     {
       "id": "15",
@@ -785,7 +802,7 @@
       "terminalDestino": "Quitumbe",
       "horaSalida": "12:00",
       "horaLlegada": "20:00",
-      "paradas": ""
+      "paradas": []
     },
     {
       "id": "16",
@@ -796,7 +813,11 @@
       "terminalDestino": "Terminal Terrestre de Guayaquil",
       "horaSalida": "7:00",
       "horaLlegada": "15:00",
-      "paradas": "20"
+      "paradas": [
+        "Latacunga",
+        "Riobamba",
+        "Milagro"
+      ]
     }
   ]
 }

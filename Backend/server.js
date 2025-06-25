@@ -20,6 +20,10 @@ app.use('/unidades', unidadesRouter);
 const rutasRouter = require('./routes/rutas');
 app.use('/Rutas', rutasRouter);
 
+// Paradas
+const paradasRouter = require('./routes/paradas');
+app.use('/rutas', paradasRouter);
+
 // Inicio del servidor
 app.listen(port, () => {
   console.log(`Servidor backend corriendo en http://localhost:${port}`);
