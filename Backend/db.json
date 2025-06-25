@@ -645,17 +645,6 @@
       "paradas": ""
     },
     {
-      "id": "2",
-      "numeroRuta": "RT-2025-0002",
-      "ciudadOrigen": "Quito",
-      "terminalOrigen": "Quitumbe",
-      "ciudadDestino": "Guayaquil",
-      "terminalDestino": "Terminal Terrestre de Guayaquil",
-      "horaSalida": "14:20",
-      "horaLlegada": "22:30",
-      "paradas": ""
-    },
-    {
       "id": "3",
       "numeroRuta": "RT-2025-0003",
       "ciudadOrigen": "Quito",
@@ -800,17 +789,6 @@
     },
     {
       "id": "16",
-      "numeroRuta": "RT-2025-0016",
-      "ciudadOrigen": "Cuenca",
-      "terminalOrigen": "Terminal Terrestre de Cuenca",
-      "ciudadDestino": "Quito",
-      "terminalDestino": "Carcelén",
-      "horaSalida": "14:00",
-      "horaLlegada": "22:00",
-      "paradas": ""
-    },
-    {
-      "id": "17",
       "numeroRuta": "RT-2025_2100",
       "ciudadOrigen": "Quito",
       "terminalOrigen": "Quitumbe",
@@ -818,7 +796,7 @@
       "terminalDestino": "Terminal Terrestre de Guayaquil",
       "horaSalida": "7:00",
       "horaLlegada": "15:00",
-      "paradas": "2"
+      "paradas": "20"
     }
   ]
 }

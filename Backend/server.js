@@ -16,6 +16,10 @@ app.use('/UsuarioPasajero', usuariosRouter);
 const unidadesRouter = require('./routes/unidades');
 app.use('/Unidades', unidadesRouter);
 
+// Rutas
+const rutasRouter = require('./routes/rutas');
+app.use('/Rutas', rutasRouter);
+
 // Inicio del servidor
 app.listen(port, () => {
   console.log(`Servidor backend corriendo en http://localhost:${port}`);
