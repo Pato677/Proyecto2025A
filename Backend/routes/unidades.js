@@ -35,9 +35,23 @@ router.get('/:id', (req, res) => {
 
 // POST crear nueva unidad
 router.post('/', (req, res) => {
+  const nuevaUnidad = req.body;
+  // Validación de campos obligatorios
+  if (
+    !nuevaUnidad.placa ||
+    !nuevaUnidad.numeroUnidad ||
+    !nuevaUnidad.conductor ||
+    !nuevaUnidad.controlador ||
+    !nuevaUnidad.pisos ||
+    !nuevaUnidad.asientos ||
+    !nuevaUnidad.imagen ||
+    typeof nuevaUnidad.asientos !== 'number' ||
+    typeof nuevaUnidad.pisos !== 'number'
+  ) {
+    return res.status(400).json({ error: 'Datos inválidos o incompletos' });
+  }
   const db = leerDB();
   const nuevasUnidades = db.unidades || [];
-  const nuevaUnidad = req.body;
   // Generar un id único si no viene en el body
   if (!nuevaUnidad.id) {
     nuevaUnidad.id = nuevasUnidades.length > 0
