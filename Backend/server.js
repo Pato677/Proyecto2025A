@@ -14,7 +14,15 @@ app.use('/UsuarioPasajero', usuariosRouter);
 
 //Unidades
 const unidadesRouter = require('./routes/unidades');
-app.use('/Unidades', unidadesRouter);
+app.use('/unidades', unidadesRouter);
+
+// Rutas
+const rutasRouter = require('./routes/rutas');
+app.use('/Rutas', rutasRouter);
+
+// Paradas
+const paradasRouter = require('./routes/paradas');
+app.use('/rutas', paradasRouter);
 
 // Inicio del servidor
 app.listen(port, () => {
