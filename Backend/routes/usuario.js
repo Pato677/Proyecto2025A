@@ -35,13 +35,6 @@ router.get('/', (req, res) => {
   res.json(usuarios);
 });
 
-// GET usuario por ID
-router.get('/:id', (req, res) => {
-  const db = leerDB();
-  const usuario = db.UsuarioPasajero.find(u => u.id === req.params.id);
-  if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-  res.json(usuario);
-});
 
 // POST crear usuario
 router.post('/', (req, res) => {
@@ -77,5 +70,36 @@ router.delete('/:id', (req, res) => {
   escribirDB(db);
   res.json({ mensaje: 'Usuario eliminado correctamente' });
 });
+// Verificamos credenciales para el login 
+// Verificamos credenciales usando POST con body JSON
+router.post('/login', (req, res) => {
+  console.log('Login request body:', req.body);
+  const { correo, contrasena } = req.body;
+
+  if (!correo || !contrasena) {
+    return res.status(400).json({ error: 'Faltan parámetros' });
+  }
+
+  const db = leerDB();
+  const usuario = db.UsuarioPasajero.find(
+    u => u.correo === correo && u.contrasena === contrasena
+  );
+
+  if (usuario) {
+    res.json(usuario);
+  } else {
+    res.status(404).json({ mensaje: 'Credenciales inválidas' });
+  }
+});
+
+
+// GET usuario por ID
+router.get('/:id', (req, res) => {
+  const db = leerDB();
+  const usuario = db.UsuarioPasajero.find(u => u.id === req.params.id);
+  if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+  res.json(usuario);
+});
+
 
 module.exports = router;

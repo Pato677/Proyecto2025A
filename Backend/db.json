@@ -1,17 +1,6 @@
 {
   "UsuarioPasajero": [
     {
-      "id": "1",
-      "nombres": "Juan Carlos",
-      "apellidos": "Pérez Gómez",
-      "fechaNacimiento": "1995-06-20",
-      "cedula": "0102030405",
-      "correo": "juan.perez@example.com",
-      "telefono": "0991234567",
-      "contrasena": "abc123",
-      "confirmarContrasena": "abc123"
-    },
-    {
       "id": "ceda",
       "nombres": "Jaime",
       "apellidos": "Sanchez",
@@ -23,17 +12,6 @@
       "confirmarContrasena": "pa2302"
     },
     {
-      "id": "882b",
-      "nombres": "Jaimeae",
-      "apellidos": "Sanchezaa",
-      "fechaNacimiento": "2000-06-02",
-      "cedula": "1708975625",
-      "correo": "pa@gmail.com",
-      "telefono": "0847564854",
-      "contrasena": "123456",
-      "confirmarContrasena": "123456"
-    },
-    {
       "id": "60b3",
       "nombres": "Patricio Vladimir",
       "apellidos": "Sánchez Espinoza",
@@ -42,6 +20,17 @@
       "correo": "patriciosanchezd677@gmail.com",
       "telefono": "0982821204",
       "contrasena": "pato123456"
+    },
+    {
+      "nombres": "Ana",
+      "apellidos": "Torres",
+      "fechaNacimiento": "2000-05-10",
+      "cedula": "1712345678",
+      "correo": "ana.torres@mail.com",
+      "telefono": "0999988776",
+      "contrasena": "ana123",
+      "confirmarContrasena": "ana123",
+      "id": "ox87"
     }
   ],
   "TerminalesInterprovinciales": [
