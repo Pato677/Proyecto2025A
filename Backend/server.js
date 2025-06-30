@@ -10,7 +10,7 @@ app.use(express.json());
 
 // Rutas
 const usuariosRouter = require('./routes/usuario');
-app.use('/pasajero', usuariosRouter);
+app.use('/pasajeros', usuariosRouter);
 
 //Unidades
 const unidadesRouter = require('./routes/unidades');
@@ -26,10 +26,10 @@ app.use('/rutas', paradasRouter);
 
 //terminales
 const terminalesRouter = require('./routes/terminales');
-app.use('/terminal', terminalesRouter);
+app.use('/terminales', terminalesRouter);
 // cooperativas
 const cooperativasRouter = require('./routes/cooperativas');
-app.use('/cooperativa', cooperativasRouter);
+app.use('/cooperativas', cooperativasRouter);
 
 // Inicio del servidor
 app.listen(port, () => {
