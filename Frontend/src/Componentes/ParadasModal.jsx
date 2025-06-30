@@ -1,40 +1,36 @@
 import React from 'react';
 import { FiX } from 'react-icons/fi';
 import { FaBus } from 'react-icons/fa';
-import './Estilos/Admin.css'; 
+import './Estilos/ParadasModal.css'; // Asegúrate de tener este archivo CSS
 
-const stops = [
-  'Tambillo',
-  'Aloag',
-  'Santo Domingo',
-  'Quevedo',
-  'Babahoyo',
-  'Jujan',
-  'Guayaquil'
-];
+const ParadasModal = ({ onClose, ruta }) => {
+  const paradas = ruta?.paradas || [];
 
-const ParadasModal = ({ onClose }) => (
-  <div className="modal-overlay">
-    <div className="modal">
-      <button className="modal-close" onClick={onClose}>
-        <FiX />
-      </button>
+  return (
+    <div className="modal-overlay">
+      <div className="paradas-modal">
+        <button className="modal-close" onClick={onClose}>
+          <FiX />
+        </button>
 
-      <div className="modal-icon-wrapper">
-        <div className="modal-icon">
-          <FaBus />
+        <div className="modal-icon-wrapper">
+          <div className="modal-icon">
+            <FaBus />
+          </div>
+        </div>
+
+        <h2 className="modal-title">Paradas de la Ruta {ruta?.numeroRuta}</h2>
+
+        <div className="paradas-list-container">
+          <ul className="modal-list">
+            {paradas.map((parada, i) => (
+              <li key={i}>{parada}</li>
+            ))}
+          </ul>
         </div>
       </div>
-
-      <h2 className="modal-title">Paradas</h2>
-
-      <ul className="modal-list">
-        {stops.map((parada, i) => (
-          <li key={i}>{parada}</li>
-        ))}
-      </ul>
     </div>
-  </div>
-);
+  );
+};
 
 export default ParadasModal;

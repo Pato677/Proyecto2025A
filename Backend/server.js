@@ -18,7 +18,7 @@ app.use('/unidades', unidadesRouter);
 
 // Rutas
 const rutasRouter = require('./routes/rutas');
-app.use('/Rutas', rutasRouter);
+app.use('/rutas', rutasRouter);
 
 // Paradas
 const paradasRouter = require('./routes/paradas');
