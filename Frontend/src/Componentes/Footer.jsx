@@ -1,5 +1,5 @@
 import React from 'react';
-import './Estilos/styles.css';
+import './Estilos/Footer.css';
 
 function Footer() {
   return (

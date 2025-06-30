@@ -19,6 +19,7 @@ import Registro from './Componentes/Registro';
 import FormasDePagoPage from './Componentes/FormasDePagoPage';
 import Button from './Componentes/Button';
 import PerfilUsuario from './Componentes/PerfilUsuario';
+import SuperAdminDashboard from './Componentes/SuperAdminDashboard';
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
           <Route path="/FormasDePagoPage" element={<FormasDePagoPage />} />
           <Route path="/PerfilUsuario" element ={<PerfilUsuario />} />
           <Route path="/boton" element={<Button text="Atras" />} />
+          <Route path="/SuperAdmin" element={<SuperAdminDashboard />} />
         </Routes>
       </BrowserRouter>
     </div>
