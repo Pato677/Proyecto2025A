@@ -57,13 +57,16 @@
 
 .superadmin-main {
   flex: 1;
-  padding: 40px 32px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;      /* Centra horizontalmente */
+  justify-content: center;  /* Centra verticalmente */
   min-width: 0;
   min-height: 0;
   height: 100%;
+  width: 100%;
+  padding: 0;               /* Elimina padding lateral excesivo */
+  box-sizing: border-box;
 }
 
 .panel-box {
@@ -71,10 +74,13 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(180,200,230,0.07);
   padding: 32px 24px;
-  min-width: 650px;
+  min-width: 400px;
   max-width: 900px;
-  width: 100%;
-  margin-bottom: 32px;
+  width: 80vw;              /* Más ancho, pero responsivo */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .panel-box h3 {
@@ -156,4 +162,50 @@
 
 .btn-agregar:hover {
   background: #2176ab;
+}
+
+.panel-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.panel-pagination button {
+  padding: 4px 10px;
+  border: 1px solid #3077c6;
+  background: #fff;
+  color: #3077c6;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.panel-pagination button.active,
+.panel-pagination button:hover {
+  background: #3077c6;
+  color: #fff;
+}
+
+.panel-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-outline,
+.btn-eliminar {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  padding: 0;
+  margin-right: 8px;
+}
+
+.btn-eliminar {
+  margin-right: 0;
 }
