@@ -132,22 +132,20 @@
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(255,255,255,0.6);
+  background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(4px);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding-top: 5vh;
   z-index: 1000;
 }
 
-.modal {
-  position: relative;
+.paradas-modal {
   width: 400px;
   max-height: 90vh;
   padding: 32px 24px 40px;
   border-radius: 20px;
-  background: rgba(45, 140, 240, 0.6); /* más opaco */
+  background: rgba(45, 140, 240, 0.3); /* MÁS TRANSPARENTE */
   border: 2px solid #82b3e7;
   backdrop-filter: blur(8px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
@@ -180,7 +178,7 @@
   height: 60px;
   border: 2px solid #2d8cf0;
   border-radius: 50%;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.95);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -234,7 +232,7 @@
   position: relative;
   padding-left: 24px;
   margin-bottom: 12px;
-  font-size: 16px;
+  font-size: 18px; /* MÁS GRANDE */
   color: #1c3a5d;
 }
 

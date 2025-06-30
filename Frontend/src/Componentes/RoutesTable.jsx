@@ -14,6 +14,7 @@ const RoutesTable = ({ rutas, selectedId, setSelectedId, onViewRoute, onEditRout
         <th>Paradas</th>
       </tr>
     </thead>
+    
     <tbody>
       {rutas.length > 0 ? (
         rutas.map((ruta) => (
