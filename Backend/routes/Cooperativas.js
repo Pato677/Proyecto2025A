@@ -80,3 +80,5 @@ router.post('/login', (req, res) => {
 
   res.json({ mensaje: 'Login exitoso', cooperativa });
 });
+
+module.exports = router;

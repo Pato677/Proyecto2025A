@@ -808,5 +808,37 @@
         "Milagro"
       ]
     }
+  ],
+  "Cooperativas": [
+    {
+      "id": "c1",
+      "razonSocial": "Cooperativa TransAndina",
+      "permisoOperacion": "PA-01234",
+      "ruc": "1790012345001",
+      "correo": "contacto@transandina.ec",
+      "telefono": "0991234567",
+      "contrasena": "trans2025",
+      "confirmarContrasena": "trans2025"
+    },
+    {
+      "id": "c2",
+      "razonSocial": "Cooperativa Santa Cruz",
+      "permisoOperacion": "PA-05678",
+      "ruc": "0998765432001",
+      "correo": "santacruz@cooperativas.ec",
+      "telefono": "0987654321",
+      "contrasena": "santacruz01",
+      "confirmarContrasena": "santacruz01"
+    },
+    {
+      "id": "c3",
+      "razonSocial": "Cooperativa Los Andes",
+      "permisoOperacion": "PA-00999",
+      "ruc": "1102233445001",
+      "correo": "info@losandes.ec",
+      "telefono": "0961122334",
+      "contrasena": "andes2025",
+      "confirmarContrasena": "andes2025"
+    }
   ]
 }

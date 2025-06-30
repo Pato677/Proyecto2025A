@@ -24,6 +24,13 @@ app.use('/rutas', rutasRouter);
 const paradasRouter = require('./routes/paradas');
 app.use('/rutas', paradasRouter);
 
+//terminales
+const terminalesRouter = require('./routes/terminales');
+app.use('/terminales', terminalesRouter);
+// cooperativas
+const cooperativasRouter = require('./routes/cooperativas');
+app.use('/cooperativas', cooperativasRouter);
+
 // Inicio del servidor
 app.listen(port, () => {
   console.log(`Servidor backend corriendo en http://localhost:${port}`);
