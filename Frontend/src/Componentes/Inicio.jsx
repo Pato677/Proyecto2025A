@@ -114,6 +114,8 @@ const Inicio = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('usuario');
+        localStorage.removeItem('origenSeleccionado');
+        localStorage.removeItem('destinoSeleccionado');
         setUsuario(null);
     };
 
