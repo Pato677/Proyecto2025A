@@ -71,6 +71,12 @@ body, html {
   cursor: pointer;
 }
 
+.filtro-btn.activa {
+  background-color: #3077c6;
+  color: #fff;
+  border-color: #3077c6;
+}
+
 .cargando {
   text-align: center;
   margin: 20px;

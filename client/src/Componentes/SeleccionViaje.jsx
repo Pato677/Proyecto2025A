@@ -73,6 +73,7 @@ const TripSelectionPage = () => {
     viajesOrdenados.sort((a, b) => {
       const [ha, ma] = a.horaSalida.split(':').map(Number);
       const [hb, mb] = b.horaSalida.split(':').map(Number);
+      // Para mostrar primero los que salen más temprano:
       return ha !== hb ? ha - hb : ma - mb;
     });
   }
@@ -104,13 +105,27 @@ const TripSelectionPage = () => {
           <span className="filtrar-label">Filtrar por:</span>
           <button
             className={`filtro-btn${orden === 'precio' ? ' activa' : ''}`}
-            onClick={() => { setOrden('precio'); setCurrentPage(1); }}
+            onClick={() => {
+              if (orden === 'precio') {
+                setOrden('');
+              } else {
+                setOrden('precio');
+              }
+              setCurrentPage(1);
+            }}
           >
             Mejor precio
           </button>
           <button
             className={`filtro-btn${orden === 'hora' ? ' activa' : ''}`}
-            onClick={() => { setOrden('hora'); setCurrentPage(1); }}
+            onClick={() => {
+              if (orden === 'hora') {
+                setOrden('');
+              } else {
+                setOrden('hora');
+              }
+              setCurrentPage(1);
+            }}
           >
             Más reciente
           </button>
