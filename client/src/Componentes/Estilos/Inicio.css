@@ -261,6 +261,24 @@ html, body {
   position: relative; /* <-- Quita absolute */
 }
 
+.btn-rastrear-boleto {
+  background: #fff;
+  color: #3077c6;
+  border: 2px solid #3077c6;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 16px auto 0 auto;
+  display: block;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-rastrear-boleto:hover {
+  background: #3077c6;
+  color: #fff;
+}
+
 @media (max-width: 900px) {
   .contenedor-busqueda {
     flex-direction: column;

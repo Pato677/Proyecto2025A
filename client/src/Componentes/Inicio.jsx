@@ -15,6 +15,7 @@ import RegistroCooperativa from "./RegistroCooperativa";
 import AutocompleteTerminal from '../../../client/src/Componentes/AutocompleteTerminal';
 import DatePicker from './DatePicker';
 import PasajerosMenu from './PasajerosMenu';
+import ModalRastreoBoleto from "./ModalRastreoBoleto";
 
 const Inicio = () => {
     const navigate = useNavigate();
@@ -24,6 +25,7 @@ const Inicio = () => {
     const [mostrarLogin, setMostrarLogin] = useState(false);
     const [mostrarRegistro, setMostrarRegistro] = useState(false);
     const [mostrarRegistroCooperativa, setMostrarRegistroCooperativa] = useState(false);
+    const [mostrarModalRastreo, setMostrarModalRastreo] = useState(false);
 
     // Estados para origen y destino
     const [origenSeleccionado, setOrigenSeleccionado] = useState({ ciudad: '', terminal: '' });
@@ -51,6 +53,8 @@ const Inicio = () => {
         const saved = localStorage.getItem('usuario');
         return saved ? JSON.parse(saved) : null;
     });
+    const [numeroBoleto, setNumeroBoleto] = useState('');
+    const [errorRastreo, setErrorRastreo] = useState('');
 
     // Persistir estados
     useEffect(() => {
@@ -170,7 +174,12 @@ const Inicio = () => {
                 onLoginClick={() => setMostrarLogin(true)}
             />
             
-           
+            <button
+  className="btn-rastrear-boleto"
+  onClick={() => setMostrarModalRastreo(true)}
+>
+  Rastrear boleto
+</button>
             <div className="inicio-main-content">
                 <div className="formulario-viaje">
                     <div className="tipo-viaje">
@@ -294,6 +303,11 @@ const Inicio = () => {
             {mostrarRegistroCooperativa && (
                 <RegistroCooperativa cerrar={() => setMostrarRegistroCooperativa(false)} />
             )}
+
+            <ModalRastreoBoleto
+  open={mostrarModalRastreo}
+  onClose={() => setMostrarModalRastreo(false)}
+/>
 
             <footer>
                 <Footer />
