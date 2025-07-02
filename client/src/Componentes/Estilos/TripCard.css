@@ -114,6 +114,13 @@
   justify-content: center;
 }
 
+.viaje-seleccionado .tripcard-pricepill {
+  border-top-right-radius: 30px !important; /* Igual al contenedor */
+  border-bottom-right-radius: 28px;
+  background: linear-gradient(90deg, #c6ffe3 0%, #b3ccff 100%);
+  z-index: 2;
+}
+
 .pill-content {
   display: flex;
   flex-direction: column;
