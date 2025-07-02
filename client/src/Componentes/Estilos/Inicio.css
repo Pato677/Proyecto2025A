@@ -47,6 +47,19 @@ html, body {
   font-size: 1.1rem;
 }
 
+.tipo-viaje-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.tipo-viaje-info {
+  display: flex;
+  flex-direction: column;
+}
+
 .ida-activo {
   display: flex;
   align-items: center;
@@ -275,6 +288,43 @@ html, body {
   transition: background 0.2s, color 0.2s;
 }
 .btn-rastrear-boleto:hover {
+  background: #3077c6;
+  color: #fff;
+}
+
+.rastreo-boleto-section {
+  text-align: center;
+  margin: 24px 0 12px 0;
+}
+
+.rastreo-boleto-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.98rem;
+  color: #3077c6;
+  background: #f7fafc;
+  border-radius: 8px;
+  padding: 4px 10px 4px 12px;
+}
+
+.rastreo-texto {
+  font-weight: 500;
+  color: #3077c6;
+}
+
+.btn-rastrear-boleto-mini {
+  background: #eaf3fb;
+  color: #3077c6;
+  border: 1.5px solid #b3ccff;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 0.97rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-rastrear-boleto-mini:hover {
   background: #3077c6;
   color: #fff;
 }

@@ -53,9 +53,7 @@ const Inicio = () => {
         const saved = localStorage.getItem('usuario');
         return saved ? JSON.parse(saved) : null;
     });
-    const [numeroBoleto, setNumeroBoleto] = useState('');
-    const [errorRastreo, setErrorRastreo] = useState('');
-
+    
     // Persistir estados
     useEffect(() => {
         localStorage.setItem('origenSeleccionado', JSON.stringify(origenSeleccionado));
@@ -174,22 +172,26 @@ const Inicio = () => {
                 onLoginClick={() => setMostrarLogin(true)}
             />
             
-            <button
-  className="btn-rastrear-boleto"
-  onClick={() => setMostrarModalRastreo(true)}
->
-  Rastrear boleto
-</button>
             <div className="inicio-main-content">
                 <div className="formulario-viaje">
-                    <div className="tipo-viaje">
-                        <span className="ida-activo">
-                            <span className="circulo-verde"></span> Ida
-                        </span>
-                        <span className="subtitulo">
-                            Selecciona el origen, fecha de ida y número de pasajeros
-                        </span>
-                    </div>
+                    <div className="tipo-viaje-flex">
+    <div className="tipo-viaje-info">
+        <span className="subtitulo">
+            Selecciona el origen, fecha de ida y número de pasajeros
+        </span>
+    </div>
+    <div className="rastreo-boleto-inline">
+        <span className="rastreo-texto">
+            ¿Ya compraste tu boleto?
+        </span>
+        <button
+            className="btn-rastrear-boleto-mini"
+            onClick={() => setMostrarModalRastreo(true)}
+        >
+            Rastrear boleto
+        </button>
+    </div>
+</div>
                     
                     <div className="contenedor-busqueda">
                         {/* Campo Origen */}
@@ -262,6 +264,7 @@ const Inicio = () => {
                     {error && <div className="error-mensaje">{error}</div>}
                 </div>
 
+                {/* Publicidad */}
                 <div className="promocion">
                     <div className="promo-img-wrapper">
                         <img src={BusEcuador} alt="Bus" className="promo-img-full" />
