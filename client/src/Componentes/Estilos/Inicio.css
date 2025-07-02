@@ -81,10 +81,22 @@ html, body {
   margin-right: 8px;
 }
 
+.subtitulo-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 54px; /* Ajusta la altura según tu diseño */
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
 .subtitulo {
   color: #888;
-  font-size: 1.08rem;
-  font-weight: 400;
+  font-size: 1.18rem;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
 }
 
 .contenedor-busqueda {
@@ -336,12 +348,12 @@ html, body {
     padding: 18px 8px;
   }
   .promocion {
-    flex-direction: column;
-    align-items: stretch;
-    min-height: unset;
-  }
-  .promocion > img {
-    width: 100%;
+  } flex-direction: column;
+  .promo-img-wrapper {ch;
+    min-height: 140px;
+    height: 140px;
+  }promocion > img {
+}   width: 100%;
     min-width: unset;
     height: 180px;
     object-fit: cover;
