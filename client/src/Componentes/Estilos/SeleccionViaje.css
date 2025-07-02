@@ -102,6 +102,7 @@ body, html {
   cursor: pointer;
   background: #fff;
   z-index: 1;
+  position: relative; /* Para que el badge se posicione respecto a este div */
 }
 
 .viaje-item:hover {
@@ -111,6 +112,23 @@ body, html {
 .viaje-seleccionado {
   border: 2px solid #4caf50;
   box-shadow: 0 0 0 2px #d0f0d5;
+}
+
+.badge-viaje-seleccionado {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #4caf50;
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 0 0 0 8px;
+  box-shadow: 0 2px 8px #0001;
+  z-index: 10;
+  letter-spacing: 0.5px;
+  margin: 0;
+  pointer-events: none; /* Opcional: para que no tape clicks */
 }
 
 .botones-finales {

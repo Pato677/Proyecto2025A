@@ -138,6 +138,9 @@ const TripSelectionPage = () => {
               className={`viaje-item ${selectedTrip === viaje.id ? 'viaje-seleccionado' : ''}`}
               onClick={() => handleSelectTrip(viaje.id)}
             >
+              {selectedTrip === viaje.id && (
+                <div className="badge-viaje-seleccionado">Viaje Seleccionado</div>
+              )}
               <TripCard
                 horaSalida={viaje.horaSalida}
                 horaLlegada={viaje.horaLlegada}
