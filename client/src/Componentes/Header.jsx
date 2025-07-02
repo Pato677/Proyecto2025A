@@ -36,7 +36,13 @@ function Header({
 
   return (
     <header className="ticket-header">
-      <img src={Logo} alt="Logo" className="ticket-logo" />
+      <img
+        src={Logo}
+        alt="Logo"
+        className="ticket-logo"
+        style={{ cursor: 'pointer' }}
+        onClick={() => navigate('/Inicio')}
+      />
 
       {showSearch && (
         <div className="ticket-step-indicator">

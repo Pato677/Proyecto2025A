@@ -132,6 +132,10 @@
   position: relative;
 }
 
+.viaje-seleccionado .pill-content {
+  padding-top: 32px; 
+}
+
 .pill-usd {
   font-size: 0.93rem;
   font-weight: 600;
