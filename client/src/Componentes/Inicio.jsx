@@ -26,15 +26,8 @@ const Inicio = () => {
     const [mostrarRegistroCooperativa, setMostrarRegistroCooperativa] = useState(false);
 
     // Estados para origen y destino
-    const [origenSeleccionado, setOrigenSeleccionado] = useState(() => {
-        const saved = localStorage.getItem('origenSeleccionado');
-        return saved ? JSON.parse(saved) : { ciudad: '', terminal: '' };
-    });
-
-    const [destinoSeleccionado, setDestinoSeleccionado] = useState(() => {
-        const saved = localStorage.getItem('destinoSeleccionado');
-        return saved ? JSON.parse(saved) : { ciudad: '', terminal: '' };
-    });
+    const [origenSeleccionado, setOrigenSeleccionado] = useState({ ciudad: '', terminal: '' });
+    const [destinoSeleccionado, setDestinoSeleccionado] = useState({ ciudad: '', terminal: '' });
 
     // Estados derivados
     const [origen, setOrigen] = useState(
@@ -53,7 +46,7 @@ const Inicio = () => {
     const [fecha, setFecha] = useState('');
     const [mostrarMenuPasajeros, setMostrarMenuPasajeros] = useState(false);
     const [pasajeros, setPasajeros] = useState([1, 0, 0, 0]);
-    const [error] = useState('');
+    const [error, setError] = useState('');
     const [usuario, setUsuario] = useState(() => {
         const saved = localStorage.getItem('usuario');
         return saved ? JSON.parse(saved) : null;
@@ -120,7 +113,42 @@ const Inicio = () => {
     };
 
     const handleBuscar = () => {
-        // Validaciones...
+        // Validaciones
+        if (!origenSeleccionado.ciudad || !origenSeleccionado.terminal) {
+            setError('Por favor selecciona un origen válido.');
+            return;
+        }
+        if (!destinoSeleccionado.ciudad || !destinoSeleccionado.terminal) {
+            setError('Por favor selecciona un destino válido.');
+            return;
+        }
+        if (!fecha) {
+            setError('Por favor selecciona una fecha de viaje.');
+            return;
+        }
+        // Validar que la fecha sea hoy o futura
+        const hoy = new Date();
+        hoy.setHours(0,0,0,0);
+
+        // Si fecha es 'YYYY-MM-DD', parsea manualmente para evitar problemas de zona horaria
+        const [anio, mes, dia] = fecha.split('-').map(Number);
+        const fechaSeleccionada = new Date(anio, mes - 1, dia); // Mes empieza en 0
+        fechaSeleccionada.setHours(0,0,0,0);
+
+        console.log('Fecha seleccionada:', fechaSeleccionada, 'Hoy:', hoy);
+
+        if (fechaSeleccionada < hoy) {
+            setError('La fecha debe ser hoy o una fecha futura.');
+            return;
+        }
+        if (
+            origenSeleccionado.ciudad === destinoSeleccionado.ciudad &&
+            origenSeleccionado.terminal === destinoSeleccionado.terminal
+        ) {
+            setError('El origen y destino no pueden ser iguales.');
+            return;
+        }
+        setError('');
         const params = new URLSearchParams({
             origenCiudad: origenSeleccionado.ciudad,
             origenTerminal: origenSeleccionado.terminal,
