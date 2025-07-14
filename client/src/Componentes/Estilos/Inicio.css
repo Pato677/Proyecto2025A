@@ -1,4 +1,4 @@
-html, body {
+body {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -6,7 +6,6 @@ html, body {
   box-sizing: border-box;
 }
 
-/* Header y Footer full width */
 .header,
 .header-admin,
 .ticket-footer {
@@ -19,7 +18,6 @@ html, body {
   box-sizing: border-box;
 }
 
-/* Centra el contenido principal y limita su ancho */
 .inicio-container {
   min-height: 100vh;
   background: #f9fbfd;
@@ -28,7 +26,6 @@ html, body {
   box-sizing: border-box;
 }
 
-/* Nuevo: contenedor interno para centrar el contenido */
 .inicio-main-content {
   max-width: 1200px;
   margin: 0 auto;
@@ -85,7 +82,7 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  height: 54px; /* Ajusta la altura según tu diseño */
+  height: 54px;
   margin-bottom: 0;
   padding-bottom: 0;
 }
@@ -109,7 +106,7 @@ html, body {
   padding: 22px 24px;
   margin: 0 auto;
   max-width: 1100px;
-  box-shadow: 0 2px 8px rgba(180,200,230,0.07);
+  box-shadow: 0 2px 8px rgba(180, 200, 230, 0.07);
 }
 
 .campo-opcion-btn {
@@ -124,7 +121,7 @@ html, body {
   cursor: pointer;
   transition: border 0.15s, box-shadow 0.15s;
   font-size: 1.08rem;
-  box-shadow: 0 2px 8px rgba(180,200,230,0.04);
+  box-shadow: 0 2px 8px rgba(180, 200, 230, 0.04);
 }
 
 .campo-opcion-btn strong {
@@ -202,7 +199,7 @@ html, body {
 
 .promo-info {
   flex: 1 1 300px;
-  padding: 2.2rem 2.2rem 2.2rem 2.2rem;
+  padding: 2.2rem;
   background: linear-gradient(to right, #d7e9ff, #c2ddff);
   display: flex;
   flex-direction: column;
@@ -272,7 +269,7 @@ html, body {
   flex: 1 1 0;
   width: 100%;
   min-width: 0;
-  min-height: 220px; /* O el mínimo que desees */
+  min-height: 220px;
   display: flex;
   align-items: stretch;
   position: relative;
@@ -283,7 +280,7 @@ html, body {
   height: 100%;
   object-fit: cover;
   display: block;
-  position: relative; /* <-- Quita absolute */
+  position: relative;
 }
 
 .btn-rastrear-boleto {
@@ -299,6 +296,7 @@ html, body {
   display: block;
   transition: background 0.2s, color 0.2s;
 }
+
 .btn-rastrear-boleto:hover {
   background: #3077c6;
   color: #fff;
@@ -336,34 +334,37 @@ html, body {
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
+
 .btn-rastrear-boleto-mini:hover {
   background: #3077c6;
   color: #fff;
 }
 
+/* Media query corregido */
 @media (max-width: 900px) {
   .contenedor-busqueda {
     flex-direction: column;
     gap: 14px;
     padding: 18px 8px;
   }
+
   .promocion {
-  } flex-direction: column;
-  .promo-img-wrapper {ch;
-    min-height: 140px;
-    height: 140px;
-  }promocion > img {
-}   width: 100%;
-    min-width: unset;
-    height: 180px;
-    object-fit: cover;
+    flex-direction: column;
   }
-  .promo-info {
-    padding: 1.2rem;
-  }
+
   .promo-img-wrapper {
     min-height: 140px;
     height: 140px;
   }
-}
 
+  .promocion > img {
+    width: 100%;
+    min-width: unset;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .promo-info {
+    padding: 1.2rem;
+  }
+}

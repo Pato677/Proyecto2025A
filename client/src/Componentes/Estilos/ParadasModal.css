@@ -80,7 +80,7 @@
 /* Celda “Paradas” en negrita, color y subrayado */
 .paradas-cell {
   font-weight: bold;
-  color: #2176ab;
+  color: #000000;
   text-decoration: underline;
   cursor: pointer;
   transition: color 0.2s;
@@ -124,7 +124,7 @@
 }
 
 .btn-outline:hover {
-  background: #2176ab;
+  background: #ffffff;
   color: #fff;
 }
 
@@ -133,7 +133,7 @@
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -141,10 +141,12 @@
 }
 
 .paradas-modal {
-  width: 400px;
-  max-height: 90vh;
-  padding: 32px 24px 40px;
-  border-radius: 20px;
+  width: 70vw;
+  height: 80vh;
+  max-height: 750px;
+  max-width: 800px;
+  padding: 40px 38px 40px;
+  border-radius: 24px;
   background: rgba(45, 140, 240, 0.3); /* MÁS TRANSPARENTE */
   border: 2px solid #82b3e7;
   backdrop-filter: blur(8px);
@@ -161,14 +163,14 @@
   right: 12px;
   background: none;
   border: none;
-  font-size: 18px;
-  color: #000000;
+  font-size: 25px;
+  color: #ffffff;
   cursor: pointer;
 }
 
 .modal-icon-wrapper {
   position: relative;
-  margin: 0 auto 8px;
+  margin:  auto 8px;
   width: 60px;
   height: 100px;
 }
@@ -182,7 +184,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #2d8cf0;
+  color: #ffffff;
   font-size: 32px;
   margin: 0 auto;
 }
@@ -195,19 +197,19 @@
   transform: translateX(-50%);
   width: 2px;
   height: 40px;
-  background: #2d8cf0;
+  background: #ffffff;
 }
 
 .modal-title {
   margin: 0 0 16px;
   font-size: 22px;
   font-weight: bold;
-  color: #1c3a5d;
+  color: #ffffff;
 }
 
 /* Contenedor scrollable */
 .paradas-list-container {
-  max-height: 250px;
+  max-height: 450px;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -222,6 +224,7 @@
 }
 
 .modal-list {
+  font-size: 26px;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -232,8 +235,8 @@
   position: relative;
   padding-left: 24px;
   margin-bottom: 12px;
-  font-size: 18px; /* MÁS GRANDE */
-  color: #1c3a5d;
+  font-size: 20px; /* MÁS GRANDE */
+  color: #ffffff;
 }
 
 .modal-list li::before {
@@ -243,6 +246,6 @@
   left: 0;
   width: 8px;
   height: 8px;
-  background: #2d8cf0;
+  background: #ffffff;
   border-radius: 2px;
 }

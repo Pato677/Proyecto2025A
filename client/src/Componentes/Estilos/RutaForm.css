@@ -1,3 +1,16 @@
+.ruta-form--modal {
+  min-width: 800px;
+  max-width: 90vw;
+}
+
+.ruta-form__header {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 12px;
+  color: #1c3a5d;
+}
+
 .busqueda-container {
   display: flex;
   gap: 8px;
@@ -43,7 +56,7 @@
 }
 
 .paradas-lista {
-  max-height: 150px;
+  max-height: 180px;
   overflow-y: auto;
   padding: 0;
   list-style: none;
@@ -56,10 +69,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f2f9ff;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   padding: 8px 10px;
   border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: background 0.3s;
 }
 
 .paradas-lista button {
@@ -68,4 +82,25 @@
   cursor: pointer;
   color: #c00;
   font-size: 16px;
+}
+
+.btn-control {
+  background-color: #2176ab;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
+.leaflet-tooltip {
+  font-size: 11px !important;
+  font-weight: 500;
+  background-color: #f0f8ff;
+  border: 1px solid #2176ab;
+  border-radius: 6px;
+  padding: 2px 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
