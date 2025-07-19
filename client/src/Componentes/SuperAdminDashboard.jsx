@@ -8,7 +8,6 @@ import CooperativaUnidadesPanel from './SuperAdmin/CooperativaUnidadesPanel';
 import HorariosPanel from './SuperAdmin/HorariosPanel';
 import RutasPanel from './SuperAdmin/RutasPanel';
 import ConductoresPanel from './SuperAdmin/ConductoresPanel';
-import ControladoresPanel from './SuperAdmin/ControladoresPanel';
 import './Estilos/SuperAdminDashboard.css';
 
 const panels = [
@@ -18,8 +17,7 @@ const panels = [
   { key: 'cooperativas', label: 'Unidades de Cooperativas', component: <CooperativaUnidadesPanel /> },
   { key: 'horarios', label: 'Horarios', component: <HorariosPanel /> },
   { key: 'rutas', label: 'Rutas', component: <RutasPanel /> },
-  { key: 'conductores', label: 'Conductores', component: <ConductoresPanel /> },
-  { key: 'controladores', label: 'Controladores', component: <ControladoresPanel /> },
+  { key: 'personal', label: 'Conductores y Controladores', component: <ConductoresPanel /> },
 ];
 
 const SuperAdminDashboard = () => {

@@ -922,7 +922,8 @@
       "identificacion": "1234567890",
       "tipoLicencia": "D (Pasajeros)",
       "telefono": "0999999999",
-      "correo": "juan.perez@email.com"
+      "correo": "juan.perez@email.com",
+      "roles": ["conductor"]
     },
     {
       "id": 2,
@@ -930,7 +931,26 @@
       "identificacion": "0987654321",
       "tipoLicencia": "D1(Turismo)",
       "telefono": "0988888888",
-      "correo": "maria.lopez@email.com"
+      "correo": "maria.lopez@email.com",
+      "roles": ["conductor"]
+    },
+    {
+      "id": 3,
+      "nombre": "Carlos Ruiz Mendoza",
+      "identificacion": "1122334455",
+      "tipoLicencia": "D (Pasajeros)",
+      "telefono": "0977777777",
+      "correo": "carlos.ruiz@email.com",
+      "roles": ["conductor", "controlador"]
+    },
+    {
+      "id": 4,
+      "nombre": "Ana Martínez Torres",
+      "identificacion": "5566778899",
+      "tipoLicencia": "N/A",
+      "telefono": "0966666666",
+      "correo": "ana.martinez@email.com",
+      "roles": ["controlador"]
     }
   ]
 }

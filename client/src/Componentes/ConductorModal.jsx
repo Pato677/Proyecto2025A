@@ -8,7 +8,8 @@ const ConductorModal = ({ open, onClose, onSave, initialData, mode }) => {
     identificacion: '',
     tipoLicencia: '',
     telefono: '',
-    correo: ''
+    correo: '',
+    roles: []
   });
 
   const [errors, setErrors] = useState({});
@@ -22,7 +23,8 @@ const ConductorModal = ({ open, onClose, onSave, initialData, mode }) => {
         identificacion: '',
         tipoLicencia: '',
         telefono: '',
-        correo: ''
+        correo: '',
+        roles: []
       });
     }
     setErrors({});
@@ -37,14 +39,37 @@ const ConductorModal = ({ open, onClose, onSave, initialData, mode }) => {
     }
   };
 
+  const handleRoleChange = (role) => {
+    setFormData(prev => {
+      const currentRoles = prev.roles || [];
+      const hasRole = currentRoles.includes(role);
+      
+      if (hasRole) {
+        return { ...prev, roles: currentRoles.filter(r => r !== role) };
+      } else {
+        return { ...prev, roles: [...currentRoles, role] };
+      }
+    });
+    
+    // Limpiar error de roles si existe
+    if (errors.roles) {
+      setErrors(prev => ({ ...prev, roles: '' }));
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
     
     if (!formData.nombre.trim()) newErrors.nombre = 'El nombre es obligatorio';
     if (!formData.identificacion.trim()) newErrors.identificacion = 'La identificación es obligatoria';
-    if (!formData.tipoLicencia) newErrors.tipoLicencia = 'Selecciona un tipo de licencia';
     if (!formData.telefono.trim()) newErrors.telefono = 'El teléfono es obligatorio';
     if (!formData.correo.trim()) newErrors.correo = 'El correo es obligatorio';
+    if (!formData.roles || formData.roles.length === 0) newErrors.roles = 'Debe seleccionar al menos un rol';
+    
+    // Validar licencia solo si es conductor
+    if (formData.roles && formData.roles.includes('conductor') && !formData.tipoLicencia) {
+      newErrors.tipoLicencia = 'El tipo de licencia es obligatorio para conductores';
+    }
     
     // Validar formato de correo
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -75,7 +100,7 @@ const ConductorModal = ({ open, onClose, onSave, initialData, mode }) => {
     <div className="conductor-modal-overlay" onClick={onClose}>
       <div className="conductor-modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="conductor-modal-header">
-          <h2>{mode === 'edit' ? 'Editar Conductor' : 'Agregar Conductor'}</h2>
+          <h2>{mode === 'edit' ? 'Editar Personal' : 'Agregar Personal'}</h2>
           <button className="close-btn" onClick={onClose}>&times;</button>
         </div>
         
@@ -109,13 +134,41 @@ const ConductorModal = ({ open, onClose, onSave, initialData, mode }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="tipoLicencia">Tipo de Licencia *</label>
+            <label>Roles *</label>
+            <div className="roles-container" style={{ display: 'flex', gap: '15px', marginTop: '8px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={formData.roles?.includes('conductor') || false}
+                  onChange={() => handleRoleChange('conductor')}
+                  style={{ marginRight: '8px' }}
+                />
+                Conductor
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={formData.roles?.includes('controlador') || false}
+                  onChange={() => handleRoleChange('controlador')}
+                  style={{ marginRight: '8px' }}
+                />
+                Controlador
+              </label>
+            </div>
+            {errors.roles && <span className="error-message">{errors.roles}</span>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="tipoLicencia">
+              Tipo de Licencia {formData.roles?.includes('conductor') ? '*' : ''}
+            </label>
             <select
               id="tipoLicencia"
               name="tipoLicencia"
               value={formData.tipoLicencia}
               onChange={handleInputChange}
               className={errors.tipoLicencia ? 'error' : ''}
+              disabled={!formData.roles?.includes('conductor')}
             >
               <option value="">Seleccionar tipo</option>
               <option value="D1(Turismo)">D1 (Turismo)</option>
@@ -123,6 +176,11 @@ const ConductorModal = ({ open, onClose, onSave, initialData, mode }) => {
               <option value="N/A">N/A</option>
             </select>
             {errors.tipoLicencia && <span className="error-message">{errors.tipoLicencia}</span>}
+            {!formData.roles?.includes('conductor') && (
+              <small style={{ color: '#666', fontSize: '0.85rem' }}>
+                Solo requerido para conductores
+              </small>
+            )}
           </div>
 
           <div className="form-group">
