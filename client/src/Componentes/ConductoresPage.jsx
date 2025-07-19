@@ -233,7 +233,6 @@ function ConductoresPage() {
 
         <div className="conductores-btn-group">
           <Button text="Atrás" width='200px'/>
-          <Button text="Exportar Lista" width='200px'/>
         </div>
       </main>
 

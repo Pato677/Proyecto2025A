@@ -156,9 +156,8 @@ const ConductoresPanel = () => {
         onChange={setPagina}
       />
       
-      <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
+      <div style={{ marginTop: '20px' }}>
         <button className="btn-agregar">Agregar Personal</button>
-        <button className="btn-outline">Exportar Lista</button>
       </div>
     </div>
   );
