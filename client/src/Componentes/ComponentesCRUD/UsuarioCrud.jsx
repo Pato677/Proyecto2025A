@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/UsuarioPasajero";
+const API_URL = "http://localhost:3000/usuarios"; 
 
 const UsuarioCrud = {
   // Crear un nuevo usuario

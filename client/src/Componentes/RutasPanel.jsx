@@ -11,6 +11,8 @@ import './Estilos/Footer.css';
 import axios from 'axios';
 
 const rutasPorPagina = 4;
+// Ruta de la API
+const API_URL_Rutas = "http://localhost:3000/rutas";
 
 const RutasPanel = () => {
   const [rutas, setRutas] = useState([]);
@@ -26,7 +28,7 @@ const RutasPanel = () => {
 
   // 🔄 Recargar rutas desde el servidor
   const recargarRutas = () => {
-    axios.get('http://localhost:3000/Rutas')
+    axios.get(API_URL_Rutas)
       .then(res => setRutas(res.data))
       .catch(() => setRutas([]));
   };
@@ -35,7 +37,7 @@ const RutasPanel = () => {
   useEffect(() => {
     recargarRutas();
 
-    axios.get('http://localhost:3000/TerminalesInterprovinciales')
+    axios.get('http://localhost:3000/terminales')
       .then(res => setTerminales(res.data))
       .catch(() => setTerminales([]));
   }, []);
@@ -50,14 +52,14 @@ const RutasPanel = () => {
     if (modalMode === 'add') {
       const newId = rutas.length > 0 ? Math.max(...rutas.map(r => Number(r.id || 0))) + 1 : 1;
       const rutaConId = { ...nuevaRuta, id: newId };
-      axios.post('http://localhost:3000/Rutas', rutaConId)
+      axios.post(API_URL_Rutas, rutaConId)
         .then(res => {
           setRutas(prev => [...prev, res.data]);
           setShowModal(false);
         });
     } else if (modalMode === 'edit' && rutaEdit) {
       const id = rutaEdit.id;
-      axios.put(`http://localhost:3000/Rutas/${id}`, { ...nuevaRuta, id })
+      axios.put(`${API_URL_Rutas}/${id}`, { ...nuevaRuta, id })
         .then(res => {
           setRutas(prev => prev.map(r => r.id === id ? res.data : r));
           setShowModal(false);
@@ -96,7 +98,7 @@ const RutasPanel = () => {
   // Abrir ParadasModal con ruta actualizada desde el servidor
   const handleViewRoute = (ruta) => {
     // 🔄 Refrescar ruta antes de mostrar
-    axios.get(`http://localhost:3000/Rutas/${ruta.id}`)
+    axios.get(`${API_URL_Rutas}/${ruta.id}`)
       .then(res => {
         setRutaSeleccionada(res.data);
         setShowParadas(true);
@@ -111,7 +113,7 @@ const RutasPanel = () => {
     if (!selectedId) return;
     const ruta = rutas.find(r => r.id === selectedId);
     if (!ruta) return;
-    axios.delete(`http://localhost:3000/Rutas/${ruta.id}`)
+    axios.delete(`${API_URL_Rutas}/${ruta.id}`)
       .then(() => {
         setRutas(prev => prev.filter(r => r.id !== ruta.id));
         setSelectedId(null);
