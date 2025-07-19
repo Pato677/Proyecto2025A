@@ -4,7 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import DateCarousel from './DateCarousel';
 import TripCard from './TripCard';
 import TripDetails from './TripDetails';
-import Modal from './Modal';
+import InfoModal from './InfoModal';
+import WarningModal from './WarningModal';
 import Footer from './Footer';
 import Header from './Header';
 import './Estilos/Footer.css';
@@ -31,7 +32,8 @@ const TripSelectionPage = () => {
   const [viajes, setViajes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [orden, setOrden] = useState('');
-  const [showModal, setShowModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showWarningModal, setShowWarningModal] = useState(false);
   const [usuario, setUsuario] = useState(null);
   const viajesPorPagina = 4;
 
@@ -63,6 +65,19 @@ const TripSelectionPage = () => {
   const handleLogout = () => {
     localStorage.removeItem('usuario');
     setUsuario(null);
+  };
+
+  const handleConfirmTrip = () => {
+    const params = new URLSearchParams({
+      origenCiudad,
+      origenTerminal,
+      destinoCiudad,
+      destinoTerminal,
+      fecha: fechaSeleccionada,
+      pasajeros,
+      viajeId: selectedTrip
+    }).toString();
+    navigate(`/RegistroPasajerosPage?${params}`);
   };
 
   // Ordenar viajes
@@ -202,29 +217,32 @@ const TripSelectionPage = () => {
             disabled={!selectedTrip}
             onClick={() => {
               if (!selectedTrip) {
-                setShowModal(true);
+                setShowInfoModal(true);
                 return;
               }
-              const params = new URLSearchParams({
-                origenCiudad,
-                origenTerminal,
-                destinoCiudad,
-                destinoTerminal,
-                fecha: fechaSeleccionada,
-                pasajeros,
-                viajeId: selectedTrip
-              }).toString();
-              navigate(`/RegistroPasajerosPage?${params}`);
+              setShowWarningModal(true);
             }}
           />
         </div>
-      </main>
 
-      <Modal open={showModal} onClose={() => setShowModal(false)}>
-        <div style={{ marginBottom: 16, fontSize: '1.1rem', color: '#3077c6', textAlign: 'center' }}>
-          Por favor, selecciona un viaje antes de continuar.
-        </div>
-      </Modal>
+        {/* Modal informativo (sin viaje seleccionado) */}
+        <InfoModal
+          open={showInfoModal}
+          onClose={() => setShowInfoModal(false)}
+          title="Selección requerida"
+          message="Por favor, selecciona un viaje antes de continuar."
+        />
+
+        {/* Modal de advertencia de tiempo */}
+        <WarningModal
+          open={showWarningModal}
+          onClose={() => setShowWarningModal(false)}
+          onConfirm={() => {
+            setShowWarningModal(false);
+            handleConfirmTrip();
+          }}
+        />
+      </main>
 
       <footer>
         <Footer />
