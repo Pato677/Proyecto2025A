@@ -3,8 +3,8 @@ const app = express();
 const port = 3000;
 const cors = require('cors');
 
-// Importar configuración de Sequelize
-require('./server/config/sequelize.config.js');
+// ✅ CARGAR modelos después de configurar la base
+require('./server/models/index');
 
 // Middlewares
 app.use(cors());
@@ -20,7 +20,7 @@ const rutasRoutes = require('./server/routes/rutas.routes');
 const terminalesRoutes = require('./server/routes/terminales.routes');
 const ciudadesRoutes = require('./server/routes/ciudades.routes');
 const viajesRoutes = require('./server/routes/viajes.routes');
-const boletosRoutes = require('./server/routes/boletos.routes'); 
+const boletosRoutes = require('./server/routes/boletos.routes');
 
 // Registrar las rutas
 usuariosRoutes(app);
@@ -31,7 +31,7 @@ rutasRoutes(app);
 terminalesRoutes(app);
 ciudadesRoutes(app);
 viajesRoutes(app);
-boletosRoutes(app); 
+boletosRoutes(app);
 
 // Inicio del servidor
 app.listen(port, () => {

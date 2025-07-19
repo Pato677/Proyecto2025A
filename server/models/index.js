@@ -1,3 +1,7 @@
+// Importar la instancia de sequelize PRIMERO
+const sequelize = require('../config/sequelize.config');
+
+// Luego importar todos los modelos
 const Usuario = require('./usuario.model');
 const Cooperativa = require('./cooperativa.model');
 const Ciudad = require('./ciudad.model');
@@ -9,6 +13,7 @@ const Viaje = require('./viaje.model');
 const Boleto = require('./boleto.model');
 const PasajeroBoleto = require('./PasajeroBoleto.model');
 
+// Definir todas las relaciones
 // Relaciones Ciudad -> Terminal
 Ciudad.hasMany(Terminal, { foreignKey: 'ciudadId', as: 'terminales' });
 Terminal.belongsTo(Ciudad, { foreignKey: 'ciudadId', as: 'ciudad' });
@@ -51,6 +56,7 @@ Boleto.hasMany(PasajeroBoleto, { foreignKey: 'boletoId', as: 'pasajeros' });
 PasajeroBoleto.belongsTo(Boleto, { foreignKey: 'boletoId', as: 'boleto' });
 
 module.exports = {
+    sequelize,
     Usuario,
     Cooperativa,
     Ciudad,

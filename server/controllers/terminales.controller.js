@@ -1,4 +1,4 @@
-const { Terminal, Ciudad } = require('../models');
+const { Terminal, Ciudad } =  require('../models');
 
 // Obtener todos los terminales
 const getAllTerminales = async (req, res) => {

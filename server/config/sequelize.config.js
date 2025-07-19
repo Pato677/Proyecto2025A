@@ -6,7 +6,7 @@ const password = "admin";
 const bdd_name = "TransportesEC";
 const hostName = "localhost";
 
-//Conexión incial sin especificar la base de datos
+// Conexión inicial sin especificar la base de datos
 const initialSequelize = new Sequelize(`mysql://${username}:${password}@localhost`);
 
 initialSequelize.query(`CREATE DATABASE IF NOT EXISTS ${bdd_name};`)
@@ -30,8 +30,8 @@ const sequelize = new Sequelize(bdd_name, username, password, {
 sequelize.sync({ force: true }).then(async () => {
     console.log(`Base de datos ${bdd_name} sincronizada`);
     
-    // Ejecutar migración automáticamente
-    const migrateData = require('./scripts/migrateData');
+    // ✅ CARGAR modelos DESPUÉS del sync
+    const migrateData = require('../models/migrateData');
     await migrateData();
 }).catch((error) => {
     console.error(`Error al sincronizar la base de datos ${bdd_name}`, error);

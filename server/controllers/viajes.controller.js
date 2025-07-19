@@ -1,4 +1,4 @@
-const { Viaje, Ruta, Unidad, Ciudad, Terminal } = require('../models');
+const { Viaje, Ruta, Unidad, Ciudad, Terminal } =  require('../models');
 
 // Obtener todos los viajes
 const getAllViajes = async (req, res) => {

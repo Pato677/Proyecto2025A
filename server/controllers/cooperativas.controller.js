@@ -1,4 +1,4 @@
-const { Cooperativa, Conductor, Unidad } = require('../models');
+const { Cooperativa, Conductor, Unidad } =  require('../models');
 
 // Obtener todas las cooperativas
 const getAllCooperativas = async (req, res) => {
