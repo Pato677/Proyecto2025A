@@ -47,62 +47,110 @@
 .dashboard-admin-modules {
   display: flex;
   justify-content: center;
-  gap: 60px;
+  gap: 40px;
   width: 100%;
+  max-width: 1200px;
+  flex-wrap: wrap;
 }
 
 .dashboard-admin-module-card {
   background: #e6f2fd;
-  border-radius: 32px;
-  width: 180px;
-  height: 220px;
+  border-radius: 20px;
+  width: 220px;
+  height: 260px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(180,200,230,0.07);
-  transition: box-shadow 0.2s;
+  justify-content: space-between;
+  padding: 20px 15px;
+  box-shadow: 0 4px 15px rgba(180,200,230,0.15);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-admin-module-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
 }
 
 .dashboard-admin-module-card:hover {
-  box-shadow: 0 4px 16px rgba(58,142,219,0.12);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(58,142,219,0.25);
+  background: linear-gradient(135deg, #e6f2fd 0%, #d1e9fc 100%);
+}
+
+.dashboard-admin-module-card:hover::before {
+  left: 100%;
+}
+
+.dashboard-admin-module-card:active {
+  transform: translateY(-4px) scale(0.98);
+  transition: all 0.1s ease;
 }
 
 .dashboard-admin-module-icon {
-  max-width: 110px;
-  height: 90px;
-  margin-bottom: 18px;
+  max-width: 130px;
+  height: 110px;
+  margin-bottom: 20px;
   margin-top: 10px;
+  transition: transform 0.3s ease;
+  object-fit: contain;
+}
+
+.dashboard-admin-module-card:hover .dashboard-admin-module-icon {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .dashboard-admin-module-button {
   display: block;
-  background: #56aee9;
+  background: linear-gradient(135deg, #56aee9 0%, #3a8edb 100%);
   color: #fff;
-  font-weight: 500;
-  font-size: 1.1rem;
-  border-radius: 10px;
-  padding: 7px 28px;
-  margin-top: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 12px;
+  padding: 12px 16px;
+  width: 100%;
   text-align: center;
-  text-decoration: underline;
+  text-decoration: none;
   border: none;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(86, 174, 233, 0.3);
+  line-height: 1.2;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: pre-line;
 }
 
 .dashboard-admin-module-button:hover {
-  background: #3a8edb;
+  background: linear-gradient(135deg, #3a8edb 0%, #2176ab 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(58, 142, 219, 0.4);
   color: #fff;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 @media (max-width: 900px) {
   .dashboard-admin-modules {
-    gap: 24px;
+    gap: 30px;
+    padding: 0 20px;
   }
   .dashboard-admin-box {
     padding: 18px 4vw 30px 4vw;
+  }
+  .dashboard-admin-module-card {
+    width: 200px;
+    height: 240px;
   }
 }
 
@@ -111,9 +159,16 @@
     flex-direction: column;
     align-items: center;
     gap: 24px;
+    padding: 0 10px;
   }
   .dashboard-admin-module-card {
-    width: 90vw;
-    max-width: 320px;
+    width: 280px;
+    max-width: 90vw;
+    height: 220px;
+  }
+  .dashboard-admin-module-button {
+    font-size: 0.95rem;
+    padding: 10px 12px;
+    min-height: 45px;
   }
 }

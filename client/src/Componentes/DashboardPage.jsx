@@ -73,7 +73,7 @@ function DashboardPage() {
                 onClick={() => handleModuleClick('Conductores')}
                 className="dashboard-admin-module-button"
               >
-                Conductores/Controladores
+                {"Conductores/\nControladores"}
               </button>
             </div>
           </div>
