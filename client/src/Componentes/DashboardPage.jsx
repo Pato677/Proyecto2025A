@@ -40,7 +40,10 @@ function DashboardPage() {
           <h2 className="dashboard-admin-title">Módulos</h2>
           <hr className="dashboard-admin-divider" />
           <div className="dashboard-admin-modules">
-            <div className="dashboard-admin-module-card">
+            <div 
+              className="dashboard-admin-module-card"
+              onClick={() => handleModuleClick('Unidades')}
+            >
               <img src={Unidades} alt="Unidades" className="dashboard-admin-module-icon" />
               <button 
                 onClick={() => handleModuleClick('Unidades')}
@@ -49,7 +52,10 @@ function DashboardPage() {
                 Unidades
               </button>
             </div>
-            <div className="dashboard-admin-module-card">
+            <div 
+              className="dashboard-admin-module-card"
+              onClick={() => handleModuleClick('Horarios')}
+            >
               <img src={Horarios} alt="Horarios" className="dashboard-admin-module-icon" />
               <button 
                 onClick={() => handleModuleClick('Horarios')}
@@ -58,7 +64,10 @@ function DashboardPage() {
                 Horarios
               </button>
             </div>
-            <div className="dashboard-admin-module-card">
+            <div 
+              className="dashboard-admin-module-card"
+              onClick={() => handleModuleClick('Rutas')}
+            >
               <img src={Rutas} alt="Rutas" className="dashboard-admin-module-icon" />
               <button 
                 onClick={() => handleModuleClick('Rutas')}
@@ -67,7 +76,10 @@ function DashboardPage() {
                 Rutas
               </button>
             </div>
-            <div className="dashboard-admin-module-card">
+            <div 
+              className="dashboard-admin-module-card"
+              onClick={() => handleModuleClick('Conductores')}
+            >
               <img src={Conductores} alt="Conductores/Controladores" className="dashboard-admin-module-icon" />
               <button 
                 onClick={() => handleModuleClick('Conductores')}
