@@ -914,5 +914,23 @@
         "Durán"
       ]
     }
+  ],
+  "conductores": [
+    {
+      "id": 1,
+      "nombre": "Juan Pérez González",
+      "identificacion": "1234567890",
+      "tipoLicencia": "D (Pasajeros)",
+      "telefono": "0999999999",
+      "correo": "juan.perez@email.com"
+    },
+    {
+      "id": 2,
+      "nombre": "María López Silva",
+      "identificacion": "0987654321",
+      "tipoLicencia": "D1(Turismo)",
+      "telefono": "0988888888",
+      "correo": "maria.lopez@email.com"
+    }
   ]
 }
