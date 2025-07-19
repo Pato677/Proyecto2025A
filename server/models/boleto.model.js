@@ -13,7 +13,7 @@ const Boleto = sequelize.define('Boleto', {
         field: 'viaje_id'
     },
     usuarioId: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.INTEGER, // CAMBIO: De STRING a INTEGER
         allowNull: false,
         field: 'usuario_id'
     },

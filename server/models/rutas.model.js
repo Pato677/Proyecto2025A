@@ -52,7 +52,7 @@ const Ruta = sequelize.define('Ruta', {
         field: 'distancia_km'
     },
     cooperativaId: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.INTEGER, // CAMBIO: De STRING a INTEGER
         field: 'cooperativa_id'
     },
     estado: {

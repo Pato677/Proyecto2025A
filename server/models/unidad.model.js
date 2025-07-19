@@ -29,7 +29,7 @@ const Unidad = sequelize.define('Unidad', {
         type: DataTypes.TEXT
     },
     cooperativaId: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.INTEGER, // CAMBIO: De STRING a INTEGER
         field: 'cooperativa_id'
     },
     conductorId: {

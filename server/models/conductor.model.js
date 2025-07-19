@@ -39,7 +39,7 @@ const Conductor = sequelize.define('Conductor', {
         defaultValue: ['conductor']
     },
     cooperativaId: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.INTEGER,
         field: 'cooperativa_id'
     },
     estado: {

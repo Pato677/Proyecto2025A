@@ -1,7 +1,7 @@
 {
   "UsuarioPasajero": [
     {
-      "id": "1",
+      "id": 1,
       "nombres": "Juan Carlos",
       "apellidos": "Pérez Gómez",
       "fechaNacimiento": "1995-06-20",
@@ -12,7 +12,7 @@
       "confirmarContrasena": "abc123"
     },
     {
-      "id": "ceda",
+      "id": 2,
       "nombres": "Jaime",
       "apellidos": "Sanchez",
       "fechaNacimiento": "2000-06-02",
@@ -23,18 +23,18 @@
       "confirmarContrasena": "pa2302"
     },
     {
-      "id": "882b",
+      "id": 3,
       "nombres": "Jaimeae",
       "apellidos": "Sanchezaa",
       "fechaNacimiento": "2000-06-02",
       "cedula": "1708975625",
-      "correo": "pa@gmail.com",
+      "correo": "pa2@gmail.com",
       "telefono": "0847564854",
       "contrasena": "123456",
       "confirmarContrasena": "123456"
     },
     {
-      "id": "60b3",
+      "id": 4,
       "nombres": "Patricio Vladimir",
       "apellidos": "Sánchez Espinoza",
       "fechaNacimiento": "2025-06-12",
@@ -46,7 +46,7 @@
   ],
   "TerminalesInterprovinciales": [
     {
-      "id": "1",
+      "id": 1,
       "ciudad": "Quito",
       "terminales": [
         "Quitumbe",
@@ -54,133 +54,133 @@
       ]
     },
     {
-      "id": "2",
+      "id": 2,
       "ciudad": "Guayaquil",
       "terminales": [
         "Terminal Terrestre de Guayaquil"
       ]
     },
     {
-      "id": "3",
+      "id": 3,
       "ciudad": "Cuenca",
       "terminales": [
         "Terminal Terrestre de Cuenca"
       ]
     },
     {
-      "id": "4",
+      "id": 4,
       "ciudad": "Ambato",
       "terminales": [
         "Terminal Terrestre de Ambato"
       ]
     },
     {
-      "id": "5",
+      "id": 5,
       "ciudad": "Ibarra",
       "terminales": [
         "Terminal Terrestre de Ibarra"
       ]
     },
     {
-      "id": "6",
+      "id": 6,
       "ciudad": "Loja",
       "terminales": [
         "Terminal Terrestre de Loja"
       ]
     },
     {
-      "id": "7",
+      "id": 7,
       "ciudad": "Riobamba",
       "terminales": [
         "Terminal Terrestre de Riobamba"
       ]
     },
     {
-      "id": "8",
+      "id": 8,
       "ciudad": "Babahoyo",
       "terminales": [
         "Terminal Terrestre de Babahoyo"
       ]
     },
     {
-      "id": "9",
+      "id": 9,
       "ciudad": "Manta",
       "terminales": [
         "Terminal Terrestre de Manta"
       ]
     },
     {
-      "id": "10",
+      "id": 10,
       "ciudad": "Machala",
       "terminales": [
         "Terminal Terrestre de Machala"
       ]
     },
     {
-      "id": "11",
+      "id": 11,
       "ciudad": "Portoviejo",
       "terminales": [
         "Terminal Terrestre de Portoviejo"
       ]
     },
     {
-      "id": "12",
+      "id": 12,
       "ciudad": "Santo Domingo",
       "terminales": [
         "Terminal Terrestre de Santo Domingo"
       ]
     },
     {
-      "id": "13",
+      "id": 13,
       "ciudad": "Durán",
       "terminales": [
         "Terminal Terrestre de Durán"
       ]
     },
     {
-      "id": "14",
+      "id": 14,
       "ciudad": "Atacames",
       "terminales": [
         "Terminal Terrestre de Atacames"
       ]
     },
     {
-      "id": "15",
+      "id": 15,
       "ciudad": "Baños",
       "terminales": [
         "Terminal Terrestre de Baños"
       ]
     },
     {
-      "id": "16",
+      "id": 16,
       "ciudad": "Coca",
       "terminales": [
         "Terminal Terrestre de Coca"
       ]
     },
     {
-      "id": "17",
+      "id": 17,
       "ciudad": "Macas",
       "terminales": [
         "Terminal Terrestre de Macas"
       ]
     },
     {
-      "id": "18",
+      "id": 18,
       "ciudad": "Puyo",
       "terminales": [
         "Terminal Terrestre de Puyo"
       ]
     },
     {
-      "id": "19",
+      "id": 19,
       "ciudad": "Quevedo",
       "terminales": [
         "Terminal Terrestre de Quevedo"
       ]
     },
     {
-      "id": "20",
+      "id": 20,
       "ciudad": "Tulcán",
       "terminales": [
         "Terminal Terrestre de Tulcán"
@@ -189,7 +189,7 @@
   ],
   "unidades": [
     {
-      "id": "1",
+      "id": 1,
       "placa": "PBXZ1234",
       "numeroUnidad": 20,
       "conductor": "Juan Perez",
@@ -199,7 +199,7 @@
       "imagen": "https://carroceriasjacome.com/images/buses/santa-martha_2.jpg"
     },
     {
-      "id": "2",
+      "id": 2,
       "placa": "ABC1234",
       "numeroUnidad": 21,
       "conductor": "Luis Torres",
@@ -291,7 +291,7 @@
   ],
   "Viajes": [
     {
-      "id": "1",
+      "id": 1,
       "origenCiudad": "Quito",
       "origenTerminal": "Quitumbe",
       "destinoCiudad": "Guayaquil",
@@ -302,7 +302,7 @@
       "precio": 12.25
     },
     {
-      "id": "2",
+      "id": 2,
       "origenCiudad": "Quito",
       "origenTerminal": "Quitumbe",
       "destinoCiudad": "Guayaquil",
@@ -313,7 +313,7 @@
       "precio": 14.83
     },
     {
-      "id": "3",
+      "id": 3,
       "origenCiudad": "Quito",
       "origenTerminal": "Carcelén",
       "destinoCiudad": "Guayaquil",
@@ -324,7 +324,7 @@
       "precio": 17.85
     },
     {
-      "id": "4",
+      "id": 4,
       "origenCiudad": "Quito",
       "origenTerminal": "Carcelén",
       "destinoCiudad": "Guayaquil",
@@ -335,7 +335,7 @@
       "precio": 18.5
     },
     {
-      "id": "5",
+      "id": 5,
       "origenCiudad": "Quito",
       "origenTerminal": "Quitumbe",
       "destinoCiudad": "Cuenca",
@@ -346,7 +346,7 @@
       "precio": 15.75
     },
     {
-      "id": "6",
+      "id": 6,
       "origenCiudad": "Quito",
       "origenTerminal": "Carcelén",
       "destinoCiudad": "Cuenca",
@@ -357,7 +357,7 @@
       "precio": 13.4
     },
     {
-      "id": "7",
+      "id": 7,
       "origenCiudad": "Quito",
       "origenTerminal": "Quitumbe",
       "destinoCiudad": "Cuenca",
@@ -368,7 +368,7 @@
       "precio": 20
     },
     {
-      "id": "8",
+      "id": 8,
       "origenCiudad": "Quito",
       "origenTerminal": "Carcelén",
       "destinoCiudad": "Cuenca",
@@ -379,7 +379,7 @@
       "precio": 16.9
     },
     {
-      "id": "9",
+      "id": 9,
       "origenCiudad": "Guayaquil",
       "origenTerminal": "Terminal Terrestre de Guayaquil",
       "destinoCiudad": "Quito",
@@ -390,7 +390,7 @@
       "precio": 13
     },
     {
-      "id": "10",
+      "id": 10,
       "origenCiudad": "Guayaquil",
       "origenTerminal": "Terminal Terrestre de Guayaquil",
       "destinoCiudad": "Quito",
@@ -401,7 +401,7 @@
       "precio": 16.5
     },
     {
-      "id": "11",
+      "id": 11,
       "origenCiudad": "Guayaquil",
       "origenTerminal": "Terminal Terrestre de Guayaquil",
       "destinoCiudad": "Quito",
@@ -412,7 +412,7 @@
       "precio": 15
     },
     {
-      "id": "12",
+      "id": 12,
       "origenCiudad": "Guayaquil",
       "origenTerminal": "Terminal Terrestre de Guayaquil",
       "destinoCiudad": "Quito",
@@ -423,7 +423,7 @@
       "precio": 13.2
     },
     {
-      "id": "13",
+      "id": 13,
       "origenCiudad": "Cuenca",
       "origenTerminal": "Terminal Terrestre de Cuenca",
       "destinoCiudad": "Quito",
@@ -434,7 +434,7 @@
       "precio": 15.5
     },
     {
-      "id": "14",
+      "id": 14,
       "origenCiudad": "Cuenca",
       "origenTerminal": "Terminal Terrestre de Cuenca",
       "destinoCiudad": "Quito",
@@ -445,7 +445,7 @@
       "precio": 13.9
     },
     {
-      "id": "15",
+      "id": 15,
       "origenCiudad": "Cuenca",
       "origenTerminal": "Terminal Terrestre de Cuenca",
       "destinoCiudad": "Quito",
@@ -456,7 +456,7 @@
       "precio": 19
     },
     {
-      "id": "16",
+      "id": 16,
       "origenCiudad": "Cuenca",
       "origenTerminal": "Terminal Terrestre de Cuenca",
       "destinoCiudad": "Quito",
@@ -467,7 +467,7 @@
       "precio": 17.2
     },
     {
-      "id": "17",
+      "id": 17,
       "origenCiudad": "Ambato",
       "origenTerminal": "Terminal Terrestre de Ambato",
       "destinoCiudad": "Manta",
@@ -478,7 +478,7 @@
       "precio": 6.64
     },
     {
-      "id": "18",
+      "id": 18,
       "origenCiudad": "Ambato",
       "origenTerminal": "Terminal Terrestre de Ambato",
       "destinoCiudad": "Durán",
@@ -489,7 +489,7 @@
       "precio": 8.36
     },
     {
-      "id": "19",
+      "id": 19,
       "origenCiudad": "Ambato",
       "origenTerminal": "Terminal Terrestre de Ambato",
       "destinoCiudad": "Coca",
@@ -500,7 +500,7 @@
       "precio": 15.63
     },
     {
-      "id": "20",
+      "id": 20,
       "origenCiudad": "Ambato",
       "origenTerminal": "Terminal Terrestre de Ambato",
       "destinoCiudad": "Tulcán",
@@ -511,7 +511,7 @@
       "precio": 8.23
     },
     {
-      "id": "21",
+      "id": 21,
       "origenCiudad": "Ambato",
       "origenTerminal": "Terminal Terrestre de Ambato",
       "destinoCiudad": "Loja",
@@ -522,7 +522,7 @@
       "precio": 19.46
     },
     {
-      "id": "22",
+      "id": 22,
       "origenCiudad": "Ibarra",
       "origenTerminal": "Terminal Terrestre de Ibarra",
       "destinoCiudad": "Baños",
@@ -533,7 +533,7 @@
       "precio": 14.11
     },
     {
-      "id": "23",
+      "id": 23,
       "origenCiudad": "Ibarra",
       "origenTerminal": "Terminal Terrestre de Ibarra",
       "destinoCiudad": "Portoviejo",
@@ -544,7 +544,7 @@
       "precio": 14.83
     },
     {
-      "id": "24",
+      "id": 24,
       "origenCiudad": "Ibarra",
       "origenTerminal": "Terminal Terrestre de Ibarra",
       "destinoCiudad": "Puyo",
@@ -555,7 +555,7 @@
       "precio": 10.75
     },
     {
-      "id": "25",
+      "id": 25,
       "origenCiudad": "Ibarra",
       "origenTerminal": "Terminal Terrestre de Ibarra",
       "destinoCiudad": "Macas",
@@ -566,7 +566,7 @@
       "precio": 15.2
     },
     {
-      "id": "26",
+      "id": 26,
       "origenCiudad": "Ibarra",
       "origenTerminal": "Terminal Terrestre de Ibarra",
       "destinoCiudad": "Quevedo",
@@ -577,7 +577,7 @@
       "precio": 15.44
     },
     {
-      "id": "27",
+      "id": 27,
       "origenCiudad": "Loja",
       "origenTerminal": "Terminal Terrestre de Loja",
       "destinoCiudad": "Manta",
@@ -588,7 +588,7 @@
       "precio": 11.27
     },
     {
-      "id": "28",
+      "id": 28,
       "origenCiudad": "Loja",
       "origenTerminal": "Terminal Terrestre de Loja",
       "destinoCiudad": "Atacames",
@@ -599,7 +599,7 @@
       "precio": 11.91
     },
     {
-      "id": "29",
+      "id": 29,
       "origenCiudad": "Loja",
       "origenTerminal": "Terminal Terrestre de Loja",
       "destinoCiudad": "Santo Domingo",
@@ -610,7 +610,7 @@
       "precio": 10.03
     },
     {
-      "id": "30",
+      "id": 30,
       "origenCiudad": "Loja",
       "origenTerminal": "Terminal Terrestre de Loja",
       "destinoCiudad": "Babahoyo",
@@ -621,7 +621,7 @@
       "precio": 10.67
     },
     {
-      "id": "31",
+      "id": 31,
       "origenCiudad": "Loja",
       "origenTerminal": "Terminal Terrestre de Loja",
       "destinoCiudad": "Machala",
@@ -634,7 +634,7 @@
   ],
   "Rutas": [
     {
-      "id": "1",
+      "id": 1,
       "numeroRuta": "RT-2025-0001",
       "ciudadOrigen": "Quito",
       "terminalOrigen": "Quitumbe",
@@ -666,7 +666,7 @@
       ]
     },
     {
-      "id": "3",
+      "id": 3,
       "numeroRuta": "RT-2025-0003",
       "ciudadOrigen": "Quito",
       "terminalOrigen": "Carcelén",
@@ -683,7 +683,7 @@
       ]
     },
     {
-      "id": "4",
+      "id": 4,
       "numeroRuta": "RT-2025-0004",
       "ciudadOrigen": "Quito",
       "terminalOrigen": "Carcelén",
@@ -700,7 +700,7 @@
       ]
     },
     {
-      "id": "5",
+      "id": 5,
       "numeroRuta": "RT-2025-0005",
       "ciudadOrigen": "Quito",
       "terminalOrigen": "Quitumbe",
@@ -716,7 +716,7 @@
       ]
     },
     {
-      "id": "6",
+      "id": 6,
       "numeroRuta": "RT-2025-0006",
       "ciudadOrigen": "Quito",
       "terminalOrigen": "Carcelén",
@@ -732,7 +732,7 @@
       ]
     },
     {
-      "id": "7",
+      "id": 7,
       "numeroRuta": "RT-2025-0007",
       "ciudadOrigen": "Quito",
       "terminalOrigen": "Quitumbe",
@@ -749,7 +749,7 @@
       ]
     },
     {
-      "id": "8",
+      "id": 8,
       "numeroRuta": "RT-2025-0008",
       "ciudadOrigen": "Quito",
       "terminalOrigen": "Carcelén",
@@ -766,7 +766,7 @@
       ]
     },
     {
-      "id": "9",
+      "id": 9,
       "numeroRuta": "RT-2025-0009",
       "ciudadOrigen": "Guayaquil",
       "terminalOrigen": "Terminal Terrestre de Guayaquil",
@@ -783,7 +783,7 @@
       ]
     },
     {
-      "id": "10",
+      "id": 10,
       "numeroRuta": "RT-2025-0010",
       "ciudadOrigen": "Guayaquil",
       "terminalOrigen": "Terminal Terrestre de Guayaquil",
@@ -800,7 +800,7 @@
       ]
     },
     {
-      "id": "11",
+      "id": 11,
       "numeroRuta": "RT-2025-0011",
       "ciudadOrigen": "Guayaquil",
       "terminalOrigen": "Terminal Terrestre de Guayaquil",
@@ -816,7 +816,7 @@
       ]
     },
     {
-      "id": "12",
+      "id": 12,
       "numeroRuta": "RT-2025-0012",
       "ciudadOrigen": "Guayaquil",
       "terminalOrigen": "Terminal Terrestre de Guayaquil",
@@ -833,7 +833,7 @@
       ]
     },
     {
-      "id": "13",
+      "id": 13,
       "numeroRuta": "RT-2025-0013",
       "ciudadOrigen": "Cuenca",
       "terminalOrigen": "Terminal Terrestre de Cuenca",
@@ -849,7 +849,7 @@
       ]
     },
     {
-      "id": "14",
+      "id": 14,
       "numeroRuta": "RT-2025-0014",
       "ciudadOrigen": "Cuenca",
       "terminalOrigen": "Terminal Terrestre de Cuenca",
@@ -865,7 +865,7 @@
       ]
     },
     {
-      "id": "15",
+      "id": 15,
       "numeroRuta": "RT-2025-0015",
       "ciudadOrigen": "Cuenca",
       "terminalOrigen": "Terminal Terrestre de Cuenca",
@@ -881,7 +881,7 @@
       ]
     },
     {
-      "id": "16",
+      "id": 16,
       "numeroRuta": "RT-2025-0016",
       "ciudadOrigen": "Cuenca",
       "terminalOrigen": "Terminal Terrestre de Cuenca",
@@ -897,7 +897,7 @@
       ]
     },
     {
-      "id": "17",
+      "id": 17,
       "numeroRuta": "RT-2025_2100",
       "ciudadOrigen": "Quito",
       "terminalOrigen": "Quitumbe",

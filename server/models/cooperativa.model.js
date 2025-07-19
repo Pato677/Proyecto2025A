@@ -3,10 +3,9 @@ const sequelize = require('../config/sequelize.config');
 
 const Cooperativa = sequelize.define('Cooperativa', {
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER, 
         primaryKey: true,
-        autoIncrement: true,
-        allowNull: false
+        autoIncrement: true 
     },
     razonSocial: {
         type: DataTypes.STRING(200),

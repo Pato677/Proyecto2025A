@@ -1,13 +1,13 @@
-const Usuario = require('./Usuario');
-const Cooperativa = require('./Cooperativa');
-const Ciudad = require('./Ciudad');
-const Terminal = require('./Terminal');
-const Conductor = require('./Conductor');
-const Unidad = require('./Unidad');
-const Ruta = require('./Ruta');
-const Viaje = require('./Viaje');
-const Boleto = require('./Boleto'); // Cambio aquí
-const PasajeroBoleto = require('./PasajeroBoleto'); // Cambio aquí
+const Usuario = require('./usuario.model');
+const Cooperativa = require('./cooperativa.model');
+const Ciudad = require('./ciudad.model');
+const Terminal = require('./terminal.model');
+const Conductor = require('./conductor.model');
+const Unidad = require('./unidad.model');
+const Ruta = require('./rutas.model');
+const Viaje = require('./viaje.model');
+const Boleto = require('./boleto.model');
+const PasajeroBoleto = require('./PasajeroBoleto.model');
 
 // Relaciones Ciudad -> Terminal
 Ciudad.hasMany(Terminal, { foreignKey: 'ciudadId', as: 'terminales' });
@@ -40,13 +40,13 @@ Viaje.belongsTo(Ruta, { foreignKey: 'rutaId', as: 'ruta' });
 Unidad.hasMany(Viaje, { foreignKey: 'unidadId', as: 'viajes' });
 Viaje.belongsTo(Unidad, { foreignKey: 'unidadId', as: 'unidad' });
 
-// Relaciones Boleto (anteriormente Reserva)
+// Relaciones Boleto
 Usuario.hasMany(Boleto, { foreignKey: 'usuarioId', as: 'boletos' });
 Boleto.belongsTo(Usuario, { foreignKey: 'usuarioId', as: 'usuario' });
 Viaje.hasMany(Boleto, { foreignKey: 'viajeId', as: 'boletos' });
 Boleto.belongsTo(Viaje, { foreignKey: 'viajeId', as: 'viaje' });
 
-// Relaciones PasajeroBoleto (anteriormente PasajeroReserva)
+// Relaciones PasajeroBoleto
 Boleto.hasMany(PasajeroBoleto, { foreignKey: 'boletoId', as: 'pasajeros' });
 PasajeroBoleto.belongsTo(Boleto, { foreignKey: 'boletoId', as: 'boleto' });
 
@@ -59,6 +59,6 @@ module.exports = {
     Unidad,
     Ruta,
     Viaje,
-    Boleto, // Cambio aquí
-    PasajeroBoleto // Cambio aquí
+    Boleto,
+    PasajeroBoleto
 };
