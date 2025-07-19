@@ -27,8 +27,12 @@ const sequelize = new Sequelize(bdd_name, username, password, {
 //En producción no se debe utilizar ninguno.
 
 //sequelize.sync({force:true}).then(() => {
-sequelize.sync().then(() => {
+sequelize.sync({ force: true }).then(async () => {
     console.log(`Base de datos ${bdd_name} sincronizada`);
+    
+    // Ejecutar migración automáticamente
+    const migrateData = require('./scripts/migrateData');
+    await migrateData();
 }).catch((error) => {
     console.error(`Error al sincronizar la base de datos ${bdd_name}`, error);
 });

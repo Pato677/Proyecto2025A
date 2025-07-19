@@ -1,35 +1,37 @@
 const express = require('express');
 const app = express();
-const port = 8000;
+const port = 3000;
 const cors = require('cors');
 
+// Importar configuración de Sequelize
+require('./server/config/sequelize.config.js');
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Rutas
-const usuariosRouter = require('./server/routes/usuario');
-app.use('/pasajeros', usuariosRouter);
+// Importar todas las rutas
+const usuariosRoutes = require('./server/routes/usuario.routes');
+const cooperativasRoutes = require('./server/routes/cooperativas.routes');
+const unidadesRoutes = require('./server/routes/unidades.routes');
+const conductoresRoutes = require('./server/routes/conductores.routes');
+const rutasRoutes = require('./server/routes/rutas.routes');
+const terminalesRoutes = require('./server/routes/terminales.routes');
+const ciudadesRoutes = require('./server/routes/ciudades.routes');
+const viajesRoutes = require('./server/routes/viajes.routes');
+const boletosRoutes = require('./server/routes/boletos.routes'); 
 
-//Unidades
-const unidadesRouter = require('./server/routes/unidades');
-app.use('/unidades', unidadesRouter);
-
-// Rutas
-const rutasRouter = require('./server/routes/rutas');
-app.use('/rutas', rutasRouter);
-
-// Paradas
-const paradasRouter = require('./server/routes/paradas');
-app.use('/rutas', paradasRouter);
-
-//terminales
-const terminalesRouter = require('./server/routes/terminales');
-app.use('/terminales', terminalesRouter);
-// cooperativas
-const cooperativasRouter = require('./server/routes/cooperativas');
-app.use('/cooperativas', cooperativasRouter);
+// Registrar las rutas
+usuariosRoutes(app);
+cooperativasRoutes(app);
+unidadesRoutes(app);
+conductoresRoutes(app);
+rutasRoutes(app);
+terminalesRoutes(app);
+ciudadesRoutes(app);
+viajesRoutes(app);
+boletosRoutes(app); 
 
 // Inicio del servidor
 app.listen(port, () => {
