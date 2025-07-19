@@ -15,16 +15,22 @@ function ConductoresPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const conductoresPorPagina = 8;
 
+  // URL base consistente
+  const API_URL = 'http://localhost:3000';
+
   // Cargar conductores al inicio
   useEffect(() => {
-    axios.get('http://localhost:8000/conductores')
+    axios.get(`${API_URL}/conductores`)
       .then(res => {
         setConductores(res.data);
         if (res.data.length > 0) {
           setSelectedId(res.data[0].id);
         }
       })
-      .catch(() => setConductores([]));
+      .catch(err => {
+        console.error('Error al cargar conductores:', err);
+        setConductores([]);
+      });
   }, []);
 
   // Calcular paginación
@@ -41,20 +47,22 @@ function ConductoresPage() {
     if (modalMode === 'add') {
       const newId = conductores.length > 0 ? Math.max(...conductores.map(c => Number(c.id))) + 1 : 1;
       const conductorConId = { ...nuevoConductor, id: newId };
-      axios.post('http://localhost:8000/conductores', conductorConId)
+      axios.post(`${API_URL}/conductores`, conductorConId)
         .then(res => {
           setConductores(prev => [...prev, res.data]);
           setShowModal(false);
           setSelectedId(res.data.id);
-        });
+        })
+        .catch(err => console.error('Error al agregar conductor:', err));
     } else if (modalMode === 'edit' && conductorEdit) {
-      axios.put(`http://localhost:8000/conductores/${conductorEdit.id}`, { ...nuevoConductor, id: conductorEdit.id })
+      axios.put(`${API_URL}/conductores/${conductorEdit.id}`, { ...nuevoConductor, id: conductorEdit.id })
         .then(res => {
           setConductores(prev => prev.map(c => c.id === conductorEdit.id ? res.data : c));
           setShowModal(false);
           setSelectedId(conductorEdit.id);
           setConductorEdit(null);
-        });
+        })
+        .catch(err => console.error('Error al actualizar conductor:', err));
     }
   };
 
@@ -68,27 +76,45 @@ function ConductoresPage() {
   // Abrir modal para editar
   const handleActualizar = () => {
     if (!selectedId) return;
-    axios.get(`http://localhost:8000/conductores/${selectedId}`)
-      .then(res => {
-        setConductorEdit(res.data);
-        setModalMode('edit');
-        setShowModal(true);
-      });
+    
+    // Buscar el conductor en el estado local primero
+    const conductorLocal = conductores.find(c => c.id === selectedId);
+    if (conductorLocal) {
+      setConductorEdit(conductorLocal);
+      setModalMode('edit');
+      setShowModal(true);
+    } else {
+      // Si no está en el estado local, hacer petición al servidor
+      axios.get(`${API_URL}/conductores/${selectedId}`)
+        .then(res => {
+          setConductorEdit(res.data);
+          setModalMode('edit');
+          setShowModal(true);
+        })
+        .catch(err => {
+          console.error('Error al cargar conductor:', err);
+          alert('Error al cargar los datos del conductor');
+        });
+    }
   };
 
   // Eliminar conductor seleccionado
   const handleEliminar = () => {
     if (!selectedId) return;
-    axios.delete(`http://localhost:8000/conductores/${selectedId}`)
-      .then(() => {
-        setConductores(prev => prev.filter(c => c.id !== selectedId));
-        setTimeout(() => {
-          setSelectedId(prev => {
-            const restantes = conductores.filter(c => c.id !== selectedId);
-            return restantes.length > 0 ? restantes[0].id : null;
-          });
-        }, 0);
-      });
+    
+    if (window.confirm('¿Estás seguro de que deseas eliminar este conductor?')) {
+      axios.delete(`${API_URL}/conductores/${selectedId}`)
+        .then(() => {
+          setConductores(prev => prev.filter(c => c.id !== selectedId));
+          // Seleccionar el siguiente conductor disponible
+          const restantes = conductores.filter(c => c.id !== selectedId);
+          setSelectedId(restantes.length > 0 ? restantes[0].id : null);
+        })
+        .catch(err => {
+          console.error('Error al eliminar conductor:', err);
+          alert('Error al eliminar el conductor');
+        });
+    }
   };
 
   // Cambiar página
@@ -140,29 +166,31 @@ function ConductoresPage() {
               </tbody>
             </table>
             {/* Paginación */}
-            <div className="pagination">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                &lt;
-              </button>
-              {Array.from({ length: totalPaginas }, (_, i) => (
+            {totalPaginas > 1 && (
+              <div className="pagination">
                 <button
-                  key={i + 1}
-                  className={currentPage === i + 1 ? 'active' : ''}
-                  onClick={() => handlePageChange(i + 1)}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
                 >
-                  {i + 1}
+                  &lt;
                 </button>
-              ))}
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPaginas}
-              >
-                &gt;
-              </button>
-            </div>
+                {Array.from({ length: totalPaginas }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    className={currentPage === i + 1 ? 'active' : ''}
+                    onClick={() => handlePageChange(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPaginas}
+                >
+                  &gt;
+                </button>
+              </div>
+            )}
           </div>
           
           <div className="conductores-info-box">
@@ -187,8 +215,20 @@ function ConductoresPage() {
 
         <div className="conductores-btn-group">
           <button className="conductores-btn" onClick={handleAgregar}>Agregar</button>
-          <button className="conductores-btn" onClick={handleEliminar}>Eliminar</button>
-          <button className="conductores-btn" onClick={handleActualizar}>Actualizar</button>
+          <button 
+            className="conductores-btn" 
+            onClick={handleEliminar}
+            disabled={!selectedId}
+          >
+            Eliminar
+          </button>
+          <button 
+            className="conductores-btn" 
+            onClick={handleActualizar}
+            disabled={!selectedId}
+          >
+            Actualizar
+          </button>
         </div>
 
         <div className="conductores-btn-group">

@@ -20,12 +20,10 @@ import FormasDePagoPage from './Componentes/FormasDePagoPage';
 import Button from './Componentes/Button';
 import PerfilUsuario from './Componentes/PerfilUsuario';
 import SuperAdminDashboard from './Componentes/SuperAdminDashboard';
+import ConductoresPage from './Componentes/ConductoresPage';
 
 function App() {
-
-
   return (
-
     <div className="App">
       <BrowserRouter>
         <Routes>
@@ -48,6 +46,7 @@ function App() {
           <Route path="/PerfilUsuario" element ={<PerfilUsuario />} />
           <Route path="/boton" element={<Button text="Atras" />} />
           <Route path="/SuperAdmin" element={<SuperAdminDashboard />} />
+          <Route path="/ConductoresPage" element={<ConductoresPage />} />
         </Routes>
       </BrowserRouter>
     </div>

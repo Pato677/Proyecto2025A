@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Estilos/Indice.css';
+
 const Indice = () => {
   return (
     <div className="indice-container">
@@ -13,16 +14,16 @@ const Indice = () => {
           <Link className="indice-link" to="/Login">🔑 Login</Link>
         </li>
         <li>
-          <Link className="indice-link" to="/PasajeroForm">🛣️ Registrar Usuario</Link>
+          <Link className="indice-link" to="/PasajeroForm">👤 Registrar Usuario</Link>
         </li>
         <li>
-          <Link className="indice-link" to="/RegistroCooperativa">🛣️ Registrar Cooperativa</Link>
+          <Link className="indice-link" to="/RegistroCooperativa">🏢 Registrar Cooperativa</Link>
         </li>
         <li>
           <Link className="indice-link" to="/SeleccionViaje">🚌 Selección de Viaje</Link>
         </li>
         <li>
-          <Link className="indice-link" to="/RegistroPasajerosPage">👤 Registro de Pasajeros</Link>
+          <Link className="indice-link" to="/RegistroPasajerosPage">👥 Registro de Pasajeros</Link>
         </li>
         <li>
           <Link className="indice-link" to="/SeleccionAsientosPage">💺 Selección de Asientos</Link>
@@ -40,7 +41,13 @@ const Indice = () => {
           <Link className="indice-link" to="/DashboardAdmin">📊 Dashboard Administrador</Link>
         </li>
         <li>
+          <Link className="indice-link" to="/SuperAdmin">⚡ Dashboard Super Administrador</Link>
+        </li>
+        <li>
           <Link className="indice-link" to="/RegisterUnits">🚌 Registrar Unidades</Link>
+        </li>
+        <li>
+          <Link className="indice-link" to="/ConductoresPage">👨‍✈️ Gestión de Conductores</Link>
         </li>
         <li>
           <Link className="indice-link" to="/RutasPanel">🗺️ Tabla de Rutas</Link>
