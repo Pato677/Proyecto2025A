@@ -1,0 +1,9 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - script: echo "Pipeline ejecutado correctamente"
+    displayName: 'Mostrar mensaje'
