@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import HeaderAdmin from './HeaderAdmin';
 import Footer from './Footer';
 import './Estilos/RegisterUnits.css';
 import Button from './Button';
 import UnidadModal from './UnidadModal';
+import SimuladorUbicacionModal from './SimularUbicacion';
 
 function RegisterUnitsPage() {
   const [unidades, setUnidades] = useState([]);
@@ -14,8 +15,8 @@ function RegisterUnitsPage() {
   const [unidadEdit, setUnidadEdit] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const unidadesPorPagina = 8;
+  const [mostrarSimulador, setMostrarSimulador] = useState(false);
 
-  // Cargar unidades al inicio
   useEffect(() => {
     axios.get('http://localhost:3000/unidades')
       .then(res => {
@@ -27,16 +28,13 @@ function RegisterUnitsPage() {
       .catch(() => setUnidades([]));
   }, []);
 
-  // Calcular paginación
   const totalPaginas = Math.ceil(unidades.length / unidadesPorPagina);
   const startIdx = (currentPage - 1) * unidadesPorPagina;
   const endIdx = startIdx + unidadesPorPagina;
   const unidadesPagina = unidades.slice(startIdx, endIdx);
 
-  // Buscar la unidad seleccionada en el array
   const unidadSeleccionada = unidades.find(u => u.id === selectedId);
 
-  // Guardar nueva unidad
   const handleSaveUnidad = (nuevaUnidad) => {
     if (modalMode === 'add') {
       const newId = unidades.length > 0 ? Math.max(...unidades.map(u => Number(u.id))) + 1 : 1;
@@ -58,14 +56,12 @@ function RegisterUnitsPage() {
     }
   };
 
-  // Abrir modal para agregar
   const handleAgregar = () => {
     setModalMode('add');
     setUnidadEdit(null);
     setShowModal(true);
   };
 
-  // Abrir modal para editar y cargar datos
   const handleActualizar = () => {
     if (!selectedId) return;
     axios.get(`http://localhost:3000/unidades/${selectedId}`)
@@ -76,7 +72,6 @@ function RegisterUnitsPage() {
       });
   };
 
-  // Eliminar unidad seleccionada
   const handleEliminar = () => {
     if (!selectedId) return;
     axios.delete(`http://localhost:3000/unidades/${selectedId}`)
@@ -91,10 +86,8 @@ function RegisterUnitsPage() {
       });
   };
 
-  // Cambiar página
   const handlePageChange = (num) => {
     setCurrentPage(num);
-    // Seleccionar el primer elemento de la nueva página si existe
     const nuevaUnidad = unidades[(num - 1) * unidadesPorPagina];
     if (nuevaUnidad) setSelectedId(nuevaUnidad.id);
   };
@@ -105,86 +98,98 @@ function RegisterUnitsPage() {
 
       <main className="register-units-main">
         <h1 className="register-units-title">Registrar Unidades</h1>
-        <div className="register-units-content">
-          <div className="register-units-table-box">
-            <table className="register-units-table">
-              <thead>
-                <tr>
-                  <th>Placa</th>
-                  <th>N° de unidad</th>
-                  <th>Conductor</th>
-                  <th>Controlador</th>
-                  <th>N° de pisos</th>
-                  <th>Nro de asientos</th>
-                </tr>
-              </thead>
-              <tbody>
-                {unidadesPagina.length > 0 ? (
-                  unidadesPagina.map((unidad) => (
-                    <tr
-                      key={unidad.id}
-                      className={selectedId === unidad.id ? 'selected-row' : ''}
-                      onClick={() => setSelectedId(unidad.id)}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <td>{unidad.placa}</td>
-                      <td>{unidad.numeroUnidad}</td>
-                      <td>{unidad.conductor}</td>
-                      <td>{unidad.controlador}</td>
-                      <td>{unidad.pisos}</td>
-                      <td>{unidad.asientos}</td>
-                    </tr>
-                  ))
-                ) : (
+
+        <div className="register-units-container-box">
+          <div className="register-units-content">
+            <div className="register-units-table-box">
+              <table className="register-units-table">
+                <thead>
                   <tr>
-                    <td colSpan={6} style={{ textAlign: 'center' }}>No hay unidades registradas</td>
+                    <th>Placa</th>
+                    <th>Nº de unidad</th>
+                    <th>Conductor</th>
+                    <th>Controlador</th>
+                    <th>Nº de pisos</th>
+                    <th>Nro de asientos</th>
+                    <th>Ubicación</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
-            {/* Paginación */}
-            <div className="pagination">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                &lt;
-              </button>
-              {Array.from({ length: totalPaginas }, (_, i) => (
+                </thead>
+                <tbody>
+                  {unidadesPagina.length > 0 ? (
+                    unidadesPagina.map((unidad) => (
+                      <tr
+                        key={unidad.id}
+                        className={selectedId === unidad.id ? 'selected-row' : ''}
+                        onClick={() => setSelectedId(unidad.id)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <td>{unidad.placa}</td>
+                        <td>{unidad.numeroUnidad}</td>
+                        <td>{unidad.conductor}</td>
+                        <td>{unidad.controlador}</td>
+                        <td>{unidad.pisos}</td>
+                        <td>{unidad.asientos}</td>
+                        <td>
+                          <button
+                            className="ver-ruta-btn"
+                            onClick={(e) => { e.stopPropagation(); setMostrarSimulador(true); }}
+                          >
+                            Ver Ruta
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={7} style={{ textAlign: 'center' }}>No hay unidades registradas</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+
+              <div className="pagination">
                 <button
-                  key={i + 1}
-                  className={currentPage === i + 1 ? 'active' : ''}
-                  onClick={() => handlePageChange(i + 1)}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
                 >
-                  {i + 1}
+                  &lt;
                 </button>
-              ))}
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPaginas}
-              >
-                &gt;
-              </button>
+                {Array.from({ length: totalPaginas }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    className={currentPage === i + 1 ? 'active' : ''}
+                    onClick={() => handlePageChange(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPaginas}
+                >
+                  &gt;
+                </button>
+              </div>
+            </div>
+
+            <div className="register-units-image-box">
+              <img
+                src={unidadSeleccionada?.imagen || "https://via.placeholder.com/400x200?text=Sin+imagen"}
+                alt="Bus"
+                className="register-units-image"
+              />
             </div>
           </div>
-          <div className="register-units-image-box">
-            <img
-              src={unidadSeleccionada?.imagen || "https://via.placeholder.com/400x200?text=Sin+imagen"}
-              alt="Bus"
-              className="register-units-image"
-            />
-          </div>
-        </div>
 
-        <div className="register-units-btn-group">
-          <button className="register-units-btn" onClick={handleAgregar}>Agregar</button>
-          <button className="register-units-btn" onClick={handleEliminar}>Eliminar</button>
-          <button className="register-units-btn" onClick={handleActualizar}>Actualizar</button>
+          <div className="register-units-btn-group">
+            <button className="register-units-btn" onClick={handleAgregar}>Agregar</button>
+            <button className="register-units-btn" onClick={handleEliminar}>Eliminar</button>
+            <button className="register-units-btn" onClick={handleActualizar}>Actualizar</button>
+          </div>
         </div>
 
         <div className="register-units-btn-group">
           <Button text="Atras" width='200px'/>
-          <Button text="Ver Ubicacion" width='200px'/>
         </div>
       </main>
 
@@ -197,6 +202,10 @@ function RegisterUnitsPage() {
         initialData={modalMode === 'edit' ? unidadEdit : null}
         mode={modalMode}
       />
+
+      {mostrarSimulador && (
+        <SimuladorUbicacionModal onClose={() => setMostrarSimulador(false)} />
+      )}
     </div>
   );
 }

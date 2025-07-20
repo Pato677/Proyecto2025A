@@ -12,7 +12,7 @@ import axios from 'axios';
 
 const rutasPorPagina = 4;
 // Ruta de la API
-const API_URL_Rutas = "http://localhost:3000/rutas";
+const API_URL_Rutas = "http://localhost:3000/Rutas";
 
 const RutasPanel = () => {
   const [rutas, setRutas] = useState([]);
@@ -37,7 +37,7 @@ const RutasPanel = () => {
   useEffect(() => {
     recargarRutas();
 
-    axios.get('http://localhost:3000/terminales')
+    axios.get('http://localhost:3000/TerminalesInterprovinciales')
       .then(res => setTerminales(res.data))
       .catch(() => setTerminales([]));
   }, []);

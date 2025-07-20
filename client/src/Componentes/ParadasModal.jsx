@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiX } from 'react-icons/fi';
 import { FaBus } from 'react-icons/fa';
-import './Estilos/ParadasModal.css'; // Asegúrate de tener este archivo CSS
+import './Estilos/ParadasModal.css'; 
 
 const ParadasModal = ({ onClose, ruta }) => {
   const paradas = ruta?.paradas || [];
