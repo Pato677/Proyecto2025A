@@ -147,11 +147,64 @@ const loginUsuario = async (req, res) => {
     }
 };
 
+// Verificar si un correo existe
+const verificarCorreo = async (req, res) => {
+    try {
+        const { correo } = req.params;
+        const usuario = await Usuario.findOne({ where: { correo } });
+        res.json({ existe: !!usuario });
+    } catch (error) {
+        console.error('Error al verificar correo:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+// Verificar si una cédula existe
+const verificarCedula = async (req, res) => {
+    try {
+        const { cedula } = req.params;
+        const usuario = await Usuario.findOne({ where: { cedula } });
+        res.json({ existe: !!usuario });
+    } catch (error) {
+        console.error('Error al verificar cédula:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+// Endpoint especial para actualizar contraseñas de texto plano a bcrypt
+const actualizarContrasenasPlanas = async (req, res) => {
+    try {
+        const usuarios = await Usuario.findAll();
+        let actualizados = 0;
+        
+        for (let usuario of usuarios) {
+            // Verificar si la contraseña NO está encriptada (no empieza con $2)
+            if (!usuario.contrasena.startsWith('$2')) {
+                const contrasenaEncriptada = await bcrypt.hash(usuario.contrasena, 10);
+                await usuario.update({ contrasena: contrasenaEncriptada });
+                actualizados++;
+                console.log(`Contraseña actualizada para: ${usuario.correo}`);
+            }
+        }
+        
+        res.json({ 
+            message: `Se actualizaron ${actualizados} contraseñas de texto plano a bcrypt`,
+            actualizados 
+        });
+    } catch (error) {
+        console.error('Error al actualizar contraseñas:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
 module.exports = {
     getAllUsuarios,
     getUsuarioById,
     createUsuario,
     updateUsuario,
     deleteUsuario,
-    loginUsuario
+    loginUsuario,
+    verificarCorreo,
+    verificarCedula,
+    actualizarContrasenasPlanas
 };

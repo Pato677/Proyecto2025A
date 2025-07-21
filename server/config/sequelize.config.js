@@ -2,7 +2,7 @@ const {Sequelize} = require("sequelize");
 
 const username = "root";
 //const password = "root";
-const password = "admin";
+const password = "root";
 const bdd_name = "TransportesEC";
 const hostName = "localhost";
 
@@ -27,7 +27,7 @@ const sequelize = new Sequelize(bdd_name, username, password, {
 //En producción no se debe utilizar ninguno.
 
 //sequelize.sync({force:true}).then(() => {
-sequelize.sync({ force: true }).then(async () => {
+sequelize.sync({ alter: true }).then(async () => {
     console.log(`Base de datos ${bdd_name} sincronizada`);
     
     // ✅ CARGAR modelos DESPUÉS del sync

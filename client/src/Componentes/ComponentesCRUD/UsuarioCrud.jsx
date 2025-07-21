@@ -62,20 +62,27 @@ const UsuarioCrud = {
   // Verificar si un correo ya existe
   verificarCorreoExistente: async (correo) => {
     try {
-      const response = await axios.get(`${API_URL}?correo=${correo}`);
-      return response.data.length > 0;
+      const response = await axios.get(`${API_URL}/verificar-correo/${correo}`);
+      return response.data.existe;
     } catch (error) {
       console.error("Error al verificar correo:", error);
       throw error;
     }
   },
 
-    // En UsuarioCrud.js
+    // Verificar credenciales de usuario (Login)
     verificarCredenciales: async (correo, contrasena) => {
         try {
-            const response = await axios.get(`${API_URL}?correo=${correo}&contrasena=${contrasena}`);
-            return response.data.length > 0 ? response.data[0] : null;
+            const response = await axios.post(`${API_URL}/login`, {
+                correo,
+                contrasena
+            });
+            return response.data;
         } catch (error) {
+            if (error.response && error.response.status === 401) {
+                // Credenciales inválidas
+                return null;
+            }
             console.error("Error al verificar credenciales:", error);
             throw error;
         }
@@ -84,8 +91,8 @@ const UsuarioCrud = {
   // Verificar si una cédula ya existe
   verificarCedulaExistente: async (cedula) => {
     try {
-      const response = await axios.get(`${API_URL}?cedula=${cedula}`);
-      return response.data.length > 0;
+      const response = await axios.get(`${API_URL}/verificar-cedula/${cedula}`);
+      return response.data.existe;
     } catch (error) {
       console.error("Error al verificar cédula:", error);
       throw error;
