@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import HeaderAdmin from './HeaderAdmin';
 import RoutesTable from './RoutesTable';
 import ActionButtons from './ActionButtons';
 import ParadasModal from './ParadasModal';
 import RutaModal from './RutasModal';
 import RutaForm from './RutaForm';
-import Footer from './Footer';
 import './Estilos/RutasPanel.css';
-import './Estilos/Footer.css';
 import axios from 'axios';
 
 const rutasPorPagina = 4;
@@ -127,7 +124,6 @@ const RutasPanel = () => {
 
   return (
     <div className="rutas-panel-container">
-      <HeaderAdmin />
       <main className="rutas-panel-main">
         <section className="rutas-panel">
           <h1 className="rutas-title">Rutas</h1>
@@ -202,9 +198,6 @@ const RutasPanel = () => {
           )}
         </section>
       </main>
-      <footer>
-        <Footer />
-      </footer>
 
       {/* Modal para crear/editar ruta (sin mapa) */}
       <RutaModal

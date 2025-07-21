@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import HeaderAdmin from './HeaderAdmin';
-import Footer from './Footer';
 import './Estilos/RegisterUnits.css';
 import Button from './Button';
 import UnidadModal from './UnidadModal';
@@ -94,8 +92,6 @@ function RegisterUnitsPage() {
 
   return (
     <div className="register-units-page">
-      <HeaderAdmin />
-
       <main className="register-units-main">
         <h1 className="register-units-title">Registrar Unidades</h1>
 
@@ -192,8 +188,6 @@ function RegisterUnitsPage() {
           <Button text="Atras" width='200px'/>
         </div>
       </main>
-
-      <Footer />
 
       <UnidadModal
         open={showModal}

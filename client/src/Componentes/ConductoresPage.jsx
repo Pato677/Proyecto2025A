@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import HeaderAdmin from './HeaderAdmin';
-import Footer from './Footer';
 import './Estilos/ConductoresPage.css';
 import Button from './Button';
 import ConductorModal from './ConductorModal';
@@ -126,8 +124,6 @@ function ConductoresPage() {
 
   return (
     <div className="conductores-page">
-      <HeaderAdmin />
-
       <main className="conductores-main">
         <h1 className="conductores-title">Gestión de Conductores</h1>
         <div className="conductores-content">
@@ -235,8 +231,6 @@ function ConductoresPage() {
           <Button text="Atrás" width='200px'/>
         </div>
       </main>
-
-      <Footer />
 
       <ConductorModal
         open={showModal}

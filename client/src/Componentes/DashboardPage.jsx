@@ -1,97 +1,99 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import HeaderAdmin from './HeaderAdmin';
 import Footer from './Footer';
+import RegistrarUnidadesPage from './RegistrarUnidadesPage';
+import RutasPanel from './RutasPanel';
+import ConductoresPage from './ConductoresPage';
 import './Estilos/DashboardAdmin.css';
-import Unidades from './Imagenes/Unidades.png';
-import Horarios from './Imagenes/Horarios.png';
-import Rutas from './Imagenes/RutasAdmin.png';
-import Conductores from './Imagenes/Conductores.png'; // Necesitas agregar esta imagen
+
+// Paneles disponibles - similar a SuperAdminDashboard
+const panels = [
+  { key: 'unidades', label: 'Unidades', component: <RegistrarUnidadesPage />, available: true },
+  { key: 'horarios', label: 'Horarios', component: null, available: false },
+  { key: 'rutas', label: 'Rutas', component: <RutasPanel />, available: true },
+  { key: 'conductores', label: 'Conductores y Controladores', component: <ConductoresPage />, available: true },
+];
 
 function DashboardPage() {
-  const navigate = useNavigate();
+  const [selectedModule, setSelectedModule] = useState(null);
+  
+  // Encontrar el panel seleccionado
+  const selectedPanel = panels.find(p => p.key === selectedModule);
 
   const handleModuleClick = (moduleName) => {
-    switch(moduleName) {
-      case 'Unidades':
-        navigate('/RegisterUnits');
-        break;
-      case 'Horarios':
-        // navigate('/HorariosPage'); // Cuando tengas el componente
-        console.log('Módulo Horarios - En desarrollo');
-        break;
-      case 'Rutas':
-        navigate('/RutasPanel');
-        break;
-      case 'Conductores':
-        navigate('/ConductoresPage');
-        break;
-      default:
-        console.log('Módulo no encontrado');
+    const panel = panels.find(p => p.key === moduleName);
+    if (panel && panel.available) {
+      setSelectedModule(moduleName);
+    } else if (moduleName === 'horarios') {
+      // Módulo en desarrollo - mostrar mensaje
+      setSelectedModule('horarios');
     }
   };
 
-  return (
-    <div className="dashboard-admin-page">
-      <HeaderAdmin />
-
-      <main className="dashboard-admin-main">
-        <div className="dashboard-admin-box">
-          <h2 className="dashboard-admin-title">Módulos</h2>
-          <hr className="dashboard-admin-divider" />
-          <div className="dashboard-admin-modules">
-            <div 
-              className="dashboard-admin-module-card"
-              onClick={() => handleModuleClick('Unidades')}
-            >
-              <img src={Unidades} alt="Unidades" className="dashboard-admin-module-icon" />
-              <button 
-                onClick={() => handleModuleClick('Unidades')}
-                className="dashboard-admin-module-button"
-              >
-                Unidades
-              </button>
-            </div>
-            <div 
-              className="dashboard-admin-module-card"
-              onClick={() => handleModuleClick('Horarios')}
-            >
-              <img src={Horarios} alt="Horarios" className="dashboard-admin-module-icon" />
-              <button 
-                onClick={() => handleModuleClick('Horarios')}
-                className="dashboard-admin-module-button"
-              >
-                Horarios
-              </button>
-            </div>
-            <div 
-              className="dashboard-admin-module-card"
-              onClick={() => handleModuleClick('Rutas')}
-            >
-              <img src={Rutas} alt="Rutas" className="dashboard-admin-module-icon" />
-              <button 
-                onClick={() => handleModuleClick('Rutas')}
-                className="dashboard-admin-module-button"
-              >
-                Rutas
-              </button>
-            </div>
-            <div 
-              className="dashboard-admin-module-card"
-              onClick={() => handleModuleClick('Conductores')}
-            >
-              <img src={Conductores} alt="Conductores/Controladores" className="dashboard-admin-module-icon" />
-              <button 
-                onClick={() => handleModuleClick('Conductores')}
-                className="dashboard-admin-module-button"
-              >
-                {"Conductores/\nControladores"}
-              </button>
-            </div>
+  // Función para renderizar el contenido principal
+  const renderMainContent = () => {
+    if (!selectedModule) {
+      return (
+        <div className="welcome-panel">
+          <div className="panel-box">
+            <h3>Bienvenido al Panel Administrativo</h3>
+            <p>Selecciona un módulo del menú lateral para comenzar a gestionar:</p>
+            <ul className="module-list">
+              <li><strong>Unidades:</strong> Registra y administra unidades de transporte</li>
+              <li><strong>Horarios:</strong> Gestiona horarios de rutas (En desarrollo)</li>
+              <li><strong>Rutas:</strong> Configura y administra rutas de transporte</li>
+              <li><strong>Conductores y Controladores:</strong> Administra el personal</li>
+            </ul>
           </div>
         </div>
-      </main>
+      );
+    }
 
+    if (selectedModule === 'horarios') {
+      return (
+        <div className="welcome-panel">
+          <div className="panel-box">
+            <h3>Módulo de Horarios</h3>
+            <p className="panel-info">Este módulo está en desarrollo y estará disponible próximamente.</p>
+          </div>
+        </div>
+      );
+    }
+
+    return selectedPanel ? selectedPanel.component : null;
+  };
+
+  const dashboardModules = [
+    { key: 'unidades', label: 'Unidades', available: true },
+    { key: 'horarios', label: 'Horarios', available: false },
+    { key: 'rutas', label: 'Rutas', available: true },
+    { key: 'conductores', label: 'Conductores y Controladores', available: true },
+  ];
+
+  return (
+    <div className="dashboard-grid-layout">
+      <HeaderAdmin />
+      <div className="dashboard-admin">
+        <aside className="dashboard-sidebar">
+          <h2>Panel Administrativo</h2>
+          <nav>
+            {dashboardModules.map(module => (
+              <button
+                key={module.key}
+                className={`${!module.available ? 'disabled' : ''} ${selectedModule === module.key ? 'active' : ''}`}
+                onClick={() => handleModuleClick(module.key)}
+                disabled={!module.available}
+              >
+                {module.label}
+                {!module.available && <span className="dev-badge">En desarrollo</span>}
+              </button>
+            ))}
+          </nav>
+        </aside>
+        <main className="dashboard-main">
+          {renderMainContent()}
+        </main>
+      </div>
       <Footer />
     </div>
   );
