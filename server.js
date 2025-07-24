@@ -21,6 +21,7 @@ const terminalesRoutes = require('./server/routes/terminales.routes');
 const ciudadesRoutes = require('./server/routes/ciudades.routes');
 const viajesRoutes = require('./server/routes/viajes.routes');
 const boletosRoutes = require('./server/routes/boletos.routes');
+const ciudadesTerminalesRoutes = require('./server/routes/ciudadesTerminales.routes');
 
 // Registrar las rutas
 usuariosRoutes(app);
@@ -32,6 +33,7 @@ terminalesRoutes(app);
 ciudadesRoutes(app);
 viajesRoutes(app);
 boletosRoutes(app);
+app.use('/', ciudadesTerminalesRoutes);
 
 // Inicio del servidor
 app.listen(port, () => {
