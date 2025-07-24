@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PaginacionPanel from './PaginacionPanel';
+import AgregarTerminalModal from './AgregarTerminalModal';
 import '../Estilos/SuperAdminDashboard.css';
 
 const CiudadesTerminalesPanel = () => {
@@ -8,6 +9,8 @@ const CiudadesTerminalesPanel = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pagina, setPagina] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [terminalToEdit, setTerminalToEdit] = useState(null);
   const porPagina = 5;
 
   // Función para cargar datos desde el servidor
@@ -38,6 +41,31 @@ const CiudadesTerminalesPanel = () => {
   // Calcular paginación
   const totalPaginas = Math.ceil(ciudadesTerminales.length / porPagina);
   const datossPagina = ciudadesTerminales.slice((pagina - 1) * porPagina, pagina * porPagina);
+
+  // Función para manejar el guardado desde el modal
+  const handleSaveFromModal = () => {
+    cargarCiudadesTerminales(); // Recargar los datos
+    setShowModal(false); // Cerrar el modal
+    setTerminalToEdit(null); // Limpiar terminal en edición
+  };
+
+  // Función para abrir modal en modo agregar
+  const handleAgregar = () => {
+    setTerminalToEdit(null);
+    setShowModal(true);
+  };
+
+  // Función para abrir modal en modo editar
+  const handleEditar = (terminal) => {
+    setTerminalToEdit(terminal);
+    setShowModal(true);
+  };
+
+  // Función para cerrar modal
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setTerminalToEdit(null);
+  };
 
   // Función para manejar la eliminación
   const handleEliminar = async (terminalId) => {
@@ -110,7 +138,7 @@ const CiudadesTerminalesPanel = () => {
                     <button 
                       className="btn-outline" 
                       title="Editar"
-                      onClick={() => console.log('Editar terminal:', item.terminal_id)}
+                      onClick={() => handleEditar(item)}
                     >
                       ✏️
                     </button>
@@ -135,10 +163,17 @@ const CiudadesTerminalesPanel = () => {
       )}
       <button 
         className="btn-agregar"
-        onClick={() => console.log('Agregar nueva ciudad/terminal')}
+        onClick={handleAgregar}
       >
         Agregar Ciudad/Terminal
       </button>
+
+      <AgregarTerminalModal
+        open={showModal}
+        onClose={handleCloseModal}
+        onSave={handleSaveFromModal}
+        terminalToEdit={terminalToEdit}
+      />
     </div>
   );
 };
