@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { 
-    Usuario, Cooperativa, Ciudad, Terminal, 
+    Usuario, UsuarioFinal, UsuarioCooperativa, Ciudad, Terminal, 
     Conductor, Unidad, Ruta, Viaje 
 } = require('./index');
 
@@ -18,18 +18,27 @@ async function migrateData() {
         console.log('📄 Migrando usuarios...');
         if (jsonData.UsuarioPasajero && jsonData.UsuarioPasajero.length > 0) {
             for (const user of jsonData.UsuarioPasajero) {
-                await Usuario.findOrCreate({
-                    where: { cedula: user.cedula }, // CAMBIO: Buscar por cedula en lugar de ID
+                // Crear usuario principal
+                const [usuario, created] = await Usuario.findOrCreate({
+                    where: { email: user.correo },
                     defaults: {
-                        nombres: user.nombres,
-                        apellidos: user.apellidos,
-                        fechaNacimiento: user.fechaNacimiento,
-                        cedula: user.cedula,
-                        correo: user.correo,
+                        email: user.correo,
+                        password: user.contrasena,
                         telefono: user.telefono,
-                        contrasena: user.contrasena
+                        rol: 'usuario'
                     }
                 });
+
+                // Crear perfil de usuario final
+                if (created) {
+                    await UsuarioFinal.create({
+                        usuario_id: usuario.id,
+                        nombres: user.nombres,
+                        apellidos: user.apellidos,
+                        cedula: user.cedula,
+                        fecha_nacimiento: user.fechaNacimiento
+                    });
+                }
             }
         }
 
@@ -37,30 +46,58 @@ async function migrateData() {
         console.log('🏢 Migrando cooperativas...');
         const cooperativasDefault = [
             {
-                razonSocial: "Cooperativa Velotax",
-                permisoOperacion: "POP-001",
-                ruc: "1234567890001",
-                correo: "admin@velotax.com",
+                email: "admin@velotax.com",
+                password: "admin123",
                 telefono: "022345678",
-                contrasena: "admin123",
-                estado: "activa"
+                rol: "cooperativa",
+                nombre_cooperativa: "Cooperativa Velotax",
+                ruc: "1234567890001",
+                razon_social: "Cooperativa de Transporte Velotax Cia. Ltda.",
+                representante_legal: "Juan Pérez González",
+                cedula_representante: "1700000001",
+                direccion_matriz: "Av. Principal 123, Quito",
+                ciudad_matriz: "Quito"
             },
             {
-                razonSocial: "Cooperativa Panamericana",
-                permisoOperacion: "POP-002", 
-                ruc: "1234567890002",
-                correo: "admin@panamericana.com",
+                email: "admin@panamericana.com",
+                password: "admin123", 
                 telefono: "022345679",
-                contrasena: "admin123",
-                estado: "activa"
+                rol: "cooperativa",
+                nombre_cooperativa: "Cooperativa Panamericana",
+                ruc: "1234567890002",
+                razon_social: "Cooperativa de Transporte Panamericana S.A.",
+                representante_legal: "María López Castro",
+                cedula_representante: "1700000002",
+                direccion_matriz: "Calle Secundaria 456, Guayaquil",
+                ciudad_matriz: "Guayaquil"
             }
         ];
 
         for (const coop of cooperativasDefault) {
-            await Cooperativa.findOrCreate({
-                where: { ruc: coop.ruc },
-                defaults: coop
+            // Crear usuario principal
+            const [usuario, created] = await Usuario.findOrCreate({
+                where: { email: coop.email },
+                defaults: {
+                    email: coop.email,
+                    password: coop.password,
+                    telefono: coop.telefono,
+                    rol: coop.rol
+                }
             });
+
+            // Crear perfil de cooperativa
+            if (created) {
+                await UsuarioCooperativa.create({
+                    usuario_id: usuario.id,
+                    nombre_cooperativa: coop.nombre_cooperativa,
+                    ruc: coop.ruc,
+                    razon_social: coop.razon_social,
+                    representante_legal: coop.representante_legal,
+                    cedula_representante: coop.cedula_representante,
+                    direccion_matriz: coop.direccion_matriz,
+                    ciudad_matriz: coop.ciudad_matriz
+                });
+            }
         }
 
         // 3. Migrar Ciudades y Terminales
@@ -76,11 +113,11 @@ async function migrateData() {
                     await Terminal.findOrCreate({
                         where: { 
                             nombre: terminalNombre,
-                            ciudadId: ciudad.id 
+                            ciudad_id: ciudad.id 
                         },
                         defaults: {
                             nombre: terminalNombre,
-                            ciudadId: ciudad.id
+                            ciudad_id: ciudad.id
                         }
                     });
                 }
@@ -90,16 +127,20 @@ async function migrateData() {
         // 4. Migrar Conductores
         console.log('👨‍✈️ Migrando conductores...');
         if (jsonData.conductores && jsonData.conductores.length > 0) {
+            // Obtener la primera cooperativa para asignar a los conductores
+            const cooperativa = await UsuarioCooperativa.findOne();
+            
             for (const conductor of jsonData.conductores) {
                 await Conductor.findOrCreate({
                     where: { identificacion: conductor.identificacion },
                     defaults: {
                         nombre: conductor.nombre,
                         identificacion: conductor.identificacion,
-                        tipoLicencia: conductor.tipoLicencia,
+                        tipo_licencia: conductor.tipoLicencia,
                         telefono: conductor.telefono,
                         correo: conductor.correo,
                         roles: conductor.roles,
+                        cooperativa_id: cooperativa?.id,
                         estado: 'activo'
                     }
                 });
@@ -109,6 +150,9 @@ async function migrateData() {
         // 5. Migrar Unidades
         console.log('🚌 Migrando unidades...');
         if (jsonData.unidades && jsonData.unidades.length > 0) {
+            // Obtener la primera cooperativa para asignar a las unidades
+            const cooperativa = await UsuarioCooperativa.findOne();
+            
             for (const unidad of jsonData.unidades) {
                 const conductor = await Conductor.findOne({ 
                     where: { nombre: unidad.conductor } 
@@ -121,12 +165,13 @@ async function migrateData() {
                     where: { placa: unidad.placa },
                     defaults: {
                         placa: unidad.placa,
-                        numeroUnidad: unidad.numeroUnidad,
+                        numero_unidad: unidad.numeroUnidad,
                         pisos: unidad.pisos,
                         asientos: unidad.asientos,
                         imagen: unidad.imagen,
-                        conductorId: conductor?.id,
-                        controladorId: controlador?.id,
+                        cooperativa_id: cooperativa?.id,
+                        conductor_id: conductor?.id,
+                        controlador_id: controlador?.id,
                         estado: 'activa'
                     }
                 });

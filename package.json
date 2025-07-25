@@ -6,7 +6,6 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.2",
-    "nodemon": "^3.1.10",
     "sequelize": "^6.37.7"
   },
   "name": "backend",
@@ -18,5 +17,8 @@
     "nodemon": "nodemon server.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
 }
