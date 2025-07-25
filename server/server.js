@@ -4,7 +4,7 @@ const port = 3000;
 const cors = require('cors');
 
 // Cargar modelos después de configurar la base
-require('./server/models/index');
+require('./models/index');
 
 // Middlewares
 app.use(cors());
@@ -12,20 +12,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Rutas de autenticación (públicas)
-const authRoutes = require('./server/routes/auth.routes');
+const authRoutes = require('./routes/auth.routes');
 app.use('/auth', authRoutes);
 
 // Rutas protegidas
-const usuariosRoutes = require('./server/routes/usuario.routes');
-const cooperativasRoutes = require('./server/routes/cooperativas.routes');
-const unidadesRoutes = require('./server/routes/unidades.routes');
-const conductoresRoutes = require('./server/routes/conductores.routes');
-const rutasRoutes = require('./server/routes/rutas.routes');
-const terminalesRoutes = require('./server/routes/terminales.routes');
-const ciudadesRoutes = require('./server/routes/ciudades.routes');
-const viajesRoutes = require('./server/routes/viajes.routes');
-const boletosRoutes = require('./server/routes/boletos.routes');
-const ciudadesTerminalesRoutes = require('./server/routes/ciudadesTerminales.routes');
+const usuariosRoutes = require('./routes/usuario.routes');
+const cooperativasRoutes = require('./routes/cooperativas.routes');
+const unidadesRoutes = require('./routes/unidades.routes');
+const conductoresRoutes = require('./routes/conductores.routes');
+const rutasRoutes = require('./routes/rutas.routes');
+const terminalesRoutes = require('./routes/terminales.routes');
+const ciudadesRoutes = require('./routes/ciudades.routes');
+const viajesRoutes = require('./routes/viajes.routes');
+const boletosRoutes = require('./routes/boletos.routes');
+const ciudadesTerminalesRoutes = require('./routes/ciudadesTerminales.routes');
 
 // Registrar las rutas con prefijos
 app.use('/usuarios', usuariosRoutes);
