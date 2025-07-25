@@ -7,51 +7,42 @@ const Boleto = sequelize.define('Boleto', {
         primaryKey: true,
         autoIncrement: true
     },
-    viajeId: {
+    usuario_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        field: 'viaje_id'
+        allowNull: false
     },
-    usuarioId: {
-        type: DataTypes.INTEGER, // CAMBIO: De STRING a INTEGER
-        allowNull: false,
-        field: 'usuario_id'
-    },
-    numeroAsientos: {
+    viaje_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        field: 'numero_asientos'
+        allowNull: false
     },
-    asientosSeleccionados: {
-        type: DataTypes.JSON,
-        allowNull: false,
-        field: 'asientos_seleccionados'
+    numero_asiento: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
-    precioTotal: {
+    precio: {
         type: DataTypes.DECIMAL(8, 2),
-        allowNull: false,
-        field: 'precio_total'
+        allowNull: false
     },
-    estadoPago: {
-        type: DataTypes.ENUM('pendiente', 'pagado', 'cancelado'),
-        defaultValue: 'pendiente',
-        field: 'estado_pago'
+    estado: {
+        type: DataTypes.ENUM('reservado', 'pagado', 'usado', 'cancelado'),
+        defaultValue: 'reservado'
     },
-    metodoPago: {
-        type: DataTypes.ENUM('efectivo', 'tarjeta', 'transferencia'),
-        defaultValue: 'efectivo',
-        field: 'metodo_pago'
-    },
-    codigoBoleto: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
+    codigo_qr: {
+        type: DataTypes.STRING(255),
         unique: true,
-        field: 'codigo_boleto'
+        allowNull: true
     },
-    fechaBoleto: {
+    fecha_compra: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        field: 'fecha_boleto'
+        defaultValue: DataTypes.NOW
+    },
+    fecha_uso: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    metodo_pago: {
+        type: DataTypes.ENUM('efectivo', 'tarjeta', 'transferencia', 'paypal'),
+        defaultValue: 'efectivo'
     }
 }, {
     tableName: 'boletos',

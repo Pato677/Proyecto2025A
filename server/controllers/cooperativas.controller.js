@@ -1,10 +1,15 @@
-const { Cooperativa, Conductor, Unidad } =  require('../models');
+const { UsuarioCooperativa, Usuario, Conductor, Unidad } = require('../models');
 
 // Obtener todas las cooperativas
 const getAllCooperativas = async (req, res) => {
     try {
-        const cooperativas = await Cooperativa.findAll({
+        const cooperativas = await UsuarioCooperativa.findAll({
             include: [
+                {
+                    model: Usuario,
+                    as: 'usuario',
+                    attributes: ['id', 'email', 'telefono', 'estado']
+                },
                 {
                     model: Conductor,
                     as: 'conductores',

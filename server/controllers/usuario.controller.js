@@ -1,67 +1,176 @@
-const { Usuario } = require('../models');
+const Usuario = require('../models/usuario.model');
+const UsuarioFinal = require('../models/usuarioFinal.model');
+const UsuarioCooperativa = require('../models/usuarioCooperativa.model');
 const bcrypt = require('bcrypt');
 
-// Obtener todos los usuarios
+// Obtener todos los usuarios con información específica
 const getAllUsuarios = async (req, res) => {
     try {
-        const usuarios = await Usuario.findAll({
-            attributes: { exclude: ['contrasena'] } // No enviar contraseñas
+        const { rol, estado, page = 1, limit = 10 } = req.query;
+        
+        const where = {};
+        if (rol) where.rol = rol;
+        if (estado) where.estado = estado;
+
+        const offset = (page - 1) * limit;
+
+        const usuarios = await Usuario.findAndCountAll({
+            where,
+            attributes: { exclude: ['password'] },
+            include: [
+                {
+                    model: UsuarioFinal,
+                    as: 'datosUsuarioFinal',
+                    required: false
+                },
+                {
+                    model: UsuarioCooperativa,
+                    as: 'datosCooperativa',
+                    required: false
+                }
+            ],
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+            order: [['created_at', 'DESC']]
         });
-        res.json(usuarios);
+
+        res.json({
+            success: true,
+            data: usuarios.rows,
+            pagination: {
+                total: usuarios.count,
+                page: parseInt(page),
+                limit: parseInt(limit),
+                totalPages: Math.ceil(usuarios.count / limit)
+            }
+        });
     } catch (error) {
         console.error('Error al obtener usuarios:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        res.status(500).json({ 
+            success: false,
+            message: 'Error interno del servidor',
+            error: error.message 
+        });
     }
 };
 
-// Obtener usuario por ID
+// Obtener usuario por ID con información específica
 const getUsuarioById = async (req, res) => {
     try {
         const { id } = req.params;
         const usuario = await Usuario.findByPk(id, {
-            attributes: { exclude: ['contrasena'] }
+            attributes: { exclude: ['password'] },
+            include: [
+                {
+                    model: UsuarioFinal,
+                    as: 'datosUsuarioFinal',
+                    required: false
+                },
+                {
+                    model: UsuarioCooperativa,
+                    as: 'datosCooperativa',
+                    required: false
+                }
+            ]
         });
         
         if (!usuario) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
+            return res.status(404).json({ 
+                success: false,
+                message: 'Usuario no encontrado' 
+            });
         }
         
-        res.json(usuario);
+        res.json({
+            success: true,
+            data: usuario
+        });
     } catch (error) {
         console.error('Error al obtener usuario:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        res.status(500).json({ 
+            success: false,
+            message: 'Error interno del servidor',
+            error: error.message 
+        });
     }
 };
 
-// Crear nuevo usuario
+// Crear nuevo usuario (solo para superusuarios)
 const createUsuario = async (req, res) => {
     try {
-        const { id, nombres, apellidos, fechaNacimiento, cedula, correo, telefono, contrasena } = req.body;
+        const { 
+            email, 
+            password, 
+            telefono, 
+            rol,
+            datosUsuarioFinal,
+            datosCooperativa
+        } = req.body;
+
+        // Verificar que el email no existe
+        const usuarioExistente = await Usuario.findOne({ where: { email } });
+        if (usuarioExistente) {
+            return res.status(400).json({
+                success: false,
+                message: 'El email ya está registrado'
+            });
+        }
         
         // Encriptar contraseña
-        const contrasenaEncriptada = await bcrypt.hash(contrasena, 10);
+        const passwordEncriptado = await bcrypt.hash(password, 10);
         
+        // Crear usuario base
         const nuevoUsuario = await Usuario.create({
-            id,
-            nombres,
-            apellidos,
-            fechaNacimiento,
-            cedula,
-            correo,
+            email,
+            password: passwordEncriptado,
             telefono,
-            contrasena: contrasenaEncriptada
+            rol,
+            estado: 'activo',
+            email_verificado: true
+        });
+
+        // Crear datos específicos según el rol
+        if (rol === 'usuario' && datosUsuarioFinal) {
+            await UsuarioFinal.create({
+                usuario_id: nuevoUsuario.id,
+                ...datosUsuarioFinal
+            });
+        } else if (rol === 'cooperativa' && datosCooperativa) {
+            await UsuarioCooperativa.create({
+                usuario_id: nuevoUsuario.id,
+                ...datosCooperativa
+            });
+        }
+
+        // Obtener usuario completo para respuesta
+        const usuarioCompleto = await Usuario.findByPk(nuevoUsuario.id, {
+            attributes: { exclude: ['password'] },
+            include: [
+                {
+                    model: UsuarioFinal,
+                    as: 'datosUsuarioFinal',
+                    required: false
+                },
+                {
+                    model: UsuarioCooperativa,
+                    as: 'datosCooperativa',
+                    required: false
+                }
+            ]
         });
         
-        // No enviar la contraseña en la respuesta
-        const { contrasena: _, ...usuarioSinContrasena } = nuevoUsuario.toJSON();
-        res.status(201).json(usuarioSinContrasena);
+        res.status(201).json({
+            success: true,
+            message: 'Usuario creado exitosamente',
+            data: usuarioCompleto
+        });
     } catch (error) {
         console.error('Error al crear usuario:', error);
-        if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
-            res.status(400).json({ error: error.message });
-        } else {
-            res.status(500).json({ error: 'Error interno del servidor' });
-        }
+        res.status(500).json({ 
+            success: false,
+            message: 'Error interno del servidor',
+            error: error.message 
+        });
     }
 };
 
@@ -69,39 +178,70 @@ const createUsuario = async (req, res) => {
 const updateUsuario = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombres, apellidos, fechaNacimiento, cedula, correo, telefono, contrasena } = req.body;
+        const { 
+            telefono, 
+            estado,
+            datosUsuarioFinal,
+            datosCooperativa
+        } = req.body;
         
         const usuario = await Usuario.findByPk(id);
         if (!usuario) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
+            return res.status(404).json({ 
+                success: false,
+                message: 'Usuario no encontrado' 
+            });
         }
         
-        const updateData = {
-            nombres,
-            apellidos,
-            fechaNacimiento,
-            cedula,
-            correo,
-            telefono
-        };
-        
-        // Solo encriptar nueva contraseña si se proporciona
-        if (contrasena) {
-            updateData.contrasena = await bcrypt.hash(contrasena, 10);
-        }
+        // Actualizar datos comunes
+        const updateData = {};
+        if (telefono) updateData.telefono = telefono;
+        if (estado) updateData.estado = estado;
         
         await usuario.update(updateData);
+
+        // Actualizar datos específicos según el rol
+        if (usuario.rol === 'usuario' && datosUsuarioFinal) {
+            const usuarioFinal = await UsuarioFinal.findOne({ where: { usuario_id: id } });
+            if (usuarioFinal) {
+                await usuarioFinal.update(datosUsuarioFinal);
+            }
+        } else if (usuario.rol === 'cooperativa' && datosCooperativa) {
+            const usuarioCooperativa = await UsuarioCooperativa.findOne({ where: { usuario_id: id } });
+            if (usuarioCooperativa) {
+                await usuarioCooperativa.update(datosCooperativa);
+            }
+        }
+
+        // Obtener usuario actualizado
+        const usuarioActualizado = await Usuario.findByPk(id, {
+            attributes: { exclude: ['password'] },
+            include: [
+                {
+                    model: UsuarioFinal,
+                    as: 'datosUsuarioFinal',
+                    required: false
+                },
+                {
+                    model: UsuarioCooperativa,
+                    as: 'datosCooperativa',
+                    required: false
+                }
+            ]
+        });
         
-        // No enviar la contraseña en la respuesta
-        const { contrasena: _, ...usuarioSinContrasena } = usuario.toJSON();
-        res.json(usuarioSinContrasena);
+        res.json({
+            success: true,
+            message: 'Usuario actualizado exitosamente',
+            data: usuarioActualizado
+        });
     } catch (error) {
         console.error('Error al actualizar usuario:', error);
-        if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
-            res.status(400).json({ error: error.message });
-        } else {
-            res.status(500).json({ error: 'Error interno del servidor' });
-        }
+        res.status(500).json({ 
+            success: false,
+            message: 'Error interno del servidor',
+            error: error.message 
+        });
     }
 };
 
@@ -112,63 +252,53 @@ const deleteUsuario = async (req, res) => {
         
         const usuario = await Usuario.findByPk(id);
         if (!usuario) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
+            return res.status(404).json({ 
+                success: false,
+                message: 'Usuario no encontrado' 
+            });
         }
         
         await usuario.destroy();
-        res.json({ message: 'Usuario eliminado correctamente' });
+        res.json({ 
+            success: true,
+            message: 'Usuario eliminado correctamente' 
+        });
     } catch (error) {
         console.error('Error al eliminar usuario:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        res.status(500).json({ 
+            success: false,
+            message: 'Error interno del servidor',
+            error: error.message 
+        });
     }
 };
 
-// Login de usuario
-const loginUsuario = async (req, res) => {
+// Verificar si un email existe
+const verificarEmail = async (req, res) => {
     try {
-        const { correo, contrasena } = req.body;
-        
-        const usuario = await Usuario.findOne({ where: { correo } });
-        if (!usuario) {
-            return res.status(401).json({ error: 'Credenciales inválidas' });
-        }
-        
-        const contrasenaValida = await bcrypt.compare(contrasena, usuario.contrasena);
-        if (!contrasenaValida) {
-            return res.status(401).json({ error: 'Credenciales inválidas' });
-        }
-        
-        // No enviar la contraseña en la respuesta
-        const { contrasena: _, ...usuarioSinContrasena } = usuario.toJSON();
-        res.json(usuarioSinContrasena);
+        const { email } = req.params;
+        const usuario = await Usuario.findOne({ where: { email } });
+        res.json({ 
+            success: true,
+            existe: !!usuario 
+        });
     } catch (error) {
-        console.error('Error en login:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        console.error('Error al verificar email:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Error interno del servidor',
+            error: error.message 
+        });
     }
 };
 
-// Verificar si un correo existe
-const verificarCorreo = async (req, res) => {
-    try {
-        const { correo } = req.params;
-        const usuario = await Usuario.findOne({ where: { correo } });
-        res.json({ existe: !!usuario });
-    } catch (error) {
-        console.error('Error al verificar correo:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-};
-
-// Verificar si una cédula existe
-const verificarCedula = async (req, res) => {
-    try {
-        const { cedula } = req.params;
-        const usuario = await Usuario.findOne({ where: { cedula } });
-        res.json({ existe: !!usuario });
-    } catch (error) {
-        console.error('Error al verificar cédula:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
+module.exports = {
+    getAllUsuarios,
+    getUsuarioById,
+    createUsuario,
+    updateUsuario,
+    deleteUsuario,
+    verificarEmail
 };
 
 // Endpoint especial para actualizar contraseñas de texto plano a bcrypt
@@ -203,8 +333,6 @@ module.exports = {
     createUsuario,
     updateUsuario,
     deleteUsuario,
-    loginUsuario,
-    verificarCorreo,
-    verificarCedula,
+    verificarEmail,
     actualizarContrasenasPlanas
 };

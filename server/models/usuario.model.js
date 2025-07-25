@@ -2,50 +2,62 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize.config');
 
 const Usuario = sequelize.define('Usuario', {
-    id: {
-        type: DataTypes.INTEGER, 
-        primaryKey: true,
-        autoIncrement: true
-    },
-    nombres: {
-        type: DataTypes.STRING(100),
-        allowNull: false
-    },
-    apellidos: {
-        type: DataTypes.STRING(100),
-        allowNull: false
-    },
-    fechaNacimiento: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
-        field: 'fecha_nacimiento'
-    },
-    cedula: {
-        type: DataTypes.STRING(10),
-        allowNull: false,
-        unique: true
-    },
-    correo: {
-        type: DataTypes.STRING(150),
-        allowNull: false,
-        unique: true,
-        validate: {
-            isEmail: true
-        }
-    },
-    telefono: {
-        type: DataTypes.STRING(15),
-        allowNull: false
-    },
-    contrasena: {
-        type: DataTypes.STRING(255),
-        allowNull: false
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  email: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: true
     }
+  },
+  password: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  telefono: {
+    type: DataTypes.STRING(20),
+    allowNull: false
+  },
+  rol: {
+    type: DataTypes.ENUM('usuario', 'cooperativa', 'superusuario'),
+    allowNull: false
+  },
+  estado: {
+    type: DataTypes.ENUM('activo', 'inactivo', 'suspendido'),
+    defaultValue: 'activo'
+  },
+  email_verificado: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  fecha_ultimo_acceso: {
+    type: DataTypes.DATE,
+    allowNull: true
+  }
 }, {
-    tableName: 'usuarios_pasajeros',
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
+  tableName: 'usuarios',
+  timestamps: true,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
+  indexes: [
+    {
+      fields: ['email']
+    },
+    {
+      fields: ['rol']
+    },
+    {
+      fields: ['estado']
+    },
+    {
+      fields: ['rol', 'estado']
+    }
+  ]
 });
 
 module.exports = Usuario;

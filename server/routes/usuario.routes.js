@@ -1,30 +1,28 @@
+const express = require('express');
+const router = express.Router();
 const UsuarioController = require('../controllers/usuario.controller');
+const authMiddleware = require('../middleware/auth.middleware');
 
-module.exports = (app) => {
-    // Obtener todos los usuarios
-    app.get('/usuarios', UsuarioController.getAllUsuarios);
-    
-    // Obtener usuario por ID
-    app.get('/usuarios/:id', UsuarioController.getUsuarioById);
-    
-    // Crear nuevo usuario
-    app.post('/usuarios', UsuarioController.createUsuario);
-    
-    // Actualizar usuario
-    app.put('/usuarios/:id', UsuarioController.updateUsuario);
-    
-    // Eliminar usuario
-    app.delete('/usuarios/:id', UsuarioController.deleteUsuario);
-    
-    // Login de usuario
-    app.post('/usuarios/login', UsuarioController.loginUsuario);
-    
-    // Verificar si correo existe
-    app.get('/usuarios/verificar-correo/:correo', UsuarioController.verificarCorreo);
-    
-    // Verificar si cédula existe
-    app.get('/usuarios/verificar-cedula/:cedula', UsuarioController.verificarCedula);
-    
-    // Endpoint especial para actualizar contraseñas planas (solo usar una vez)
-    app.post('/usuarios/actualizar-contrasenas-planas', UsuarioController.actualizarContrasenasPlanas);
-};
+// Todas las rutas requieren autenticación y rol de superusuario
+router.use(authMiddleware);
+router.use(authMiddleware.requireRole('superusuario'));
+
+// Obtener todos los usuarios con filtros y paginación
+router.get('/', UsuarioController.getAllUsuarios);
+
+// Obtener usuario por ID con información completa
+router.get('/:id', UsuarioController.getUsuarioById);
+
+// Crear nuevo usuario (solo superusuarios)
+router.post('/', UsuarioController.createUsuario);
+
+// Actualizar usuario
+router.put('/:id', UsuarioController.updateUsuario);
+
+// Eliminar usuario
+router.delete('/:id', UsuarioController.deleteUsuario);
+
+// Verificar si email existe
+router.get('/verificar-email/:email', UsuarioController.verificarEmail);
+
+module.exports = router;

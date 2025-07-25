@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 const cors = require('cors');
 
-// ✅ CARGAR modelos después de configurar la base
+// Cargar modelos después de configurar la base
 require('./server/models/index');
 
 // Middlewares
@@ -11,7 +11,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Importar todas las rutas
+// Rutas de autenticación (públicas)
+const authRoutes = require('./server/routes/auth.routes');
+app.use('/auth', authRoutes);
+
+// Rutas protegidas
 const usuariosRoutes = require('./server/routes/usuario.routes');
 const cooperativasRoutes = require('./server/routes/cooperativas.routes');
 const unidadesRoutes = require('./server/routes/unidades.routes');
@@ -23,19 +27,47 @@ const viajesRoutes = require('./server/routes/viajes.routes');
 const boletosRoutes = require('./server/routes/boletos.routes');
 const ciudadesTerminalesRoutes = require('./server/routes/ciudadesTerminales.routes');
 
-// Registrar las rutas
-usuariosRoutes(app);
-cooperativasRoutes(app);
-unidadesRoutes(app);
-conductoresRoutes(app);
-rutasRoutes(app);
-terminalesRoutes(app);
-ciudadesRoutes(app);
-viajesRoutes(app);
-boletosRoutes(app);
+// Registrar las rutas con prefijos
+app.use('/usuarios', usuariosRoutes);
+app.use('/cooperativas', cooperativasRoutes);
+app.use('/unidades', unidadesRoutes);
+app.use('/conductores', conductoresRoutes);
+app.use('/rutas', rutasRoutes);
+app.use('/terminales', terminalesRoutes);
+app.use('/ciudades', ciudadesRoutes);
+app.use('/viajes', viajesRoutes);
+app.use('/boletos', boletosRoutes);
 app.use('/', ciudadesTerminalesRoutes);
+
+// Middleware para manejar rutas no encontradas
+app.use('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Endpoint no encontrado'
+  });
+});
+
+// Middleware global de manejo de errores
+app.use((error, req, res, next) => {
+  console.error('Error no manejado:', error);
+  res.status(500).json({
+    success: false,
+    message: 'Error interno del servidor',
+    error: process.env.NODE_ENV === 'development' ? error.message : 'Error interno'
+  });
+});
 
 // Inicio del servidor
 app.listen(port, () => {
-  console.log(`Servidor backend corriendo en http://localhost:${port}`);
+  console.log('🚀 SERVIDOR BACKEND INICIADO');
+  console.log('==============================');
+  console.log(`🌐 URL: http://localhost:${port}`);
+  console.log('📋 Endpoints disponibles:');
+  console.log('   🔐 POST /auth/login - Login universal');
+  console.log('   👤 POST /auth/registro/usuario - Registro usuario');
+  console.log('   🏢 POST /auth/registro/cooperativa - Registro cooperativa');
+  console.log('   📊 GET /ciudades-terminales/plano - Datos tabla');
+  console.log('   🏙️ GET /ciudades - Listado ciudades');
+  console.log('   🚌 GET /terminales - Listado terminales');
+  console.log('==============================');
 });

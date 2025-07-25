@@ -17,6 +17,11 @@ const Viaje = sequelize.define('Viaje', {
         allowNull: false,
         field: 'unidad_id'
     },
+    conductorId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'conductor_id'
+    },
     fechaViaje: {
         type: DataTypes.DATEONLY,
         allowNull: false,
