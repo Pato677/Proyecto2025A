@@ -1,26 +1,23 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize.config');
 
-const Boleto = sequelize.define('Boleto', {
-  codigo: {
-    type: DataTypes.STRING,
+const Parada = sequelize.define('Parada', {
+  id: {
+    type: DataTypes.INTEGER,
     primaryKey: true,
-    allowNull: false
+    autoIncrement: true
   },
-  valor: {
-    type: DataTypes.DECIMAL
-  },
-  compra_id: {
+  ruta_id: {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  pasajero_id: {
+  terminal_id: {
     type: DataTypes.INTEGER,
     allowNull: false
   }
 }, {
-  tableName: 'boletos',
+  tableName: 'paradas',
   timestamps: false
 });
 
-module.exports = Boleto;
+module.exports = Parada;

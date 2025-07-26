@@ -17,10 +17,12 @@ const Compra = sequelize.define('Compra', {
     type: DataTypes.STRING
   },
   pasajero_id: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   viaje_id: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 }, {
   tableName: 'compras',

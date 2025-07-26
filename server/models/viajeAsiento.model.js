@@ -4,13 +4,16 @@ const sequelize = require('../config/sequelize.config');
 const ViajeAsiento = sequelize.define('ViajeAsiento', {
   id: {
     type: DataTypes.STRING,
-    primaryKey: true
+    primaryKey: true,
+    allowNull: false
   },
   asiento_id: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: false
   },
   viaje_id: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 }, {
   tableName: 'viaje_asientos',

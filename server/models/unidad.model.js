@@ -17,13 +17,16 @@ const Unidad = sequelize.define('Unidad', {
     type: DataTypes.STRING
   },
   cooperativa_id: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   conductor_id: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   controlador_id: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 }, {
   tableName: 'unidades',

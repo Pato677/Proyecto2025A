@@ -21,9 +21,6 @@ const Conductor = sequelize.define('Conductor', {
   },
   correo: {
     type: DataTypes.STRING
-  },
-  cooperativa_id: {
-    type: DataTypes.INTEGER
   }
 }, {
   tableName: 'conductores',

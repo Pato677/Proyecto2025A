@@ -20,10 +20,12 @@ const Viaje = sequelize.define('Viaje', {
     type: DataTypes.DECIMAL
   },
   ruta_id: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   unidad_id: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 }, {
   tableName: 'viajes',

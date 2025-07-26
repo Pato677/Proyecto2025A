@@ -17,16 +17,16 @@ const Ruta = sequelize.define('Ruta', {
     type: DataTypes.TIME
   },
   cooperativa_id: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   terminal_destino_id: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   terminal_origen_id: {
-    type: DataTypes.INTEGER
-  },
-  conductor_id: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 }, {
   tableName: 'rutas',
