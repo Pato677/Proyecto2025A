@@ -1,31 +1,27 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize.config');
 
-const UsuarioCooperativa = sequelize.define('UsuarioCooperativa', {
+const Pasajero = sequelize.define('Pasajero', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  razon_social: {
+  nombres: {
     type: DataTypes.STRING
   },
-  permiso_operacion: {
+  apellidos: {
     type: DataTypes.STRING
   },
-  ruc: {
-    type: DataTypes.STRING
+  fecha_nacimiento: {
+    type: DataTypes.DATEONLY
   },
-  estado: {
+  cedula: {
     type: DataTypes.STRING
-  },
-  usuario_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false
   }
 }, {
-  tableName: 'usuarios_cooperativas',
+  tableName: 'pasajeros',
   timestamps: false
 });
 
-module.exports = UsuarioCooperativa;
+module.exports = Pasajero;

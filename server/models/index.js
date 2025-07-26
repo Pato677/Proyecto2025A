@@ -1,7 +1,3 @@
-// Importar la instancia de sequelize PRIMERO
-const sequelize = require('../config/sequelize.config');
-
-// Luego importar todos los modelos
 const Usuario = require('./usuario.model');
 const UsuarioFinal = require('./usuarioFinal.model');
 const UsuarioCooperativa = require('./usuarioCooperativa.model');
@@ -9,77 +5,99 @@ const Ciudad = require('./ciudad.model');
 const Terminal = require('./terminal.model');
 const Conductor = require('./conductor.model');
 const Unidad = require('./unidad.model');
-const Ruta = require('./rutas.model');
+const Ruta = require('./ruta.model');
 const Viaje = require('./viaje.model');
 const Boleto = require('./boleto.model');
-const PasajeroBoleto = require('./PasajeroBoleto.model');
+const Pasajero = require('./pasajero.model');
+const Compra = require('./compra.model');
+const Asiento = require('./asiento.model');
+const ViajeAsiento = require('./viajeAsiento.model');
 
-// Definir todas las relaciones
+// UsuarioFinal - Usuario (FK: usuario_id)
+Usuario.hasOne(UsuarioFinal, { foreignKey: 'usuario_id' });
+UsuarioFinal.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 
-// Relaciones Usuario -> UsuarioFinal y UsuarioCooperativa
-Usuario.hasOne(UsuarioFinal, { foreignKey: 'usuario_id', as: 'datosUsuarioFinal' });
-UsuarioFinal.belongsTo(Usuario, { foreignKey: 'usuario_id', as: 'usuario' });
+// UsuarioCooperativa - Usuario (FK: usuario_id)
+Usuario.hasOne(UsuarioCooperativa, { foreignKey: 'usuario_id' });
+UsuarioCooperativa.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 
-Usuario.hasOne(UsuarioCooperativa, { foreignKey: 'usuario_id', as: 'datosCooperativa' });
-UsuarioCooperativa.belongsTo(Usuario, { foreignKey: 'usuario_id', as: 'usuario' });
+// Terminal - Ciudad (FK: ciudad_id)
+Ciudad.hasMany(Terminal, { foreignKey: 'ciudad_id' });
+Terminal.belongsTo(Ciudad, { foreignKey: 'ciudad_id' });
 
-// Relaciones Ciudad -> Terminal
-Ciudad.hasMany(Terminal, { foreignKey: 'ciudadId', as: 'terminales' });
-Terminal.belongsTo(Ciudad, { foreignKey: 'ciudadId', as: 'ciudad' });
+// Unidad - UsuarioCooperativa (FK: cooperativa_id)
+UsuarioCooperativa.hasMany(Unidad, { foreignKey: 'cooperativa_id' });
+Unidad.belongsTo(UsuarioCooperativa, { foreignKey: 'cooperativa_id' });
 
-// Relaciones UsuarioCooperativa -> Conductor (actualizada)
-UsuarioCooperativa.hasMany(Conductor, { foreignKey: 'cooperativa_id', as: 'conductores' });
-Conductor.belongsTo(UsuarioCooperativa, { foreignKey: 'cooperativa_id', as: 'cooperativa' });
+// Unidad - Conductor (FK: conductor_id)
+Conductor.hasMany(Unidad, { foreignKey: 'conductor_id' });
+Unidad.belongsTo(Conductor, { foreignKey: 'conductor_id' });
 
-// Relaciones UsuarioCooperativa -> Unidad (actualizada)
-UsuarioCooperativa.hasMany(Unidad, { foreignKey: 'cooperativa_id', as: 'unidades' });
-Unidad.belongsTo(UsuarioCooperativa, { foreignKey: 'cooperativa_id', as: 'cooperativa' });
+// Unidad - Conductor (FK: controlador_id) // Relación para controlador
+Conductor.hasMany(Unidad, { foreignKey: 'controlador_id', as: 'ControladorUnidades' });
+Unidad.belongsTo(Conductor, { foreignKey: 'controlador_id', as: 'Controlador' });
 
-// Relaciones UsuarioCooperativa -> Ruta (actualizada)
-UsuarioCooperativa.hasMany(Ruta, { foreignKey: 'cooperativa_id', as: 'rutas' });
+// Ruta - UsuarioCooperativa (FK: cooperativa_id)
+UsuarioCooperativa.hasMany(Ruta, { foreignKey: 'cooperativa_id' });
+Ruta.belongsTo(UsuarioCooperativa, { foreignKey: 'cooperativa_id' });
 
-// Relaciones Conductor -> Unidad (actualizada)
-Conductor.hasMany(Unidad, { foreignKey: 'conductor_id', as: 'unidades' });
-Unidad.belongsTo(Conductor, { foreignKey: 'conductor_id', as: 'conductor' });
+// Ruta - Terminal (FK: terminal_destino_id)
+Terminal.hasMany(Ruta, { foreignKey: 'terminal_destino_id', as: 'DestinoRutas' });
+Ruta.belongsTo(Terminal, { foreignKey: 'terminal_destino_id', as: 'DestinoTerminal' });
 
-// Relaciones Usuario -> Conductor (opcional)
-Usuario.hasOne(Conductor, { foreignKey: 'usuario_id', as: 'datosConductor' });
-Conductor.belongsTo(Usuario, { foreignKey: 'usuario_id', as: 'usuario' });
+// Ruta - Terminal (FK: terminal_origen_id)
+Terminal.hasMany(Ruta, { foreignKey: 'terminal_origen_id', as: 'OrigenRutas' });
+Ruta.belongsTo(Terminal, { foreignKey: 'terminal_origen_id', as: 'OrigenTerminal' });
 
-// Relaciones Ruta (actualizada)
-Ruta.belongsTo(Terminal, { foreignKey: 'origen_id', as: 'terminalOrigen' });
-Ruta.belongsTo(Terminal, { foreignKey: 'destino_id', as: 'terminalDestino' });
-Ruta.belongsTo(UsuarioCooperativa, { foreignKey: 'cooperativa_id', as: 'cooperativa' });
+// Ruta - Conductor (FK: conductor_id)
+Conductor.hasMany(Ruta, { foreignKey: 'conductor_id' });
+Ruta.belongsTo(Conductor, { foreignKey: 'conductor_id' });
 
-// Relaciones Viaje (actualizada)
-Ruta.hasMany(Viaje, { foreignKey: 'ruta_id', as: 'viajes' });
-Viaje.belongsTo(Ruta, { foreignKey: 'ruta_id', as: 'ruta' });
-Unidad.hasMany(Viaje, { foreignKey: 'unidad_id', as: 'viajes' });
-Viaje.belongsTo(Unidad, { foreignKey: 'unidad_id', as: 'unidad' });
-Conductor.hasMany(Viaje, { foreignKey: 'conductor_id', as: 'viajes' });
-Viaje.belongsTo(Conductor, { foreignKey: 'conductor_id', as: 'conductor' });
+// Viaje - Ruta (FK: ruta_id)
+Ruta.hasMany(Viaje, { foreignKey: 'ruta_id' });
+Viaje.belongsTo(Ruta, { foreignKey: 'ruta_id' });
 
-// Relaciones Boleto (actualizada)
-Usuario.hasMany(Boleto, { foreignKey: 'usuario_id', as: 'boletos' });
-Boleto.belongsTo(Usuario, { foreignKey: 'usuario_id', as: 'usuario' });
-Viaje.hasMany(Boleto, { foreignKey: 'viaje_id', as: 'boletos' });
-Boleto.belongsTo(Viaje, { foreignKey: 'viaje_id', as: 'viaje' });
+// Viaje - Unidad (FK: unidad_id)
+Unidad.hasMany(Viaje, { foreignKey: 'unidad_id' });
+Viaje.belongsTo(Unidad, { foreignKey: 'unidad_id' });
 
-// Relaciones PasajeroBoleto
-Boleto.hasMany(PasajeroBoleto, { foreignKey: 'boleto_id', as: 'pasajeros' });
-PasajeroBoleto.belongsTo(Boleto, { foreignKey: 'boleto_id', as: 'boleto' });
+// Compra - Pasajero (FK: pasajero_id)
+Pasajero.hasMany(Compra, { foreignKey: 'pasajero_id' });
+Compra.belongsTo(Pasajero, { foreignKey: 'pasajero_id' });
+
+// Compra - Viaje (FK: viaje_id)
+Viaje.hasMany(Compra, { foreignKey: 'viaje_id' });
+Compra.belongsTo(Viaje, { foreignKey: 'viaje_id' });
+
+// Boleto - Compra (FK: compra_id)
+Compra.hasMany(Boleto, { foreignKey: 'compra_id' });
+Boleto.belongsTo(Compra, { foreignKey: 'compra_id' });
+
+// Boleto - Pasajero (FK: pasajero_id)
+Pasajero.hasMany(Boleto, { foreignKey: 'pasajero_id' });
+Boleto.belongsTo(Pasajero, { foreignKey: 'pasajero_id' });
+
+// ViajeAsiento - Viaje (FK: viaje_id)
+Viaje.hasMany(ViajeAsiento, { foreignKey: 'viaje_id' });
+ViajeAsiento.belongsTo(Viaje, { foreignKey: 'viaje_id' });
+
+// ViajeAsiento - Asiento (FK: asiento_id)
+Asiento.hasMany(ViajeAsiento, { foreignKey: 'asiento_id' });
+ViajeAsiento.belongsTo(Asiento, { foreignKey: 'asiento_id' });
 
 module.exports = {
-    sequelize,
-    Usuario,
-    UsuarioFinal,
-    UsuarioCooperativa,
-    Ciudad,
-    Terminal,
-    Conductor,
-    Unidad,
-    Ruta,
-    Viaje,
-    Boleto,
-    PasajeroBoleto
+  Usuario,
+  UsuarioFinal,
+  UsuarioCooperativa,
+  Ciudad,
+  Terminal,
+  Conductor,
+  Unidad,
+  Ruta,
+  Viaje,
+  Boleto,
+  Pasajero,
+  Compra,
+  Asiento,
+  ViajeAsiento
 };

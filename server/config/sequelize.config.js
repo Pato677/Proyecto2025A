@@ -3,7 +3,7 @@ const {Sequelize} = require("sequelize");
 const username = "root";
 const password = "admin";
 //const password = "root";
-const bdd_name = "TransportesEC";
+const bdd_name = "transportesec";
 const hostName = "localhost";
 
 // Conexión inicial sin especificar la base de datos
@@ -31,8 +31,8 @@ sequelize.sync({ alter: true }).then(async () => {
     console.log(`Base de datos ${bdd_name} sincronizada`);
     
     // ✅ CARGAR modelos DESPUÉS del sync
-    const migrateData = require('../models/migrateData');
-    await migrateData();
+    //const migrateData = require('../models/migrateData');
+    //await migrateData();
 }).catch((error) => {
     console.error(`Error al sincronizar la base de datos ${bdd_name}`, error);
 });

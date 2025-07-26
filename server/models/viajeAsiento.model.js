@@ -1,23 +1,20 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize.config');
 
-const Boleto = sequelize.define('Boleto', {
-  codigo: {
+const ViajeAsiento = sequelize.define('ViajeAsiento', {
+  id: {
     type: DataTypes.STRING,
     primaryKey: true
   },
-  valor: {
-    type: DataTypes.DECIMAL
+  asiento_id: {
+    type: DataTypes.STRING
   },
-  compra_id: {
-    type: DataTypes.INTEGER
-  },
-  pasajero_id: {
+  viaje_id: {
     type: DataTypes.INTEGER
   }
 }, {
-  tableName: 'boletos',
+  tableName: 'viaje_asientos',
   timestamps: false
 });
 
-module.exports = Boleto;
+module.exports = ViajeAsiento;

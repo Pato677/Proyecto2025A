@@ -2,55 +2,32 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize.config');
 
 const Conductor = sequelize.define('Conductor', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    nombre: {
-        type: DataTypes.STRING(150),
-        allowNull: false
-    },
-    identificacion: {
-        type: DataTypes.STRING(10),
-        allowNull: false,
-        unique: true
-    },
-    tipoLicencia: {
-        type: DataTypes.ENUM('D1(Turismo)', 'D (Pasajeros)', 'N/A'),
-        allowNull: false,
-        field: 'tipo_licencia'
-    },
-    telefono: {
-        type: DataTypes.STRING(15),
-        allowNull: false
-    },
-    correo: {
-        type: DataTypes.STRING(150),
-        allowNull: false,
-        unique: true,
-        validate: {
-            isEmail: true
-        }
-    },
-    roles: {
-        type: DataTypes.JSON,
-        allowNull: false,
-        defaultValue: ['conductor']
-    },
-    cooperativaId: {
-        type: DataTypes.INTEGER,
-        field: 'cooperativa_id'
-    },
-    estado: {
-        type: DataTypes.ENUM('activo', 'inactivo'),
-        defaultValue: 'activo'
-    }
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  nombre: {
+    type: DataTypes.STRING
+  },
+  identificacion: {
+    type: DataTypes.STRING
+  },
+  tipo_licencia: {
+    type: DataTypes.STRING
+  },
+  telefono: {
+    type: DataTypes.STRING
+  },
+  correo: {
+    type: DataTypes.STRING
+  },
+  cooperativa_id: {
+    type: DataTypes.INTEGER
+  }
 }, {
-    tableName: 'conductores',
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
+  tableName: 'conductores',
+  timestamps: false
 });
 
 module.exports = Conductor;

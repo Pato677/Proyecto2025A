@@ -1,33 +1,36 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize.config');
 
-const Viaje = sequelize.define('Viaje', {
+const Ruta = sequelize.define('Ruta', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  fecha_salida: {
-    type: DataTypes.DATE
+  numero_ruta: {
+    type: DataTypes.STRING
   },
-  fecha_llegada: {
-    type: DataTypes.DATE
+  hora_salida: {
+    type: DataTypes.TIME
   },
-  numero_asientos_ocupados: {
+  hora_llegada: {
+    type: DataTypes.TIME
+  },
+  cooperativa_id: {
     type: DataTypes.INTEGER
   },
-  precio: {
-    type: DataTypes.DECIMAL
-  },
-  ruta_id: {
+  terminal_destino_id: {
     type: DataTypes.INTEGER
   },
-  unidad_id: {
+  terminal_origen_id: {
+    type: DataTypes.INTEGER
+  },
+  conductor_id: {
     type: DataTypes.INTEGER
   }
 }, {
-  tableName: 'viajes',
+  tableName: 'rutas',
   timestamps: false
 });
 
-module.exports = Viaje;
+module.exports = Ruta;

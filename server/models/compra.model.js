@@ -1,33 +1,30 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize.config');
 
-const Viaje = sequelize.define('Viaje', {
+const Compra = sequelize.define('Compra', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  fecha_salida: {
+  fecha: {
     type: DataTypes.DATE
   },
-  fecha_llegada: {
-    type: DataTypes.DATE
+  email_contacto: {
+    type: DataTypes.STRING
   },
-  numero_asientos_ocupados: {
+  telefono_contacto: {
+    type: DataTypes.STRING
+  },
+  pasajero_id: {
     type: DataTypes.INTEGER
   },
-  precio: {
-    type: DataTypes.DECIMAL
-  },
-  ruta_id: {
-    type: DataTypes.INTEGER
-  },
-  unidad_id: {
+  viaje_id: {
     type: DataTypes.INTEGER
   }
 }, {
-  tableName: 'viajes',
+  tableName: 'compras',
   timestamps: false
 });
 
-module.exports = Viaje;
+module.exports = Compra;
