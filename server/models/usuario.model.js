@@ -16,6 +16,9 @@ const Usuario = sequelize.define('Usuario', {
   },
   telefono: {
     type: DataTypes.STRING
+  },
+  rol: {
+    type: DataTypes.STRING
   }
 }, {
   tableName: 'usuarios',

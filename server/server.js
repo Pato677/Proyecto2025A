@@ -15,6 +15,12 @@ app.use(express.urlencoded({ extended: true }));
 // Rutas de autenticación (públicas)
 const authRoutes = require('./routes/auth.routes');
 app.use('/auth', authRoutes);
+
+// Rutas de usuarios (descomentadas y configuradas)
+const usuariosRoutes = require('./routes/usuario.routes');
+app.use('/usuarios', usuariosRoutes);
+
+// Otras rutas
 const rutasRoutes = require('./routes/rutas.routes');
 rutasRoutes(app);
 const viajesRoutes = require('./routes/viajes.routes');

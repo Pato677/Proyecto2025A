@@ -16,22 +16,20 @@ const getAllUsuarios = async (req, res) => {
 
         const usuarios = await Usuario.findAndCountAll({
             where,
-            attributes: { exclude: ['password'] },
+            attributes: { exclude: ['contrasena'] },
             include: [
                 {
                     model: UsuarioFinal,
-                    as: 'datosUsuarioFinal',
                     required: false
                 },
                 {
                     model: UsuarioCooperativa,
-                    as: 'datosCooperativa',
                     required: false
                 }
             ],
             limit: parseInt(limit),
             offset: parseInt(offset),
-            order: [['created_at', 'DESC']]
+            order: [['id', 'DESC']]
         });
 
         res.json({
@@ -59,16 +57,14 @@ const getUsuarioById = async (req, res) => {
     try {
         const { id } = req.params;
         const usuario = await Usuario.findByPk(id, {
-            attributes: { exclude: ['password'] },
+            attributes: { exclude: ['contrasena'] },
             include: [
                 {
                     model: UsuarioFinal,
-                    as: 'datosUsuarioFinal',
                     required: false
                 },
                 {
                     model: UsuarioCooperativa,
-                    as: 'datosCooperativa',
                     required: false
                 }
             ]
@@ -99,8 +95,8 @@ const getUsuarioById = async (req, res) => {
 const createUsuario = async (req, res) => {
     try {
         const { 
-            email, 
-            password, 
+            correo, 
+            contrasena, 
             telefono, 
             rol,
             datosUsuarioFinal,
@@ -108,7 +104,7 @@ const createUsuario = async (req, res) => {
         } = req.body;
 
         // Verificar que el email no existe
-        const usuarioExistente = await Usuario.findOne({ where: { email } });
+        const usuarioExistente = await Usuario.findOne({ where: { correo } });
         if (usuarioExistente) {
             return res.status(400).json({
                 success: false,
@@ -117,20 +113,18 @@ const createUsuario = async (req, res) => {
         }
         
         // Encriptar contraseña
-        const passwordEncriptado = await bcrypt.hash(password, 10);
+        const contrasenaEncriptada = await bcrypt.hash(contrasena, 10);
         
         // Crear usuario base
         const nuevoUsuario = await Usuario.create({
-            email,
-            password: passwordEncriptado,
+            correo,
+            contrasena: contrasenaEncriptada,
             telefono,
-            rol,
-            estado: 'activo',
-            email_verificado: true
+            rol
         });
 
         // Crear datos específicos según el rol
-        if (rol === 'usuario' && datosUsuarioFinal) {
+        if (rol === 'final' && datosUsuarioFinal) {
             await UsuarioFinal.create({
                 usuario_id: nuevoUsuario.id,
                 ...datosUsuarioFinal
@@ -144,16 +138,14 @@ const createUsuario = async (req, res) => {
 
         // Obtener usuario completo para respuesta
         const usuarioCompleto = await Usuario.findByPk(nuevoUsuario.id, {
-            attributes: { exclude: ['password'] },
+            attributes: { exclude: ['contrasena'] },
             include: [
                 {
                     model: UsuarioFinal,
-                    as: 'datosUsuarioFinal',
                     required: false
                 },
                 {
                     model: UsuarioCooperativa,
-                    as: 'datosCooperativa',
                     required: false
                 }
             ]
@@ -180,7 +172,6 @@ const updateUsuario = async (req, res) => {
         const { id } = req.params;
         const { 
             telefono, 
-            estado,
             datosUsuarioFinal,
             datosCooperativa
         } = req.body;
@@ -196,12 +187,11 @@ const updateUsuario = async (req, res) => {
         // Actualizar datos comunes
         const updateData = {};
         if (telefono) updateData.telefono = telefono;
-        if (estado) updateData.estado = estado;
         
         await usuario.update(updateData);
 
         // Actualizar datos específicos según el rol
-        if (usuario.rol === 'usuario' && datosUsuarioFinal) {
+        if (usuario.rol === 'final' && datosUsuarioFinal) {
             const usuarioFinal = await UsuarioFinal.findOne({ where: { usuario_id: id } });
             if (usuarioFinal) {
                 await usuarioFinal.update(datosUsuarioFinal);
@@ -215,16 +205,14 @@ const updateUsuario = async (req, res) => {
 
         // Obtener usuario actualizado
         const usuarioActualizado = await Usuario.findByPk(id, {
-            attributes: { exclude: ['password'] },
+            attributes: { exclude: ['contrasena'] },
             include: [
                 {
                     model: UsuarioFinal,
-                    as: 'datosUsuarioFinal',
                     required: false
                 },
                 {
                     model: UsuarioCooperativa,
-                    as: 'datosCooperativa',
                     required: false
                 }
             ]
@@ -276,11 +264,26 @@ const deleteUsuario = async (req, res) => {
 // Verificar si un email existe
 const verificarEmail = async (req, res) => {
     try {
-        const { email } = req.params;
-        const usuario = await Usuario.findOne({ where: { email } });
+        const { correo } = req.params;
+        
+        // Decodificar el email por si tiene caracteres especiales
+        const emailDecodificado = decodeURIComponent(correo);
+        
+        // Debug: mostrar el email que se está buscando
+        console.log('🔍 Buscando email:', emailDecodificado);
+        
+        const usuario = await Usuario.findOne({ where: { correo: emailDecodificado } });
+        
+        // Debug: mostrar resultado de la búsqueda
+        console.log('👤 Usuario encontrado:', usuario ? 'SÍ' : 'NO');
+        if (usuario) {
+            console.log('📧 Email en BD:', usuario.correo);
+        }
+        
         res.json({ 
             success: true,
-            existe: !!usuario 
+            existe: !!usuario,
+            emailBuscado: emailDecodificado  // Para debug
         });
     } catch (error) {
         console.error('Error al verificar email:', error);
@@ -292,13 +295,112 @@ const verificarEmail = async (req, res) => {
     }
 };
 
+// Actualizar estado de cooperativa (activo/inactivo)
+const actualizarEstadoCooperativa = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { estado } = req.body;
+
+        // Validar que el estado sea válido
+        if (!estado || !['activo', 'inactivo'].includes(estado)) {
+            return res.status(400).json({
+                success: false,
+                message: 'El estado debe ser "activo" o "inactivo"'
+            });
+        }
+
+        // Verificar que el usuario existe y es una cooperativa
+        const usuario = await Usuario.findByPk(id);
+        if (!usuario) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuario no encontrado'
+            });
+        }
+
+        if (usuario.rol !== 'cooperativa') {
+            return res.status(400).json({
+                success: false,
+                message: 'Este endpoint solo funciona para usuarios cooperativa'
+            });
+        }
+
+        // Buscar los datos de la cooperativa
+        const usuarioCooperativa = await UsuarioCooperativa.findOne({ 
+            where: { usuario_id: id } 
+        });
+
+        if (!usuarioCooperativa) {
+            return res.status(404).json({
+                success: false,
+                message: 'Datos de cooperativa no encontrados'
+            });
+        }
+
+        // Actualizar el estado
+        await usuarioCooperativa.update({ estado });
+
+        // Obtener usuario actualizado completo
+        const usuarioActualizado = await Usuario.findByPk(id, {
+            attributes: { exclude: ['contrasena'] },
+            include: [
+                {
+                    model: UsuarioFinal,
+                    required: false
+                },
+                {
+                    model: UsuarioCooperativa,
+                    required: false
+                }
+            ]
+        });
+
+        res.json({
+            success: true,
+            message: `Estado de cooperativa actualizado a: ${estado}`,
+            data: usuarioActualizado
+        });
+
+    } catch (error) {
+        console.error('Error al actualizar estado de cooperativa:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor',
+            error: error.message
+        });
+    }
+};
+
+// Debug: Listar todos los emails (temporal para depuración)
+const listarEmails = async (req, res) => {
+    try {
+        const usuarios = await Usuario.findAll({
+            attributes: ['id', 'correo', 'rol']
+        });
+        
+        res.json({
+            success: true,
+            data: usuarios,
+            total: usuarios.length
+        });
+    } catch (error) {
+        console.error('Error al listar emails:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     getAllUsuarios,
     getUsuarioById,
     createUsuario,
     updateUsuario,
     deleteUsuario,
-    verificarEmail
+    verificarEmail,
+    listarEmails  // Agregamos la nueva función
 };
 
 // Endpoint especial para actualizar contraseñas de texto plano a bcrypt
@@ -334,5 +436,10 @@ module.exports = {
     updateUsuario,
     deleteUsuario,
     verificarEmail,
+    actualizarEstadoCooperativa,
+    listarEmails,
     actualizarContrasenasPlanas
 };
+
+
+//relaciones extras
