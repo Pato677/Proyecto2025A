@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 8000;
 const cors = require('cors');
-
+require('./config/sequelize.config')
 // Cargar modelos después de configurar la base
+
 require('./models/index');
 
 // Middlewares
@@ -14,30 +15,42 @@ app.use(express.urlencoded({ extended: true }));
 // Rutas de autenticación (públicas)
 const authRoutes = require('./routes/auth.routes');
 app.use('/auth', authRoutes);
+const rutasRoutes = require('./routes/rutas.routes');
+rutasRoutes(app);
+const viajesRoutes = require('./routes/viajes.routes');
+viajesRoutes(app);
+const unidadesRoutes = require('./routes/unidades.routes');
+unidadesRoutes(app);
 
-// Rutas protegidas
+
+/*// Rutas protegidas
 const usuariosRoutes = require('./routes/usuario.routes');
 const cooperativasRoutes = require('./routes/cooperativas.routes');
 const unidadesRoutes = require('./routes/unidades.routes');
 const conductoresRoutes = require('./routes/conductores.routes');
-const rutasRoutes = require('./routes/rutas.routes');
+
 const terminalesRoutes = require('./routes/terminales.routes');
 const ciudadesRoutes = require('./routes/ciudades.routes');
-const viajesRoutes = require('./routes/viajes.routes');
 const boletosRoutes = require('./routes/boletos.routes');
 const ciudadesTerminalesRoutes = require('./routes/ciudadesTerminales.routes');
 
-// Registrar las rutas con prefijos
-app.use('/usuarios', usuariosRoutes);
-app.use('/cooperativas', cooperativasRoutes);
-app.use('/unidades', unidadesRoutes);
-app.use('/conductores', conductoresRoutes);
-app.use('/rutas', rutasRoutes);
-app.use('/terminales', terminalesRoutes);
-app.use('/ciudades', ciudadesRoutes);
-app.use('/viajes', viajesRoutes);
-app.use('/boletos', boletosRoutes);
-app.use('/', ciudadesTerminalesRoutes);
+
+
+usuariosRoutes(app);
+cooperativasRoutes(app);
+unidadesRoutes(app);
+conductoresRoutes(app);
+
+terminalesRoutes(app);
+ciudadesRoutes(app);
+
+
+boletosRoutes(app);
+
+ciudadesTerminalesRoutes(app);*/
+
+console.log('Todas las rutas cargadas exitosamente!');
+
 
 // Middleware para manejar rutas no encontradas
 app.use('*', (req, res) => {

@@ -36,15 +36,14 @@ Unidad.belongsTo(Conductor, { foreignKey: 'controlador_id', as: 'Controlador' })
 
 // Unidad - Viaje (FK: unidad_id)
 Unidad.hasMany(Viaje, { foreignKey: 'unidad_id' });
-Viaje.belongsTo(Unidad, { foreignKey: 'unidad_id' });
-
+Viaje.belongsTo(Unidad, { foreignKey: 'unidad_id', as: 'unidad' });
 // Ruta - UsuarioCooperativa (FK: cooperativa_id)
 UsuarioCooperativa.hasMany(Ruta, { foreignKey: 'cooperativa_id' });
 Ruta.belongsTo(UsuarioCooperativa, { foreignKey: 'cooperativa_id' });
 
 // Ruta - Viaje (FK: ruta_id)
 Ruta.hasMany(Viaje, { foreignKey: 'ruta_id' });
-Viaje.belongsTo(Ruta, { foreignKey: 'ruta_id' });
+Viaje.belongsTo(Ruta, { foreignKey: 'ruta_id', as: 'ruta'});
 
 // Compra - Viaje (FK: viaje_id)
 Viaje.hasMany(Compra, { foreignKey: 'viaje_id' });
@@ -76,7 +75,15 @@ Terminal.belongsToMany(Ruta, { through: Parada, foreignKey: 'terminal_id', other
 
 // Terminal - Ciudad (FK: ciudad_id)
 Ciudad.hasMany(Terminal, { foreignKey: 'ciudad_id' });
-Terminal.belongsTo(Ciudad, { foreignKey: 'ciudad_id' });
+Terminal.belongsTo(Ciudad, { foreignKey: 'ciudad_id', as: 'ciudad' });
+
+// Ruta - Terminal Origen (FK: terminal_origen_id)
+Terminal.hasMany(Ruta, { foreignKey: 'terminal_origen_id', as: 'rutasOrigen' });
+Ruta.belongsTo(Terminal, { foreignKey: 'terminal_origen_id', as: 'terminalOrigen' });
+
+// Ruta - Terminal Destino (FK: terminal_destino_id)
+Terminal.hasMany(Ruta, { foreignKey: 'terminal_destino_id', as: 'rutasDestino' });
+Ruta.belongsTo(Terminal, { foreignKey: 'terminal_destino_id', as: 'terminalDestino' });
 
 module.exports = {
   Usuario,

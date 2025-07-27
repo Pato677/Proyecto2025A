@@ -5,7 +5,7 @@ const ViajesTable = ({ viajes, selectedId, setSelectedId }) => {
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    return date.toLocaleDateString(); // Solo mostrar la fecha, sin la hora
   };
 
   const formatPrice = (price) => {
@@ -25,12 +25,16 @@ const ViajesTable = ({ viajes, selectedId, setSelectedId }) => {
               <th>Asientos Ocupados</th>
               <th>Precio</th>
               <th>Ruta</th>
+              <th>Terminal Origen</th>
+              <th>Terminal Destino</th>
+              <th>Hora Salida</th>
+              <th>Hora Llegada</th>
               <th>Unidad</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td colSpan="7" className="table-empty">
+              <td colSpan="11" className="table-empty">
                 <p>No hay viajes registrados</p>
               </td>
             </tr>
@@ -51,6 +55,10 @@ const ViajesTable = ({ viajes, selectedId, setSelectedId }) => {
             <th>Asientos Ocupados</th>
             <th>Precio</th>
             <th>Ruta</th>
+            <th>Terminal Origen</th>
+            <th>Terminal Destino</th>
+            <th>Hora Salida</th>
+            <th>Hora Llegada</th>
             <th>Unidad</th>
           </tr>
         </thead>
@@ -67,16 +75,28 @@ const ViajesTable = ({ viajes, selectedId, setSelectedId }) => {
               <td>{viaje.numero_asientos_ocupados || 0}</td>
               <td>{formatPrice(viaje.precio)}</td>
               <td>
-                {viaje.ruta ? 
-                  `${viaje.ruta.origen} - ${viaje.ruta.destino}` : 
-                  `Ruta ID: ${viaje.ruta_id}`
+                {viaje.ruta?.numero_ruta || 'N/A'}
+              </td>
+              <td>
+                {viaje.ruta?.terminalOrigen ? 
+                  `${viaje.ruta.terminalOrigen.nombre || 'Terminal'} - ${viaje.ruta.terminalOrigen.ciudad?.nombre || 'Ciudad'}` : 
+                  'N/A'
                 }
               </td>
               <td>
-                {viaje.unidad ? 
-                  `${viaje.unidad.placa}` : 
-                  `Unidad ID: ${viaje.unidad_id}`
+                {viaje.ruta?.terminalDestino ? 
+                  `${viaje.ruta.terminalDestino.nombre || 'Terminal'} - ${viaje.ruta.terminalDestino.ciudad?.nombre || 'Ciudad'}` : 
+                  'N/A'
                 }
+              </td>
+              <td>
+                {viaje.ruta?.hora_salida || 'N/A'}
+              </td>
+              <td>
+                {viaje.ruta?.hora_llegada || 'N/A'}
+              </td>
+              <td>
+                {viaje.unidad?.numero || viaje.unidad?.placa || 'N/A'}
               </td>
             </tr>
           ))}

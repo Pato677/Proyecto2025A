@@ -1,4 +1,4 @@
-.viaje-modal-bg {
+.viaje-update-modal-bg {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0.35);
@@ -8,7 +8,7 @@
   justify-content: center;
 }
 
-.viaje-modal-content {
+.viaje-update-modal-content {
   background: #fff;
   border-radius: 14px;
   padding: 2rem 2.5rem 1.5rem 2.5rem;
@@ -24,7 +24,7 @@
   to { transform: scale(1); opacity: 1; }
 }
 
-.viaje-modal-close {
+.viaje-update-modal-close {
   position: absolute;
   top: 12px;
   right: 18px;
@@ -35,19 +35,44 @@
   cursor: pointer;
   transition: color 0.2s;
 }
-.viaje-modal-close:hover {
+.viaje-update-modal-close:hover {
   color: #0ea5e9;
 }
 
-.viaje-modal-form {
+.viaje-update-modal-content h2 {
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+}
+
+.viaje-update-modal-subtitle {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem 0;
+  font-style: italic;
+}
+
+.viaje-update-modal-form {
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
   margin-top: 1rem;
 }
 
-.viaje-modal-form input,
-.viaje-modal-form select {
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.viaje-update-modal-form input,
+.viaje-update-modal-form select {
   padding: 0.5rem 0.8rem;
   border: 1.5px solid #d1d5db;
   border-radius: 7px;
@@ -55,31 +80,24 @@
   outline: none;
   transition: border 0.2s;
 }
-.viaje-modal-form input:focus,
-.viaje-modal-form select:focus {
+
+.viaje-update-modal-form input:focus,
+.viaje-update-modal-form select:focus {
   border: 1.5px solid #0ea5e9;
 }
 
-.viaje-modal-btns {
+.viaje-update-modal-form select {
+  cursor: pointer;
+}
+
+.viaje-update-modal-btns {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
   margin-top: 1rem;
-  flex-wrap: wrap;
 }
 
-@media (max-width: 768px) {
-  .viaje-modal-btns {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .viaje-modal-btns button {
-    width: 100%;
-  }
-}
-
-.viaje-modal-save {
+.viaje-update-modal-save {
   background: #0ea5e9;
   color: #fff;
   border: none;
@@ -89,26 +107,11 @@
   cursor: pointer;
   transition: background 0.2s;
 }
-.viaje-modal-save:hover {
+.viaje-update-modal-save:hover {
   background: #0369a1;
 }
 
-.viaje-modal-multiple {
-  background: #10b981;
-  color: #fff;
-  border: none;
-  border-radius: 7px;
-  padding: 0.5rem 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-size: 0.9rem;
-}
-.viaje-modal-multiple:hover {
-  background: #059669;
-}
-
-.viaje-modal-cancel {
+.viaje-update-modal-cancel {
   background: #e5e7eb;
   color: #222;
   border: none;
@@ -117,21 +120,6 @@
   cursor: pointer;
   transition: background 0.2s;
 }
-.viaje-modal-cancel:hover {
+.viaje-update-modal-cancel:hover {
   background: #cbd5e1;
-}
-
-.info-multiple-trips {
-  background: #f0f9ff;
-  border: 1px solid #bae6fd;
-  border-radius: 7px;
-  padding: 1rem;
-  margin: 0.5rem 0;
-}
-
-.info-multiple-trips p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #0369a1;
-  line-height: 1.4;
 }

@@ -8,6 +8,10 @@
   background-color: #f0f8ff;
 }
 
+.selected {
+  background-color: #d1ecf1 !important;
+}
+
 /* Contenedor de botones de acciones */
 .actions-container {
   display: flex;

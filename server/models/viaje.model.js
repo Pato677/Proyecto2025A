@@ -25,7 +25,7 @@ const Viaje = sequelize.define('Viaje', {
   },
   unidad_id: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true  // Permitir null para que se pueda asignar después
   }
 }, {
   tableName: 'viajes',

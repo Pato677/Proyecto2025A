@@ -4,6 +4,9 @@ module.exports = (app) => {
     // Obtener todas las unidades
     app.get('/unidades', UnidadesController.getAllUnidades);
     
+    // Obtener unidades por cooperativa
+    app.get('/unidades/cooperativa/:cooperativaId', UnidadesController.getUnidadesByCooperativa);
+    
     // Obtener unidad por ID
     app.get('/unidades/:id', UnidadesController.getUnidadById);
     

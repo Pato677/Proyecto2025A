@@ -1,4 +1,4 @@
-const { Unidad, Conductor, Cooperativa } =  require('../models');
+const { Unidad, Conductor, UsuarioCooperativa } =  require('../models');
 
 // Obtener todas las unidades
 const getAllUnidades = async (req, res) => {
@@ -7,17 +7,17 @@ const getAllUnidades = async (req, res) => {
             include: [
                 {
                     model: Conductor,
-                    as: 'conductor',
+                    as: 'Conductor',
                     attributes: ['id', 'nombre']
                 },
                 {
                     model: Conductor,
-                    as: 'controlador',
+                    as: 'Controlador',
                     attributes: ['id', 'nombre']
                 },
                 {
-                    model: Cooperativa,
-                    as: 'cooperativa',
+                    model: UsuarioCooperativa,
+                    foreignKey: 'cooperativa_id',
                     attributes: ['id', 'razonSocial']
                 }
             ]
@@ -37,17 +37,17 @@ const getUnidadById = async (req, res) => {
             include: [
                 {
                     model: Conductor,
-                    as: 'conductor',
+                    as: 'Conductor',
                     attributes: ['id', 'nombre']
                 },
                 {
                     model: Conductor,
-                    as: 'controlador',
+                    as: 'Controlador',
                     attributes: ['id', 'nombre']
                 },
                 {
-                    model: Cooperativa,
-                    as: 'cooperativa',
+                    model: UsuarioCooperativa,
+                    foreignKey: 'cooperativa_id',
                     attributes: ['id', 'razonSocial']
                 }
             ]
@@ -143,10 +143,56 @@ const deleteUnidad = async (req, res) => {
     }
 };
 
+// Obtener unidades por cooperativa
+const getUnidadesByCooperativa = async (req, res) => {
+    try {
+        const { cooperativaId } = req.params;
+        
+        if (!cooperativaId) {
+            return res.status(400).json({
+                success: false,
+                message: 'El ID de la cooperativa es requerido'
+            });
+        }
+
+        const unidades = await Unidad.findAll({
+            where: { cooperativa_id: cooperativaId },
+            include: [
+                {
+                    model: Conductor,
+                    as: 'Conductor',
+                    attributes: ['id', 'nombre']
+                },
+                {
+                    model: Conductor,
+                    as: 'Controlador',
+                    attributes: ['id', 'nombre']
+                }
+            ]
+        });
+
+        res.status(200).json({
+            success: true,
+            message: `Unidades encontradas para la cooperativa ${cooperativaId}`,
+            data: unidades,
+            total: unidades.length
+        });
+        
+    } catch (error) {
+        console.error('Error al obtener unidades por cooperativa:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error al obtener unidades por cooperativa',
+            error: error.message 
+        });
+    }
+};
+
 module.exports = {
     getAllUnidades,
     getUnidadById,
     createUnidad,
     updateUnidad,
-    deleteUnidad
+    deleteUnidad,
+    getUnidadesByCooperativa
 };
