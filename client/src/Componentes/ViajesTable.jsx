@@ -1,0 +1,89 @@
+import React from 'react';
+import './Estilos/ViajesTable.css';
+
+const ViajesTable = ({ viajes, selectedId, setSelectedId }) => {
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+  };
+
+  const formatPrice = (price) => {
+    if (!price) return 'N/A';
+    return `$${parseFloat(price).toFixed(2)}`;
+  };
+
+  if (!viajes || viajes.length === 0) {
+    return (
+      <div className="table-container">
+        <table className="viajes-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha Salida</th>
+              <th>Fecha Llegada</th>
+              <th>Asientos Ocupados</th>
+              <th>Precio</th>
+              <th>Ruta</th>
+              <th>Unidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan="7" className="table-empty">
+                <p>No hay viajes registrados</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  return (
+    <div className="table-container">
+      <table className="viajes-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fecha Salida</th>
+            <th>Fecha Llegada</th>
+            <th>Asientos Ocupados</th>
+            <th>Precio</th>
+            <th>Ruta</th>
+            <th>Unidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          {viajes.map((viaje) => (
+            <tr
+              key={viaje.id}
+              className={selectedId === viaje.id ? 'selected' : ''}
+              onClick={() => setSelectedId(viaje.id)}
+            >
+              <td>{viaje.id}</td>
+              <td>{formatDate(viaje.fecha_salida)}</td>
+              <td>{formatDate(viaje.fecha_llegada)}</td>
+              <td>{viaje.numero_asientos_ocupados || 0}</td>
+              <td>{formatPrice(viaje.precio)}</td>
+              <td>
+                {viaje.ruta ? 
+                  `${viaje.ruta.origen} - ${viaje.ruta.destino}` : 
+                  `Ruta ID: ${viaje.ruta_id}`
+                }
+              </td>
+              <td>
+                {viaje.unidad ? 
+                  `${viaje.unidad.placa}` : 
+                  `Unidad ID: ${viaje.unidad_id}`
+                }
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default ViajesTable;

@@ -4,12 +4,13 @@ import Footer from './Footer';
 import RegistrarUnidadesPage from './RegistrarUnidadesPage';
 import RutasPanel from './RutasPanel';
 import ConductoresPage from './ConductoresPage';
+import ViajesPanel from './ViajesPanel';
 import './Estilos/DashboardAdmin.css';
 
 // Paneles disponibles - similar a SuperAdminDashboard
 const panels = [
   { key: 'unidades', label: 'Unidades', component: <RegistrarUnidadesPage />, available: true },
-  { key: 'horarios', label: 'Horarios', component: null, available: false },
+  { key: 'viajes', label: 'Viajes', component: <ViajesPanel />, available: true },
   { key: 'rutas', label: 'Rutas', component: <RutasPanel />, available: true },
   { key: 'conductores', label: 'Conductores y Controladores', component: <ConductoresPage />, available: true },
 ];
@@ -24,9 +25,6 @@ function DashboardPage() {
     const panel = panels.find(p => p.key === moduleName);
     if (panel && panel.available) {
       setSelectedModule(moduleName);
-    } else if (moduleName === 'horarios') {
-      // Módulo en desarrollo - mostrar mensaje
-      setSelectedModule('horarios');
     }
   };
 
@@ -40,7 +38,7 @@ function DashboardPage() {
             <p>Selecciona un módulo del menú lateral para comenzar a gestionar:</p>
             <ul className="module-list">
               <li><strong>Unidades:</strong> Registra y administra unidades de transporte</li>
-              <li><strong>Horarios:</strong> Gestiona horarios de rutas (En desarrollo)</li>
+              <li><strong>Viajes:</strong> Gestiona viajes y horarios de transporte</li>
               <li><strong>Rutas:</strong> Configura y administra rutas de transporte</li>
               <li><strong>Conductores y Controladores:</strong> Administra el personal</li>
             </ul>
@@ -65,7 +63,7 @@ function DashboardPage() {
 
   const dashboardModules = [
     { key: 'unidades', label: 'Unidades', available: true },
-    { key: 'horarios', label: 'Horarios', available: false },
+    { key: 'viajes', label: 'Viajes', available: true },
     { key: 'rutas', label: 'Rutas', available: true },
     { key: 'conductores', label: 'Conductores y Controladores', available: true },
   ];
