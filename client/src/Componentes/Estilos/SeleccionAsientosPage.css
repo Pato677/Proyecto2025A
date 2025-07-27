@@ -370,3 +370,63 @@ body, html {
     margin-right: auto;
   }
 }
+
+/* Estilos para información de pasajeros */
+.pasajero-actual-info {
+  background-color: #f3f4f6;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  border-left: 4px solid #3b82f6;
+}
+
+.pasajero-actual-info p {
+  margin: 0.25rem 0;
+}
+
+.asientos-seleccionados-info {
+  background-color: #f0fdf4;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  border-left: 4px solid #10b981;
+}
+
+.asientos-seleccionados-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: #065f46;
+}
+
+.asiento-pasajero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: white;
+  border-radius: 4px;
+  margin: 0.25rem 0;
+  border: 1px solid #d1fae5;
+}
+
+.btn-deseleccionar {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.btn-deseleccionar:hover {
+  background-color: #dc2626;
+}
+
+.btn-aceptar:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.btn-aceptar:disabled:hover {
+  background-color: #9ca3af;
+}

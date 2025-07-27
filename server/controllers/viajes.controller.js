@@ -1,4 +1,4 @@
-const { Viaje, Ruta, Unidad, Ciudad, Terminal, UsuarioCooperativa } =  require('../models');
+const { Viaje, Ruta, Unidad, Ciudad, Terminal, UsuarioCooperativa, ViajeAsiento } =  require('../models');
 
 // Crear nuevo viaje
 module.exports.createViaje = async (req, res) => {
@@ -314,6 +314,110 @@ module.exports.deleteViaje = async (req, res) => {
       success: false, 
       message: 'Error al eliminar el viaje',
       error: error.message 
+    });
+  }
+};
+
+// Obtener viaje por ID con todas las relaciones
+module.exports.getViajeById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: 'El ID del viaje es requerido'
+      });
+    }
+
+    const viaje = await Viaje.findByPk(id, {
+      include: [
+        {
+          model: Ruta,
+          as: 'ruta',
+          include: [
+            {
+              model: Terminal,
+              as: 'terminalOrigen',
+              include: [
+                {
+                  model: Ciudad,
+                  as: 'ciudad'
+                }
+              ]
+            },
+            {
+              model: Terminal,
+              as: 'terminalDestino',
+              include: [
+                {
+                  model: Ciudad,
+                  as: 'ciudad'
+                }
+              ]
+            },
+            {
+              model: UsuarioCooperativa,
+              as: 'UsuarioCooperativa'
+            }
+          ]
+        },
+        {
+          model: Unidad,
+          as: 'unidad'
+        }
+      ]
+    });
+
+    if (!viaje) {
+      return res.status(404).json({
+        success: false,
+        message: 'Viaje no encontrado'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: viaje
+    });
+
+  } catch (error) {
+    console.error('Error al obtener el viaje:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener el viaje',
+      error: error.message
+    });
+  }
+};
+
+// Obtener asientos ocupados por viaje
+module.exports.getAsientosOcupados = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const asientosOcupados = await ViajeAsiento.findAll({
+      where: { viaje_id: id },
+      attributes: ['asiento_id']
+    });
+
+    const asientosIds = asientosOcupados.map(asiento => asiento.asiento_id);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        viajeId: id,
+        asientosOcupados: asientosIds,
+        totalAsientosOcupados: asientosIds.length
+      }
+    });
+
+  } catch (error) {
+    console.error('Error al obtener asientos ocupados:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener asientos ocupados',
+      error: error.message
     });
   }
 };

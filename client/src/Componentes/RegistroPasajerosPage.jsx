@@ -12,9 +12,13 @@ const RegistroPasajerosPage = () => {
   const location = useLocation();
   const formRef = useRef();
 
+  // Variable de prueba para el número de pasajeros (posteriormente se obtendrá via query)
+  const numeroPasajerosPrueba = 2; // Cambiar este valor para probar con diferentes números de pasajeros
+  const viajeIdPrueba = 2; // ID del viaje para pruebas (posteriormente se obtendrá via query)
+  
   // Obtener número de pasajeros de la URL
   const params = new URLSearchParams(location.search);
-  const pasajeros = parseInt(params.get('pasajeros'), 10) || 1;
+  const pasajeros = numeroPasajerosPrueba; // Usar la variable de prueba
 
   // Estado para el formulario actual
   const [formIndex, setFormIndex] = useState(0);
@@ -35,7 +39,11 @@ const RegistroPasajerosPage = () => {
 
   // Esta función se pasará al formulario
   const handleRegistroExitoso = () => {
-    navigate('/TripSelectionPage');
+    // Pasar los datos de los pasajeros y el ID del viaje a la siguiente página
+    const params = new URLSearchParams(location.search);
+    params.set('pasajerosData', JSON.stringify(datosPasajeros));
+    params.set('viajeId', viajeIdPrueba);
+    navigate(`/SeleccionAsientosPage?${params.toString()}`);
   };
 
   // Función para actualizar los datos de un pasajero
@@ -46,8 +54,30 @@ const RegistroPasajerosPage = () => {
   };
 
   const handleAceptar = () => {
-    if (formRef.current && formRef.current.validar()) {
-      // El formulario es válido y onRegistroExitoso ya navega
+    // Validar todos los formularios de pasajeros
+    let todosValidos = true;
+    
+    for (let i = 0; i < pasajeros; i++) {
+      const pasajero = datosPasajeros[i];
+      
+      // Validaciones básicas para todos los pasajeros
+      if (!pasajero.nombres || !pasajero.apellidos || !pasajero.cedula || 
+          !pasajero.dia || !pasajero.mes || !pasajero.anio) {
+        todosValidos = false;
+        break;
+      }
+      
+      // Validaciones adicionales para el primer pasajero (titular)
+      if (i === 0 && (!pasajero.correo || !pasajero.telefono)) {
+        todosValidos = false;
+        break;
+      }
+    }
+    
+    if (todosValidos) {
+      handleRegistroExitoso();
+    } else {
+      alert('Por favor, complete todos los datos requeridos de todos los pasajeros antes de continuar.');
     }
   };
 
