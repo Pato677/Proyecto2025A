@@ -27,6 +27,12 @@ const viajesRoutes = require('./routes/viajes.routes');
 viajesRoutes(app);
 const unidadesRoutes = require('./routes/unidades.routes');
 unidadesRoutes(app);
+const comprasRoutes = require('./routes/compras.routes');
+app.use('/api/compras', comprasRoutes);
+const pasajerosRoutes = require('./routes/pasajeros.routes');
+app.use('/api/pasajeros', pasajerosRoutes);
+const asientosRoutes = require('./routes/asientos.routes');
+asientosRoutes(app);
 
 
 /*// Rutas protegidas

@@ -1,14 +1,85 @@
-import React from 'react';
-
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import SeatSelector from './SeatSelector';
 import StepProgress from './StepProgress'; // Asegúrate de que la ruta sea correcta
 import './Estilos/SeleccionAsientosPage.css';
 import Footer from './Footer';
 import Logo from './Imagenes/Logo.png';
 
-
-
 const SeleccionAsientosPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = new URLSearchParams(location.search);
+  
+  // Obtener datos de los pasajeros de la URL
+  const pasajerosDataStr = params.get('pasajerosData');
+  const pasajerosData = pasajerosDataStr ? JSON.parse(pasajerosDataStr) : [];
+  const numeroPasajeros = pasajerosData.length;
+  const viajeId = params.get('viajeId');
+
+  // Estado para el precio del viaje
+  const [precioViaje, setPrecioViaje] = useState(12.25);
+
+  // Cargar datos del viaje
+  useEffect(() => {
+    if (viajeId) {
+      axios.get(`http://localhost:8000/viajes/${viajeId}`)
+        .then(res => {
+          if (res.data.success && res.data.data) {
+            setPrecioViaje(parseFloat(res.data.data.precio) || 12.25);
+          }
+        })
+        .catch(error => {
+          console.error('Error al cargar precio del viaje:', error);
+        });
+    }
+  }, [viajeId]);
+  
+  // Estado para los asientos seleccionados
+  const [asientosSeleccionados, setAsientosSeleccionados] = useState([]);
+  
+  // Estado para mostrar qué pasajero está seleccionando asiento
+  const [pasajeroActual, setPasajeroActual] = useState(0);
+
+  const handleSeleccionAsiento = (numeroAsiento) => {
+    if (asientosSeleccionados.length < numeroPasajeros && 
+        !asientosSeleccionados.includes(numeroAsiento)) {
+      setAsientosSeleccionados([...asientosSeleccionados, numeroAsiento]);
+      
+      // Avanzar al siguiente pasajero si no es el último
+      if (pasajeroActual < numeroPasajeros - 1) {
+        setPasajeroActual(pasajeroActual + 1);
+      }
+    }
+  };
+
+  const handleDeseleccionarAsiento = (numeroAsiento) => {
+    const nuevosAsientos = asientosSeleccionados.filter(asiento => asiento !== numeroAsiento);
+    setAsientosSeleccionados(nuevosAsientos);
+    
+    // Ajustar el pasajero actual
+    if (nuevosAsientos.length > 0) {
+      setPasajeroActual(nuevosAsientos.length - 1);
+    } else {
+      setPasajeroActual(0);
+    }
+  };
+
+  const handleAtras = () => {
+    navigate(-1);
+  };
+
+  const handleAceptar = () => {
+    if (asientosSeleccionados.length === numeroPasajeros) {
+      // Pasar los datos de pasajeros y asientos a la siguiente página
+      const allParams = new URLSearchParams(location.search);
+      allParams.set('asientosSeleccionados', JSON.stringify(asientosSeleccionados));
+      navigate(`/FormasDePagoPage?${allParams.toString()}`);
+    } else {
+      alert(`Debe seleccionar ${numeroPasajeros} asientos para todos los pasajeros.`);
+    }
+  };
   return (
     <div className="page-container">
 
@@ -21,12 +92,12 @@ const SeleccionAsientosPage = () => {
           </div>
         </div>
         <div className="step-info">
-          <span>1 Adulto</span>
+          <span>{numeroPasajeros} {numeroPasajeros === 1 ? 'Pasajero' : 'Pasajeros'}</span>
           <div className="step-progress">
                 <StepProgress currentStep={4} totalSteps={5} />
           </div>
    
-          <button className="precio">USD 12,<sup>25</sup></button>
+          <button className="precio">USD {precioViaje.toFixed(2).replace('.', ',')}</button>
         </div>
       </header>
       
@@ -35,7 +106,33 @@ const SeleccionAsientosPage = () => {
       <div className="main">
         <div className="title-container">
           <h2>Selecciona tus asientos</h2>
-           <p>Elige como quieres viajar, ventana o pasillo</p>
+          <p>Elige como quieres viajar, ventana o pasillo</p>
+          
+          {/* Información del pasajero actual */}
+          {asientosSeleccionados.length < numeroPasajeros && (
+            <div className="pasajero-actual-info">
+              <p><strong>Seleccionando asiento para:</strong> {pasajerosData[pasajeroActual]?.nombres} {pasajerosData[pasajeroActual]?.apellidos}</p>
+              <p>Pasajero {pasajeroActual + 1} de {numeroPasajeros}</p>
+            </div>
+          )}
+          
+          {/* Mostrar asientos ya seleccionados */}
+          {asientosSeleccionados.length > 0 && (
+            <div className="asientos-seleccionados-info">
+              <h4>Asientos seleccionados:</h4>
+              {asientosSeleccionados.map((asiento, index) => (
+                <div key={index} className="asiento-pasajero">
+                  <span>Asiento {asiento}: {pasajerosData[index]?.nombres} {pasajerosData[index]?.apellidos}</span>
+                  <button 
+                    onClick={() => handleDeseleccionarAsiento(asiento)}
+                    className="btn-deseleccionar"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <section className="info-section">
           <div className='ruta-info'>
@@ -60,16 +157,26 @@ const SeleccionAsientosPage = () => {
 
           
           <div className='seat-selector'>
-            <SeatSelector />
+            <SeatSelector 
+              onSeleccionAsiento={handleSeleccionAsiento}
+              asientosSeleccionados={asientosSeleccionados}
+              numeroPasajeros={numeroPasajeros}
+              viajeId={viajeId}
+            />
           </div>
 
 
         </section>
         
         <div className='button-group'>
-          <button className="btn-atras">ATRÁS</button>
-            <button className="btn-aceptar">ACEPTAR</button>
-
+          <button className="btn-atras" onClick={handleAtras}>ATRÁS</button>
+          <button 
+            className="btn-aceptar" 
+            onClick={handleAceptar}
+            disabled={asientosSeleccionados.length !== numeroPasajeros}
+          >
+            ACEPTAR ({asientosSeleccionados.length}/{numeroPasajeros})
+          </button>
         </div>
 
         
