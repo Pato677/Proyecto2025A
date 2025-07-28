@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 import "./Estilos/Inicio.css";
 import "./Estilos/Footer.css";
 import Header from "./Header";
@@ -20,6 +21,7 @@ import ModalRastreoBoleto from "./ModalRastreoBoleto";
 const Inicio = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { usuario, logout } = useAuth();
 
     // Estados para el modal
     const [mostrarLogin, setMostrarLogin] = useState(false);
@@ -49,10 +51,6 @@ const Inicio = () => {
     const [mostrarMenuPasajeros, setMostrarMenuPasajeros] = useState(false);
     const [pasajeros, setPasajeros] = useState([1, 0, 0, 0]);
     const [error, setError] = useState('');
-    const [usuario, setUsuario] = useState(() => {
-        const saved = localStorage.getItem('usuario');
-        return saved ? JSON.parse(saved) : null;
-    });
     
     // Persistir estados
     useEffect(() => {
@@ -103,15 +101,15 @@ const Inicio = () => {
     };
 
     const handleLoginExitoso = (usuarioData) => {
-        setUsuario(usuarioData);
+        // El usuario se actualiza automáticamente a través del AuthContext
         setMostrarLogin(false);
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('usuario');
+        // Usar el logout del AuthContext que limpia todo
+        logout();
         localStorage.removeItem('origenSeleccionado');
         localStorage.removeItem('destinoSeleccionado');
-        setUsuario(null);
     };
 
     const handleBuscar = () => {

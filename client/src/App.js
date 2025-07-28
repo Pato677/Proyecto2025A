@@ -1,6 +1,8 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import React from 'react';
+import { AuthProvider } from './Componentes/AuthContext';
+import ProtectedRoute from './Componentes/ProtectedRoute';
 import Inicio from './Componentes/Inicio';
 import Indice from './Componentes/Indice';
 import Login from './Componentes/Login';
@@ -25,30 +27,89 @@ import ConductoresPage from './Componentes/ConductoresPage';
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Indice />} />
-          <Route path="/Inicio" element={<Inicio />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/PasajeroForm" element={<Registro />} />
-          <Route path="/RegistroCooperativa" element={<RegistroCooperativa />} />
-          <Route path="/SeleccionViaje" element={<SeleccionViaje/>} />
-          <Route path="/RegistroPasajerosPage" element={<RegistroPasajerosPage />} />
-          <Route path="/SeleccionAsientosPage" element={<SeleccionAsientosPage/>} />
-          <Route path="/TablaPasajeros" element={<TablaPasajeros />} />
-          <Route path="/TicketPage" element={<TicketPage />} />
-          <Route path="/RealTimeMap" element={<LiveLocationPage />} />
-          <Route path="/DashboardAdmin" element={<DashboardPage />} />
-          <Route path="/RegisterUnits" element={<RegisterUnitsPage />} />
-          <Route path="/RutasPanel" element={<RutasPanel />} />
-          <Route path="/RutaForm" element={<RutaForm />} />
-          <Route path="/FormasDePagoPage" element={<FormasDePagoPage />} />
-          <Route path="/PerfilUsuario" element ={<PerfilUsuario />} />
-          <Route path="/boton" element={<Button text="Atras" />} />
-          <Route path="/SuperAdmin" element={<SuperAdminDashboard />} />
-          <Route path="/ConductoresPage" element={<ConductoresPage />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Rutas públicas */}
+            <Route path="/" element={<Indice />} />
+            <Route path="/Inicio" element={<Inicio />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/PasajeroForm" element={<Registro />} />
+            <Route path="/RegistroCooperativa" element={<RegistroCooperativa />} />
+            
+            {/* Rutas para usuarios finales (público por ahora, pueden requerir auth después) */}
+            <Route path="/SeleccionViaje" element={<SeleccionViaje/>} />
+            <Route path="/RegistroPasajerosPage" element={<RegistroPasajerosPage />} />
+            <Route path="/SeleccionAsientosPage" element={<SeleccionAsientosPage/>} />
+            <Route path="/TablaPasajeros" element={<TablaPasajeros />} />
+            <Route path="/TicketPage" element={<TicketPage />} />
+            <Route path="/RealTimeMap" element={<LiveLocationPage />} />
+            <Route path="/FormasDePagoPage" element={<FormasDePagoPage />} />
+            <Route path="/PerfilUsuario" element={<PerfilUsuario />} />
+            
+            {/* Rutas protegidas para cooperativas y administradores */}
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute requiredRole={null}>
+                  <DashboardPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/DashboardAdmin" 
+              element={
+                <ProtectedRoute requiredRole="cooperativa">
+                  <DashboardPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/RegisterUnits" 
+              element={
+                <ProtectedRoute requiredRole="cooperativa">
+                  <RegisterUnitsPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/RutasPanel" 
+              element={
+                <ProtectedRoute requiredRole="cooperativa">
+                  <RutasPanel />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/RutaForm" 
+              element={
+                <ProtectedRoute requiredRole="cooperativa">
+                  <RutaForm />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/SuperAdmin" 
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <SuperAdminDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/ConductoresPage" 
+              element={
+                <ProtectedRoute requiredRole="cooperativa">
+                  <ConductoresPage />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Ruta de utilidad */}
+            <Route path="/boton" element={<Button text="Atras" />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </div>
   );
 }

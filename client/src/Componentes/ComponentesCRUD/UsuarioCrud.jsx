@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/usuarios"; 
+const API_URL = "http://localhost:8000/usuarios"; 
 
 const UsuarioCrud = {
   // Crear un nuevo usuario
@@ -71,20 +71,52 @@ const UsuarioCrud = {
   },
 
     // Verificar credenciales de usuario (Login)
-    verificarCredenciales: async (correo, contrasena) => {
+    login: async (correo, contrasena) => {
         try {
             const response = await axios.post(`${API_URL}/login`, {
                 correo,
                 contrasena
+            }, {
+                timeout: 10000, // Timeout de 10 segundos
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
+            
+            // Si el login es exitoso, guardar el token en localStorage
+            if (response.data.success && response.data.token) {
+                // Usar setTimeout para evitar problemas de renderizado concurrente
+                setTimeout(() => {
+                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('usuario', JSON.stringify(response.data.usuario));
+                    localStorage.setItem('dashboard', response.data.configuracion.dashboard);
+                }, 0);
+            }
+            
             return response.data;
         } catch (error) {
-            if (error.response && error.response.status === 401) {
-                // Credenciales inválidas
-                return null;
+            console.error('Error en login:', error);
+            if (error.response) {
+                // Error del servidor con respuesta
+                throw new Error(error.response.data.message || 'Error al iniciar sesión');
+            } else if (error.code === 'ECONNABORTED') {
+                // Error de timeout
+                throw new Error('Tiempo de espera agotado. Verifique su conexión.');
+            } else {
+                // Error de red u otro
+                throw new Error('Error de conexión con el servidor');
             }
+        }
+    },
+
+    // Método legacy para compatibilidad (puede ser removido después)
+    verificarCredenciales: async (correo, contrasena) => {
+        try {
+            const loginResponse = await UsuarioCrud.login(correo, contrasena);
+            return loginResponse.success ? loginResponse : null;
+        } catch (error) {
             console.error("Error al verificar credenciales:", error);
-            throw error;
+            return null;
         }
     },
 

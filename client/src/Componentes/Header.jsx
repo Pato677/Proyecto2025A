@@ -74,7 +74,9 @@ function Header({
             >
               <FaUser className="ticket-icon" />
               <span className="ticket-login">
-                {usuario.nombres.split(' ')[0]} ?
+                {usuario.nombres ? usuario.nombres.split(' ')[0] : 
+                 usuario.correo ? usuario.correo.split('@')[0] : 
+                 'Usuario'} 
               </span>
               {menuOpen && (
                 <div className="dropdown-content">

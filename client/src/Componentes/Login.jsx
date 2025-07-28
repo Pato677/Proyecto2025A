@@ -1,18 +1,22 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaUser, FaLock, FaSignInAlt } from "react-icons/fa";
+import { useAuth } from "./AuthContext";
 import UsuarioCrud from "./ComponentesCRUD/UsuarioCrud";
 import "./Estilos/Login.css";
 
 const Login = ({ cerrar, abrirRegistro, onLoginExitoso }) => {
-    const [credenciales, setCredenciales] = React.useState({
+    const navigate = useNavigate();
+    const { login: authLogin } = useAuth();
+    const [credenciales, setCredenciales] = useState({
         correo: "",
         contrasena: ""
     });
     
-    const [error, setError] = React.useState("");
-    const [loading, setLoading] = React.useState(false);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const handleChange = (e) => {
+    const handleChange = useCallback((e) => {
         const { name, value } = e.target;
         setCredenciales(prev => ({
             ...prev,
@@ -20,9 +24,9 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso }) => {
         }));
         
         if (error) setError("");
-    };
+    }, [error]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true);
         setError("");
@@ -34,28 +38,66 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso }) => {
                 return;
             }
 
-            // Verificar credenciales
-            const usuario = await UsuarioCrud.verificarCredenciales(
+            // Hacer login con el backend
+            const loginResponse = await UsuarioCrud.login(
                 credenciales.correo, 
                 credenciales.contrasena
             );
             
-            if (usuario) {
-                // Guardar usuario en localStorage
-                localStorage.setItem("usuario", JSON.stringify(usuario));
+            if (loginResponse.success) {
+                // Mostrar mensaje de bienvenida en consola
+                console.log("✅", loginResponse.mensajeBienvenida);
                 
-                // Notificar al componente padre
-                onLoginExitoso(usuario);
+                // Actualizar el contexto de autenticación
+                authLogin(loginResponse.usuario, loginResponse.token);
+                
+                // Cerrar modal de login
+                if (cerrar) cerrar();
+                
+                // Notificar al componente padre si existe
+                if (onLoginExitoso) {
+                    onLoginExitoso(loginResponse.usuario);
+                }
+                
+                // Usar setTimeout para asegurar que las actualizaciones de estado se completen
+                setTimeout(() => {
+                    // Redirigir según el dashboard configurado
+                    const dashboard = loginResponse.configuracion.dashboard;
+                    
+                    switch (dashboard) {
+                        case 'usuario':
+                            // Usuarios finales van a la selección de viajes
+                            console.log("🚀 Redirigiendo a interfaz de usuario...");
+                            navigate('/Inicio');
+                            break;
+                        case 'cooperativa':
+                            // Cooperativas van al dashboard administrativo
+                            console.log("🏢 Redirigiendo a dashboard de cooperativa...");
+                            navigate('/dashboard');
+                            break;
+                        case 'admin':
+                            // Administradores van al panel de admin
+                            console.log("👨‍💼 Redirigiendo a panel de administrador...");
+                            navigate('/dashboard');
+                            break;
+                        default:
+                            // Fallback por si hay un rol no manejado
+                            console.log("⚠️ Rol no reconocido, redirigiendo al inicio...");
+                            navigate('/Inicio');
+                            break;
+                    }
+                }, 100); // Delay de 100ms para asegurar que el estado se actualice
+                
             } else {
-                setError("Correo o contraseña incorrectos");
+                setError("Error en el inicio de sesión");
             }
         } catch (err) {
             console.error("Error al iniciar sesión:", err);
-            setError("Ocurrió un error al iniciar sesión");
+            setError(err.message || "Ocurrió un error al iniciar sesión");
         } finally {
             setLoading(false);
         }
-    };
+    }, [credenciales, authLogin, cerrar, onLoginExitoso, navigate, error]);
 
     return (
         <div className="login-overlay" onClick={cerrar}>
@@ -99,7 +141,7 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso }) => {
                         >
                             {loading ? "CARGANDO..." : "INGRESAR"}
                         </button>
-                        <button type="button" className="btn-admin">Admin</button>
+                       
                     </div>
                 </form>
 
