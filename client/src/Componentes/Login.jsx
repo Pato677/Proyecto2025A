@@ -80,6 +80,11 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso }) => {
                             console.log("👨‍💼 Redirigiendo a panel de administrador...");
                             navigate('/dashboard');
                             break;
+                        case 'superuser':
+                            // Super usuario va al panel de super admin
+                            console.log("🔐 Redirigiendo a panel de super usuario...");
+                            navigate('/SuperAdmin');
+                            break;
                         default:
                             // Fallback por si hay un rol no manejado
                             console.log("⚠️ Rol no reconocido, redirigiendo al inicio...");

@@ -126,7 +126,7 @@ const createUsuario = async (req, res) => {
         });
 
         // Crear datos específicos según el rol
-        if (rol === 'final' && datosUsuarioFinal) {
+        if ((rol === 'final' || rol === 'superuser') && datosUsuarioFinal) {
             await UsuarioFinal.create({
                 usuario_id: nuevoUsuario.id,
                 ...datosUsuarioFinal
@@ -560,8 +560,35 @@ const login = async (req, res) => {
                 dashboard: 'usuario'
             };
 
+        } else if (usuario.rol === 'superuser') {
+            // Super Usuario - Tiene datos como usuario final pero permisos de admin
+            const datosUsuarioFinal = usuario.UsuarioFinal;
+            
+            if (!datosUsuarioFinal) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Datos de superusuario incompletos'
+                });
+            }
+
+            perfilUsuario = {
+                ...perfilUsuario,
+                nombres: datosUsuarioFinal.nombres,
+                apellidos: datosUsuarioFinal.apellidos,
+                fechaNacimiento: datosUsuarioFinal.fecha_nacimiento,
+                cedula: datosUsuarioFinal.cedula,
+                nombreCompleto: `${datosUsuarioFinal.nombres} ${datosUsuarioFinal.apellidos}`,
+                esSuperUser: true // Flag especial para identificar superuser
+            };
+
+            mensajeBienvenida = `¡Bienvenido Super Usuario ${datosUsuarioFinal.nombres}!`;
+            
+            configuracionPerfil = {
+                dashboard: 'superuser' // Dashboard específico para superuser
+            };
+
         } else {
-            // Otros roles (admin, superusuario, etc.)
+            // Otros roles (admin, etc.)
             mensajeBienvenida = `¡Bienvenido ${usuario.correo}!`;
             
             configuracionPerfil = {
