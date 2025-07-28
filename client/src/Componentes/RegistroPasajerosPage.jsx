@@ -19,13 +19,17 @@ const RegistroPasajerosPage = () => {
   // Obtener número de pasajeros de la URL
   const params = new URLSearchParams(location.search);
   const pasajeros = numeroPasajerosPrueba; // Usar la variable de prueba
+  
+  // Obtener datos de pasajeros existentes si vienen de vuelta desde otra página
+  const pasajerosDataStr = params.get('pasajerosData');
+  const datosExistentes = pasajerosDataStr ? JSON.parse(pasajerosDataStr) : null;
 
   // Estado para el formulario actual
   const [formIndex, setFormIndex] = useState(0);
 
-  // Estado para los datos de los pasajeros
+  // Estado para los datos de los pasajeros - usar datos existentes si están disponibles
   const [datosPasajeros, setDatosPasajeros] = useState(
-    Array.from({ length: pasajeros }, () => ({
+    datosExistentes || Array.from({ length: pasajeros }, () => ({
       nombres: '',
       apellidos: '',
       cedula: '',
@@ -123,7 +127,13 @@ const RegistroPasajerosPage = () => {
           </button>
         </div>
         <div className="contenedor-botones">
-          <Button text="Atras" width='150px' onClick={() => navigate(-1)} />
+          <Button text="Atras" width='150px' onClick={() => {
+            // Guardar datos actuales en los parámetros antes de navegar hacia atrás
+            const currentParams = new URLSearchParams(location.search);
+            currentParams.set('pasajerosData', JSON.stringify(datosPasajeros));
+            // Mantener otros parámetros y regresar a la página anterior
+            navigate(-1, { state: { pasajerosData: datosPasajeros } });
+          }} />
           <Button text="Aceptar" width='150px' onClick={handleAceptar} />
         </div>
       </main>

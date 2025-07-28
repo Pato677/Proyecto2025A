@@ -17,6 +17,10 @@ const SeleccionAsientosPage = () => {
   const pasajerosData = pasajerosDataStr ? JSON.parse(pasajerosDataStr) : [];
   const numeroPasajeros = pasajerosData.length;
   const viajeId = params.get('viajeId');
+  
+  // Obtener asientos previamente seleccionados si existen
+  const asientosYaSeleccionadosStr = params.get('asientosSeleccionados');
+  const asientosYaSeleccionados = asientosYaSeleccionadosStr ? JSON.parse(asientosYaSeleccionadosStr) : [];
 
   // Estado para el precio del viaje
   const [precioViaje, setPrecioViaje] = useState(12.25);
@@ -36,11 +40,11 @@ const SeleccionAsientosPage = () => {
     }
   }, [viajeId]);
   
-  // Estado para los asientos seleccionados
-  const [asientosSeleccionados, setAsientosSeleccionados] = useState([]);
+  // Estado para los asientos seleccionados - inicializar con asientos previos si existen
+  const [asientosSeleccionados, setAsientosSeleccionados] = useState(asientosYaSeleccionados);
   
   // Estado para mostrar qué pasajero está seleccionando asiento
-  const [pasajeroActual, setPasajeroActual] = useState(0);
+  const [pasajeroActual, setPasajeroActual] = useState(asientosYaSeleccionados.length > 0 ? asientosYaSeleccionados.length - 1 : 0);
 
   const handleSeleccionAsiento = (numeroAsiento) => {
     if (asientosSeleccionados.length < numeroPasajeros && 
@@ -67,7 +71,9 @@ const SeleccionAsientosPage = () => {
   };
 
   const handleAtras = () => {
-    navigate(-1);
+    // Mantener todos los parámetros actuales y regresar a registro de pasajeros
+    const allParams = new URLSearchParams(location.search);
+    navigate(`/RegistroPasajerosPage?${allParams.toString()}`);
   };
 
   const handleAceptar = () => {
@@ -107,6 +113,14 @@ const SeleccionAsientosPage = () => {
         <div className="title-container">
           <h2>Selecciona tus asientos</h2>
           <p>Elige como quieres viajar, ventana o pasillo</p>
+          
+          {/* Mensaje informativo si hay asientos previamente seleccionados */}
+          {asientosYaSeleccionados.length > 0 && (
+            <div className="asientos-previos-info">
+              <p><strong>ℹ️ Se han conservado tus asientos previamente seleccionados.</strong></p>
+              <p>Puedes modificar tu selección o continuar con los asientos actuales.</p>
+            </div>
+          )}
           
           {/* Información del pasajero actual */}
           {asientosSeleccionados.length < numeroPasajeros && (

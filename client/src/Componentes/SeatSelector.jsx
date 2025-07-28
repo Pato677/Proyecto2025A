@@ -45,8 +45,12 @@ const SeatSelector = ({ onSeleccionAsiento, asientosSeleccionados = [], numeroPa
   }, [viajeId]);
   
   const handleSeatClick = (seat) => {
-    if (!occupiedSeats.includes(seat)) {
-      if (asientosSeleccionados.includes(seat)) {
+    const seatStr = seat.toString();
+    const occupiedSeatsStr = occupiedSeats.map(s => s.toString());
+    const asientosSeleccionadosStr = asientosSeleccionados.map(s => s.toString());
+    
+    if (!occupiedSeatsStr.includes(seatStr)) {
+      if (asientosSeleccionadosStr.includes(seatStr)) {
         // Si el asiento ya está seleccionado, no hacer nada o permitir deselección
         // Por ahora mantenemos simple y no permitimos deselección desde aquí
         return;
@@ -88,14 +92,13 @@ const SeatSelector = ({ onSeleccionAsiento, asientosSeleccionados = [], numeroPa
       {seatLayout.map((row, rowIdx) => (
         <div className="seat-row" key={rowIdx}>
           {row.map((seat) => {
-            const isOccupied = occupiedSeats.includes(seat);
-            const isSelected = asientosSeleccionados.includes(seat);
+            const seatStr = seat.toString();
+            const isOccupied = occupiedSeats.map(s => s.toString()).includes(seatStr);
+            const isSelected = asientosSeleccionados.map(s => s.toString()).includes(seatStr);
             return (
               <button
                 key={seat}
-                className={`seat 
-                  ${isOccupied ? 'occupied' : ''} 
-                  ${isSelected ? 'selected' : ''}`}
+                className={`seat ${isOccupied ? 'occupied' : ''} ${isSelected ? 'selected' : ''}`.trim()}
                 onClick={() => handleSeatClick(seat)}
                 disabled={isOccupied}
               >

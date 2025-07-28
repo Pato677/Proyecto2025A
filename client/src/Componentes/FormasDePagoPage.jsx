@@ -125,7 +125,10 @@ const FormasDePagoPage = () => {
   });
 
   const handleAtras = () => {
-    navigate(-1);
+    // Regresar a selección de asientos manteniendo todos los parámetros
+    const allParams = new URLSearchParams(location.search);
+    // Mantener los asientos seleccionados para que se muestren como referencia
+    navigate(`/SeleccionAsientosPage?${allParams.toString()}`);
   };
 
   // Calcular el total de la compra

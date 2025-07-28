@@ -52,10 +52,16 @@ body, html {
 }
 
 .seat.selected {
-  background-color: #00cc66; /* verde */
+  background-color: #22c55e !important; /* verde más vibrante con !important */
+  color: white;
+}
+
+.seat.selected:hover {
+  background-color: #16a34a !important; /* verde más oscuro al hover */
 }
 
 .seat.occupied {
   background-color: #ccc;
   cursor: not-allowed;
+  color: #666;
 }
