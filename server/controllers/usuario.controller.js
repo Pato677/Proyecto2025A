@@ -440,8 +440,29 @@ const login = async (req, res) => {
     try {
         const { correo, contrasena } = req.body;
 
-        // Buscar usuario por correo
-        const usuario = await Usuario.findOne({ where: { correo } });
+        // Validar campos requeridos
+        if (!correo || !contrasena) {
+            return res.status(400).json({
+                success: false,
+                message: 'Correo y contraseña son requeridos'
+            });
+        }
+
+        // Buscar usuario por correo con sus datos específicos
+        const usuario = await Usuario.findOne({ 
+            where: { correo },
+            include: [
+                {
+                    model: UsuarioFinal,
+                    required: false
+                },
+                {
+                    model: UsuarioCooperativa,
+                    required: false
+                }
+            ]
+        });
+
         if (!usuario) {
             return res.status(404).json({ 
                 success: false, 
@@ -469,16 +490,95 @@ const login = async (req, res) => {
             { expiresIn: '24h' }
         );
 
+        // Preparar respuesta específica según el rol
+        let perfilUsuario = {
+            id: usuario.id,
+            correo: usuario.correo,
+            telefono: usuario.telefono,
+            rol: usuario.rol
+        };
+
+        let mensajeBienvenida = '';
+        let configuracionPerfil = {};
+
+        if (usuario.rol === 'cooperativa') {
+            // Usuario Cooperativa
+            const datosCooperativa = usuario.UsuarioCooperativa;
+            
+            if (!datosCooperativa) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Datos de cooperativa incompletos'
+                });
+            }
+
+            // Verificar estado de la cooperativa
+            if (datosCooperativa.estado === 'inactivo') {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Su cooperativa se encuentra inactiva. Contacte al administrador.'
+                });
+            }
+
+            perfilUsuario = {
+                ...perfilUsuario,
+                razonSocial: datosCooperativa.razon_social,
+                permisoOperacion: datosCooperativa.permiso_operacion,
+                ruc: datosCooperativa.ruc,
+                estado: datosCooperativa.estado
+            };
+
+            mensajeBienvenida = `¡Bienvenido ${datosCooperativa.razon_social}!`;
+            
+            configuracionPerfil = {
+                dashboard: 'cooperativa'
+            };
+
+        } else if (usuario.rol === 'final') {
+            // Usuario Final
+            const datosUsuarioFinal = usuario.UsuarioFinal;
+            
+            if (!datosUsuarioFinal) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Datos de usuario incompletos'
+                });
+            }
+
+            perfilUsuario = {
+                ...perfilUsuario,
+                nombres: datosUsuarioFinal.nombres,
+                apellidos: datosUsuarioFinal.apellidos,
+                fechaNacimiento: datosUsuarioFinal.fecha_nacimiento,
+                cedula: datosUsuarioFinal.cedula,
+                nombreCompleto: `${datosUsuarioFinal.nombres} ${datosUsuarioFinal.apellidos}`
+            };
+
+            mensajeBienvenida = `¡Bienvenido ${datosUsuarioFinal.nombres} ${datosUsuarioFinal.apellidos}!`;
+            
+            configuracionPerfil = {
+                dashboard: 'usuario'
+            };
+
+        } else {
+            // Otros roles (admin, superusuario, etc.)
+            mensajeBienvenida = `¡Bienvenido ${usuario.correo}!`;
+            
+            configuracionPerfil = {
+                dashboard: 'admin'
+            };
+        }
+
         res.json({
             success: true,
             message: 'Inicio de sesión exitoso',
+            mensajeBienvenida,
             token,
-            usuario: {
-                id: usuario.id,
-                correo: usuario.correo,
-                rol: usuario.rol
-            }
+            usuario: perfilUsuario,
+            configuracion: configuracionPerfil,
+            tiempoSesion: '24 horas'
         });
+
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
         res.status(500).json({ 
