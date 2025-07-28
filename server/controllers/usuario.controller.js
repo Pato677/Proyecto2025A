@@ -153,7 +153,7 @@ const createUsuario = async (req, res) => {
             ]
         });
 
-        // Generar token JWT para el usuario recién creado
+        // Generar token JWT para el usuario recién creado con 24horas de validez
         const token = jwt.sign(
             { 
                 id: nuevoUsuario.id, 
