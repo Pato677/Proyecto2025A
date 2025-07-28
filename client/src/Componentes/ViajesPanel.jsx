@@ -21,6 +21,7 @@ const ViajesPanel = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rutas, setRutas] = useState([]);
   const [unidades, setUnidades] = useState([]);
+  const [asientosOcupados, setAsientosOcupados] = useState({});
 
   // 🔄 Recargar viajes desde el servidor
   const recargarViajes = () => {
@@ -31,15 +32,50 @@ const ViajesPanel = () => {
         if (res.data.success && res.data.data) {
           setViajes(res.data.data);
           console.log('Viajes cargados:', res.data.data.length);
+          // Cargar asientos ocupados para cada viaje
+          cargarAsientosOcupados(res.data.data);
         } else {
           console.log('No hay viajes o respuesta sin éxito');
           setViajes([]);
+          setAsientosOcupados({});
         }
       })
       .catch(error => {
         console.error('Error al cargar viajes:', error);
         setViajes([]);
+        setAsientosOcupados({});
       });
+  };
+
+  // 🪑 Cargar asientos ocupados para todos los viajes
+  const cargarAsientosOcupados = async (viajesData) => {
+    const asientosPromises = viajesData.map(viaje => 
+      axios.get(`${API_URL_Viajes_CRUD}/${viaje.id}/asientos-ocupados`)
+        .then(res => ({
+          viajeId: viaje.id,
+          totalAsientosOcupados: res.data.success ? res.data.data.totalAsientosOcupados : 0
+        }))
+        .catch(error => {
+          console.error(`Error al cargar asientos ocupados para viaje ${viaje.id}:`, error);
+          return {
+            viajeId: viaje.id,
+            totalAsientosOcupados: 0
+          };
+        })
+    );
+
+    try {
+      const resultados = await Promise.all(asientosPromises);
+      const asientosMap = {};
+      resultados.forEach(resultado => {
+        asientosMap[resultado.viajeId] = resultado.totalAsientosOcupados;
+      });
+      setAsientosOcupados(asientosMap);
+      console.log('Asientos ocupados cargados:', asientosMap);
+    } catch (error) {
+      console.error('Error al cargar todos los asientos ocupados:', error);
+      setAsientosOcupados({});
+    }
   };
 
   // Cargar viajes, rutas y unidades al inicio
@@ -84,7 +120,11 @@ const ViajesPanel = () => {
   const totalPaginas = Math.ceil(viajes.length / viajesPorPagina);
   const startIdx = (currentPage - 1) * viajesPorPagina;
   const endIdx = startIdx + viajesPorPagina;
-  const viajesPagina = viajes.slice(startIdx, endIdx);
+  // Agregar información de asientos ocupados a los viajes de la página actual
+  const viajesPagina = viajes.slice(startIdx, endIdx).map(viaje => ({
+    ...viaje,
+    asientos_ocupados_reales: asientosOcupados[viaje.id] || 0
+  }));
 
   // Crear nuevo viaje
   const handleSaveViaje = (nuevoViaje) => {

@@ -72,7 +72,7 @@ const ViajesTable = ({ viajes, selectedId, setSelectedId }) => {
               <td>{viaje.id}</td>
               <td>{formatDate(viaje.fecha_salida)}</td>
               <td>{formatDate(viaje.fecha_llegada)}</td>
-              <td>{viaje.numero_asientos_ocupados || 0}</td>
+              <td>{viaje.asientos_ocupados_reales !== undefined ? viaje.asientos_ocupados_reales : (viaje.numero_asientos_ocupados || 0)}</td>
               <td>{formatPrice(viaje.precio)}</td>
               <td>
                 {viaje.ruta?.numero_ruta || 'N/A'}
