@@ -1,0 +1,150 @@
+.confirmacion-modal-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirmacion-modal-content {
+  background: #fff;
+  border-radius: 14px;
+  padding: 2rem 2.5rem 1.5rem 2.5rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  min-width: 400px;
+  max-width: 500px;
+  width: 90vw;
+  position: relative;
+  animation: modalIn 0.2s;
+  text-align: center;
+}
+
+@keyframes modalIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.confirmacion-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.confirmacion-modal-close:hover {
+  color: #0ea5e9;
+}
+
+.confirmacion-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: iconPulse 2s infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.confirmacion-title {
+  color: #0ea5e9;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.confirmacion-message {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.confirmacion-message > p {
+  font-size: 1.1rem;
+  color: #374151;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.confirmacion-details {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.confirmacion-details p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  color: #1f2937;
+}
+
+.confirmacion-warning {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 7px;
+  padding: 1rem;
+  margin-top: 1rem;
+  color: #0369a1;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.confirmacion-modal-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .confirmacion-modal-btns {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .confirmacion-modal-btns button {
+    width: 100%;
+  }
+  
+  .confirmacion-modal-content {
+    min-width: 320px;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+  }
+}
+
+.confirmacion-modal-cancel {
+  background: #e5e7eb;
+  color: #222;
+  border: none;
+  border-radius: 7px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: bold;
+  font-size: 1rem;
+}
+.confirmacion-modal-cancel:hover {
+  background: #cbd5e1;
+}
+
+.confirmacion-modal-confirm {
+  background: #0ea5e9;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 0.5rem 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+.confirmacion-modal-confirm:hover {
+  background: #0369a1;
+}

@@ -7,6 +7,8 @@ import Footer from './Footer';
 import TablaPasajeros from './TablaPasajeros';
 import TicketInfo from './Ticket (12)/TicketInfo';
 import Button from './Button';
+import ConfirmacionCompraModal from './ConfirmacionCompraModal';
+import ResultadoCompraModal from './ResultadoCompraModal';
 
 const FormasDePagoPage = () => {
   const location = useLocation();
@@ -18,6 +20,11 @@ const FormasDePagoPage = () => {
   const [procesandoPago, setProcesandoPago] = useState(false);
   const [datosViajeReal, setDatosViajeReal] = useState(null);
   const [cargandoViaje, setCargandoViaje] = useState(false);
+  
+  // Estados para los modales
+  const [showConfirmacionModal, setShowConfirmacionModal] = useState(false);
+  const [showResultadoModal, setShowResultadoModal] = useState(false);
+  const [datosCompraExitosa, setDatosCompraExitosa] = useState(null);
   
   // Obtener datos de los parámetros
   const pasajerosDataStr = params.get('pasajerosData');
@@ -121,7 +128,12 @@ const FormasDePagoPage = () => {
     navigate(-1);
   };
 
-  const handleAceptar = async () => {
+  // Calcular el total de la compra
+  const calcularTotalCompra = () => {
+    return pasajerosConPrecio.reduce((total, pasajero) => total + parseFloat(pasajero.precio), 0).toFixed(2);
+  };
+
+  const handleAceptar = () => {
     // Validar que se haya seleccionado una forma de pago
     if (!formaPagoSeleccionada) {
       alert('Por favor, seleccione una forma de pago');
@@ -144,6 +156,12 @@ const FormasDePagoPage = () => {
       return;
     }
 
+    // Mostrar modal de confirmación
+    setShowConfirmacionModal(true);
+  };
+
+  const handleConfirmarCompra = async () => {
+    setShowConfirmacionModal(false);
     setProcesandoPago(true);
 
     try {
@@ -161,15 +179,16 @@ const FormasDePagoPage = () => {
       const response = await axios.post('http://localhost:8000/api/compras', datosCompra);
 
       if (response.data.success) {
-        const { codigoCompra, totalPasajeros, totalBoletos, precioBase } = response.data.data;
-        alert(`¡Compra realizada exitosamente!
-Código de compra: ${codigoCompra}
-Pasajeros registrados: ${totalPasajeros}
-Boletos generados: ${totalBoletos}
-Precio base del viaje: $${precioBase}`);
+        const datosRespuesta = response.data.data;
         
-        // Redirigir a una página de confirmación o inicio
-        navigate('/');
+        // Agregar información de pasajeros con precios para mostrar en el modal
+        const datosCompraCompletos = {
+          ...datosRespuesta,
+          pasajeros: pasajerosConPrecio
+        };
+        
+        setDatosCompraExitosa(datosCompraCompletos);
+        setShowResultadoModal(true);
       } else {
         alert('Error al procesar la compra: ' + response.data.message);
       }
@@ -195,6 +214,17 @@ Precio base del viaje: $${precioBase}`);
     } finally {
       setProcesandoPago(false);
     }
+  };
+
+  const handleCancelarConfirmacion = () => {
+    setShowConfirmacionModal(false);
+  };
+
+  const handleCerrarResultado = () => {
+    setShowResultadoModal(false);
+    setDatosCompraExitosa(null);
+    // Redirigir a la página principal
+    navigate('/');
   };
   return (
     <div className="pago-resumen-page">
@@ -249,6 +279,23 @@ Precio base del viaje: $${precioBase}`);
       <footer>
         <Footer />
       </footer>
+
+      {/* Modal de Confirmación de Compra */}
+      <ConfirmacionCompraModal
+        open={showConfirmacionModal}
+        onConfirmar={handleConfirmarCompra}
+        onCancelar={handleCancelarConfirmacion}
+        totalPasajeros={pasajerosConPrecio.length}
+        precioTotal={calcularTotalCompra()}
+      />
+
+      {/* Modal de Resultado de Compra */}
+      <ResultadoCompraModal
+        open={showResultadoModal}
+        onCerrar={handleCerrarResultado}
+        datosCompra={datosCompraExitosa}
+        datosViaje={datosViaje}
+      />
     </div>
   );
 };
