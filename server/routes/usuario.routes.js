@@ -7,6 +7,9 @@ const authMiddleware = require('../middleware/auth.middleware');
 // router.use(authMiddleware);
 // router.use(authMiddleware.requireRole('superusuario'));
 
+// Login de usuario (público - sin autenticación)
+router.post('/login', UsuarioController.login);
+
 // Obtener todos los usuarios con filtros y paginación
 router.get('/', UsuarioController.getAllUsuarios);
 

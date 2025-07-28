@@ -2,6 +2,8 @@ const Usuario = require('../models/usuario.model');
 const UsuarioFinal = require('../models/usuarioFinal.model');
 const UsuarioCooperativa = require('../models/usuarioCooperativa.model');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require ('dotenv').config();
 
 // Obtener todos los usuarios con información específica
 const getAllUsuarios = async (req, res) => {
@@ -150,10 +152,22 @@ const createUsuario = async (req, res) => {
                 }
             ]
         });
+
+        // Generar token JWT para el usuario recién creado
+        const token = jwt.sign(
+            { 
+                id: nuevoUsuario.id, 
+                correo: nuevoUsuario.correo,
+                rol: nuevoUsuario.rol 
+            }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: '24h' }
+        );
         
         res.status(201).json({
             success: true,
             message: 'Usuario creado exitosamente',
+            token,
             data: usuarioCompleto
         });
     } catch (error) {
@@ -393,16 +407,6 @@ const listarEmails = async (req, res) => {
     }
 };
 
-module.exports = {
-    getAllUsuarios,
-    getUsuarioById,
-    createUsuario,
-    updateUsuario,
-    deleteUsuario,
-    verificarEmail,
-    listarEmails  // Agregamos la nueva función
-};
-
 // Endpoint especial para actualizar contraseñas de texto plano a bcrypt
 const actualizarContrasenasPlanas = async (req, res) => {
     try {
@@ -429,6 +433,62 @@ const actualizarContrasenasPlanas = async (req, res) => {
     }
 };
 
+
+
+//endpoint para logearse
+const login = async (req, res) => {
+    try {
+        const { correo, contrasena } = req.body;
+
+        // Buscar usuario por correo
+        const usuario = await Usuario.findOne({ where: { correo } });
+        if (!usuario) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Usuario no encontrado' 
+            });
+        }
+
+        // Verificar contraseña
+        const contrasenaValida = await bcrypt.compare(contrasena, usuario.contrasena);
+        if (!contrasenaValida) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Contraseña incorrecta' 
+            });
+        }
+
+        // Generar token JWT
+        const token = jwt.sign(
+            { 
+                id: usuario.id, 
+                correo: usuario.correo,
+                rol: usuario.rol 
+            }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: '24h' }
+        );
+
+        res.json({
+            success: true,
+            message: 'Inicio de sesión exitoso',
+            token,
+            usuario: {
+                id: usuario.id,
+                correo: usuario.correo,
+                rol: usuario.rol
+            }
+        });
+    } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error interno del servidor',
+            error: error.message 
+        });
+    }
+};
+
 module.exports = {
     getAllUsuarios,
     getUsuarioById,
@@ -438,7 +498,8 @@ module.exports = {
     verificarEmail,
     actualizarEstadoCooperativa,
     listarEmails,
-    actualizarContrasenasPlanas
+    actualizarContrasenasPlanas,
+    login
 };
 
 
