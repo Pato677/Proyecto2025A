@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import UsuarioCrud from "./ComponentesCRUD/UsuarioCrud";
+import PerfilCooperativaModal from "./PerfilCooperativaModal";
 import './Estilos/PerfilUsuario.css';
 import { 
   FaUser, FaCalendarAlt, FaIdCard, 
@@ -11,7 +12,7 @@ import {
 
 const PerfilUsuario = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth(); // Obtener la función logout del contexto
+  const { logout, usuario } = useAuth(); // Obtener el usuario del contexto también
   const [usuarioState, setUsuarioState] = useState({
     id: "",
     nombres: "",
@@ -78,6 +79,11 @@ const PerfilUsuario = () => {
 
     cargarUsuario();
   }, [navigate]);
+
+  // Si es cooperativa, mostrar el modal específico
+  if (usuario && usuario.rol === 'cooperativa') {
+    return <PerfilCooperativaModal cerrar={() => navigate('/dashboard')} />;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;

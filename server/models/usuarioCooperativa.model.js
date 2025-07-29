@@ -17,7 +17,8 @@ const UsuarioCooperativa = sequelize.define('UsuarioCooperativa', {
     type: DataTypes.STRING
   },
   estado: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    defaultValue: 'desactivo'
   },
   usuario_id: {
     type: DataTypes.INTEGER,

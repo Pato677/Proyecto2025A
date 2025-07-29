@@ -47,6 +47,67 @@
   color: #222;
 }
 
+.header-admin__user-menu {
+  position: relative;
+}
+
+.header-admin__user-toggle {
+  cursor: pointer;
+  transition: background-color 0.2s;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.header-admin__user-toggle:hover {
+  background-color: #f0f7ff;
+}
+
+.header-admin__chevron {
+  font-size: 1rem;
+  margin-left: 4px;
+  transition: transform 0.2s;
+}
+
+.header-admin__chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.header-admin__dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
+  z-index: 1000;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.header-admin__dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.header-admin__dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.header-admin__dropdown-item:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.header-admin__dropdown-icon {
+  font-size: 1.1rem;
+  color: #666;
+}
+
 .header-admin__icon {
   font-size: 1.25rem;
   color: #3a8edb;

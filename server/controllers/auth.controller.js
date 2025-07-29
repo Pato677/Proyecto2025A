@@ -22,8 +22,8 @@ const generateToken = (user) => {
 const registrarUsuario = async (req, res) => {
   try {
     const { 
-      email, 
-      password, 
+      correo, 
+      contrasena, 
       telefono, 
       nombres, 
       apellidos, 
@@ -34,25 +34,24 @@ const registrarUsuario = async (req, res) => {
       ciudad 
     } = req.body;
 
-    // Verificar si el email ya existe
-    const usuarioExistente = await Usuario.findOne({ where: { email } });
+    // Verificar si el correo ya existe
+    const usuarioExistente = await Usuario.findOne({ where: { correo } });
     if (usuarioExistente) {
       return res.status(400).json({ 
         success: false, 
-        message: 'El email ya está registrado' 
+        message: 'El correo ya está registrado' 
       });
     }
 
     // Encriptar contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(contrasena, 10);
 
     // Crear usuario base
     const nuevoUsuario = await Usuario.create({
-      email,
-      password: hashedPassword,
+      correo,
+      contrasena: hashedPassword,
       telefono,
-      rol: 'usuario',
-      estado: 'activo'
+      rol: 'final'
     });
 
     // Crear datos específicos del usuario final
@@ -75,7 +74,7 @@ const registrarUsuario = async (req, res) => {
       message: 'Usuario registrado exitosamente',
       data: {
         id: nuevoUsuario.id,
-        email: nuevoUsuario.email,
+        correo: nuevoUsuario.correo,
         rol: nuevoUsuario.rol,
         nombres,
         apellidos
@@ -97,28 +96,20 @@ const registrarUsuario = async (req, res) => {
 const registrarCooperativa = async (req, res) => {
   try {
     const {
-      email,
-      password,
+      correo,
+      contrasena,
       telefono,
-      nombre_cooperativa,
-      ruc,
       razon_social,
-      representante_legal,
-      cedula_representante,
-      direccion_matriz,
-      ciudad_matriz,
-      telefono_fijo,
-      pagina_web,
-      fecha_constitucion,
-      numero_socios
+      permiso_operacion,
+      ruc
     } = req.body;
 
-    // Verificar si el email ya existe
-    const usuarioExistente = await Usuario.findOne({ where: { email } });
+    // Verificar si el correo ya existe
+    const usuarioExistente = await Usuario.findOne({ where: { correo } });
     if (usuarioExistente) {
       return res.status(400).json({
         success: false,
-        message: 'El email ya está registrado'
+        message: 'El correo ya está registrado'
       });
     }
 
@@ -132,32 +123,23 @@ const registrarCooperativa = async (req, res) => {
     }
 
     // Encriptar contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(contrasena, 10);
 
     // Crear usuario base
     const nuevoUsuario = await Usuario.create({
-      email,
-      password: hashedPassword,
+      correo,
+      contrasena: hashedPassword,
       telefono,
-      rol: 'cooperativa',
-      estado: 'activo'
+      rol: 'cooperativa'
     });
 
     // Crear datos específicos de la cooperativa
     await UsuarioCooperativa.create({
       usuario_id: nuevoUsuario.id,
-      nombre_cooperativa,
-      ruc,
       razon_social,
-      representante_legal,
-      cedula_representante,
-      direccion_matriz,
-      ciudad_matriz,
-      telefono_fijo,
-      pagina_web,
-      fecha_constitucion,
-      numero_socios: numero_socios || 0,
-      estado_juridico: 'en_tramite'
+      permiso_operacion,
+      ruc,
+      estado: 'desactivo' // Las cooperativas se crean desactivas por defecto
     });
 
     // Generar token
@@ -168,9 +150,9 @@ const registrarCooperativa = async (req, res) => {
       message: 'Cooperativa registrada exitosamente',
       data: {
         id: nuevoUsuario.id,
-        email: nuevoUsuario.email,
+        correo: nuevoUsuario.correo,
         rol: nuevoUsuario.rol,
-        nombre_cooperativa,
+        razon_social,
         ruc
       },
       token
@@ -189,20 +171,18 @@ const registrarCooperativa = async (req, res) => {
 // Login universal
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { correo, contrasena } = req.body;
 
     // Buscar usuario con sus datos específicos
     const usuario = await Usuario.findOne({
-      where: { email },
+      where: { correo },
       include: [
         {
           model: UsuarioFinal,
-          as: 'datosUsuarioFinal',
           required: false
         },
         {
           model: UsuarioCooperativa,
-          as: 'datosCooperativa',
           required: false
         }
       ]
@@ -216,7 +196,7 @@ const login = async (req, res) => {
     }
 
     // Verificar contraseña
-    const passwordValida = await bcrypt.compare(password, usuario.password);
+    const passwordValida = await bcrypt.compare(contrasena, usuario.contrasena);
     if (!passwordValida) {
       return res.status(401).json({
         success: false,
@@ -224,16 +204,39 @@ const login = async (req, res) => {
       });
     }
 
-    // Verificar estado del usuario
-    if (usuario.estado !== 'activo') {
-      return res.status(403).json({
-        success: false,
-        message: 'Cuenta inactiva o suspendida'
-      });
+    // Verificar estado del usuario según su rol
+    if (usuario.rol === 'final') {
+      if (!usuario.UsuarioFinal) {
+        return res.status(400).json({
+          success: false,
+          message: 'Datos de usuario incompletos'
+        });
+      }
+      // Los usuarios finales no tienen validación de estado
+    } else if (usuario.rol === 'cooperativa') {
+      if (!usuario.UsuarioCooperativa) {
+        return res.status(400).json({
+          success: false,
+          message: 'Datos de cooperativa incompletos'
+        });
+      }
+      
+      if (usuario.UsuarioCooperativa.estado !== 'activo') {
+        return res.status(403).json({
+          success: false,
+          message: 'Su cooperativa se encuentra inactiva. El administrador debe activar su ingreso para poder acceder al sistema.'
+        });
+      }
+    } else if (usuario.rol === 'superuser') {
+      // Los superusuarios no necesitan validación de estado específica
+      // pero deben tener datos en UsuarioFinal
+      if (!usuario.UsuarioFinal) {
+        return res.status(400).json({
+          success: false,
+          message: 'Datos de superusuario incompletos'
+        });
+      }
     }
-
-    // Actualizar fecha de último acceso
-    await usuario.update({ fecha_ultimo_acceso: new Date() });
 
     // Generar token
     const token = generateToken(usuario);
@@ -241,37 +244,46 @@ const login = async (req, res) => {
     // Preparar datos de respuesta según el rol
     let datosUsuario = {
       id: usuario.id,
-      email: usuario.email,
+      correo: usuario.correo,
       telefono: usuario.telefono,
-      rol: usuario.rol,
-      estado: usuario.estado
+      rol: usuario.rol
     };
 
-    if (usuario.rol === 'usuario' && usuario.datosUsuarioFinal) {
+    if (usuario.rol === 'final' && usuario.UsuarioFinal) {
       datosUsuario = {
         ...datosUsuario,
-        nombres: usuario.datosUsuarioFinal.nombres,
-        apellidos: usuario.datosUsuarioFinal.apellidos,
-        cedula: usuario.datosUsuarioFinal.cedula,
-        ciudad: usuario.datosUsuarioFinal.ciudad,
-        puntos_fidelidad: usuario.datosUsuarioFinal.puntos_fidelidad
+        nombres: usuario.UsuarioFinal.nombres,
+        apellidos: usuario.UsuarioFinal.apellidos,
+        cedula: usuario.UsuarioFinal.cedula,
+        ciudad: usuario.UsuarioFinal.ciudad
+        // No incluimos estado para usuarios finales
       };
-    } else if (usuario.rol === 'cooperativa' && usuario.datosCooperativa) {
+    } else if (usuario.rol === 'cooperativa' && usuario.UsuarioCooperativa) {
       datosUsuario = {
         ...datosUsuario,
-        nombre_cooperativa: usuario.datosCooperativa.nombre_cooperativa,
-        ruc: usuario.datosCooperativa.ruc,
-        razon_social: usuario.datosCooperativa.razon_social,
-        representante_legal: usuario.datosCooperativa.representante_legal,
-        estado_juridico: usuario.datosCooperativa.estado_juridico
+        razon_social: usuario.UsuarioCooperativa.razon_social,
+        ruc: usuario.UsuarioCooperativa.ruc,
+        permiso_operacion: usuario.UsuarioCooperativa.permiso_operacion,
+        estado: usuario.UsuarioCooperativa.estado
       };
+    }
+
+    // Configurar dashboard según el rol
+    let configuracion = {};
+    if (usuario.rol === 'final') {
+      configuracion = { dashboard: 'usuario' };
+    } else if (usuario.rol === 'cooperativa') {
+      configuracion = { dashboard: 'cooperativa' };
+    } else if (usuario.rol === 'superuser') {
+      configuracion = { dashboard: 'superuser' };
     }
 
     res.json({
       success: true,
       message: 'Login exitoso',
-      data: datosUsuario,
-      token
+      usuario: datosUsuario,
+      token,
+      configuracion
     });
 
   } catch (error) {
@@ -293,12 +305,10 @@ const obtenerPerfil = async (req, res) => {
       include: [
         {
           model: UsuarioFinal,
-          as: 'datosUsuarioFinal',
           required: false
         },
         {
           model: UsuarioCooperativa,
-          as: 'datosCooperativa',
           required: false
         }
       ]

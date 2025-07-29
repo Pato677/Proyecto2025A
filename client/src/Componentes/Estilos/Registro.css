@@ -124,3 +124,96 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+/* Estilos para perfil de cooperativa */
+.mensaje-modal {
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.registro-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.registro-submit {
+  background: #28a745;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.registro-submit:hover {
+  background: #218838;
+}
+
+.registro-delete {
+  background: #dc3545;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.registro-delete:hover {
+  background: #c82333;
+}
+
+.error-message {
+  display: block;
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.campo input.error {
+  border: 2px solid #ff6b6b;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.btn-registrarse:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 600px) {
+  .registro-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .registro-submit,
+  .registro-delete {
+    width: 100%;
+    max-width: 250px;
+  }
+}

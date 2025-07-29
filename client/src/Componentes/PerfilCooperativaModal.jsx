@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import CooperativaCrud from "./ComponentesCRUD/CooperativaCrud.jsx";
-import "./Estilos/Registro.css"; // puedes usar el mismo estilo
+import React, { useState, useEffect } from "react";
+import { useAuth } from "./AuthContext";
+import UsuarioCrud from "./ComponentesCRUD/UsuarioCrud";
+import "./Estilos/Registro.css";
 import {
   FaUser,
   FaEnvelope,
@@ -8,21 +9,55 @@ import {
   FaPhoneAlt,
   FaIdCard,
   FaBuilding,
+  FaSave,
+  FaTrash
 } from "react-icons/fa";
 
-const RegistroCooperativa = ({ cerrar }) => {
+const PerfilCooperativaModal = ({ cerrar }) => {
+  const { usuario, logout } = useAuth();
   const [cooperativaState, setCooperativaState] = useState({
+    id: "",
     razonSocial: "",
     permisoOperacion: "",
     ruc: "",
     correo: "",
     telefono: "",
     contrasena: "",
-    confirmarContrasena: ""
+    confirmarContrasena: "",
+    estado: ""
   });
 
   const [errores, setErrores] = useState({});
-  const [cargando, setCargando] = useState(false);
+  const [mensaje, setMensaje] = useState("");
+
+  useEffect(() => {
+    const cargarDatosCooperativa = async () => {
+      try {
+        if (!usuario || !usuario.id) return;
+
+        const response = await UsuarioCrud.obtenerUsuarioPorId(usuario.id);
+        if (response.success && response.data) {
+          const userData = response.data;
+          
+          setCooperativaState({
+            id: userData.id,
+            razonSocial: userData.UsuarioCooperativa?.razon_social || "",
+            permisoOperacion: userData.UsuarioCooperativa?.permiso_operacion || "",
+            ruc: userData.UsuarioCooperativa?.ruc || "",
+            correo: userData.correo || "",
+            telefono: userData.telefono || "",
+            contrasena: "",
+            confirmarContrasena: "",
+            estado: userData.UsuarioCooperativa?.estado || ""
+          });
+        }
+      } catch (error) {
+        console.error("Error al cargar datos de cooperativa:", error);
+      }
+    };
+
+    cargarDatosCooperativa();
+  }, [usuario]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,7 +66,6 @@ const RegistroCooperativa = ({ cerrar }) => {
       [name]: value
     }));
     
-    // Limpiar errores cuando se edita
     if (errores[name]) {
       setErrores(prev => ({ ...prev, [name]: '' }));
     }
@@ -46,67 +80,84 @@ const RegistroCooperativa = ({ cerrar }) => {
     if (!cooperativaState.correo.trim()) nuevosErrores.correo = "Correo es requerido";
     else if (!/^\S+@\S+\.\S+$/.test(cooperativaState.correo)) nuevosErrores.correo = "Correo no válido";
     if (!cooperativaState.telefono.trim()) nuevosErrores.telefono = "Teléfono es requerido";
-    if (!cooperativaState.contrasena) nuevosErrores.contrasena = "Contraseña es requerida";
-    else if (cooperativaState.contrasena.length < 6) nuevosErrores.contrasena = "Contraseña debe tener al menos 6 caracteres";
-    if (cooperativaState.contrasena !== cooperativaState.confirmarContrasena) nuevosErrores.confirmarContrasena = "Las contraseñas no coinciden";
-    
+
+    if (cooperativaState.contrasena || cooperativaState.confirmarContrasena) {
+      if (cooperativaState.contrasena.length < 6) nuevosErrores.contrasena = "Contraseña debe tener al menos 6 caracteres";
+      if (cooperativaState.contrasena !== cooperativaState.confirmarContrasena) nuevosErrores.confirmarContrasena = "Las contraseñas no coinciden";
+    }
+
     setErrores(nuevosErrores);
     return Object.keys(nuevosErrores).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleActualizar = async (e) => {
     e.preventDefault();
     
     if (!validarFormulario()) return;
     
-    setCargando(true);
-    
     try {
-      // Verificar si el correo ya existe
-      const correoExiste = await CooperativaCrud.verificarCorreoExistente(cooperativaState.correo);
-      if (correoExiste) {
-        setErrores(prev => ({ ...prev, correo: "Este correo ya está registrado" }));
-        setCargando(false);
-        return;
-      }
-      
-      // Crear los datos de la cooperativa en el formato correcto que espera el backend
-      const cooperativaData = {
-        correo: cooperativaState.correo,
-        contrasena: cooperativaState.contrasena,
+      const datosActualizacion = {
         telefono: cooperativaState.telefono,
-        razon_social: cooperativaState.razonSocial,
-        permiso_operacion: cooperativaState.permisoOperacion,
-        ruc: cooperativaState.ruc
+        datosCooperativa: {
+          razon_social: cooperativaState.razonSocial,
+          permiso_operacion: cooperativaState.permisoOperacion,
+          ruc: cooperativaState.ruc,
+          estado: cooperativaState.estado
+        }
       };
-      
-      const response = await CooperativaCrud.registrarCooperativa(cooperativaData);
-      
-      console.log("Cooperativa registrada exitosamente:", response);
-      alert("Registro de cooperativa exitoso");
-      cerrar();
-    } catch (error) {
-      console.error("Error al registrar cooperativa:", error);
-      
-      // Manejo más específico de errores
-      if (error.response && error.response.data && error.response.data.message) {
-        alert(`Error al registrar cooperativa: ${error.response.data.message}`);
-      } else {
-        alert("Error al registrar cooperativa. Intente nuevamente.");
+
+      if (cooperativaState.contrasena) {
+        datosActualizacion.contrasena = cooperativaState.contrasena;
       }
-    } finally {
-      setCargando(false);
+
+      const response = await UsuarioCrud.actualizarUsuario(cooperativaState.id, datosActualizacion);
+
+      if (response.success) {
+        localStorage.setItem('usuario', JSON.stringify(response.data));
+        setMensaje("Perfil actualizado correctamente");
+        setTimeout(() => {
+          setMensaje("");
+          cerrar();
+        }, 2000);
+      } else {
+        setMensaje("Error al actualizar. " + (response.message || "Intente nuevamente."));
+      }
+    } catch (error) {
+      console.error("Error al actualizar:", error);
+      setMensaje("Error al actualizar. Intente nuevamente.");
     }
   };
+
+  const handleEliminar = async () => {
+    if (!window.confirm("¿Está seguro que desea eliminar su cooperativa? Esta acción no se puede deshacer.")) return;
+    
+    try {
+      const response = await UsuarioCrud.eliminarUsuario(cooperativaState.id);
+      
+      if (response.success || response.data) {
+        logout();
+        alert("Cooperativa eliminada correctamente. Sesión cerrada.");
+        cerrar();
+      } else {
+        setMensaje("Error al eliminar cooperativa. " + (response.message || "Intente nuevamente."));
+      }
+    } catch (error) {
+      console.error("Error al eliminar:", error);
+      setMensaje("Error al eliminar cooperativa. Intente nuevamente.");
+    }
+  };
+
   return (
     <div className="registro-overlay" onClick={cerrar}>
       <div className="registro-box" onClick={(e) => e.stopPropagation()}>
         <button className="registro-close" onClick={cerrar}>×</button>
         <h2>
-          <FaBuilding /> Registra tu Compañía
+          <FaBuilding /> Mi Perfil - Cooperativa
         </h2>
 
-        <form className="registro-form" onSubmit={handleSubmit}>
+        {mensaje && <div className="mensaje-modal">{mensaje}</div>}
+
+        <form className="registro-form" onSubmit={handleActualizar}>
           <div>
             <label>Razón social</label>
             <div className="campo">
@@ -114,10 +165,9 @@ const RegistroCooperativa = ({ cerrar }) => {
               <input 
                 type="text" 
                 name="razonSocial"
+                placeholder="Ingrese la razón social de la empresa"
                 value={cooperativaState.razonSocial}
                 onChange={handleChange}
-                placeholder="Ingrese la razón social de la empresa"
-                className={errores.razonSocial ? 'error' : ''}
               />
             </div>
             {errores.razonSocial && <span className="error-message">{errores.razonSocial}</span>}
@@ -130,10 +180,9 @@ const RegistroCooperativa = ({ cerrar }) => {
               <input 
                 type="text" 
                 name="permisoOperacion"
+                placeholder="Ingrese el número de permiso de operación"
                 value={cooperativaState.permisoOperacion}
                 onChange={handleChange}
-                placeholder="Ingrese el número de permiso de operación"
-                className={errores.permisoOperacion ? 'error' : ''}
               />
             </div>
             {errores.permisoOperacion && <span className="error-message">{errores.permisoOperacion}</span>}
@@ -146,10 +195,9 @@ const RegistroCooperativa = ({ cerrar }) => {
               <input 
                 type="text" 
                 name="ruc"
+                placeholder="Ingrese el RUC"
                 value={cooperativaState.ruc}
                 onChange={handleChange}
-                placeholder="Ingrese el RUC"
-                className={errores.ruc ? 'error' : ''}
               />
             </div>
             {errores.ruc && <span className="error-message">{errores.ruc}</span>}
@@ -162,13 +210,13 @@ const RegistroCooperativa = ({ cerrar }) => {
               <input 
                 type="email" 
                 name="correo"
+                placeholder="Ingrese su correo electrónico"
                 value={cooperativaState.correo}
                 onChange={handleChange}
-                placeholder="Ingrese su correo electrónico"
-                className={errores.correo ? 'error' : ''}
+                disabled
               />
             </div>
-            {errores.correo && <span className="error-message">{errores.correo}</span>}
+            <small style={{color: '#666', fontSize: '0.85em'}}>El correo no se puede modificar</small>
           </div>
 
           <div>
@@ -178,64 +226,56 @@ const RegistroCooperativa = ({ cerrar }) => {
               <input 
                 type="tel" 
                 name="telefono"
+                placeholder="Ingrese su número de teléfono"
                 value={cooperativaState.telefono}
                 onChange={handleChange}
-                placeholder="Ingrese su número"
-                className={errores.telefono ? 'error' : ''}
               />
             </div>
             {errores.telefono && <span className="error-message">{errores.telefono}</span>}
           </div>
 
           <div>
-            <label>Contraseña</label>
+            <label>Nueva contraseña (dejar en blanco para no cambiar)</label>
             <div className="campo">
               <FaLock />
               <input 
                 type="password" 
                 name="contrasena"
+                placeholder="Ingrese su nueva contraseña"
                 value={cooperativaState.contrasena}
                 onChange={handleChange}
-                placeholder="Ingrese su contraseña"
-                className={errores.contrasena ? 'error' : ''}
               />
             </div>
             {errores.contrasena && <span className="error-message">{errores.contrasena}</span>}
           </div>
 
           <div>
-            <label>Confirmar contraseña</label>
+            <label>Confirmar nueva contraseña</label>
             <div className="campo">
               <FaLock />
               <input 
                 type="password" 
                 name="confirmarContrasena"
+                placeholder="Confirme su nueva contraseña"
                 value={cooperativaState.confirmarContrasena}
                 onChange={handleChange}
-                placeholder="Confirme su contraseña"
-                className={errores.confirmarContrasena ? 'error' : ''}
               />
             </div>
             {errores.confirmarContrasena && <span className="error-message">{errores.confirmarContrasena}</span>}
           </div>
+
+          <div className="registro-buttons">
+            <button type="submit" className="registro-submit">
+              <FaSave /> Actualizar Perfil
+            </button>
+            <button type="button" className="registro-delete" onClick={handleEliminar}>
+              <FaTrash /> Eliminar Cooperativa
+            </button>
+          </div>
         </form>
-
-        <button 
-          type="submit" 
-          className="btn-registrarse"
-          disabled={cargando}
-          onClick={handleSubmit}
-        >
-          {cargando ? "REGISTRANDO..." : "REGISTRARSE"}
-        </button>
-
-        <p className="registro-link">
-          ¡Si desea registrarse de forma individual,{" "}
-          <span onClick={cerrar}>click aquí</span>!
-        </p>
       </div>
     </div>
   );
 };
 
-export default RegistroCooperativa;
+export default PerfilCooperativaModal;

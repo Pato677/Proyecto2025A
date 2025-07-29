@@ -15,12 +15,12 @@ const authMiddleware = async (req, res, next) => {
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'tu_secreto_jwt');
         
-        // Verificar que el usuario aún existe y está activo
+        // Verificar que el usuario aún existe
         const usuario = await Usuario.findByPk(decoded.id);
-        if (!usuario || usuario.estado !== 'activo') {
+        if (!usuario) {
             return res.status(401).json({
                 success: false,
-                message: 'Usuario no válido o inactivo'
+                message: 'Usuario no válido'
             });
         }
 

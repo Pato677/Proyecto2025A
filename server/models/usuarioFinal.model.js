@@ -19,6 +19,15 @@ const UsuarioFinal = sequelize.define('UsuarioFinal', {
   cedula: {
     type: DataTypes.STRING
   },
+  genero: {
+    type: DataTypes.STRING
+  },
+  direccion: {
+    type: DataTypes.STRING
+  },
+  ciudad: {
+    type: DataTypes.STRING
+  },
   usuario_id: {
     type: DataTypes.INTEGER,
     allowNull: false

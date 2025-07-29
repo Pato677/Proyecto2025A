@@ -134,7 +134,8 @@ const createUsuario = async (req, res) => {
         } else if (rol === 'cooperativa' && datosCooperativa) {
             await UsuarioCooperativa.create({
                 usuario_id: nuevoUsuario.id,
-                ...datosCooperativa
+                ...datosCooperativa,
+                estado: datosCooperativa.estado || 'desactivo' // Por defecto desactivo si no se especifica
             });
         }
 
@@ -349,10 +350,10 @@ const actualizarEstadoCooperativa = async (req, res) => {
         const { estado } = req.body;
 
         // Validar que el estado sea válido
-        if (!estado || !['activo', 'inactivo'].includes(estado)) {
+        if (!estado || !['activo', 'desactivo'].includes(estado)) {
             return res.status(400).json({
                 success: false,
-                message: 'El estado debe ser "activo" o "inactivo"'
+                message: 'El estado debe ser "activo" o "desactivo"'
             });
         }
 
@@ -546,10 +547,10 @@ const login = async (req, res) => {
             }
 
             // Verificar estado de la cooperativa
-            if (datosCooperativa.estado === 'inactivo') {
+            if (datosCooperativa.estado === 'desactivo') {
                 return res.status(403).json({
                     success: false,
-                    message: 'Su cooperativa se encuentra inactiva. Contacte al administrador.'
+                    message: 'Su cooperativa se encuentra inactiva. El administrador debe activar su ingreso para poder acceder al sistema.'
                 });
             }
 
