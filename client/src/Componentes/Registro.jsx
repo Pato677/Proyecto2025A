@@ -67,22 +67,39 @@ const Registro = ({ cerrar, abrirCooperativa }) => {
         return;
       }
       
-      // Crear el usuario
-      await UsuarioCrud.crearUsuario({
-        nombres: usuariosState.nombres,
-        apellidos: usuariosState.apellidos,
-        fechaNacimiento: usuariosState.fechaNacimiento,
-        cedula: usuariosState.cedula,
+      // Crear el usuario con el formato correcto que espera el backend
+      const usuarioData = {
         correo: usuariosState.correo,
+        contrasena: usuariosState.contrasena,
         telefono: usuariosState.telefono,
-        contrasena: usuariosState.contrasena
-      });
+        rol: "final", // Especificar que es un usuario final
+        datosUsuarioFinal: {
+          nombres: usuariosState.nombres,
+          apellidos: usuariosState.apellidos,
+          fecha_nacimiento: usuariosState.fechaNacimiento,
+          cedula: usuariosState.cedula
+        }
+      };
       
+      const response = await UsuarioCrud.crearUsuario(usuarioData);
+      
+      console.log("Usuario creado exitosamente:", response);
       alert("Registro exitoso");
       cerrar();
     } catch (error) {
       console.error("Error al registrar:", error);
-      alert("Error al registrar. Intente nuevamente.");
+      
+      // Manejo más específico de errores
+      if (error.message) {
+        // Si el error tiene un mensaje específico del backend
+        alert(`Error al registrar: ${error.message}`);
+      } else if (error.response && error.response.data && error.response.data.message) {
+        // Si hay una respuesta del servidor con mensaje
+        alert(`Error al registrar: ${error.response.data.message}`);
+      } else {
+        // Error genérico
+        alert("Error al registrar. Intente nuevamente.");
+      }
     }
   };
 

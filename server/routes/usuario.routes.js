@@ -31,6 +31,9 @@ router.delete('/:id', UsuarioController.deleteUsuario);
 // Verificar si email existe
 router.get('/verificar-email/:correo', UsuarioController.verificarEmail);
 
+// Verificar si cédula existe
+router.get('/verificar-cedula/:cedula', UsuarioController.verificarCedula);
+
 // Debug: Listar todos los emails (temporal)
 router.get('/debug/emails', UsuarioController.listarEmails);
 

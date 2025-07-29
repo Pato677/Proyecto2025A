@@ -185,7 +185,8 @@ const updateUsuario = async (req, res) => {
     try {
         const { id } = req.params;
         const { 
-            telefono, 
+            telefono,
+            contrasena,
             datosUsuarioFinal,
             datosCooperativa
         } = req.body;
@@ -202,10 +203,15 @@ const updateUsuario = async (req, res) => {
         const updateData = {};
         if (telefono) updateData.telefono = telefono;
         
+        // Si se proporciona nueva contraseña, encriptarla
+        if (contrasena) {
+            updateData.contrasena = await bcrypt.hash(contrasena, 10);
+        }
+        
         await usuario.update(updateData);
 
         // Actualizar datos específicos según el rol
-        if (usuario.rol === 'final' && datosUsuarioFinal) {
+        if ((usuario.rol === 'final' || usuario.rol === 'superuser') && datosUsuarioFinal) {
             const usuarioFinal = await UsuarioFinal.findOne({ where: { usuario_id: id } });
             if (usuarioFinal) {
                 await usuarioFinal.update(datosUsuarioFinal);
@@ -301,6 +307,33 @@ const verificarEmail = async (req, res) => {
         });
     } catch (error) {
         console.error('Error al verificar email:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Error interno del servidor',
+            error: error.message 
+        });
+    }
+};
+
+// Verificar si una cédula existe
+const verificarCedula = async (req, res) => {
+    try {
+        const { cedula } = req.params;
+        
+        console.log('🔍 Buscando cédula:', cedula);
+        
+        // Buscar en la tabla usuarios_finales
+        const usuarioFinal = await UsuarioFinal.findOne({ where: { cedula } });
+        
+        console.log('👤 Usuario con cédula encontrado:', usuarioFinal ? 'SÍ' : 'NO');
+        
+        res.json({ 
+            success: true,
+            existe: !!usuarioFinal,
+            cedulaBuscada: cedula
+        });
+    } catch (error) {
+        console.error('Error al verificar cédula:', error);
         res.status(500).json({ 
             success: false,
             message: 'Error interno del servidor',
@@ -623,6 +656,7 @@ module.exports = {
     updateUsuario,
     deleteUsuario,
     verificarEmail,
+    verificarCedula,
     actualizarEstadoCooperativa,
     listarEmails,
     actualizarContrasenasPlanas,

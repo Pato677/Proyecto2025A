@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 import UsuarioCrud from "./ComponentesCRUD/UsuarioCrud";
 import './Estilos/PerfilUsuario.css';
 import { 
@@ -10,6 +11,7 @@ import {
 
 const PerfilUsuario = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth(); // Obtener la función logout del contexto
   const [usuarioState, setUsuarioState] = useState({
     id: "",
     nombres: "",
@@ -34,20 +36,38 @@ const PerfilUsuario = () => {
           return;
         }
 
-        const usuario = await UsuarioCrud.obtenerUsuarioPorId(usuarioStorage.id);
-        if (usuario) {
+        const response = await UsuarioCrud.obtenerUsuarioPorId(usuarioStorage.id);
+        if (response.success && response.data) {
+          const usuario = response.data;
+          
+          // Obtener datos específicos según el rol
+          let datosEspecificos = {};
+          if (usuario.rol === 'final' && usuario.UsuarioFinal) {
+            datosEspecificos = {
+              nombres: usuario.UsuarioFinal.nombres || "",
+              apellidos: usuario.UsuarioFinal.apellidos || "",
+              fechaNacimiento: usuario.UsuarioFinal.fecha_nacimiento || "",
+              cedula: usuario.UsuarioFinal.cedula || ""
+            };
+          } else if (usuario.rol === 'cooperativa' && usuario.UsuarioCooperativa) {
+            datosEspecificos = {
+              nombres: usuario.UsuarioCooperativa.razon_social || "",
+              apellidos: "",
+              fechaNacimiento: "",
+              cedula: usuario.UsuarioCooperativa.ruc || ""
+            };
+          }
+
           setUsuarioState({
             id: usuario.id,
-            nombres: usuario.nombres || "",
-            apellidos: usuario.apellidos || "",
-            fechaNacimiento: usuario.fechaNacimiento || "",
-            cedula: usuario.cedula || "",
+            ...datosEspecificos,
             correo: usuario.correo || "",
             telefono: usuario.telefono || "",
             contrasena: "",
             confirmarContrasena: ""
           });
         } else {
+          console.error("Error: No se pudo obtener los datos del usuario");
           navigate('/Inicio');
         }
       } catch (error) {
@@ -97,26 +117,45 @@ const PerfilUsuario = () => {
     if (!validarFormulario()) return;
     
     try {
+      // Obtener el usuario actual del localStorage para conocer su rol
+      const usuarioStorage = JSON.parse(localStorage.getItem('usuario'));
+      
       const datosActualizacion = {
-        nombres: usuarioState.nombres,
-        apellidos: usuarioState.apellidos,
-        fechaNacimiento: usuarioState.fechaNacimiento,
-        cedula: usuarioState.cedula,
-        correo: usuarioState.correo,
         telefono: usuarioState.telefono
       };
 
+      // Incluir contraseña solo si se proporcionó
       if (usuarioState.contrasena) {
         datosActualizacion.contrasena = usuarioState.contrasena;
       }
 
-      await UsuarioCrud.actualizarUsuario(usuarioState.id, datosActualizacion);
+      // Estructurar datos específicos según el rol del usuario
+      if (usuarioStorage.rol === 'final' || usuarioStorage.rol === 'superuser') {
+        datosActualizacion.datosUsuarioFinal = {
+          nombres: usuarioState.nombres,
+          apellidos: usuarioState.apellidos,
+          fecha_nacimiento: usuarioState.fechaNacimiento,
+          cedula: usuarioState.cedula
+        };
+      } else if (usuarioStorage.rol === 'cooperativa') {
+        datosActualizacion.datosCooperativa = {
+          razon_social: usuarioState.nombres,
+          ruc: usuarioState.cedula
+        };
+      }
 
-      const usuarioActualizado = await UsuarioCrud.obtenerUsuarioPorId(usuarioState.id);
-      localStorage.setItem('usuario', JSON.stringify(usuarioActualizado));
+      const response = await UsuarioCrud.actualizarUsuario(usuarioState.id, datosActualizacion);
 
-      setMensaje("Perfil actualizado correctamente");
-      setTimeout(() => setMensaje(""), 3000);
+      if (response.success) {
+        // Actualizar localStorage con los nuevos datos
+        const usuarioActualizado = response.data;
+        localStorage.setItem('usuario', JSON.stringify(usuarioActualizado));
+
+        setMensaje("Perfil actualizado correctamente");
+        setTimeout(() => setMensaje(""), 3000);
+      } else {
+        setMensaje("Error al actualizar. " + (response.message || "Intente nuevamente."));
+      }
     } catch (error) {
       console.error("Error al actualizar:", error);
       setMensaje("Error al actualizar. Intente nuevamente.");
@@ -127,9 +166,17 @@ const PerfilUsuario = () => {
     if (!window.confirm("¿Está seguro que desea eliminar su perfil? Esta acción no se puede deshacer.")) return;
     
     try {
-      await UsuarioCrud.eliminarUsuario(usuarioState.id);
-      localStorage.removeItem('usuario');
-      navigate('/Inicio');
+      const response = await UsuarioCrud.eliminarUsuario(usuarioState.id);
+      
+      if (response.success || response.data) {
+        // Usar la función logout del contexto para cerrar sesión completamente
+        logout();
+        
+        alert("Perfil eliminado correctamente. Sesión cerrada.");
+        navigate('/Inicio');
+      } else {
+        setMensaje("Error al eliminar perfil. " + (response.message || "Intente nuevamente."));
+      }
     } catch (error) {
       console.error("Error al eliminar:", error);
       setMensaje("Error al eliminar perfil. Intente nuevamente.");

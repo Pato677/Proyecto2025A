@@ -62,7 +62,7 @@ const UsuarioCrud = {
   // Verificar si un correo ya existe
   verificarCorreoExistente: async (correo) => {
     try {
-      const response = await axios.get(`${API_URL}/verificar-correo/${correo}`);
+      const response = await axios.get(`${API_URL}/verificar-email/${encodeURIComponent(correo)}`);
       return response.data.existe;
     } catch (error) {
       console.error("Error al verificar correo:", error);
