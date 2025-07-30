@@ -650,6 +650,47 @@ const login = async (req, res) => {
     }
 };
 
+// Obtener cooperativas desactivadas (para solicitudes)
+const getCooperativasDesactivadas = async (req, res) => {
+    try {
+        const { page = 1, limit = 10 } = req.query;
+        const offset = (page - 1) * limit;
+
+        const cooperativas = await Usuario.findAndCountAll({
+            where: { rol: 'cooperativa' },
+            attributes: { exclude: ['contrasena'] },
+            include: [
+                {
+                    model: UsuarioCooperativa,
+                    required: true,
+                    where: { estado: 'desactivo' }
+                }
+            ],
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+            order: [['id', 'DESC']]
+        });
+
+        res.json({
+            success: true,
+            data: cooperativas.rows,
+            pagination: {
+                total: cooperativas.count,
+                page: parseInt(page),
+                limit: parseInt(limit),
+                totalPages: Math.ceil(cooperativas.count / limit)
+            }
+        });
+    } catch (error) {
+        console.error('Error al obtener cooperativas desactivadas:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Error interno del servidor',
+            error: error.message 
+        });
+    }
+};
+
 module.exports = {
     getAllUsuarios,
     getUsuarioById,
@@ -659,6 +700,7 @@ module.exports = {
     verificarEmail,
     verificarCedula,
     actualizarEstadoCooperativa,
+    getCooperativasDesactivadas,
     listarEmails,
     actualizarContrasenasPlanas,
     login

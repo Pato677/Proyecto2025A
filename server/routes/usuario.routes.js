@@ -10,6 +10,9 @@ const authMiddleware = require('../middleware/auth.middleware');
 // Login de usuario (público - sin autenticación)
 router.post('/login', UsuarioController.login);
 
+// Obtener cooperativas desactivadas (para solicitudes)
+router.get('/cooperativas/desactivadas', UsuarioController.getCooperativasDesactivadas);
+
 // Obtener todos los usuarios con filtros y paginación
 router.get('/', UsuarioController.getAllUsuarios);
 
