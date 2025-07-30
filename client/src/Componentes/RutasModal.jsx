@@ -3,137 +3,183 @@ import './Estilos/RutasModal.css';
 
 const initialState = {
   numeroRuta: '',
-  ciudadOrigen: '',
-  terminalOrigen: '',
-  ciudadDestino: '',
-  terminalDestino: '',
+  terminalOrigenId: '',
+  terminalDestinoId: '',
   horaSalida: '',
-  horaLlegada: '',
-  paradas: '',
+  horaLlegada: ''
 };
 
-const RutaModal = ({ open, onClose, onSave, initialData, mode = 'add', terminales}) => {
+const RutaModal = ({ open, onClose, onSave, initialData, mode = 'add', terminales, loading}) => {
   const [form, setForm] = useState(initialState);
 
   useEffect(() => {
-    if (initialData) setForm(initialData);
-    else setForm(initialState);
-  }, [initialData, open]);
+    if (initialData && mode === 'edit') {
+      // Encontrar los IDs de los terminales basados en los nombres
+      const terminalOrigen = terminales.find(t => t.nombre === initialData.terminalOrigen);
+      const terminalDestino = terminales.find(t => t.nombre === initialData.terminalDestino);
+      
+      setForm({
+        numeroRuta: initialData.numeroRuta || '',
+        terminalOrigenId: terminalOrigen?.id || '',
+        terminalDestinoId: terminalDestino?.id || '',
+        horaSalida: initialData.horaSalida || '',
+        horaLlegada: initialData.horaLlegada || ''
+      });
+    } else {
+      setForm(initialState);
+    }
+  }, [initialData, open, mode, terminales]);
 
   if (!open) return null;
 
-  // Obtener ciudades únicas
-  const ciudades = terminales.map(t => t.ciudad);
-  const terminalesOrigen = terminales.find(t => t.ciudad === form.ciudadOrigen)?.terminales || [];
-  const terminalesDestino = terminales.find(t => t.ciudad === form.ciudadDestino)?.terminales || [];
+  // Agrupar terminales por ciudad
+  const terminalesPorCiudad = terminales.reduce((acc, terminal) => {
+    if (!acc[terminal.ciudad]) {
+      acc[terminal.ciudad] = [];
+    }
+    acc[terminal.ciudad].push(terminal);
+    return acc;
+  }, {});
 
   const handleChange = e => {
     const { name, value } = e.target;
-    if (name === 'ciudadOrigen') {
-      setForm(prev => ({ ...prev, ciudadOrigen: value, terminalOrigen: '' }));
-    } else if (name === 'ciudadDestino') {
-      setForm(prev => ({ ...prev, ciudadDestino: value, terminalDestino: '' }));
-    } else {
-      setForm(prev => ({ ...prev, [name]: value }));
-    }
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    onSave(form);
+    
+    // Validaciones básicas
+    if (!form.numeroRuta || !form.terminalOrigenId || !form.terminalDestinoId || !form.horaSalida || !form.horaLlegada) {
+      alert('Por favor complete todos los campos requeridos');
+      return;
+    }
+
+    if (form.terminalOrigenId === form.terminalDestinoId) {
+      alert('El terminal de origen y destino no pueden ser el mismo');
+      return;
+    }
+
+    // Preparar datos para enviar
+    const rutaData = {
+      ...form,
+      terminalOrigenId: parseInt(form.terminalOrigenId),
+      terminalDestinoId: parseInt(form.terminalDestinoId)
+    };
+
+    onSave(rutaData);
   };
 
   return (
     <div className="ruta-modal-bg">
       <div className="ruta-modal-content">
-        <button className="ruta-modal-close" onClick={onClose}>×</button>
-        <h2>{mode === 'edit' ? 'Editar Ruta' : 'Agregar Ruta'}</h2>
+        <button className="ruta-modal-close" onClick={onClose} disabled={loading}>×</button>
+        <h2>{mode === 'edit' ? 'Editar Ruta' : 'Agregar Nueva Ruta'}</h2>
+        
         <form onSubmit={handleSubmit} className="ruta-modal-form">
-          <input
-            name="numeroRuta"
-            value={form.numeroRuta}
-            onChange={handleChange}
-            placeholder="Número de Ruta"
-            required
-          />
-          {/* Ciudad Origen */}
-          <select
-            name="ciudadOrigen"
-            value={form.ciudadOrigen}
-            onChange={handleChange}
-            required
-            
-          >
-            <option value="">Seleccione Ciudad Origen</option>
-            {ciudades.map((c, idx) => (
-              <option key={idx} value={c}>{c}</option>
-            ))}
-          </select>
-          {/* Terminal Origen */}
-          <select
-            name="terminalOrigen"
-            value={form.terminalOrigen}
-            onChange={handleChange}
-            required
-            disabled={!form.ciudadOrigen}
-          >
-            <option value="">Seleccione Terminal Origen</option>
-            {terminalesOrigen.map((t, idx) => (
-              <option key={idx} value={t}>{t}</option>
-            ))}
-          </select>
-          {/* Ciudad Destino */}
-          <select
-            name="ciudadDestino"
-            value={form.ciudadDestino}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Seleccione Ciudad Destino</option>
-            {ciudades.map((c, idx) => (
-              <option key={idx} value={c}>{c}</option>
-            ))}
-          </select>
-          {/* Terminal Destino */}
-          <select
-            name="terminalDestino"
-            value={form.terminalDestino}
-            onChange={handleChange}
-            required
-            disabled={!form.ciudadDestino}
-          >
-            <option value="">Seleccione Terminal Destino</option>
-            {terminalesDestino.map((t, idx) => (
-              <option key={idx} value={t}>{t}</option>
-            ))}
-          </select>
-          <input
-            name="horaSalida"
-            value={form.horaSalida}
-            onChange={handleChange}
-            placeholder="Hora Salida"
-            required
-          />
-          <input
-            name="horaLlegada"
-            value={form.horaLlegada}
-            onChange={handleChange}
-            placeholder="Hora Llegada"
-            required
-          />
-          <input
-            name="paradas"
-            value={form.paradas}
-            onChange={handleChange}
-            placeholder="Paradas"
-            required
-          />
+          <div className="form-group">
+            <label htmlFor="numeroRuta">Número de Ruta *</label>
+            <input
+              id="numeroRuta"
+              name="numeroRuta"
+              type="text"
+              value={form.numeroRuta}
+              onChange={handleChange}
+              placeholder="Ej: R-001, RUT-001"
+              required
+              disabled={loading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="terminalOrigenId">Terminal de Origen *</label>
+            <select
+              id="terminalOrigenId"
+              name="terminalOrigenId"
+              value={form.terminalOrigenId}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            >
+              <option value="">Seleccione terminal de origen</option>
+              {Object.entries(terminalesPorCiudad).map(([ciudad, terminalesCiudad]) => (
+                <optgroup key={ciudad} label={ciudad}>
+                  {terminalesCiudad.map(terminal => (
+                    <option key={terminal.id} value={terminal.id}>
+                      {terminal.nombre} - {terminal.direccion}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="terminalDestinoId">Terminal de Destino *</label>
+            <select
+              id="terminalDestinoId"
+              name="terminalDestinoId"
+              value={form.terminalDestinoId}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            >
+              <option value="">Seleccione terminal de destino</option>
+              {Object.entries(terminalesPorCiudad).map(([ciudad, terminalesCiudad]) => (
+                <optgroup key={ciudad} label={ciudad}>
+                  {terminalesCiudad.map(terminal => (
+                    <option key={terminal.id} value={terminal.id}>
+                      {terminal.nombre} - {terminal.direccion}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="horaSalida">Hora de Salida *</label>
+              <input
+                id="horaSalida"
+                name="horaSalida"
+                type="time"
+                value={form.horaSalida}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="horaLlegada">Hora de Llegada *</label>
+              <input
+                id="horaLlegada"
+                name="horaLlegada"
+                type="time"
+                value={form.horaLlegada}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+            </div>
+          </div>
+
           <div className="ruta-modal-btns">
-            <button type="submit" className="ruta-modal-save">
-              {mode === 'edit' ? 'Actualizar' : 'Guardar'}
-            </button>
-            <button type="button" className="ruta-modal-cancel" onClick={onClose}>
+            <button 
+              type="button" 
+              className="ruta-modal-cancel" 
+              onClick={onClose}
+              disabled={loading}
+            >
               Cancelar
+            </button>
+            <button 
+              type="submit" 
+              className="ruta-modal-save"
+              disabled={loading}
+            >
+              {loading ? 'Guardando...' : (mode === 'edit' ? 'Actualizar Ruta' : 'Crear Ruta')}
             </button>
           </div>
         </form>

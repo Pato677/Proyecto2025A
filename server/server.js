@@ -16,8 +16,11 @@ app.use(express.urlencoded({ extended: true }));
 const authRoutes = require('./routes/auth.routes');
 app.use('/auth', authRoutes);
 
-// Rutas principales
+// Rutas de usuarios
 const usuariosRoutes = require('./routes/usuario.routes');
+app.use('/usuarios', usuariosRoutes);
+
+// Rutas principales
 const cooperativasRoutes = require('./routes/cooperativas.routes');
 const unidadesRoutes = require('./routes/unidades.routes');
 const conductoresRoutes = require('./routes/conductores.routes');

@@ -1,95 +1,202 @@
 .ruta-modal-bg {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.5);
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px;
 }
 
 .ruta-modal-content {
   background: #fff;
-  border-radius: 14px;
-  padding: 2rem 2.5rem 1.5rem 2.5rem;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  min-width: 340px;
-  max-width: 95vw;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
   position: relative;
-  animation: modalIn 0.2s;
+  animation: modalIn 0.3s ease-out;
 }
 
 @keyframes modalIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from { 
+    transform: scale(0.9) translateY(-20px); 
+    opacity: 0; 
+  }
+  to { 
+    transform: scale(1) translateY(0); 
+    opacity: 1; 
+  }
 }
 
 .ruta-modal-close {
   position: absolute;
-  top: 12px;
-  right: 18px;
+  top: 15px;
+  right: 20px;
   background: none;
   border: none;
-  font-size: 2rem;
-  color: #888;
+  font-size: 24px;
+  color: #666;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: all 0.2s;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
+
 .ruta-modal-close:hover {
-  color: #0ea5e9;
+  background: #f5f5f5;
+  color: #333;
+}
+
+.ruta-modal-close:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.ruta-modal-content h2 {
+  margin: 0 0 1.5rem 0;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .ruta-modal-form {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
 .ruta-modal-form input,
-.ruta-modal-form select {
-  padding: 0.5rem 0.8rem;
-  border: 1.5px solid #d1d5db;
-  border-radius: 7px;
+.ruta-modal-form select,
+.ruta-modal-form textarea {
+  padding: 0.75rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
   font-size: 1rem;
-  outline: none;
-  transition: border 0.2s;
+  transition: all 0.2s;
+  background: #fff;
 }
+
 .ruta-modal-form input:focus,
-.ruta-modal-form select:focus {
-  border: 1.5px solid #0ea5e9;
+.ruta-modal-form select:focus,
+.ruta-modal-form textarea:focus {
+  outline: none;
+  border-color: #2176ab;
+  box-shadow: 0 0 0 3px rgba(33, 118, 171, 0.1);
+}
+
+.ruta-modal-form input:disabled,
+.ruta-modal-form select:disabled,
+.ruta-modal-form textarea:disabled {
+  background: #f9fafb;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.form-help {
+  color: #6b7280;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
 }
 
 .ruta-modal-btns {
   display: flex;
-  justify-content: flex-end;
   gap: 1rem;
-  margin-top: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.ruta-modal-save,
+.ruta-modal-cancel {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 120px;
 }
 
 .ruta-modal-save {
-  background: #0ea5e9;
-  color: #fff;
-  border: none;
-  border-radius: 7px;
-  padding: 0.5rem 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
+  background: #2176ab;
+  color: white;
 }
-.ruta-modal-save:hover {
-  background: #0369a1;
+
+.ruta-modal-save:hover:not(:disabled) {
+  background: #1e6899;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(33, 118, 171, 0.3);
+}
+
+.ruta-modal-save:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .ruta-modal-cancel {
-  background: #e5e7eb;
-  color: #222;
-  border: none;
-  border-radius: 7px;
-  padding: 0.5rem 1.2rem;
-  cursor: pointer;
-  transition: background 0.2s;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
 }
-.ruta-modal-cancel:hover {
-  background: #cbd5e1;
+
+.ruta-modal-cancel:hover:not(:disabled) {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.ruta-modal-cancel:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .ruta-modal-content {
+    margin: 10px;
+    padding: 1.5rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .ruta-modal-btns {
+    flex-direction: column-reverse;
+  }
+  
+  .ruta-modal-save,
+  .ruta-modal-cancel {
+    width: 100%;
+  }
 }

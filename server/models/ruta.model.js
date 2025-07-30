@@ -27,6 +27,10 @@ const Ruta = sequelize.define('Ruta', {
   terminal_origen_id: {
     type: DataTypes.INTEGER,
     allowNull: false
+  },
+  paradas: {
+    type: DataTypes.TEXT,
+    allowNull: true
   }
 }, {
   tableName: 'rutas',

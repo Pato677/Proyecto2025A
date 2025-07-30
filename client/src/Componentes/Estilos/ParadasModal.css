@@ -207,11 +207,32 @@
   color: #ffffff;
 }
 
+/* Información de la ruta */
+.route-info {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.route-info p {
+  margin: 5px 0;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.route-info strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
 /* Contenedor scrollable */
 .paradas-list-container {
-  max-height: 450px;
+  max-height: 300px;
   overflow-y: auto;
   padding-right: 4px;
+  flex: 1;
 }
 
 .paradas-list-container::-webkit-scrollbar {
@@ -224,28 +245,103 @@
 }
 
 .modal-list {
-  font-size: 26px;
+  font-size: 16px;
   list-style: none;
   padding: 0;
   margin: 0;
   text-align: left;
 }
 
-.modal-list li {
-  position: relative;
-  padding-left: 24px;
-  margin-bottom: 12px;
-  font-size: 20px; /* MÁS GRANDE */
+.parada-item {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  color: #ffffff;
+  transition: background 0.2s;
+}
+
+.parada-item:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.parada-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: #ffffff;
+  color: #2d8cf0;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.parada-name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.parada-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.parada-info {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* Sin paradas */
+.no-paradas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
   color: #ffffff;
 }
 
-.modal-list li::before {
-  content: '';
-  position: absolute;
-  top: 6px;
-  left: 0;
-  width: 8px;
-  height: 8px;
+.no-paradas p {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.no-paradas small {
+  opacity: 0.8;
+  font-size: 12px;
+}
+
+/* Acciones del modal */
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  margin-top: 20px;
+}
+
+.btn-close {
   background: #ffffff;
-  border-radius: 2px;
+  color: #2d8cf0;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-close:hover {
+  background: #f0f9ff;
+  transform: translateY(-1px);
 }

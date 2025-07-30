@@ -56,37 +56,85 @@ const RutaForm = ({ ruta = {}, onClose, onRutaActualizada }) => {
   const [busqueda, setBusqueda] = useState('');
   const [resultados, setResultados] = useState([]);
   const [marcadores, setMarcadores] = useState([]);
+  const [terminalesDisponibles, setTerminalesDisponibles] = useState([]);
   const [paradaSeleccionada, setParadaSeleccionada] = useState(null);
   const mapRef = useRef(null);
 
+  // Cargar terminales disponibles al montar el componente
   useEffect(() => {
-    const cargarParadas = async () => {
-      if (Array.isArray(ruta.paradas)) {
-        setParadas(ruta.paradas);
-        const nuevasCoordenadas = [];
+    const cargarTerminales = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/terminales-paradas');
+        if (response.data.success) {
+          setTerminalesDisponibles(response.data.data);
+        }
+      } catch (error) {
+        console.error('Error al cargar terminales:', error);
+      }
+    };
+    cargarTerminales();
+  }, []);
 
-        for (const parada of ruta.paradas) {
+  useEffect(() => {
+    const cargarParadasDeRuta = async () => {
+      if (ruta.paradas && Array.isArray(ruta.paradas)) {
+        console.log('Cargando paradas existentes:', ruta.paradas);
+        
+        // Cargar paradas existentes (strings de nombres)
+        setParadas(ruta.paradas);
+        
+        // Crear marcadores en el mapa obteniendo coordenadas de Nominatim
+        const nuevasCoordenadas = [];
+        for (const nombreParada of ruta.paradas) {
           try {
-            const res = await fetch(
-              `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(parada)}`
+            // Intentar varias búsquedas para obtener mejores resultados
+            let coordenadas = null;
+            
+            // Primera búsqueda: con "Quito Ecuador"
+            let res = await fetch(
+              `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(nombreParada + ' Quito Ecuador')}&limit=1`
             );
-            const data = await res.json();
+            let data = await res.json();
+            
+            // Si no encuentra, intentar solo con "Quito"
+            if (!data || data.length === 0) {
+              res = await fetch(
+                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(nombreParada + ' Quito')}&limit=1`
+              );
+              data = await res.json();
+            }
+            
+            // Si aún no encuentra, intentar solo el nombre
+            if (!data || data.length === 0) {
+              res = await fetch(
+                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(nombreParada)}&limit=1`
+              );
+              data = await res.json();
+            }
+            
             if (data && data.length > 0) {
-              nuevasCoordenadas.push({
+              coordenadas = {
                 lat: parseFloat(data[0].lat),
                 lng: parseFloat(data[0].lon)
-              });
-            } else {
-              nuevasCoordenadas.push(null);
+              };
             }
+            
+            nuevasCoordenadas.push(coordenadas);
+            
+            // Pequeña pausa para no sobrecargar la API
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
           } catch (e) {
+            console.error('Error al buscar coordenadas para', nombreParada, ':', e);
             nuevasCoordenadas.push(null);
           }
         }
 
+        console.log('Marcadores establecidos:', nuevasCoordenadas.filter(Boolean).length, 'de', nuevasCoordenadas.length);
         setMarcadores(nuevasCoordenadas);
 
         const puntosValidos = nuevasCoordenadas.filter(p => p !== null);
+        
         if (puntosValidos.length > 0 && mapRef.current) {
           const bounds = L.latLngBounds(puntosValidos.map(p => [p.lat, p.lng]));
           mapRef.current.fitBounds(bounds, { padding: [30, 30] });
@@ -96,11 +144,13 @@ const RutaForm = ({ ruta = {}, onClose, onRutaActualizada }) => {
           if (mapRef.current) {
             mapRef.current.invalidateSize();
           }
-        }, 300);
+        }, 500); // Aumentamos el timeout un poco
       }
     };
 
-    cargarParadas();
+    if (ruta.paradas && Array.isArray(ruta.paradas) && ruta.paradas.length > 0) {
+      cargarParadasDeRuta();
+    }
   }, [ruta]);
 
   const agregarParadaDesdeMapa = (nombreLugar, coords) => {
@@ -144,27 +194,73 @@ const RutaForm = ({ ruta = {}, onClose, onRutaActualizada }) => {
     }
   };
 
-  const guardarRuta = () => {
+  // Agregar terminal como parada (ahora usando solo el nombre como string)
+  const agregarTerminalComoParada = async (terminal) => {
+    try {
+      // Buscar coordenadas del terminal en Nominatim
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(terminal.nombre + ' ' + terminal.ciudad)}`
+      );
+      const data = await res.json();
+      
+      let coordenadas = null;
+      if (data && data.length > 0) {
+        coordenadas = {
+          lat: parseFloat(data[0].lat),
+          lng: parseFloat(data[0].lon)
+        };
+      }
+
+      // Agregar solo el nombre como string
+      setParadas(prev => [...prev, terminal.nombre]);
+      setMarcadores(prev => [...prev, coordenadas]);
+      
+      if (coordenadas && mapRef.current) {
+        mapRef.current.setView([coordenadas.lat, coordenadas.lng], 14, {
+          animate: true
+        });
+      }
+    } catch (error) {
+      console.error('Error al buscar coordenadas del terminal:', error);
+      // Agregar el terminal como string aunque no se encuentren coordenadas
+      setParadas(prev => [...prev, terminal.nombre]);
+      setMarcadores(prev => [...prev, null]);
+    }
+  };
+
+  const guardarRuta = async () => {
     if (!ruta.id) {
       alert('❌ Error: la ruta no tiene un ID válido.');
       return;
     }
 
+    if (paradas.length === 0) {
+      alert('❌ Error: Debe agregar al menos una parada.');
+      return;
+    }
+
+    // Las paradas ahora son strings, no necesitamos extraer IDs
     const rutaActualizada = {
-      ...ruta,
-      paradas
+      paradas: paradas // Array de strings
     };
 
-    axios.put(`http://localhost:3000/Rutas/${ruta.id}`, rutaActualizada)
-      .then(() => {
+    try {
+      console.log('Actualizando paradas de la ruta:', ruta.id, rutaActualizada);
+      // Usar el endpoint específico para actualizar paradas
+      const response = await axios.put(`http://localhost:8000/rutas/${ruta.id}/paradas`, rutaActualizada);
+      
+      if (response.data.success) {
         alert('✅ Paradas actualizadas correctamente.');
+        console.log('Paradas actualizadas:', response.data.data);
         if (onRutaActualizada) onRutaActualizada();
         if (onClose) onClose();
-      })
-      .catch((err) => {
-        console.error('Error al actualizar', err);
-        alert('❌ Error al guardar las paradas');
-      });
+      } else {
+        throw new Error(response.data.message || 'Error desconocido');
+      }
+    } catch (error) {
+      console.error('Error al actualizar paradas:', error);
+      alert(`❌ Error al guardar las paradas: ${error.response?.data?.message || error.message}`);
+    }
   };
 
   return (
@@ -208,27 +304,65 @@ const RutaForm = ({ ruta = {}, onClose, onRutaActualizada }) => {
           attribution="&copy; OpenStreetMap contributors"
         />
         <ClickHandler onUbicacionSeleccionada={agregarParadaDesdeMapa} />
-        {marcadores.map((coord, i) =>
-          coord ? (
+        {marcadores.map((coord, i) => {
+          return coord && coord.lat && coord.lng ? (
             <Marker
               key={i}
               position={[coord.lat, coord.lng]}
               icon={i === paradaSeleccionada ? iconRojo : iconAzul}
             >
               <Tooltip direction="top" offset={[0, -10]} permanent>
-                {paradas[i]}
+                {paradas[i] || `Parada ${i + 1}`}
               </Tooltip>
             </Marker>
-          ) : null
-        )}
+          ) : null;
+        })}
         {marcadores.filter(Boolean).length >= 2 && (
           <Polyline positions={marcadores.filter(Boolean).map(p => [p.lat, p.lng])} color="#2d8cf0" />
         )}
       </MapContainer>
 
+      {/* Selector de terminales para agregar paradas */}
+      <div className="form-group" style={{ marginBottom: '16px' }}>
+        <label htmlFor="selector-terminal" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+          Agregar Terminal como Parada:
+        </label>
+        <select
+          id="selector-terminal"
+          className="form-control"
+          value=""
+          onChange={(e) => {
+            if (e.target.value) {
+              const terminal = terminalesDisponibles.find(t => t.id === parseInt(e.target.value));
+              if (terminal && !paradas.includes(terminal.nombre)) {
+                agregarTerminalComoParada(terminal);
+              }
+              e.target.value = ""; // Reset selector
+            }
+          }}
+          style={{
+            width: '100%',
+            padding: '8px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px'
+          }}
+        >
+          <option value="">Seleccione un terminal...</option>
+          {terminalesDisponibles
+            .filter(terminal => !paradas.includes(terminal.nombre))
+            .map(terminal => (
+              <option key={terminal.id} value={terminal.id}>
+                {terminal.label}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+
       <h4>Paradas Seleccionadas</h4>
       <ul className="paradas-lista">
-        {paradas.map((p, i) => (
+        {paradas.map((parada, i) => (
           <li
             key={i}
             onClick={() => {
@@ -244,7 +378,9 @@ const RutaForm = ({ ruta = {}, onClose, onRutaActualizada }) => {
               cursor: 'pointer'
             }}
           >
-            <span>{p}</span>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontWeight: 'bold' }}>{parada}</span>
+            </div>
             <button onClick={(e) => {
               e.stopPropagation();
               eliminarParada(i);

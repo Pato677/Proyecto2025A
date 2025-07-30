@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import RoutesTable from './RoutesTable';
 import ActionButtons from './ActionButtons';
 import ParadasModal from './ParadasModal';
@@ -8,10 +8,11 @@ import './Estilos/RutasPanel.css';
 import axios from 'axios';
 
 const rutasPorPagina = 4;
-// Ruta de la API
-const API_URL_Rutas = "http://localhost:3000/Rutas";
+// URL de la API del backend
+const API_URL_Rutas = "http://localhost:8000/rutas";
+const API_URL_Terminales = "http://localhost:8000/terminales";
 
-const RutasPanel = () => {
+const RutasPanel = ({ cooperativaId = 1 }) => { // Por defecto cooperativa 1 para pruebas
   const [rutas, setRutas] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -22,13 +23,50 @@ const RutasPanel = () => {
   const [showRutaForm, setShowRutaForm] = useState(false);
   const [terminales, setTerminales] = useState([]);
   const [rutaSeleccionada, setRutaSeleccionada] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [cooperativas, setCooperativas] = useState([]);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: rutasPorPagina
+  });
 
-  // 🔄 Recargar rutas desde el servidor
-  const recargarRutas = () => {
-    axios.get(API_URL_Rutas)
-      .then(res => setRutas(res.data))
-      .catch(() => setRutas([]));
-  };
+  // 🔄 Recargar rutas desde el servidor con paginación por cooperativa
+  const recargarRutas = useCallback(async (page = currentPage) => {
+    setLoading(true);
+    try {
+      // Usar endpoint por cooperativa
+      const response = await axios.get(`${API_URL_Rutas}/cooperativa/${cooperativaId}?page=${page}&limit=${rutasPorPagina}`);
+      if (response.data.success) {
+        setRutas(response.data.data);
+        setPagination(response.data.pagination);
+        console.log(`Rutas cargadas para cooperativa ${cooperativaId}: ${response.data.data.length} de ${response.data.pagination.totalItems}`);
+      } else {
+        setRutas([]);
+        console.error('Error en la respuesta:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error al cargar rutas:', error);
+      setRutas([]);
+      // Mostrar datos de ejemplo si falla la conexión
+      setRutas([
+        {
+          id: 1,
+          numeroRuta: "R-001",
+          ciudadOrigen: "Quito",
+          terminalOrigen: "Terminal Terrestre Quitumbe",
+          ciudadDestino: "Guayaquil",
+          terminalDestino: "Terminal Terrestre",
+          horaSalida: "08:00",
+          horaLlegada: "16:00",
+          paradas: ["Santo Domingo", "Quevedo", "Babahoyo"]
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPage]);
 
   // Cargar rutas y terminales al inicio
   useEffect(() => {
@@ -52,32 +90,81 @@ const RutasPanel = () => {
       .catch(() => setTerminales([]));
   }, []);
 
-  const totalPaginas = Math.ceil(rutas.length / rutasPorPagina);
-  const startIdx = (currentPage - 1) * rutasPorPagina;
-  const endIdx = startIdx + rutasPorPagina;
-  const rutasPagina = rutas.slice(startIdx, endIdx);
+  // Cargar cooperativas disponibles
+  const cargarCooperativas = useCallback(async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/cooperativas');
+      console.log('Cooperativas cargadas:', response.data);
+      if (response.data.success) {
+        setCooperativas(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error al cargar cooperativas:', error);
+      setCooperativas([]);
+    }
+  }, []);
 
-  // Guardar nueva o editar ruta desde RutaModal
-  const handleSaveRuta = (nuevaRuta) => {
-    if (modalMode === 'add') {
-      const newId = rutas.length > 0 ? Math.max(...rutas.map(r => Number(r.id || 0))) + 1 : 1;
-      const rutaConId = { ...nuevaRuta, id: newId };
-      axios.post(API_URL_Rutas, rutaConId)
-        .then(res => {
-          setRutas(prev => [...prev, res.data]);
+  // Cargar rutas, terminales y cooperativas al inicio
+  useEffect(() => {
+    recargarRutas(1);
+    cargarTerminales();
+    cargarCooperativas();
+  }, [cooperativaId]); // Recargar cuando cambie la cooperativa
+
+  // Guardar nueva ruta o editar ruta existente
+  const handleSaveRuta = async (nuevaRuta) => {
+    setLoading(true);
+    try {
+      if (modalMode === 'add') {
+        console.log('Creando nueva ruta:', nuevaRuta);
+        
+        // Mapear datos del formulario al formato del backend
+        const rutaData = {
+          numeroRuta: nuevaRuta.numeroRuta,
+          terminalOrigenId: nuevaRuta.terminalOrigenId,
+          terminalDestinoId: nuevaRuta.terminalDestinoId,
+          horaSalida: nuevaRuta.horaSalida,
+          horaLlegada: nuevaRuta.horaLlegada,
+          cooperativaId: cooperativaId // Usar el ID de la cooperativa actual
+        };
+
+        const response = await axios.post(API_URL_Rutas, rutaData);
+        if (response.data.success) {
+          console.log('Ruta creada exitosamente:', response.data.data);
+          await recargarRutas(currentPage);
           setShowModal(false);
-        });
-    } else if (modalMode === 'edit' && rutaEdit) {
-      const id = rutaEdit.id;
-      axios.put(`${API_URL_Rutas}/${id}`, { ...nuevaRuta, id })
-        .then(res => {
-          setRutas(prev => prev.map(r => r.id === id ? res.data : r));
+          alert('Ruta creada exitosamente');
+        } else {
+          throw new Error(response.data.message);
+        }
+      } else if (modalMode === 'edit' && rutaEdit) {
+        console.log('Actualizando ruta:', rutaEdit.id, nuevaRuta);
+        
+        const rutaData = {
+          numeroRuta: nuevaRuta.numeroRuta,
+          terminalOrigenId: nuevaRuta.terminalOrigenId,
+          terminalDestinoId: nuevaRuta.terminalDestinoId,
+          horaSalida: nuevaRuta.horaSalida,
+          horaLlegada: nuevaRuta.horaLlegada,
+          paradas: Array.isArray(nuevaRuta.paradas) ? nuevaRuta.paradas : nuevaRuta.paradas.split(',').map(p => p.trim())
+        };
+
+        const response = await axios.put(`${API_URL_Rutas}/${rutaEdit.id}`, rutaData);
+        if (response.data.success) {
+          console.log('Ruta actualizada exitosamente:', response.data.data);
+          await recargarRutas(currentPage);
           setShowModal(false);
           setRutaEdit(null);
-        })
-        .catch(() => {
-          alert("Error al actualizar la ruta. Verifica que el ID exista.");
-        });
+          alert('Ruta actualizada exitosamente');
+        } else {
+          throw new Error(response.data.message);
+        }
+      }
+    } catch (error) {
+      console.error('Error al guardar ruta:', error);
+      alert(`Error al guardar la ruta: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,9 +177,15 @@ const RutasPanel = () => {
 
   // Abrir modal para editar
   const handleActualizar = () => {
-    if (!selectedId) return;
+    if (!selectedId) {
+      alert('Por favor selecciona una ruta para actualizar');
+      return;
+    }
     const ruta = rutas.find(r => r.id === selectedId);
-    if (!ruta) return;
+    if (!ruta) {
+      alert('Ruta no encontrada');
+      return;
+    }
     setRutaEdit(ruta);
     setModalMode('edit');
     setShowModal(true);
@@ -100,69 +193,144 @@ const RutasPanel = () => {
 
   // Abrir RutaForm (Leaflet) para editar paradas
   const handleEditRoute = (ruta) => {
+    console.log('Editando paradas de ruta:', ruta);
     setRutaEdit(ruta);
     setModalMode('edit');
     setShowRutaForm(true);
   };
 
-  // Abrir ParadasModal con ruta actualizada desde el servidor
-  const handleViewRoute = (ruta) => {
-    // 🔄 Refrescar ruta antes de mostrar
-    axios.get(`${API_URL_Rutas}/${ruta.id}`)
-      .then(res => {
-        setRutaSeleccionada(res.data);
+  // Abrir ParadasModal para ver paradas
+  const handleViewRoute = async (ruta) => {
+    console.log('Viendo ruta:', ruta);
+    try {
+      setLoading(true);
+      // Obtener la ruta actualizada del servidor
+      const response = await axios.get(`${API_URL_Rutas}/${ruta.id}`);
+      if (response.data.success) {
+        setRutaSeleccionada(response.data.data);
         setShowParadas(true);
-      })
-      .catch(() => {
-        alert("❌ No se pudo cargar la ruta actualizada.");
-      });
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error al cargar la ruta:', error);
+      // Usar datos locales si falla la conexión
+      setRutaSeleccionada(ruta);
+      setShowParadas(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Eliminar ruta
-  const handleEliminar = () => {
-    if (!selectedId) return;
+  const handleEliminar = async () => {
+    if (!selectedId) {
+      alert('Por favor selecciona una ruta para eliminar');
+      return;
+    }
+    
     const ruta = rutas.find(r => r.id === selectedId);
-    if (!ruta) return;
-    axios.delete(`${API_URL_Rutas}/${ruta.id}`)
-      .then(() => {
-        setRutas(prev => prev.filter(r => r.id !== ruta.id));
+    if (!ruta) {
+      alert('Ruta no encontrada');
+      return;
+    }
+
+    if (!window.confirm(`¿Estás seguro de que deseas eliminar la ruta ${ruta.numeroRuta}?`)) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.delete(`${API_URL_Rutas}/${ruta.id}`);
+      if (response.data.success) {
+        console.log('Ruta eliminada exitosamente');
+        await recargarRutas(currentPage);
         setSelectedId(null);
-      });
+        alert('Ruta eliminada exitosamente');
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error al eliminar ruta:', error);
+      alert(`Error al eliminar la ruta: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handlePageChange = (num) => {
-    setCurrentPage(num);
+  // Cambiar página
+  const handlePageChange = (newPage) => {
+    if (newPage < 1 || newPage > pagination.totalPages) return;
+    setCurrentPage(newPage);
+    recargarRutas(newPage);
     setSelectedId(null);
+  };
+
+  // Actualizar paradas desde RutaForm
+  const handleRutaActualizada = () => {
+    console.log('Ruta actualizada, recargando...');
+    recargarRutas(currentPage);
+    setShowRutaForm(false);
+    setRutaEdit(null);
   };
 
   return (
     <div className="rutas-panel-container">
       <main className="rutas-panel-main">
         <section className="rutas-panel">
-          <h1 className="rutas-title">Rutas</h1>
+          <h1 className="rutas-title">Gestión de Rutas</h1>
+          
+          {loading && (
+            <div className="loading-indicator">
+              <p>Cargando...</p>
+            </div>
+          )}
+          
           <div className="rutas-content">
             <div className="rutas-table-wrapper">
               <RoutesTable
-                rutas={rutasPagina}
+                rutas={rutas}
                 selectedId={selectedId}
                 setSelectedId={setSelectedId}
                 onViewRoute={handleViewRoute}
                 onEditRoute={handleEditRoute}
+                loading={loading}
               />
+
+              {/* Información de paginación */}
+              <div className="pagination-info">
+                <span>
+                  Mostrando {rutas.length} de {pagination.totalItems} rutas 
+                  (Página {pagination.currentPage} de {pagination.totalPages})
+                </span>
+              </div>
 
               {/* Paginación */}
               <div className="pagination">
-                <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>&lt;</button>
-                {Array.from({ length: totalPaginas }, (_, i) => (
+                <button 
+                  onClick={() => handlePageChange(currentPage - 1)} 
+                  disabled={currentPage === 1 || loading}
+                >
+                  &lt;
+                </button>
+                
+                {Array.from({ length: pagination.totalPages }, (_, i) => (
                   <button
                     key={i + 1}
                     className={currentPage === i + 1 ? 'active' : ''}
                     onClick={() => handlePageChange(i + 1)}
+                    disabled={loading}
                   >
                     {i + 1}
                   </button>
                 ))}
-                <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPaginas}>&gt;</button>
+                
+                <button 
+                  onClick={() => handlePageChange(currentPage + 1)} 
+                  disabled={currentPage === pagination.totalPages || loading}
+                >
+                  &gt;
+                </button>
               </div>
             </div>
 
@@ -170,11 +338,12 @@ const RutasPanel = () => {
               onAdd={handleAgregar}
               onDelete={handleEliminar}
               onUpdate={handleActualizar}
+              disabled={loading}
             />
           </div>
 
           {/* Modal para ver paradas */}
-          {showParadas && (
+          {showParadas && rutaSeleccionada && (
             <ParadasModal
               onClose={() => setShowParadas(false)}
               ruta={rutaSeleccionada}
@@ -204,7 +373,7 @@ const RutasPanel = () => {
                 <RutaForm
                   ruta={rutaEdit}
                   onClose={() => setShowRutaForm(false)}
-                  onRutaActualizada={recargarRutas}
+                  onRutaActualizada={handleRutaActualizada}
                 />
               </div>
             </div>
@@ -212,14 +381,18 @@ const RutasPanel = () => {
         </section>
       </main>
 
-      {/* Modal para crear/editar ruta (sin mapa) */}
+      {/* Modal para crear/editar ruta (información básica) */}
       <RutaModal
         open={showModal}
-        onClose={() => { setShowModal(false); setRutaEdit(null); }}
+        onClose={() => { 
+          setShowModal(false); 
+          setRutaEdit(null); 
+        }}
         onSave={handleSaveRuta}
         initialData={modalMode === 'edit' ? rutaEdit : null}
         mode={modalMode}
         terminales={terminales}
+        loading={loading}
       />
     </div>
   );
