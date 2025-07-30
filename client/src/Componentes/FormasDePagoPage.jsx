@@ -10,6 +10,9 @@ import TicketInfo from './Ticket (12)/TicketInfo';
 import Button from './Button';
 import ConfirmacionCompraModal from './ConfirmacionCompraModal';
 import ResultadoCompraModal from './ResultadoCompraModal';
+import Login from './Login';
+import Registro from './Registro';
+import PerfilUsuarioModal from './PerfilUsuarioModal';
 
 const FormasDePagoPage = () => {
   const location = useLocation();
@@ -27,6 +30,9 @@ const FormasDePagoPage = () => {
   const [showConfirmacionModal, setShowConfirmacionModal] = useState(false);
   const [showResultadoModal, setShowResultadoModal] = useState(false);
   const [datosCompraExitosa, setDatosCompraExitosa] = useState(null);
+  const [mostrarLogin, setMostrarLogin] = useState(false);
+  const [mostrarRegistro, setMostrarRegistro] = useState(false);
+  const [mostrarPerfil, setMostrarPerfil] = useState(false);
   
   // Obtener datos de los parámetros
   const pasajerosDataStr = params.get('pasajerosData');
@@ -69,6 +75,11 @@ const FormasDePagoPage = () => {
   }, [viajeId]);
   
   console.log('ID del viaje:', viajeId);
+  
+  const handleLoginExitoso = (usuarioData) => {
+    // El usuario se actualiza automáticamente a través del AuthContext
+    setMostrarLogin(false);
+  };
   
   // Función para calcular edad
   const calcularEdad = (dia, mes, anio) => {
@@ -239,6 +250,8 @@ const FormasDePagoPage = () => {
           totalSteps={5}
           usuario={usuario}
           onLogout={() => logout()}
+          onLoginClick={() => setMostrarLogin(true)}
+          onPerfilClick={() => setMostrarPerfil(true)}
         />
       </header>
 
@@ -306,6 +319,36 @@ const FormasDePagoPage = () => {
         datosCompra={datosCompraExitosa}
         datosViaje={datosViaje}
       />
+
+      {/* Modal de Login */}
+      {mostrarLogin && (
+        <Login
+          cerrar={() => setMostrarLogin(false)}
+          abrirRegistro={() => {
+            setMostrarLogin(false);
+            setMostrarRegistro(true);
+          }}
+          onLoginExitoso={handleLoginExitoso}
+        />
+      )}
+
+      {/* Modal de Registro */}
+      {mostrarRegistro && (
+        <Registro
+          cerrar={() => setMostrarRegistro(false)}
+          abrirCooperativa={() => {
+            setMostrarRegistro(false);
+            // Aquí podrías agregar lógica para abrir modal de cooperativa si es necesario
+          }}
+        />
+      )}
+
+      {/* Modal de Perfil */}
+      {mostrarPerfil && (
+        <PerfilUsuarioModal
+          cerrar={() => setMostrarPerfil(false)}
+        />
+      )}
     </div>
   );
 };

@@ -4,6 +4,9 @@ import { useAuth } from './AuthContext';
 import Header from './Header';
 import Footer from './Footer';
 import PasajerosForm from './PasajerosForm';
+import Login from './Login';
+import Registro from './Registro';
+import PerfilUsuarioModal from './PerfilUsuarioModal';
 import './Estilos/RegistroPasajerosPage.css';
 import Button from './Button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -28,6 +31,9 @@ const RegistroPasajerosPage = () => {
 
   // Estado para el formulario actual
   const [formIndex, setFormIndex] = useState(0);
+  const [mostrarLogin, setMostrarLogin] = useState(false);
+  const [mostrarRegistro, setMostrarRegistro] = useState(false);
+  const [mostrarPerfil, setMostrarPerfil] = useState(false);
 
   // Estado para los datos de los pasajeros - usar datos existentes si están disponibles
   const [datosPasajeros, setDatosPasajeros] = useState(
@@ -50,6 +56,11 @@ const RegistroPasajerosPage = () => {
     params.set('pasajerosData', JSON.stringify(datosPasajeros));
     params.set('viajeId', viajeIdPrueba);
     navigate(`/SeleccionAsientosPage?${params.toString()}`);
+  };
+
+  const handleLoginExitoso = (usuarioData) => {
+    // El usuario se actualiza automáticamente a través del AuthContext
+    setMostrarLogin(false);
   };
 
   // Función para actualizar los datos de un pasajero
@@ -95,6 +106,8 @@ const RegistroPasajerosPage = () => {
           totalSteps={5}
           usuario={usuario}
           onLogout={() => logout()}
+          onLoginClick={() => setMostrarLogin(true)}
+          onPerfilClick={() => setMostrarPerfil(true)}
         />
       </header>
       <main className="contenido-pasajeros">
@@ -147,6 +160,36 @@ const RegistroPasajerosPage = () => {
       <footer>
         <Footer />
       </footer>
+
+      {/* Modal de Login */}
+      {mostrarLogin && (
+        <Login
+          cerrar={() => setMostrarLogin(false)}
+          abrirRegistro={() => {
+            setMostrarLogin(false);
+            setMostrarRegistro(true);
+          }}
+          onLoginExitoso={handleLoginExitoso}
+        />
+      )}
+
+      {/* Modal de Registro */}
+      {mostrarRegistro && (
+        <Registro
+          cerrar={() => setMostrarRegistro(false)}
+          abrirCooperativa={() => {
+            setMostrarRegistro(false);
+            // Aquí podrías agregar lógica para abrir modal de cooperativa si es necesario
+          }}
+        />
+      )}
+
+      {/* Modal de Perfil */}
+      {mostrarPerfil && (
+        <PerfilUsuarioModal
+          cerrar={() => setMostrarPerfil(false)}
+        />
+      )}
     </div>
   );
 };

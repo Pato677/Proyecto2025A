@@ -9,6 +9,9 @@ import InfoModal from './InfoModal';
 import WarningModal from './WarningModal';
 import Footer from './Footer';
 import Header from './Header';
+import Login from './Login';
+import Registro from './Registro';
+import PerfilUsuarioModal from './PerfilUsuarioModal';
 import './Estilos/Footer.css';
 import './Estilos/SeleccionViaje.css';
 import Button from './Button';
@@ -36,6 +39,9 @@ const TripSelectionPage = () => {
   const [orden, setOrden] = useState('');
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
+  const [mostrarLogin, setMostrarLogin] = useState(false);
+  const [mostrarRegistro, setMostrarRegistro] = useState(false);
+  const [mostrarPerfil, setMostrarPerfil] = useState(false);
   const viajesPorPagina = 4;
 
   // Cargar viajes
@@ -57,6 +63,11 @@ const TripSelectionPage = () => {
 
   const handleLogout = () => {
     logout();
+  };
+
+  const handleLoginExitoso = (usuarioData) => {
+    // El usuario se actualiza automáticamente a través del AuthContext
+    setMostrarLogin(false);
   };
 
   const handleConfirmTrip = () => {
@@ -99,6 +110,8 @@ const TripSelectionPage = () => {
         totalSteps={5}
         usuario={usuario}
         onLogout={handleLogout}
+        onLoginClick={() => setMostrarLogin(true)}
+        onPerfilClick={() => setMostrarPerfil(true)}
       />
 
       <main className="contenido-viajes">
@@ -234,6 +247,36 @@ const TripSelectionPage = () => {
             handleConfirmTrip();
           }}
         />
+
+        {/* Modal de Login */}
+        {mostrarLogin && (
+          <Login
+            cerrar={() => setMostrarLogin(false)}
+            abrirRegistro={() => {
+              setMostrarLogin(false);
+              setMostrarRegistro(true);
+            }}
+            onLoginExitoso={handleLoginExitoso}
+          />
+        )}
+
+        {/* Modal de Registro */}
+        {mostrarRegistro && (
+          <Registro
+            cerrar={() => setMostrarRegistro(false)}
+            abrirCooperativa={() => {
+              setMostrarRegistro(false);
+              // Aquí podrías agregar lógica para abrir modal de cooperativa si es necesario
+            }}
+          />
+        )}
+
+        {/* Modal de Perfil */}
+        {mostrarPerfil && (
+          <PerfilUsuarioModal
+            cerrar={() => setMostrarPerfil(false)}
+          />
+        )}
       </main>
 
       <footer>
