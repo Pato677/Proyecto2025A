@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import ViajesTable from './ViajesTable';
 import ActionButtons from './ActionButtons';
 import ViajeModal from './ViajeModal';
@@ -23,32 +23,8 @@ const ViajesPanel = () => {
   const [unidades, setUnidades] = useState([]);
   const [asientosOcupados, setAsientosOcupados] = useState({});
 
-  // 🔄 Recargar viajes desde el servidor
-  const recargarViajes = () => {
-    axios.get(API_URL_Viajes)
-      .then(res => {
-        console.log('Respuesta completa del servidor:', res.data);
-        // El controlador devuelve los viajes vigentes filtrados en el backend
-        if (res.data.success && res.data.data) {
-          setViajes(res.data.data);
-          console.log('Viajes vigentes cargados desde backend:', res.data.data.length);
-          // Cargar asientos ocupados para cada viaje
-          cargarAsientosOcupados(res.data.data);
-        } else {
-          console.log('No hay viajes vigentes o respuesta sin éxito');
-          setViajes([]);
-          setAsientosOcupados({});
-        }
-      })
-      .catch(error => {
-        console.error('Error al cargar viajes:', error);
-        setViajes([]);
-        setAsientosOcupados({});
-      });
-  };
-
   // 🪑 Cargar asientos ocupados para todos los viajes
-  const cargarAsientosOcupados = async (viajesData) => {
+  const cargarAsientosOcupados = useCallback(async (viajesData) => {
     const asientosPromises = viajesData.map(viaje => 
       axios.get(`${API_URL_Viajes_CRUD}/${viaje.id}/asientos-ocupados`)
         .then(res => ({
@@ -76,7 +52,31 @@ const ViajesPanel = () => {
       console.error('Error al cargar todos los asientos ocupados:', error);
       setAsientosOcupados({});
     }
-  };
+  }, []);
+
+  // 🔄 Recargar viajes desde el servidor
+  const recargarViajes = useCallback(() => {
+    axios.get(API_URL_Viajes)
+      .then(res => {
+        console.log('Respuesta completa del servidor:', res.data);
+        // El controlador devuelve los viajes vigentes filtrados en el backend
+        if (res.data.success && res.data.data) {
+          setViajes(res.data.data);
+          console.log('Viajes vigentes cargados desde backend:', res.data.data.length);
+          // Cargar asientos ocupados para cada viaje
+          cargarAsientosOcupados(res.data.data);
+        } else {
+          console.log('No hay viajes vigentes o respuesta sin éxito');
+          setViajes([]);
+          setAsientosOcupados({});
+        }
+      })
+      .catch(error => {
+        console.error('Error al cargar viajes:', error);
+        setViajes([]);
+        setAsientosOcupados({});
+      });
+  }, [cargarAsientosOcupados]);
 
   // Cargar viajes, rutas y unidades al inicio
   useEffect(() => {
@@ -115,7 +115,7 @@ const ViajesPanel = () => {
         console.error('Error al cargar unidades de la cooperativa:', error);
         setUnidades([]);
       });
-  }, [recargarViajes]);
+  }, [recargarViajes]); // Agregada la dependencia recargarViajes
 
   const totalPaginas = Math.ceil(viajes.length / viajesPorPagina);
   const startIdx = (currentPage - 1) * viajesPorPagina;

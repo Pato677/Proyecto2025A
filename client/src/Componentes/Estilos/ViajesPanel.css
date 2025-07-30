@@ -189,22 +189,44 @@
   margin-top: 16px;
 }
 
+.viajes-panel .action-buttons .btn-outline {
+  flex: 1;
+  margin: 0 8px;
+  padding: 10px 0;
+  background: transparent !important;
+  border: 2px solid #2176ab !important;
+  border-radius: 24px;
+  font-size: 16px;
+  color: #2176ab !important;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+  box-shadow: none !important;
+}
+
+.viajes-panel .action-buttons .btn-outline:hover {
+  background: #2176ab !important;
+  color: #fff !important;
+  border-color: #2176ab !important;
+  box-shadow: 0 2px 8px rgba(33, 118, 171, 0.3) !important;
+}
+
 .btn-outline {
   flex: 1;
   margin: 0 8px;
   padding: 10px 0;
-  background: transparent;
-  border: 2px solid #2176ab;
+  background: transparent !important;
+  border: 2px solid #2176ab !important;
   border-radius: 24px;
   font-size: 16px;
-  color: #2176ab;
+  color: #2176ab !important;
   cursor: pointer;
   transition: background 0.3s, color 0.3s;
 }
 
 .btn-outline:hover {
-  background: #2176ab;
-  color: #fff;
+  background: #2176ab !important;
+  color: #fff !important;
+  border-color: #2176ab !important;
 }
 
 /* Responsividad para pantallas pequeñas */
