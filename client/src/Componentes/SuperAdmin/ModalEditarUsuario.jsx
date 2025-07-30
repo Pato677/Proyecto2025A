@@ -9,8 +9,6 @@ const ModalEditarUsuario = ({ isOpen, onClose, usuario, onSuccess }) => {
     fecha_nacimiento: '',
     cedula: '',
     telefono: '',
-    direccion: '',
-    ciudad: '',
     estado: 'activo'
   });
   const [loading, setLoading] = useState(false);
@@ -25,8 +23,6 @@ const ModalEditarUsuario = ({ isOpen, onClose, usuario, onSuccess }) => {
           usuarioFinal.fecha_nacimiento.split('T')[0] : '',
         cedula: usuarioFinal?.cedula || '',
         telefono: usuario.telefono || '',
-        direccion: usuarioFinal?.direccion || '',
-        ciudad: usuarioFinal?.ciudad || '',
         estado: usuarioFinal?.estado || 'activo'
       });
     }
@@ -52,8 +48,6 @@ const ModalEditarUsuario = ({ isOpen, onClose, usuario, onSuccess }) => {
           apellidos: formData.apellidos,
           fecha_nacimiento: formData.fecha_nacimiento,
           cedula: formData.cedula,
-          direccion: formData.direccion,
-          ciudad: formData.ciudad,
           estado: formData.estado
         }
       };
@@ -145,28 +139,6 @@ const ModalEditarUsuario = ({ isOpen, onClose, usuario, onSuccess }) => {
                 type="text"
                 name="telefono"
                 value={formData.telefono}
-                onChange={handleChange}
-                className="form-control"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Dirección</label>
-              <input
-                type="text"
-                name="direccion"
-                value={formData.direccion}
-                onChange={handleChange}
-                className="form-control"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Ciudad</label>
-              <input
-                type="text"
-                name="ciudad"
-                value={formData.ciudad}
                 onChange={handleChange}
                 className="form-control"
               />

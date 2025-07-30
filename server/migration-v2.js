@@ -23,7 +23,7 @@ async function migrarBaseDeDatos() {
     // Verificar y agregar columnas a usuarios_finales
     console.log('Verificando usuarios_finales...');
     
-    const columnasFinales = ['direccion', 'ciudad', 'estado'];
+    const columnasFinales = ['estado'];
     
     for (const columna of columnasFinales) {
       const existe = await verificarColumnaExiste('usuarios_finales', columna);

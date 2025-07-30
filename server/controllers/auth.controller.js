@@ -28,9 +28,7 @@ const registrarUsuario = async (req, res) => {
       nombres, 
       apellidos, 
       cedula, 
-      fecha_nacimiento, 
-      direccion, 
-      ciudad 
+      fecha_nacimiento
     } = req.body;
 
     // Verificar si el correo ya existe
@@ -59,9 +57,7 @@ const registrarUsuario = async (req, res) => {
       nombres,
       apellidos,
       cedula,
-      fecha_nacimiento,
-      direccion,
-      ciudad
+      fecha_nacimiento
     });
 
     // Generar token
@@ -252,8 +248,7 @@ const login = async (req, res) => {
         ...datosUsuario,
         nombres: usuario.UsuarioFinal.nombres,
         apellidos: usuario.UsuarioFinal.apellidos,
-        cedula: usuario.UsuarioFinal.cedula,
-        ciudad: usuario.UsuarioFinal.ciudad
+        cedula: usuario.UsuarioFinal.cedula
         // No incluimos estado para usuarios finales
       };
     } else if (usuario.rol === 'cooperativa' && usuario.UsuarioCooperativa) {
