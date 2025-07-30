@@ -29,7 +29,6 @@ const registrarUsuario = async (req, res) => {
       apellidos, 
       cedula, 
       fecha_nacimiento, 
-      genero, 
       direccion, 
       ciudad 
     } = req.body;
@@ -61,7 +60,6 @@ const registrarUsuario = async (req, res) => {
       apellidos,
       cedula,
       fecha_nacimiento,
-      genero,
       direccion,
       ciudad
     });

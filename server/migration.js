@@ -11,7 +11,6 @@ async function migrarBaseDeDatos() {
     try {
       await sequelize.query(`
         ALTER TABLE usuarios_finales 
-        ADD COLUMN IF NOT EXISTS genero VARCHAR(255),
         ADD COLUMN IF NOT EXISTS direccion VARCHAR(255),
         ADD COLUMN IF NOT EXISTS ciudad VARCHAR(255),
         ADD COLUMN IF NOT EXISTS estado VARCHAR(255) DEFAULT 'desactivo'
