@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 import Header from './Header';
 import Footer from './Footer';
 import PasajerosForm from './PasajerosForm';
@@ -10,6 +11,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 const RegistroPasajerosPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { usuario, logout } = useAuth();
   const formRef = useRef();
 
   // Variable de prueba para el número de pasajeros (posteriormente se obtendrá via query)
@@ -88,7 +90,12 @@ const RegistroPasajerosPage = () => {
   return (
     <div className="registro-pasajeros-page">
       <header>
-        <Header currentStep={3} totalSteps={5} />
+        <Header 
+          currentStep={3} 
+          totalSteps={5}
+          usuario={usuario}
+          onLogout={() => logout()}
+        />
       </header>
       <main className="contenido-pasajeros">
         <h2 className="titulo-pasajeros">Pasajeros</h2>

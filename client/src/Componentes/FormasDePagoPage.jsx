@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 import axios from 'axios';
 import './Estilos/FormasDePagoPage.css';
 import Header from './Header';
@@ -13,6 +14,7 @@ import ResultadoCompraModal from './ResultadoCompraModal';
 const FormasDePagoPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { usuario, logout } = useAuth();
   const params = new URLSearchParams(location.search);
   
   // Estado para la forma de pago seleccionada
@@ -232,7 +234,12 @@ const FormasDePagoPage = () => {
   return (
     <div className="pago-resumen-page">
       <header >
-        <Header currentStep={5} totalSteps={5} />
+        <Header 
+          currentStep={5} 
+          totalSteps={5}
+          usuario={usuario}
+          onLogout={() => logout()}
+        />
       </header>
 
       <div className="contenido-pago">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 import DateCarousel from './DateCarousel';
 import TripCard from './TripCard';
 import TripDetails from './TripDetails';
@@ -16,6 +17,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 const TripSelectionPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { usuario, logout } = useAuth();
   const params = new URLSearchParams(location.search);
   
   // Parámetros de búsqueda
@@ -34,16 +36,7 @@ const TripSelectionPage = () => {
   const [orden, setOrden] = useState('');
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
-  const [usuario, setUsuario] = useState(null);
   const viajesPorPagina = 4;
-
-  // Cargar usuario
-  useEffect(() => {
-    const usuarioStorage = JSON.parse(localStorage.getItem('usuario'));
-    if (usuarioStorage) {
-      setUsuario(usuarioStorage);
-    }
-  }, []);
 
   // Cargar viajes
   useEffect(() => {
@@ -63,8 +56,7 @@ const TripSelectionPage = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('usuario');
-    setUsuario(null);
+    logout();
   };
 
   const handleConfirmTrip = () => {

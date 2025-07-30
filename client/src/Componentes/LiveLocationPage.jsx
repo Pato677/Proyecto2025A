@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useAuth } from './AuthContext';
 import Footer from './Footer';
 import Button from './Button';
 import { FaSearch, FaGlobe, FaUserCircle } from "react-icons/fa";
@@ -7,7 +8,27 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Estilos/LiveLocation.css';
 
-function LiveLocationHeader() {
+function LiveLocationHeader({ usuario, onLogout }) {
+  const getNombreUsuario = () => {
+    if (!usuario) return 'Iniciar Sesión';
+    
+    if (usuario.rol === 'cooperativa') {
+      return usuario.razonSocial || usuario.UsuarioCooperativa?.razon_social || 'Cooperativa';
+    } else if (usuario.rol === 'final') {
+      const nombre = usuario.nombreCompleto || 
+                    (usuario.nombres && usuario.apellidos ? 
+                     `${usuario.nombres} ${usuario.apellidos}` : 
+                     (usuario.UsuarioFinal ? 
+                      `${usuario.UsuarioFinal.nombres} ${usuario.UsuarioFinal.apellidos}` : 
+                      'Usuario'));
+      return nombre;
+    } else if (usuario.rol === 'superadmin') {
+      return 'Super Usuario root';
+    }
+    
+    return usuario.correo?.split('@')[0] || 'Usuario';
+  };
+
   return (
     <header className="live-header">
       <div className="live-header-left">
@@ -24,7 +45,9 @@ function LiveLocationHeader() {
         <span className="live-language">Español</span>
         <span className="live-separator">|</span>
         <FaUserCircle className="live-user" />
-        <span className="live-user-label">Iniciar Sesión</span>
+        <span className="live-user-label" onClick={usuario && onLogout ? onLogout : undefined} style={{ cursor: usuario ? 'pointer' : 'default' }}>
+          {getNombreUsuario()}
+        </span>
       </div>
     </header>
   );
@@ -102,9 +125,11 @@ function LiveMapSimulation() {
 }
 
 function LiveLocationPage() {
+  const { usuario, logout } = useAuth();
+  
   return (
     <div className="ticket-page">
-      <LiveLocationHeader />
+      <LiveLocationHeader usuario={usuario} onLogout={() => logout()} />
       <main className="live-main-content">
         <h1 className="live-title-main">Ubicación en Tiempo Real</h1>
         <p className="live-estimated-time">Hora de llegada aproximada: 21:35</p>
