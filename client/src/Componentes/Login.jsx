@@ -102,7 +102,7 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso }) => {
         } finally {
             setLoading(false);
         }
-    }, [credenciales, authLogin, cerrar, onLoginExitoso, navigate, error]);
+    }, [credenciales, authLogin, cerrar, onLoginExitoso, navigate]);
 
     return (
         <div className="login-overlay" onClick={cerrar}>

@@ -31,6 +31,7 @@ const CooperativaCrud = {
     try {
       // Por ahora retornamos false hasta implementar el endpoint en el backend
       return false;
+      // TODO: Implementar verificación de RUC cuando esté disponible el endpoint
       // const response = await axios.get(`http://localhost:8000/usuario/verificar-ruc/${ruc}`);
       // return response.data.existe;
     } catch (error) {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 import axios from 'axios';
 import SeatSelector from './SeatSelector';
 import StepProgress from './StepProgress'; // Asegúrate de que la ruta sea correcta
@@ -10,6 +11,7 @@ import Logo from './Imagenes/Logo.png';
 const SeleccionAsientosPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { usuario, logout } = useAuth();
   const params = new URLSearchParams(location.search);
   
   // Obtener datos de los pasajeros de la URL

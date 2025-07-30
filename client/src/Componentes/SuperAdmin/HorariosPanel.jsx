@@ -3,7 +3,7 @@ import PaginacionPanel from './PaginacionPanel';
 import '../Estilos/SuperAdminDashboard.css';
 
 const HorariosPanel = () => {
-  const [horarios, setHorarios] = useState([
+  const [horarios] = useState([
     { id: 1, ruta: 'Quito - Guayaquil', salida: '08:00', llegada: '16:00' },
     { id: 2, ruta: 'Quito - Cuenca', salida: '09:00', llegada: '17:00' }
   ]);

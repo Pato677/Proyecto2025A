@@ -7,6 +7,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Login from "./Login";
 import Registro from "./Registro";
+import PerfilUsuarioModal from "./PerfilUsuarioModal";
 import BusEcuador from './Imagenes/BusEcuador.png';
 import BusIda from './Imagenes/BusdeIda.png';
 import BusVuelta from './Imagenes/Busderegreso.png';
@@ -28,6 +29,7 @@ const Inicio = () => {
     const [mostrarRegistro, setMostrarRegistro] = useState(false);
     const [mostrarRegistroCooperativa, setMostrarRegistroCooperativa] = useState(false);
     const [mostrarModalRastreo, setMostrarModalRastreo] = useState(false);
+    const [mostrarPerfil, setMostrarPerfil] = useState(false);
 
     // Estados para origen y destino
     const [origenSeleccionado, setOrigenSeleccionado] = useState({ ciudad: '', terminal: '' });
@@ -168,6 +170,7 @@ const Inicio = () => {
                 usuario={usuario}
                 onLogout={handleLogout}
                 onLoginClick={() => setMostrarLogin(true)}
+                onPerfilClick={() => setMostrarPerfil(true)}
             />
             
             <div className="inicio-main-content">
@@ -303,6 +306,13 @@ const Inicio = () => {
 
             {mostrarRegistroCooperativa && (
                 <RegistroCooperativa cerrar={() => setMostrarRegistroCooperativa(false)} />
+            )}
+
+            {/* Modal de Perfil */}
+            {mostrarPerfil && (
+                <PerfilUsuarioModal
+                    cerrar={() => setMostrarPerfil(false)}
+                />
             )}
 
             <ModalRastreoBoleto

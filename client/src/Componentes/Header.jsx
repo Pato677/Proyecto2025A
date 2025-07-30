@@ -9,6 +9,7 @@ function Header({
   showLanguage = true,
   showUser = true,
   onLoginClick = null,
+  onPerfilClick = null,
   userLabel = "Iniciar Sesión",
   currentStep = 1,
   totalSteps = 5,
@@ -28,7 +29,11 @@ function Header({
   };
 
   const handlePerfilClick = () => {
-    navigate('/PerfilUsuario');
+    if (onPerfilClick) {
+      onPerfilClick();
+    } else {
+      navigate('/PerfilUsuario');
+    }
     setMenuOpen(false);
   };
 

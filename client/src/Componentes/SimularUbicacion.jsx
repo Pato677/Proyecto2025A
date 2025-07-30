@@ -58,7 +58,7 @@ const SimuladorUbicacionModal = ({ onClose }) => {
     }, 1500);
 
     return () => clearInterval(intervalo);
-  }, []);
+  }, [rutaCoordenadas]);
 
   return (
     <div className="modal-overlay">
