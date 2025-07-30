@@ -4,20 +4,12 @@ import Footer from './Footer';
 import CiudadesTerminalesPanel from './SuperAdmin/CiudadesTerminalesPanel';
 import SolicitudesCooperativasPanel from './SuperAdmin/SolicitudesCooperativasPanel';
 import UsuariosCooperativasPanel from './SuperAdmin/UsuariosCooperativasPanel';
-import CooperativaUnidadesPanel from './SuperAdmin/CooperativaUnidadesPanel';
-import HorariosPanel from './SuperAdmin/HorariosPanel';
-import RutasPanel from './SuperAdmin/RutasPanel';
-import ConductoresPanel from './SuperAdmin/ConductoresPanel';
 import './Estilos/SuperAdminDashboard.css';
 
 const panels = [
   { key: 'ciudades', label: 'Ciudades y Terminales', component: <CiudadesTerminalesPanel /> },
   { key: 'solicitudes', label: 'Solicitudes Cooperativas', component: <SolicitudesCooperativasPanel /> },
   { key: 'usuarios', label: 'Usuarios y Cooperativas', component: <UsuariosCooperativasPanel /> },
-  { key: 'cooperativas', label: 'Unidades de Cooperativas', component: <CooperativaUnidadesPanel /> },
-  { key: 'horarios', label: 'Horarios', component: <HorariosPanel /> },
-  { key: 'rutas', label: 'Rutas', component: <RutasPanel /> },
-  { key: 'personal', label: 'Conductores y Controladores', component: <ConductoresPanel /> },
 ];
 
 const SuperAdminDashboard = () => {
