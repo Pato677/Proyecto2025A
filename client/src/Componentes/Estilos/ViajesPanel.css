@@ -1,18 +1,25 @@
 /* PANEL DE VIAJES */
 .viajes-panel {
-  max-width: 960px;
-  margin: 40px auto;
-  padding: 25px;
-  border: 2px solid #2176ab;
-  border-radius: 16px;
-  background-color: #fff;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px 15px;
+  border: none;
+  border-radius: 0;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .viajes-title {
   text-align: center;
-  font-size: 35px;
+  font-size: 32px;
   font-weight: bold;
   margin-bottom: 25px;
+  color: #2176ab;
 }
 
 .viajes-content {
@@ -22,44 +29,156 @@
 }
 
 .viajes-table-wrapper {
-  width: 100%;
-  max-width: 880px;
+  width: 95%;
+  max-width: 1200px;
   padding: 16px;
   border: 2px solid #2176ab;
   border-radius: 8px;
-  margin-bottom: 32px;
+  margin: 0 auto 32px auto;
   background: #fff;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-/* TABLA DE VIAJES */
+/* TABLA DE VIAJES RESPONSIVA CON FLEX */
 .viajes-table {
   width: 100%;
-  border-collapse: collapse;
   margin-bottom: 24px;
-  table-layout: fixed;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
-.viajes-table th,
-.viajes-table td {
-  padding: 12px 8px;
-  text-align: left;
-  border-bottom: 1px solid #e0eaf3;
-  font-size: 14px;
-  vertical-align: middle;
+/* Header de la tabla */
+.viajes-table thead {
+  display: flex;
+  width: 100%;
 }
 
-.viajes-table td {
-  text-align: center;
-  vertical-align: middle;
-  padding: 14px 8px;
-  font-size: 15px;
-  border-bottom: 1px solid #e0eaf3;
+.viajes-table thead tr {
+  display: flex;
+  width: 100%;
+  background-color: #f8f9fa;
 }
 
 .viajes-table th {
+  padding: 12px 6px;
+  text-align: center;
+  border-bottom: 2px solid #2176ab;
+  font-size: 13px;
   font-weight: 600;
   color: #000;
-  border-bottom: 2px solid #2176ab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+  white-space: normal; /* Permitir salto de línea */
+  hyphens: auto; /* Guiones automáticos */
+  line-height: 1.3;
+}
+
+/* Body de la tabla */
+.viajes-table tbody {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.viajes-table tbody tr {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid #e0eaf3;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  min-height: 50px; /* Altura mínima para las filas */
+  align-items: stretch; /* Las celdas se estiran para igualar altura */
+}
+
+.viajes-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.viajes-table tbody tr.selected {
+  background-color: #e3f2fd;
+}
+
+.viajes-table td {
+  padding: 12px 6px;
+  text-align: center;
+  font-size: 12px;
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+  white-space: normal; /* Permitir salto de línea */
+  hyphens: auto; /* Guiones automáticos */
+  line-height: 1.3;
+  min-height: inherit; /* Heredar altura mínima de la fila */
+}
+
+/* Distribución específica de columnas */
+.viajes-table th:nth-child(1),
+.viajes-table td:nth-child(1) {
+  flex: 0.3; /* ID */
+}
+
+.viajes-table th:nth-child(2),
+.viajes-table td:nth-child(2) {
+  flex: 0.8; /* Fecha Salida */
+}
+
+.viajes-table th:nth-child(3),
+.viajes-table td:nth-child(3) {
+  flex: 0.8; /* Fecha Llegada */
+}
+
+.viajes-table th:nth-child(4),
+.viajes-table td:nth-child(4) {
+  flex: 0.7; /* Asientos Ocupados */
+}
+
+.viajes-table th:nth-child(5),
+.viajes-table td:nth-child(5) {
+  flex: 0.6; /* Precio */
+}
+
+.viajes-table th:nth-child(6),
+.viajes-table td:nth-child(6) {
+  flex: 0.5; /* Ruta */
+}
+
+.viajes-table th:nth-child(7),
+.viajes-table td:nth-child(7) {
+  flex: 1.2; /* Terminal Origen */
+}
+
+.viajes-table th:nth-child(8),
+.viajes-table td:nth-child(8) {
+  flex: 1.2; /* Terminal Destino */
+}
+
+.viajes-table th:nth-child(9),
+.viajes-table td:nth-child(9) {
+  flex: 0.7; /* Hora Salida */
+}
+
+.viajes-table th:nth-child(10),
+.viajes-table td:nth-child(10) {
+  flex: 0.7; /* Hora Llegada */
+}
+
+.viajes-table th:nth-child(11),
+.viajes-table td:nth-child(11) {
+  flex: 0.7; /* Unidad */
 }
 
 /* BOTONES DE ACCIÓN */
@@ -86,6 +205,135 @@
 .btn-outline:hover {
   background: #2176ab;
   color: #fff;
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 1400px) {
+  .viajes-panel {
+    padding: 15px 10px;
+  }
+  
+  .viajes-table-wrapper {
+    width: 98%;
+  }
+  
+  .viajes-table th,
+  .viajes-table td {
+    font-size: 12px;
+    padding: 10px 4px;
+    line-height: 1.2;
+  }
+  
+  .viajes-table tbody tr {
+    min-height: 45px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .viajes-table th,
+  .viajes-table td {
+    font-size: 11px;
+    padding: 8px 3px;
+    line-height: 1.2;
+  }
+  
+  .viajes-table tbody tr {
+    min-height: 42px;
+  }
+  
+  .viajes-table th:nth-child(7),
+  .viajes-table td:nth-child(7),
+  .viajes-table th:nth-child(8),
+  .viajes-table td:nth-child(8) {
+    flex: 1; /* Reducir terminales */
+  }
+}
+
+@media (max-width: 992px) {
+  .viajes-panel {
+    padding: 10px 5px;
+  }
+  
+  .viajes-table th,
+  .viajes-table td {
+    font-size: 10px;
+    padding: 6px 2px;
+    line-height: 1.1;
+  }
+  
+  .viajes-table tbody tr {
+    min-height: 40px;
+  }
+  
+  .viajes-table th:nth-child(1),
+  .viajes-table td:nth-child(1) {
+    flex: 0.25;
+  }
+  
+  .viajes-table th:nth-child(2),
+  .viajes-table td:nth-child(2),
+  .viajes-table th:nth-child(3),
+  .viajes-table td:nth-child(3) {
+    flex: 0.7;
+  }
+  
+  .viajes-table th:nth-child(7),
+  .viajes-table td:nth-child(7),
+  .viajes-table th:nth-child(8),
+  .viajes-table td:nth-child(8) {
+    flex: 0.9;
+  }
+}
+
+@media (max-width: 768px) {
+  .viajes-table-wrapper {
+    width: 99%;
+    padding: 8px;
+  }
+  
+  .viajes-table th,
+  .viajes-table td {
+    font-size: 9px;
+    padding: 5px 1px;
+    line-height: 1.1;
+  }
+  
+  .viajes-table tbody tr {
+    min-height: 38px;
+  }
+  
+  /* Ocultar algunas columnas en pantallas muy pequeñas */
+  .viajes-table th:nth-child(3),
+  .viajes-table td:nth-child(3),
+  .viajes-table th:nth-child(10),
+  .viajes-table td:nth-child(10) {
+    display: none; /* Ocultar Fecha Llegada y Hora Llegada */
+  }
+  
+  /* Redistribuir columnas restantes */
+  .viajes-table th:nth-child(7),
+  .viajes-table td:nth-child(7),
+  .viajes-table th:nth-child(8),
+  .viajes-table td:nth-child(8) {
+    flex: 1.2;
+  }
+}
+
+@media (max-width: 480px) {
+  .viajes-title {
+    font-size: 24px;
+  }
+  
+  .viajes-table th,
+  .viajes-table td {
+    font-size: 8px;
+    padding: 4px 1px;
+    line-height: 1.0;
+  }
+  
+  .viajes-table tbody tr {
+    min-height: 35px;
+  }
 }
 
 /* Paginación */
@@ -131,20 +379,24 @@
   flex-direction: column;
   min-height: 100vh;
   background: #fff;
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  overflow-x: hidden;
 }
 
 .viajes-panel-main {
   flex: 1 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .viajes-panel-container > footer {
   flex-shrink: 0;
   margin-top: auto;
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
   padding: 0;
 }

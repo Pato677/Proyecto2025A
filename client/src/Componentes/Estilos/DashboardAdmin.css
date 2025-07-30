@@ -95,6 +95,7 @@
   width: 100%;
   box-sizing: border-box;
   overflow-y: auto;
+  overflow-x: hidden; /* Prevenir scroll horizontal */
 }
 
 /* Contenido de bienvenida - centrado */
@@ -112,15 +113,22 @@
   display: flex;
   flex-direction: column;
   padding: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* Override para componentes que tienen su propio layout */
 .dashboard-main .register-units-page,
 .dashboard-main .conductores-page,
-.dashboard-main .rutas-panel-container {
+.dashboard-main .rutas-panel-container,
+.dashboard-main .viajes-panel-container {
   height: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .panel-box {
