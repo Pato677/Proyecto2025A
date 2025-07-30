@@ -285,6 +285,81 @@ module.exports.getViajesByCooperativa = async (req, res) => {
   }
 };
 
+// Obtener viajes vigentes (no expirados) por cooperativa
+module.exports.getViajesVigentesByCooperativa = async (req, res) => {
+  try {
+    const { cooperativaId } = req.params;
+    
+    if (!cooperativaId) {
+      return res.status(400).json({
+        success: false,
+        message: 'El ID de la cooperativa es requerido'
+      });
+    }
+
+    // Obtener todos los viajes de la cooperativa con sus rutas
+    const viajes = await Viaje.findAll({
+      include: [
+        { 
+          model: Ruta, 
+          as: 'ruta',
+          where: { cooperativa_id: cooperativaId },
+          include: [
+            { 
+              model: Terminal, 
+              as: 'terminalOrigen',
+              include: [{ model: Ciudad, as: 'ciudad' }]
+            },
+            { 
+              model: Terminal, 
+              as: 'terminalDestino',
+              include: [{ model: Ciudad, as: 'ciudad' }]
+            },
+            {
+              model: UsuarioCooperativa,
+              foreignKey: 'cooperativa_id'
+            }
+          ]
+        },
+        { 
+          model: Unidad, 
+          as: 'unidad'
+        }
+      ]
+    });
+
+    // Filtrar viajes vigentes combinando fecha_salida + hora_salida de la ruta
+    const ahora = new Date();
+    const viajesVigentes = viajes.filter(viaje => {
+      if (!viaje.fecha_salida || !viaje.ruta?.hora_salida) {
+        return false; // Si no tiene fecha o hora, no es válido
+      }
+
+      // Combinar fecha_salida del viaje con hora_salida de la ruta
+      const fechaViaje = new Date(viaje.fecha_salida);
+      const [hora, minutos] = viaje.ruta.hora_salida.split(':');
+      fechaViaje.setHours(parseInt(hora), parseInt(minutos), 0, 0);
+
+      return fechaViaje > ahora; // Solo viajes futuros
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `Viajes vigentes encontrados para la cooperativa ${cooperativaId}`,
+      data: viajesVigentes,
+      total: viajesVigentes.length
+    });
+    
+  } catch (error) {
+    console.error('Error al obtener los viajes vigentes de la cooperativa:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error al obtener los viajes vigentes de la cooperativa',
+      error: error.message 
+    });
+  }
+};
+
 
 
 
@@ -417,6 +492,98 @@ module.exports.getAsientosOcupados = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error al obtener asientos ocupados',
+      error: error.message
+    });
+  }
+};
+
+// Obtener viajes vigentes para usuarios (filtrados por origen y destino)
+module.exports.getViajesVigentesParaUsuarios = async (req, res) => {
+  try {
+    const { origenCiudad, destinoCiudad } = req.query;
+    
+    if (!origenCiudad || !destinoCiudad) {
+      return res.status(400).json({
+        success: false,
+        message: 'Los parámetros origenCiudad y destinoCiudad son requeridos'
+      });
+    }
+
+    // Obtener todos los viajes que coincidan con origen y destino
+    const viajes = await Viaje.findAll({
+      include: [
+        { 
+          model: Ruta, 
+          as: 'ruta',
+          include: [
+            { 
+              model: Terminal, 
+              as: 'terminalOrigen',
+              include: [{ 
+                model: Ciudad, 
+                as: 'ciudad',
+                where: { nombre: origenCiudad }
+              }]
+            },
+            { 
+              model: Terminal, 
+              as: 'terminalDestino',
+              include: [{ 
+                model: Ciudad, 
+                as: 'ciudad',
+                where: { nombre: destinoCiudad }
+              }]
+            },
+            {
+              model: UsuarioCooperativa,
+              as: 'UsuarioCooperativa'
+            }
+          ]
+        },
+        { 
+          model: Unidad, 
+          as: 'unidad'
+        }
+      ]
+    });
+
+    // Filtrar viajes vigentes combinando fecha_salida + hora_salida de la ruta
+    const ahora = new Date();
+    const viajesVigentes = viajes.filter(viaje => {
+      if (!viaje.fecha_salida || !viaje.ruta?.hora_salida) {
+        return false; // Si no tiene fecha o hora, no es válido
+      }
+
+      // Combinar fecha_salida del viaje con hora_salida de la ruta
+      const fechaViaje = new Date(viaje.fecha_salida);
+      const [hora, minutos] = viaje.ruta.hora_salida.split(':');
+      fechaViaje.setHours(parseInt(hora), parseInt(minutos), 0, 0);
+
+      return fechaViaje > ahora; // Solo viajes futuros
+    });
+
+    // Transformar los datos al formato esperado por el frontend
+    const viajesTransformados = viajesVigentes.map(viaje => ({
+      id: viaje.id,
+      origenCiudad: viaje.ruta?.terminalOrigen?.ciudad?.nombre || origenCiudad,
+      origenTerminal: viaje.ruta?.terminalOrigen?.nombre || '',
+      destinoCiudad: viaje.ruta?.terminalDestino?.ciudad?.nombre || destinoCiudad,
+      destinoTerminal: viaje.ruta?.terminalDestino?.nombre || '',
+      horaSalida: viaje.ruta?.hora_salida || '',
+      horaLlegada: viaje.ruta?.hora_llegada || '',
+      empresa: viaje.ruta?.UsuarioCooperativa?.razon_social || 'Sin asignar',
+      precio: parseFloat(viaje.precio) || 0,
+      fecha_salida: viaje.fecha_salida,
+      fecha_llegada: viaje.fecha_llegada
+    }));
+
+    res.status(200).json(viajesTransformados);
+    
+  } catch (error) {
+    console.error('Error al obtener los viajes vigentes para usuarios:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener los viajes vigentes para usuarios',
       error: error.message
     });
   }

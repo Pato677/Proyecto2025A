@@ -51,8 +51,8 @@ const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades }) 
       return;
     }
 
-    if (viaje.fecha_llegada && new Date(viaje.fecha_salida) >= new Date(viaje.fecha_llegada)) {
-      alert('La fecha de llegada debe ser posterior a la fecha de salida');
+    if (viaje.fecha_llegada && new Date(viaje.fecha_salida) > new Date(viaje.fecha_llegada)) {
+      alert('La fecha de llegada debe ser igual o posterior a la fecha de salida');
       return;
     }
 
@@ -103,6 +103,12 @@ const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades }) 
 
   if (!open) return null;
 
+  // Obtener fecha actual en formato YYYY-MM-DD para el atributo min (fecha local)
+  const hoy = new Date();
+  const fechaActual = hoy.getFullYear() + '-' + 
+    String(hoy.getMonth() + 1).padStart(2, '0') + '-' + 
+    String(hoy.getDate()).padStart(2, '0');
+
   return (
     <div className="viaje-modal-bg">
       <div className="viaje-modal-content">
@@ -110,20 +116,22 @@ const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades }) 
         <h2>Crear Nuevo Viaje</h2>
         <form onSubmit={handleSubmit} className="viaje-modal-form">
           <input
-            type="datetime-local"
+            type="date"
             name="fecha_salida"
             placeholder="Fecha de Salida"
             value={viaje.fecha_salida}
             onChange={handleChange}
+            min={fechaActual}
             required
           />
           
           <input
-            type="datetime-local"
+            type="date"
             name="fecha_llegada"
             placeholder="Fecha de Llegada"
             value={viaje.fecha_llegada}
             onChange={handleChange}
+            min={fechaActual}
           />
           
           <input
@@ -173,6 +181,7 @@ const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades }) 
 
           <div className="info-multiple-trips">
             <p><strong>Nota:</strong> Para crear múltiples viajes, solo necesita especificar la fecha de salida. 
+            La hora de salida se tomará de cada ruta específica. 
             Se crearán viajes para todas las rutas de la cooperativa ({rutas.length} rutas disponibles). 
             Los precios se establecerán en $0.00 y las unidades quedarán sin asignar. 
             Podrá modificar precios y asignar unidades después usando el botón "Actualizar".</p>

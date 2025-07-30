@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Estilos/ResultadoCompraModal.css';
 
 const ResultadoCompraModal = ({ 
@@ -7,6 +8,7 @@ const ResultadoCompraModal = ({
   datosCompra, 
   datosViaje 
 }) => {
+  const navigate = useNavigate();
   if (!open || !datosCompra) return null;
 
   const { 
@@ -22,6 +24,15 @@ const ResultadoCompraModal = ({
       return pasajeros.reduce((total, pasajero) => total + parseFloat(pasajero.precio || 0), 0).toFixed(2);
     }
     return (parseFloat(precioBase) * totalPasajeros).toFixed(2);
+  };
+
+  const handleAceptar = () => {
+    // Navegar a TicketPage con el código de compra como parámetro
+    if (codigoCompra) {
+      navigate(`/TicketPage?codigoBoleto=${codigoCompra}`);
+    } else {
+      onCerrar();
+    }
   };
 
   return (
@@ -82,7 +93,7 @@ const ResultadoCompraModal = ({
         <div className="resultado-modal-btns">
           <button 
             type="button" 
-            onClick={onCerrar} 
+            onClick={handleAceptar} 
             className="resultado-modal-accept"
           >
             Aceptar

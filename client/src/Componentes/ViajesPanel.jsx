@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const viajesPorPagina = 4;
 // Rutas de la API
-const API_URL_Viajes = "http://localhost:8000/viajes/cooperativa/1";
+const API_URL_Viajes = "http://localhost:8000/viajes/cooperativa/1/vigentes"; // Usar endpoint que filtra viajes vigentes
 const API_URL_Viajes_CRUD = "http://localhost:8000/viajes"; // Para crear, actualizar y eliminar
 const COOPERATIVA_ID = 1; // ID de la cooperativa para pruebas
 
@@ -28,14 +28,14 @@ const ViajesPanel = () => {
     axios.get(API_URL_Viajes)
       .then(res => {
         console.log('Respuesta completa del servidor:', res.data);
-        // El controlador devuelve los viajes en res.data.data
+        // El controlador devuelve los viajes vigentes filtrados en el backend
         if (res.data.success && res.data.data) {
           setViajes(res.data.data);
-          console.log('Viajes cargados:', res.data.data.length);
+          console.log('Viajes vigentes cargados desde backend:', res.data.data.length);
           // Cargar asientos ocupados para cada viaje
           cargarAsientosOcupados(res.data.data);
         } else {
-          console.log('No hay viajes o respuesta sin éxito');
+          console.log('No hay viajes vigentes o respuesta sin éxito');
           setViajes([]);
           setAsientosOcupados({});
         }

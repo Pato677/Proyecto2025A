@@ -1,8 +1,13 @@
 const ViajesController = require('../controllers/viajes.controller');
 
 module.exports = function(app){
-    // Obtener viajes por cooperativa
+
+
+    // Obtener viajes por cooperativa (todos)
     app.get('/viajes/cooperativa/:cooperativaId', ViajesController.getViajesByCooperativa);
+
+    // Obtener viajes vigentes por cooperativa (solo futuros)
+    app.get('/viajes/cooperativa/:cooperativaId/vigentes', ViajesController.getViajesVigentesByCooperativa);
 
     // Obtener viaje por ID
     app.get('/viajes/:id', ViajesController.getViajeById);
