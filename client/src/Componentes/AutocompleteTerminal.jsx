@@ -8,10 +8,24 @@ const AutocompleteTerminal = ({ value, onChange }) => {
   const isUserInput = useRef(false);
 
   useEffect(() => {
-    // Carga los terminales desde el backend (json-server)
-    fetch('http://localhost:3000/TerminalesInterprovinciales')
+    // Carga los terminales desde el backend con ciudades y terminales agrupados
+    fetch('http://localhost:8000/ciudades-terminales')
       .then(res => res.json())
-      .then(data => setAllTerminales(data));
+      .then(data => {
+        if (data.success) {
+          // Transformar los datos a la estructura esperada
+          const terminalData = data.data.map(ciudad => ({
+            ciudad: ciudad.nombre,
+            terminales: ciudad.terminales.map(terminal => terminal.nombre)
+          }));
+          setAllTerminales(terminalData);
+        }
+      })
+      .catch(err => {
+        console.error('Error al cargar terminales:', err);
+        // Fallback con datos vacíos
+        setAllTerminales([]);
+      });
   }, []);
 
   useEffect(() => {

@@ -74,7 +74,7 @@ Ruta.belongsToMany(Terminal, { through: Parada, foreignKey: 'ruta_id', otherKey:
 Terminal.belongsToMany(Ruta, { through: Parada, foreignKey: 'terminal_id', otherKey: 'ruta_id' });
 
 // Terminal - Ciudad (FK: ciudad_id)
-Ciudad.hasMany(Terminal, { foreignKey: 'ciudad_id' });
+Ciudad.hasMany(Terminal, { foreignKey: 'ciudad_id', as: 'terminales' });
 Terminal.belongsTo(Ciudad, { foreignKey: 'ciudad_id', as: 'ciudad' });
 
 // Ruta - Terminal Origen (FK: terminal_origen_id)

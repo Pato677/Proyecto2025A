@@ -72,7 +72,7 @@ const createTerminal = async (req, res) => {
         
         const nuevoTerminal = await Terminal.create({
             nombre,
-            ciudadId,
+            ciudad_id: ciudadId, // Mapear ciudadId a ciudad_id
             direccion
         });
         
@@ -100,7 +100,7 @@ const updateTerminal = async (req, res) => {
         
         await terminal.update({
             nombre,
-            ciudadId,
+            ciudad_id: ciudadId, // Mapear ciudadId a ciudad_id
             direccion
         });
         

@@ -16,50 +16,37 @@ app.use(express.urlencoded({ extended: true }));
 const authRoutes = require('./routes/auth.routes');
 app.use('/auth', authRoutes);
 
-// Rutas de usuarios (descomentadas y configuradas)
-const usuariosRoutes = require('./routes/usuario.routes');
-app.use('/usuarios', usuariosRoutes);
-
-// Otras rutas
-const rutasRoutes = require('./routes/rutas.routes');
-rutasRoutes(app);
-const viajesRoutes = require('./routes/viajes.routes');
-viajesRoutes(app);
-const unidadesRoutes = require('./routes/unidades.routes');
-unidadesRoutes(app);
-const comprasRoutes = require('./routes/compras.routes');
-app.use('/api/compras', comprasRoutes);
-const pasajerosRoutes = require('./routes/pasajeros.routes');
-app.use('/api/pasajeros', pasajerosRoutes);
-const asientosRoutes = require('./routes/asientos.routes');
-asientosRoutes(app);
-
-
-/*// Rutas protegidas
+// Rutas principales
 const usuariosRoutes = require('./routes/usuario.routes');
 const cooperativasRoutes = require('./routes/cooperativas.routes');
 const unidadesRoutes = require('./routes/unidades.routes');
 const conductoresRoutes = require('./routes/conductores.routes');
-
+const rutasRoutes = require('./routes/rutas.routes');
+const viajesRoutes = require('./routes/viajes.routes');
+const comprasRoutes = require('./routes/compras.routes');
+const pasajerosRoutes = require('./routes/pasajeros.routes');
+const asientosRoutes = require('./routes/asientos.routes');
 const terminalesRoutes = require('./routes/terminales.routes');
 const ciudadesRoutes = require('./routes/ciudades.routes');
 const boletosRoutes = require('./routes/boletos.routes');
 const ciudadesTerminalesRoutes = require('./routes/ciudadesTerminales.routes');
 
+// Aplicar rutas
+app.use('/usuarios', usuariosRoutes);
+app.use('/api/compras', comprasRoutes);
+app.use('/api/pasajeros', pasajerosRoutes);
 
-
-usuariosRoutes(app);
-cooperativasRoutes(app);
+// Rutas con funciones
+rutasRoutes(app);
+viajesRoutes(app);
 unidadesRoutes(app);
+asientosRoutes(app);
+cooperativasRoutes(app);
 conductoresRoutes(app);
-
 terminalesRoutes(app);
 ciudadesRoutes(app);
-
-
 boletosRoutes(app);
-
-ciudadesTerminalesRoutes(app);*/
+ciudadesTerminalesRoutes(app);
 
 console.log('Todas las rutas cargadas exitosamente!');
 

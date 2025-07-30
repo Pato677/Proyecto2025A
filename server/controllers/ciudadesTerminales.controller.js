@@ -103,11 +103,9 @@ const getCiudadesTerminalesPlano = async (req, res) => {
                 SELECT 
                     c.id as ciudad_id,
                     c.nombre as ciudad_nombre,
-                    c.created_at as ciudad_created_at,
                     t.id as terminal_id,
                     t.nombre as terminal_nombre,
-                    t.direccion as terminal_direccion,
-                    t.created_at as terminal_created_at
+                    t.direccion as terminal_direccion
                 FROM ciudades c
                 LEFT JOIN terminales t ON c.id = t.ciudad_id
                 WHERE t.id IS NOT NULL
@@ -124,8 +122,7 @@ const getCiudadesTerminalesPlano = async (req, res) => {
                 ciudad_nombre: row.ciudad_nombre,
                 terminal_id: row.terminal_id,
                 terminal_nombre: row.terminal_nombre,
-                terminal_direccion: row.terminal_direccion,
-                created_at: row.terminal_created_at
+                terminal_direccion: row.terminal_direccion
             }));
 
         res.json({

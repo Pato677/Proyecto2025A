@@ -34,8 +34,21 @@ const RutasPanel = () => {
   useEffect(() => {
     recargarRutas();
 
-    axios.get('http://localhost:3000/TerminalesInterprovinciales')
-      .then(res => setTerminales(res.data))
+    axios.get('http://localhost:8000/ciudades-terminales')
+      .then(res => {
+        if (res.data.success) {
+          // Transformar los datos a la estructura esperada 
+          const terminalData = res.data.data.flatMap(ciudad => 
+            ciudad.terminales.map(terminal => ({
+              id: terminal.id,
+              ciudad: ciudad.nombre,
+              terminal: terminal.nombre,
+              direccion: terminal.direccion
+            }))
+          );
+          setTerminales(terminalData);
+        }
+      })
       .catch(() => setTerminales([]));
   }, []);
 

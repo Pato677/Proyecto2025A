@@ -17,7 +17,7 @@ const CiudadesTerminalesPanel = () => {
   const cargarCiudadesTerminales = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3000/ciudades-terminales/plano');
+      const response = await axios.get('http://localhost:8000/ciudades-terminales/plano');
       
       if (response.data.success) {
         setCiudadesTerminales(response.data.data);
@@ -71,7 +71,7 @@ const CiudadesTerminalesPanel = () => {
   const handleEliminar = async (terminalId) => {
     if (window.confirm('¿Está seguro que desea eliminar este terminal?')) {
       try {
-        await axios.delete(`http://localhost:3000/terminales/${terminalId}`);
+        await axios.delete(`http://localhost:8000/terminales/${terminalId}`);
         cargarCiudadesTerminales(); // Recargar datos
       } catch (err) {
         console.error('Error al eliminar terminal:', err);
