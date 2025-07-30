@@ -115,7 +115,7 @@ const ViajesPanel = () => {
         console.error('Error al cargar unidades de la cooperativa:', error);
         setUnidades([]);
       });
-  }, []);
+  }, [recargarViajes]);
 
   const totalPaginas = Math.ceil(viajes.length / viajesPorPagina);
   const startIdx = (currentPage - 1) * viajesPorPagina;

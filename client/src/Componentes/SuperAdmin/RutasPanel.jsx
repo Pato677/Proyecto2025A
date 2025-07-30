@@ -3,7 +3,7 @@ import PaginacionPanel from './PaginacionPanel';
 import '../Estilos/SuperAdminDashboard.css';
 
 const RutasPanel = () => {
-  const [rutas, setRutas] = useState([
+  const [rutas] = useState([
     { id: 1, origen: 'Quito', destino: 'Guayaquil', paradas: 'Santo Domingo, Quevedo' },
     { id: 2, origen: 'Quito', destino: 'Cuenca', paradas: 'Riobamba, Azogues' }
   ]);
