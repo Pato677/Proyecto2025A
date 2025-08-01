@@ -57,18 +57,49 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
       return;
     }
     
+    // NUEVO: Verificar si el input actual es una selección válida completa
+    const esSeleccionCompleta = allTerminales.some(ciudad => 
+      ciudad.terminales.some(terminal => 
+        input === `${ciudad.ciudad} (${terminal})`
+      )
+    );
+    
+    // Si es una selección completa válida, no mostrar sugerencias ni mensaje de error
+    if (esSeleccionCompleta && !isUserInput.current) {
+      setSuggestions([]);
+      setIsOpen(false);
+      setSelectedIndex(-1);
+      return;
+    }
+    
     const lowerInput = input.toLowerCase();
-    // Busca por ciudad o por terminal
+    
+    // MEJORADO: Extraer términos de búsqueda del input
+    // Si el input tiene formato "Ciudad (Terminal)", extraer ambas partes
+    let searchTerms = [lowerInput];
+    const match = input.match(/^(.+?)\s*\((.+?)\)\s*$/);
+    if (match) {
+      const [, ciudad, terminal] = match;
+      searchTerms = [
+        ciudad.trim().toLowerCase(),
+        terminal.trim().toLowerCase(),
+        lowerInput // También mantener la búsqueda completa
+      ];
+    }
+    
+    // Busca por cualquiera de los términos extraídos
     const filtered = allTerminales.flatMap(t =>
       t.terminales
-        .filter(terminal =>
-          t.ciudad.toLowerCase().includes(lowerInput) ||
-          terminal.toLowerCase().includes(lowerInput)
-        )
+        .filter(terminal => {
+          return searchTerms.some(term => 
+            t.ciudad.toLowerCase().includes(term) ||
+            terminal.toLowerCase().includes(term)
+          );
+        })
         .map(terminal => ({
           ciudad: t.ciudad,
           terminal,
-          searchTerm: lowerInput
+          searchTerm: searchTerms[0] // Usar el primer término para el resaltado
         }))
     );
     
@@ -188,7 +219,15 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
 
   const handleInputFocus = (e) => {
     e.target.select();
-    if (input.length > 0) {
+    
+    // NUEVO: Solo abrir si no es una selección válida completa
+    const esSeleccionCompleta = allTerminales.some(ciudad => 
+      ciudad.terminales.some(terminal => 
+        input === `${ciudad.ciudad} (${terminal})`
+      )
+    );
+    
+    if (input.length > 0 && !esSeleccionCompleta) {
       setIsOpen(true);
     }
   };
