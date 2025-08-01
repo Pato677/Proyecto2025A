@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import './Estilos/AutocompleteTerminal.css'; 
 
-const AutocompleteTerminal = ({ value, onChange }) => {
+const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref) => {
   const [input, setInput] = useState(value || '');
   const [suggestions, setSuggestions] = useState([]);
   const [allTerminales, setAllTerminales] = useState([]);
@@ -10,6 +10,13 @@ const AutocompleteTerminal = ({ value, onChange }) => {
   const isUserInput = useRef(false);
   const inputRef = useRef(null);
   const listRef = useRef(null);
+
+  // Exponer métodos del input interno al componente padre
+  useImperativeHandle(ref, () => ({
+    focus: () => inputRef.current?.focus(),
+    blur: () => inputRef.current?.blur(),
+    select: () => inputRef.current?.select()
+  }));
 
   useEffect(() => {
     // Carga los terminales desde el backend con ciudades y terminales agrupados
@@ -24,11 +31,9 @@ const AutocompleteTerminal = ({ value, onChange }) => {
             terminales: ciudad.terminales.map(terminal => terminal.nombre)
           }));
           setAllTerminales(terminalData);
-          console.log('Terminales procesados:', terminalData); // Debug
         }
       })
       .catch(err => {
-        console.error('Error al cargar terminales:', err);
         // Fallback con datos vacíos
         setAllTerminales([]);
       });
@@ -70,7 +75,7 @@ const AutocompleteTerminal = ({ value, onChange }) => {
     setSuggestions(filtered);
     setIsOpen(true);
     setSelectedIndex(-1);
-  }, [input, allTerminales]); // QUITAR onChange de aquí
+  }, [input, allTerminales]);
 
   // Función para resaltar el texto coincidente
   const highlightMatch = (text, searchTerm) => {
@@ -98,18 +103,23 @@ const AutocompleteTerminal = ({ value, onChange }) => {
     setSelectedIndex(-1);
     if (onChange) onChange(ciudad, terminal);
     
-    // Devolver el foco al input
-    if (inputRef.current) {
+    // Pasar el focus al siguiente input si existe la referencia
+    if (nextInputRef && nextInputRef.current) {
+      setTimeout(() => {
+        // Si nextInputRef es otro AutocompleteTerminal con forwardRef
+        if (nextInputRef.current.focus) {
+          nextInputRef.current.focus();
+        } else {
+          // Si es un input normal
+          nextInputRef.current.focus();
+        }
+      }, 100);
+    } else if (inputRef.current) {
       inputRef.current.blur();
     }
   };
 
   const handleKeyDown = (e) => {
-    console.log('Key pressed:', e.key);
-    console.log('isOpen:', isOpen);
-    console.log('suggestions.length:', suggestions.length);
-    console.log('selectedIndex:', selectedIndex);
-    
     if (!isOpen) return;
     
     // Si no hay sugerencias, solo permitir Escape
@@ -129,29 +139,22 @@ const AutocompleteTerminal = ({ value, onChange }) => {
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        console.log('Arrow down pressed');
-        setSelectedIndex(prev => {
-          const newIndex = prev < suggestions.length - 1 ? prev + 1 : 0;
-          console.log('New selectedIndex:', newIndex);
-          return newIndex;
-        });
+        setSelectedIndex(prev => 
+          prev < suggestions.length - 1 ? prev + 1 : 0
+        );
         break;
         
       case 'ArrowUp':
         e.preventDefault();
-        console.log('Arrow up pressed');
-        setSelectedIndex(prev => {
-          const newIndex = prev > 0 ? prev - 1 : suggestions.length - 1;
-          console.log('New selectedIndex:', newIndex);
-          return newIndex;
-        });
+        setSelectedIndex(prev => 
+          prev > 0 ? prev - 1 : suggestions.length - 1
+        );
         break;
         
       case 'Enter':
         e.preventDefault();
         if (selectedIndex >= 0 && selectedIndex < suggestions.length) {
           const selected = suggestions[selectedIndex];
-          console.log('Enter pressed, selecting:', selected);
           handleSelect(selected.ciudad, selected.terminal);
         }
         break;
@@ -172,7 +175,7 @@ const AutocompleteTerminal = ({ value, onChange }) => {
 
   // Scroll automático del elemento seleccionado
   useEffect(() => {
-    if (selectedIndex >= 0 && listRef.current) {
+    if (selectedIndex >= 0 && listRef.current && suggestions.length > 0) {
       const selectedElement = listRef.current.children[selectedIndex];
       if (selectedElement) {
         selectedElement.scrollIntoView({
@@ -181,11 +184,10 @@ const AutocompleteTerminal = ({ value, onChange }) => {
         });
       }
     }
-  }, [selectedIndex]);
+  }, [selectedIndex, suggestions.length]);
 
   const handleInputFocus = (e) => {
     e.target.select();
-    // CAMBIO: Abrir si hay input, independientemente de si hay sugerencias
     if (input.length > 0) {
       setIsOpen(true);
     }
@@ -245,7 +247,7 @@ const AutocompleteTerminal = ({ value, onChange }) => {
         </ul>
       )}
 
-      {/* Mensaje cuando no hay resultados - CONDICIÓN ACTUALIZADA */}
+      {/* Mensaje cuando no hay resultados */}
       {isOpen && input.length > 0 && suggestions.length === 0 && allTerminales.length > 0 && (
         <div className="autocomplete-no-results">
           <div className="no-results-icon">🚌</div>
@@ -280,6 +282,9 @@ const AutocompleteTerminal = ({ value, onChange }) => {
       </div>
     </div>
   );
-};
+});
+
+// Agregar displayName para debugging
+AutocompleteTerminal.displayName = 'AutocompleteTerminal';
 
 export default AutocompleteTerminal;

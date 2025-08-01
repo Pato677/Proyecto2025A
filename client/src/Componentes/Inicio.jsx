@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import "./Estilos/Inicio.css";
@@ -23,6 +23,11 @@ const Inicio = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { usuario, logout } = useAuth();
+
+    // Referencias para los inputs - AGREGAR origenInputRef
+    const origenInputRef = useRef(null);
+    const destinoInputRef = useRef(null);
+    const fechaInputRef = useRef(null);
 
     // Estados para el modal
     const [mostrarLogin, setMostrarLogin] = useState(false);
@@ -176,23 +181,23 @@ const Inicio = () => {
             <div className="inicio-main-content">
                 <div className="formulario-viaje">
                     <div className="tipo-viaje-flex">
-    <div className="tipo-viaje-info">
-        <span className="subtitulo">
-            Selecciona el origen, fecha de ida y número de pasajeros
-        </span>
-    </div>
-    <div className="rastreo-boleto-inline">
-        <span className="rastreo-texto">
-            ¿Ya compraste tu boleto?
-        </span>
-        <button
-            className="btn-rastrear-boleto-mini"
-            onClick={() => setMostrarModalRastreo(true)}
-        >
-            Rastrear boleto
-        </button>
-    </div>
-</div>
+                        <div className="tipo-viaje-info">
+                            <span className="subtitulo">
+                                Selecciona el origen, fecha de ida y número de pasajeros
+                            </span>
+                        </div>
+                        <div className="rastreo-boleto-inline">
+                            <span className="rastreo-texto">
+                                ¿Ya compraste tu boleto?
+                            </span>
+                            <button
+                                className="btn-rastrear-boleto-mini"
+                                onClick={() => setMostrarModalRastreo(true)}
+                            >
+                                Rastrear boleto
+                            </button>
+                        </div>
+                    </div>
                     
                     <div className="contenedor-busqueda">
                         {/* Campo Origen */}
@@ -201,9 +206,10 @@ const Inicio = () => {
                             <div>
                                 <small>Origen</small><br />
                                 <AutocompleteTerminal
+                                    ref={origenInputRef}
                                     value={origen}
                                     onChange={handleOrigenChange}
-                                    initialValue={origenSeleccionado}
+                                    nextInputRef={destinoInputRef}
                                 />
                             </div>
                         </button>
@@ -214,9 +220,10 @@ const Inicio = () => {
                             <div>
                                 <small>Destino</small><br />
                                 <AutocompleteTerminal
+                                    ref={destinoInputRef}
                                     value={destino}
                                     onChange={handleDestinoChange}
-                                    initialValue={destinoSeleccionado}
+                                    nextInputRef={fechaInputRef}
                                 />
                             </div>
                         </button>
@@ -226,7 +233,11 @@ const Inicio = () => {
                             <img src={Calendario} alt="Fecha" />
                             <div>
                                 <small>Ida</small><br />
-                                <DatePicker value={fecha} onChange={setFecha} />
+                                <DatePicker 
+                                    ref={fechaInputRef}
+                                    value={fecha} 
+                                    onChange={setFecha} 
+                                />
                             </div>
                         </button>
 
@@ -316,9 +327,9 @@ const Inicio = () => {
             )}
 
             <ModalRastreoBoleto
-  open={mostrarModalRastreo}
-  onClose={() => setMostrarModalRastreo(false)}
-/>
+                open={mostrarModalRastreo}
+                onClose={() => setMostrarModalRastreo(false)}
+            />
 
             <footer>
                 <Footer />
