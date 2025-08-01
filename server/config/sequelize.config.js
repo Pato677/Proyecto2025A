@@ -1,7 +1,7 @@
 const {Sequelize} = require("sequelize");
 
 const username = "root";
-const password = "root";
+const password = "admin";
 //const password = "root";
 const bdd_name = "transportesec";
 const hostName = "localhost";
@@ -26,8 +26,9 @@ const sequelize = new Sequelize(bdd_name, username, password, {
 //Lo recomendable en el desarrollo es usar force true
 //En producción no se debe utilizar ninguno.
 
-//sequelize.sync({force:true}).then(() => {
-sequelize.sync({ alter: true }).then(async () => {
+sequelize.sync({force:true}).then(() => {
+//sequelize.sync().then(() => {
+//sequelize.sync({ alter: true }).then(async () => {
     console.log(`Base de datos ${bdd_name} sincronizada`);
     
     // ✅ CARGAR modelos DESPUÉS del sync
