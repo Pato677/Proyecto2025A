@@ -446,3 +446,42 @@ body {
 .btn-comprar.animacion-atencion {
   animation: bounce-attention 1s ease-in-out;
 }
+
+/* Estilos para el precio mínimo dinámico */
+.precio-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #666;
+  font-size: inherit;
+}
+
+.precio-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 50%;
+  border-top-color: #667eea;
+  animation: spin-precio 1s linear infinite;
+}
+
+@keyframes spin-precio {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.promo-info h1.precio-cargando {
+  color: #999;
+  transition: color 0.3s ease;
+}
+
+.promo-info h1:not(.precio-cargando) {
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+/* Animación suave cuando el precio se carga */
+.promo-info h1 {
+  transition: all 0.3s ease;
+}

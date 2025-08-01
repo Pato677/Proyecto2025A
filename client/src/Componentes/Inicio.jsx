@@ -70,6 +70,10 @@ const Inicio = () => {
     // AGREGAR: Estado para animación del botón
     const [botonAnimando, setBotonAnimando] = useState(false);
 
+    // AGREGAR: Estados para el precio mínimo
+    const [precioMinimo, setPrecioMinimo] = useState(null);
+    const [cargandoPrecio, setCargandoPrecio] = useState(true);
+
     // Persistir estados
     useEffect(() => {
         localStorage.setItem('origenSeleccionado', JSON.stringify(origenSeleccionado));
@@ -234,6 +238,34 @@ const Inicio = () => {
         }, 200);
     };
 
+    // NUEVO: useEffect para cargar el precio mínimo
+    useEffect(() => {
+        const obtenerPrecioMinimo = async () => {
+            setCargandoPrecio(true);
+            try {
+                const response = await fetch('http://localhost:8000/viajes/precio-minimo');
+                const data = await response.json();
+                
+                if (data.success && data.precioMinimo) {
+                    setPrecioMinimo(data.precioMinimo);
+                    console.log(`Precio mínimo cargado: $${data.precioMinimo} (${data.totalViajes || 0} viajes disponibles)`);
+                } else {
+                    // Fallback en caso de respuesta sin éxito
+                    setPrecioMinimo(8.00);
+                    console.warn('No se pudo obtener precio mínimo, usando fallback');
+                }
+            } catch (error) {
+                console.error('Error al obtener precio mínimo:', error);
+                // Fallback en caso de error de conexión
+                setPrecioMinimo(8.00);
+            } finally {
+                setCargandoPrecio(false);
+            }
+        };
+
+        obtenerPrecioMinimo();
+    }, []); // Solo se ejecuta una vez al montar el componente
+
     return (
         <div className="inicio-container">
             <Header
@@ -364,7 +396,16 @@ const Inicio = () => {
                         <h2>¡Cada viaje es una experiencia única<br />hacia tu próximo destino!</h2>
                         <p>Quito, Guayaquil, Manta, Loja, Cuenca, Cayambe y muchos lugares más por conocer</p>
                         <h3>Por trayectos desde</h3>
-                        <h1>USD 8</h1>
+                        <h1 className={cargandoPrecio ? 'precio-cargando' : ''}>
+                            {cargandoPrecio ? (
+                                <span className="precio-loading">
+                                    <span className="precio-spinner"></span>
+                                    USD --
+                                </span>
+                            ) : (
+                                `USD ${precioMinimo ? precioMinimo.toFixed(2) : '8.00'}`
+                            )}
+                        </h1>
                         <button 
                             className={`btn-comprar ${botonAnimando ? 'animacion-atencion' : ''}`}
                             onClick={handleCompraYa}

@@ -23,4 +23,7 @@ module.exports = function(app){
 
     // Eliminar viaje
     app.delete('/viajes/:id', ViajesController.deleteViaje);
+
+    // AGREGAR: Endpoint para obtener precio mínimo
+    app.get('/viajes/precio-minimo', ViajesController.getPrecioMinimo);
 };
