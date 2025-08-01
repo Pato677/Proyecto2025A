@@ -10,31 +10,212 @@
   border: 2px solid #b7d6f7;
   border-radius: 10px;
   font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.autocomplete-input:focus {
+  outline: none;
+  border-color: #56aee9;
+  box-shadow: 0 0 0 3px rgba(86, 174, 233, 0.1);
 }
 
 .autocomplete-listbox {
   position: absolute;
-  top: 110%;
+  top: 100%;
   left: 0;
   right: 0;
   background: #fff;
   border: 1.5px solid #b7d6f7;
   border-radius: 10px;
-  z-index: 10;
+  z-index: 1000;
   max-height: 180px;
   overflow-y: auto;
-  box-shadow: 0 2px 8px rgba(86, 174, 233, 0.07);
+  box-shadow: 0 2px 8px rgba(86, 174, 233, 0.15);
   margin: 0;
   padding: 0;
   list-style: none;
+  box-sizing: border-box;
+  
+  /* Animación suave */
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.autocomplete-listbox.hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
 }
 
 .autocomplete-item {
   padding: 10px 12px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid #f0f4f8;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.autocomplete-item:last-child {
+  border-bottom: none;
 }
 
 .autocomplete-item:hover {
   background: #e6f4fb;
+}
+
+/* Elemento seleccionado con teclado */
+.autocomplete-item.selected {
+  background: #d1e7ff;
+  color: #1e40af;
+}
+
+.autocomplete-item.selected:hover {
+  background: #bfdbfe;
+}
+
+/* Estilos para el resaltado del texto */
+.autocomplete-highlight {
+  color: #2563eb; /* Azul */
+  font-weight: 700; /* Negrita */
+}
+
+/* Estilos para diferentes partes del texto */
+.ciudad-text {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.terminal-text {
+  color: #4b5563;
+}
+
+.separator {
+  color: #9ca3af;
+}
+
+/* Estilos alternativos para el resaltado más vibrante en hover/selected */
+.autocomplete-item:hover .autocomplete-highlight,
+.autocomplete-item.selected .autocomplete-highlight {
+  color: #1d4ed8; /* Azul más intenso */
+  font-weight: 700; /* Mantener negrita */
+}
+
+/* Scrollbar personalizado para la lista */
+.autocomplete-listbox::-webkit-scrollbar {
+  width: 6px;
+}
+
+.autocomplete-listbox::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.autocomplete-listbox::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.autocomplete-listbox::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Estados de carga o error */
+.autocomplete-status {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1.5px solid #b7d6f7;
+  border-radius: 10px;
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 14px;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(86, 174, 233, 0.15);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Mensaje cuando no hay resultados */
+.autocomplete-no-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1.5px solid #b7d6f7;
+  border-radius: 10px;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(86, 174, 233, 0.15);
+  padding: 20px 16px;
+  text-align: center;
+  box-sizing: border-box;
+  animation: fadeIn 0.3s ease;
+}
+
+.no-results-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.no-results-text {
+  color: #374151;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.no-results-text strong {
+  color: #1f2937;
+}
+
+.no-results-suggestion {
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .autocomplete-terminal {
+    width: 100%;
+  }
+  
+  .autocomplete-listbox {
+    font-size: 0.9rem;
+  }
+  
+  .autocomplete-item {
+    padding: 12px;
+  }
+  
+  .autocomplete-no-results {
+    padding: 16px 12px;
+  }
+  
+  .no-results-icon {
+    font-size: 1.5rem;
+  }
+  
+  .no-results-text {
+    font-size: 0.9rem;
+  }
+  
+  .no-results-suggestion {
+    font-size: 0.8rem;
+  }
 }
