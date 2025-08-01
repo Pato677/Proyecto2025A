@@ -138,17 +138,6 @@ const CarruselImagenes = ({ intervalo = 5000 }) => {
     });
   };
 
-  const cambiarImagen = (indice) => {
-    setImagenActual(indice);
-  };
-
-  const siguienteImagen = () => {
-    setImagenActual(prev => (prev + 1) % imagenes.length);
-  };
-
-  const imagenAnterior = () => {
-    setImagenActual(prev => (prev - 1 + imagenes.length) % imagenes.length);
-  };
 
   if (cargando) {
     return (

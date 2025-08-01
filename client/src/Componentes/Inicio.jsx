@@ -8,7 +8,6 @@ import Footer from "./Footer";
 import Login from "./Login";
 import Registro from "./Registro";
 import PerfilUsuarioModal from "./PerfilUsuarioModal";
-import BusEcuador from './Imagenes/BusEcuador.png';
 import BusIda from './Imagenes/BusdeIda.png';
 import BusVuelta from './Imagenes/Busderegreso.png';
 import Calendario from './Imagenes/Calendario.png';
