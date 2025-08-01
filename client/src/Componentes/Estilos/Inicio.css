@@ -369,7 +369,7 @@ body {
   }
 }
 
-/* Animación de shake para campos requeridos */
+/* Animaciones para campos requeridos */
 @keyframes shake {
   0%,
   20%,
@@ -401,7 +401,6 @@ body {
   }
 }
 
-/* Animación de pulse para destacar */
 @keyframes pulse-highlight {
   0% {
     box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
@@ -417,30 +416,6 @@ body {
   }
 }
 
-/* Animación de glow suave */
-@keyframes soft-glow {
-  0%,
-  100% {
-    box-shadow: 0 2px 8px rgba(180, 200, 230, 0.04);
-    border-color: #b7d6f7;
-  }
-  50% {
-    box-shadow: 0 4px 16px rgba(255, 107, 107, 0.15);
-    border-color: #ff6b6b;
-  }
-}
-
-/* Clases para aplicar animaciones */
-.campo-opcion-btn.campo-requerido {
-  animation: shake 0.6s ease-in-out, pulse-highlight 1.5s ease-in-out;
-  border-color: #ff6b6b !important;
-}
-
-.campo-opcion-btn.campo-destacado {
-  animation: soft-glow 2s ease-in-out infinite;
-}
-
-/* Animación de bounce para el botón */
 @keyframes bounce-attention {
   0%,
   20%,
@@ -457,12 +432,17 @@ body {
   }
 }
 
-.btn-comprar.animacion-atencion {
-  animation: bounce-attention 1s ease-in-out;
+/* Clases para aplicar animaciones */
+.campo-opcion-btn.campo-requerido {
+  animation: shake 0.6s ease-in-out, pulse-highlight 1.5s ease-in-out;
+  border-color: #ff6b6b !important;
 }
 
-/* Mejora visual durante la animación */
 .campo-opcion-btn.animando {
   position: relative;
   z-index: 10;
+}
+
+.btn-comprar.animacion-atencion {
+  animation: bounce-attention 1s ease-in-out;
 }

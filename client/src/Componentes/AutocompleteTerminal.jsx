@@ -23,7 +23,6 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
     fetch('http://localhost:8000/ciudades-terminales')
       .then(res => res.json())
       .then(data => {
-        console.log('Datos recibidos:', data); // Debug
         if (data.success) {
           // Transformar los datos a la estructura esperada
           const terminalData = data.data.map(ciudad => ({

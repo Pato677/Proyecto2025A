@@ -18,6 +18,7 @@ import AutocompleteTerminal from '../../../client/src/Componentes/AutocompleteTe
 import DatePicker from './DatePicker';
 import PasajerosMenu from './PasajerosMenu';
 import ModalRastreoBoleto from "./ModalRastreoBoleto";
+import CarruselImagenes from './CarruselImagenes';
 
 const Inicio = () => {
     const navigate = useNavigate();
@@ -355,10 +356,10 @@ const Inicio = () => {
                     {error && <div className="error-mensaje">{error}</div>}
                 </div>
 
-                {/* Publicidad */}
+                {/* Publicidad con Carrusel */}
                 <div className="promocion">
                     <div className="promo-img-wrapper">
-                        <img src={BusEcuador} alt="Bus" className="promo-img-full" />
+                        <CarruselImagenes intervalo={4000} />
                     </div>
                     <div className="promo-info">
                         <h2>¡Cada viaje es una experiencia única<br />hacia tu próximo destino!</h2>
