@@ -38,6 +38,7 @@ const Inicio = () => {
 
     // Estados para origen y destino
     const [origenSeleccionado, setOrigenSeleccionado] = useState({ ciudad: '', terminal: '' });
+    
     const [destinoSeleccionado, setDestinoSeleccionado] = useState({ ciudad: '', terminal: '' });
 
     // Estados derivados
@@ -59,6 +60,16 @@ const Inicio = () => {
     const [pasajeros, setPasajeros] = useState([1, 0, 0, 0]);
     const [error, setError] = useState('');
     
+    // AGREGAR: Estados para animaciones
+    const [camposAnimando, setCamposAnimando] = useState({
+        origen: false,
+        destino: false,
+        fecha: false
+    });
+
+    // AGREGAR: Estado para animación del botón
+    const [botonAnimando, setBotonAnimando] = useState(false);
+
     // Persistir estados
     useEffect(() => {
         localStorage.setItem('origenSeleccionado', JSON.stringify(origenSeleccionado));
@@ -119,42 +130,86 @@ const Inicio = () => {
         localStorage.removeItem('destinoSeleccionado');
     };
 
+    // NUEVO: Función para animar campos requeridos
+    const animarCampoRequerido = (campo) => {
+        setCamposAnimando(prev => ({ ...prev, [campo]: true }));
+        
+        // Quitar la animación después de que termine
+        setTimeout(() => {
+            setCamposAnimando(prev => ({ ...prev, [campo]: false }));
+        }, 2000); // Duración total de las animaciones
+    };
+
+    // NUEVO: Función para enfocar campo y animar
+    const enfocarYAnimar = (ref, campo) => {
+        // Animar el campo
+        animarCampoRequerido(campo);
+        
+        // Enfocar después de un pequeño delay para que se vea la animación
+        setTimeout(() => {
+            if (ref && ref.current) {
+                if (ref.current.focus) {
+                    ref.current.focus();
+                } else {
+                    // Si es un input directo
+                    ref.current.focus();
+                }
+            }
+        }, 300);
+    };
+
+    // ACTUALIZAR: Función handleBuscar mejorada
     const handleBuscar = () => {
-        // Validaciones
-        if (!origenSeleccionado.ciudad || !origenSeleccionado.terminal) {
-            setError('Por favor selecciona un origen válido.');
-            return;
+        // Verificar campos faltantes
+        const faltaOrigen = !origenSeleccionado.ciudad || !origenSeleccionado.terminal;
+        const faltaDestino = !destinoSeleccionado.ciudad || !destinoSeleccionado.terminal;
+        const faltaFecha = !fecha;
+
+        // Si faltan campos, animar y enfocar en orden de prioridad
+        if (faltaOrigen || faltaDestino || faltaFecha) {
+            if (faltaOrigen) {
+                setError('Por favor selecciona un origen válido.');
+                enfocarYAnimar(origenInputRef, 'origen');
+                return;
+            }
+            
+            if (faltaDestino) {
+                setError('Por favor selecciona un destino válido.');
+                enfocarYAnimar(destinoInputRef, 'destino');
+                return;
+            }
+            
+            if (faltaFecha) {
+                setError('Por favor selecciona una fecha de viaje.');
+                enfocarYAnimar(fechaInputRef, 'fecha');
+                return;
+            }
         }
-        if (!destinoSeleccionado.ciudad || !destinoSeleccionado.terminal) {
-            setError('Por favor selecciona un destino válido.');
-            return;
-        }
-        if (!fecha) {
-            setError('Por favor selecciona una fecha de viaje.');
-            return;
-        }
+
         // Validar que la fecha sea hoy o futura
         const hoy = new Date();
         hoy.setHours(0,0,0,0);
 
-        // Si fecha es 'YYYY-MM-DD', parsea manualmente para evitar problemas de zona horaria
         const [anio, mes, dia] = fecha.split('-').map(Number);
-        const fechaSeleccionada = new Date(anio, mes - 1, dia); // Mes empieza en 0
+        const fechaSeleccionada = new Date(anio, mes - 1, dia);
         fechaSeleccionada.setHours(0,0,0,0);
-
-        console.log('Fecha seleccionada:', fechaSeleccionada, 'Hoy:', hoy);
 
         if (fechaSeleccionada < hoy) {
             setError('La fecha debe ser hoy o una fecha futura.');
+            enfocarYAnimar(fechaInputRef, 'fecha');
             return;
         }
+
         if (
             origenSeleccionado.ciudad === destinoSeleccionado.ciudad &&
             origenSeleccionado.terminal === destinoSeleccionado.terminal
         ) {
             setError('El origen y destino no pueden ser iguales.');
+            // Animar destino ya que es el que debe cambiar
+            enfocarYAnimar(destinoInputRef, 'destino');
             return;
         }
+
         setError('');
         const params = new URLSearchParams({
             origenCiudad: origenSeleccionado.ciudad,
@@ -165,6 +220,18 @@ const Inicio = () => {
             pasajeros: pasajeros.reduce((a, b) => a + b, 0)
         }).toString();
         navigate(`/SeleccionViaje?${params}`);
+    };
+
+    // NUEVO: Función para el botón "Compra ya"
+    const handleCompraYa = () => {
+        // Animar el botón primero
+        setBotonAnimando(true);
+        setTimeout(() => setBotonAnimando(false), 1000);
+
+        // Pequeño delay antes de ejecutar la lógica de búsqueda
+        setTimeout(() => {
+            handleBuscar();
+        }, 200);
     };
 
     return (
@@ -201,7 +268,11 @@ const Inicio = () => {
                     
                     <div className="contenedor-busqueda">
                         {/* Campo Origen */}
-                        <button className="campo-opcion-btn">
+                        <button 
+                            className={`campo-opcion-btn ${
+                                camposAnimando.origen ? 'campo-requerido animando' : ''
+                            }`}
+                        >
                             <img src={BusIda} alt="Origen" />
                             <div>
                                 <small>Origen</small><br />
@@ -215,7 +286,11 @@ const Inicio = () => {
                         </button>
 
                         {/* Campo Destino */}
-                        <button className="campo-opcion-btn">
+                        <button 
+                            className={`campo-opcion-btn ${
+                                camposAnimando.destino ? 'campo-requerido animando' : ''
+                            }`}
+                        >
                             <img src={BusVuelta} alt="Destino" />
                             <div>
                                 <small>Destino</small><br />
@@ -229,7 +304,11 @@ const Inicio = () => {
                         </button>
 
                         {/* Campo Fecha */}
-                        <button className="campo-opcion-btn">
+                        <button 
+                            className={`campo-opcion-btn ${
+                                camposAnimando.fecha ? 'campo-requerido animando' : ''
+                            }`}
+                        >
                             <img src={Calendario} alt="Fecha" />
                             <div>
                                 <small>Ida</small><br />
@@ -286,7 +365,10 @@ const Inicio = () => {
                         <p>Quito, Guayaquil, Manta, Loja, Cuenca, Cayambe y muchos lugares más por conocer</p>
                         <h3>Por trayectos desde</h3>
                         <h1>USD 8</h1>
-                        <button className="btn-comprar" onClick={handleBuscar}>
+                        <button 
+                            className={`btn-comprar ${botonAnimando ? 'animacion-atencion' : ''}`}
+                            onClick={handleCompraYa}
+                        >
                             Compra ya
                         </button>
                     </div>
