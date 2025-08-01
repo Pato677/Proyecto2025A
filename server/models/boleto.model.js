@@ -6,7 +6,6 @@ const Boleto = sequelize.define('Boleto', {
     type: DataTypes.STRING,
     primaryKey: true,
     allowNull: false,
-    autoIncrement: true
   },
   valor: {
     type: DataTypes.DECIMAL
