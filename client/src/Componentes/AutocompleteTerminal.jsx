@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle, useCallback } from 'react';
 import './Estilos/AutocompleteTerminal.css'; 
 
 const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref) => {
@@ -7,36 +7,62 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
   const [allTerminales, setAllTerminales] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const isUserInput = useRef(false);
   const inputRef = useRef(null);
   const listRef = useRef(null);
+
+  // Función para cargar terminales desde el backend
+  const cargarTerminales = useCallback(async () => {
+    try {
+      setLoading(true);
+      console.log('🔄 Cargando terminales desde /ciudades-terminales...');
+      
+      const response = await fetch('http://localhost:8000/ciudades-terminales');
+      const data = await response.json();
+      
+      console.log('📡 Respuesta del servidor:', data);
+
+      if (data.success && Array.isArray(data.data)) {
+        // Transformar los datos a la estructura esperada por el componente
+        const terminalData = data.data.map(ciudad => ({
+          ciudad: ciudad.nombre,
+          terminales: ciudad.terminales.map(terminal => terminal.nombre)
+        }));
+        
+        console.log('✅ Terminales procesados:', terminalData);
+        setAllTerminales(terminalData);
+      } else {
+        console.warn('⚠️ Respuesta no válida del servidor:', data);
+        setAllTerminales([]);
+      }
+    } catch (error) {
+      console.error('❌ Error al cargar terminales:', error);
+      setAllTerminales([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   // Exponer métodos del input interno al componente padre
   useImperativeHandle(ref, () => ({
     focus: () => inputRef.current?.focus(),
     blur: () => inputRef.current?.blur(),
-    select: () => inputRef.current?.select()
+    select: () => inputRef.current?.select(),
+    recargarTerminales: cargarTerminales // Función para recargar desde el padre
   }));
 
+  // Cargar terminales al montar el componente
   useEffect(() => {
-    // Carga los terminales desde el backend con ciudades y terminales agrupados
-    fetch('http://localhost:8000/ciudades-terminales')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          // Transformar los datos a la estructura esperada
-          const terminalData = data.data.map(ciudad => ({
-            ciudad: ciudad.nombre,
-            terminales: ciudad.terminales.map(terminal => terminal.nombre)
-          }));
-          setAllTerminales(terminalData);
-        }
-      })
-      .catch(err => {
-        // Fallback con datos vacíos
-        setAllTerminales([]);
-      });
-  }, []);
+    cargarTerminales();
+  }, [cargarTerminales]);
+
+  // Crear versión memoizada de onChange
+  const memoizedOnChange = useCallback((ciudad, terminal) => {
+    if (onChange) {
+      onChange(ciudad, terminal);
+    }
+  }, [onChange]);
 
   useEffect(() => {
     // Solo actualiza el input si el cambio viene del padre
@@ -52,18 +78,20 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
       setIsOpen(false);
       setSelectedIndex(-1);
       // Solo notifica al padre si el usuario borró el campo manualmente
-      if (onChange && isUserInput.current) onChange('', '');
+      if (memoizedOnChange && isUserInput.current) {
+        memoizedOnChange('', '');
+      }
       return;
     }
     
-    // NUEVO: Verificar si el input actual es una selección válida completa
+    // Verificar si el input actual es una selección válida completa
     const esSeleccionCompleta = allTerminales.some(ciudad => 
       ciudad.terminales.some(terminal => 
         input === `${ciudad.ciudad} (${terminal})`
       )
     );
     
-    // Si es una selección completa válida, no mostrar sugerencias ni mensaje de error
+    // Si es una selección completa válida, no mostrar sugerencias
     if (esSeleccionCompleta && !isUserInput.current) {
       setSuggestions([]);
       setIsOpen(false);
@@ -73,8 +101,7 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
     
     const lowerInput = input.toLowerCase();
     
-    // MEJORADO: Extraer términos de búsqueda del input
-    // Si el input tiene formato "Ciudad (Terminal)", extraer ambas partes
+    // Extraer términos de búsqueda del input
     let searchTerms = [lowerInput];
     const match = input.match(/^(.+?)\s*\((.+?)\)\s*$/);
     if (match) {
@@ -82,11 +109,11 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
       searchTerms = [
         ciudad.trim().toLowerCase(),
         terminal.trim().toLowerCase(),
-        lowerInput // También mantener la búsqueda completa
+        lowerInput
       ];
     }
     
-    // Busca por cualquiera de los términos extraídos
+    // Buscar terminales que coincidan con cualquiera de los términos
     const filtered = allTerminales.flatMap(t =>
       t.terminales
         .filter(terminal => {
@@ -98,14 +125,14 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
         .map(terminal => ({
           ciudad: t.ciudad,
           terminal,
-          searchTerm: searchTerms[0] // Usar el primer término para el resaltado
+          searchTerm: searchTerms[0]
         }))
     );
     
     setSuggestions(filtered);
     setIsOpen(true);
     setSelectedIndex(-1);
-  }, [input, allTerminales]);
+  }, [input, allTerminales, memoizedOnChange]);
 
   // Función para resaltar el texto coincidente
   const highlightMatch = (text, searchTerm) => {
@@ -131,16 +158,16 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
     setSuggestions([]);
     setIsOpen(false);
     setSelectedIndex(-1);
-    if (onChange) onChange(ciudad, terminal);
+    if (memoizedOnChange) {
+      memoizedOnChange(ciudad, terminal);
+    }
     
     // Pasar el focus al siguiente input si existe la referencia
     if (nextInputRef && nextInputRef.current) {
       setTimeout(() => {
-        // Si nextInputRef es otro AutocompleteTerminal con forwardRef
         if (nextInputRef.current.focus) {
           nextInputRef.current.focus();
         } else {
-          // Si es un input normal
           nextInputRef.current.focus();
         }
       }, 100);
@@ -152,7 +179,6 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
   const handleKeyDown = (e) => {
     if (!isOpen) return;
     
-    // Si no hay sugerencias, solo permitir Escape
     if (suggestions.length === 0) {
       if (e.key === 'Escape') {
         e.preventDefault();
@@ -165,7 +191,6 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
       return;
     }
 
-    // Si hay sugerencias, permitir navegación completa
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
@@ -219,7 +244,6 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
   const handleInputFocus = (e) => {
     e.target.select();
     
-    // NUEVO: Solo abrir si no es una selección válida completa
     const esSeleccionCompleta = allTerminales.some(ciudad => 
       ciudad.terminales.some(terminal => 
         input === `${ciudad.ciudad} (${terminal})`
@@ -232,19 +256,21 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
   };
 
   const handleInputBlur = () => {
-    // Retrasar el cierre para permitir clicks en las sugerencias
     setTimeout(() => {
       setIsOpen(false);
       setSelectedIndex(-1);
     }, 150);
   };
 
+  // Generar ID único para el listbox
+  const listboxId = `autocomplete-listbox-${Math.random().toString(36).substr(2, 9)}`;
+
   return (
     <div className="autocomplete-terminal">
       <input
         ref={inputRef}
         type="text"
-        placeholder="Escribe ciudad o terminal"
+        placeholder={loading ? "Cargando terminales..." : "Escribe ciudad o terminal"}
         value={input}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
@@ -254,13 +280,24 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
         autoComplete="off"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
+        aria-controls={isOpen ? listboxId : undefined}
         role="combobox"
+        disabled={loading}
       />
       
+      {/* Indicador de carga */}
+      {loading && (
+        <div className="autocomplete-loading">
+          <div className="loading-spinner"></div>
+          <span>Cargando terminales...</span>
+        </div>
+      )}
+
       {/* Lista de sugerencias cuando hay resultados */}
-      {isOpen && suggestions.length > 0 && (
+      {isOpen && suggestions.length > 0 && !loading && (
         <ul 
           ref={listRef}
+          id={listboxId}
           className="autocomplete-listbox" 
           role="listbox"
         >
@@ -286,7 +323,7 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
       )}
 
       {/* Mensaje cuando no hay resultados */}
-      {isOpen && input.length > 0 && suggestions.length === 0 && allTerminales.length > 0 && (
+      {isOpen && input.length > 0 && suggestions.length === 0 && allTerminales.length > 0 && !loading && (
         <div className="autocomplete-no-results">
           <div className="no-results-icon">🚌</div>
           <div className="no-results-text">
@@ -311,10 +348,11 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
           overflow: 'hidden' 
         }}
       >
-        {isOpen && suggestions.length > 0 && 
+        {loading && "Cargando terminales..."}
+        {isOpen && suggestions.length > 0 && !loading && 
           `${suggestions.length} sugerencias disponibles. Use las flechas para navegar y Enter para seleccionar.`
         }
-        {isOpen && input.length > 0 && suggestions.length === 0 && allTerminales.length > 0 &&
+        {isOpen && input.length > 0 && suggestions.length === 0 && allTerminales.length > 0 && !loading &&
           `No se encontraron resultados para "${input}"`
         }
       </div>
@@ -322,7 +360,6 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
   );
 });
 
-// Agregar displayName para debugging
 AutocompleteTerminal.displayName = 'AutocompleteTerminal';
 
 export default AutocompleteTerminal;
