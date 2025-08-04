@@ -3,13 +3,18 @@ import "./Estilos/TripDetails.css";
 
 
 
-const TripDetails = () => {
+const TripDetails = ({ viaje }) => {
+  // Calcula asientos disponibles (asumiendo 60 asientos totales)
+  const asientosTotales = 60;
+  const ocupados = viaje?.numero_asientos_ocupados ?? 0;
+  const disponibles = asientosTotales - ocupados;
+
   return (
     <div className="tripdetails-container">
       <div className="tripdetails-features">
         <div className="tripdetails-col">
           <div className="feature-item">
-            <span className="check">&#10003;</span> Asientos disponibles: 12
+            <span className="check">&#10003;</span> Asientos disponibles: {disponibles}
           </div>
           <div className="feature-item">
             <span className="check">&#10003;</span> Aire Acondicionado
@@ -37,8 +42,8 @@ const TripDetails = () => {
       </div>
       <div className="tripdetails-image">
         <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTniBavDs0ryKktooFw1Io0omjJ21el3J16WA&s"
-          alt="Bus Velotax"
+          src={viaje?.unidad?.imagen_path || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTniBavDs0ryKktooFw1Io0omjJ21el3J16WA&s"}
+          alt={`Bus ${viaje?.unidad?.numero_unidad || ""}`}
         />
       </div>
     </div>

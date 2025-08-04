@@ -35,7 +35,7 @@ const TripCard = ({ horaSalida, horaLlegada, empresa, precio }) => {
           </div>
           <div className="tripcard-hour">
             <span className="hour-big">{horaLlegada}</span>
-            <span className="city city-bold">Guayaquil</span>
+            <span className="city city-bold">Guayaqghuil</span>
           </div>
         </div>
         <div className="tripcard-info">
