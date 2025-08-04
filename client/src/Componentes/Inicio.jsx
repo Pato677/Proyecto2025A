@@ -111,16 +111,24 @@ const Inicio = () => {
     }, [cargarDatosIniciales]);
 
     // Manejadores
-    const handleOrigenChange = (ciudad, terminal) => {
-        const nuevoValor = ciudad && terminal ? `${ciudad} (${terminal})` : '';
-        setOrigen(nuevoValor);
-        setOrigenSeleccionado({ ciudad, terminal });
+    const handleOrigenChange = (ciudad, terminalNombre, terminalId) => {
+        console.log("handleOrigenChange:", { ciudad, terminalNombre, terminalId });
+        setOrigenSeleccionado({
+            ciudad,
+            terminal: terminalNombre,
+            terminalId
+        });
+        setOrigen(`${ciudad} (${terminalNombre})`);
     };
 
-    const handleDestinoChange = (ciudad, terminal) => {
-        const nuevoValor = ciudad && terminal ? `${ciudad} (${terminal})` : '';
-        setDestino(nuevoValor);
-        setDestinoSeleccionado({ ciudad, terminal });
+    const handleDestinoChange = (ciudad, terminalNombre, terminalId) => {
+        console.log("handleDestinoChange:", { ciudad, terminalNombre, terminalId });
+        setDestinoSeleccionado({
+            ciudad,
+            terminal: terminalNombre,
+            terminalId
+        });
+        setDestino(`${ciudad} (${terminalNombre})`);
     };
 
     const handleLoginExitoso = (usuarioData) => {
@@ -163,11 +171,12 @@ const Inicio = () => {
         }, 300);
     };
 
-    // ACTUALIZAR: Función handleBuscar mejorada
+    // ACTUALIZAR: Función handleBuscar para enviar los IDs de terminal
     const handleBuscar = () => {
+        console.log("Validando:", { origenSeleccionado, destinoSeleccionado, fecha });
         // Verificar campos faltantes
-        const faltaOrigen = !origenSeleccionado.ciudad || !origenSeleccionado.terminal;
-        const faltaDestino = !destinoSeleccionado.ciudad || !destinoSeleccionado.terminal;
+        const faltaOrigen = !origenSeleccionado.ciudad || !origenSeleccionado.terminalId;
+        const faltaDestino = !destinoSeleccionado.ciudad || !destinoSeleccionado.terminalId;
         const faltaFecha = !fecha;
 
         // Si faltan campos, animar y enfocar en orden de prioridad
@@ -177,13 +186,11 @@ const Inicio = () => {
                 enfocarYAnimar(origenInputRef, 'origen');
                 return;
             }
-            
             if (faltaDestino) {
                 setError('Por favor selecciona un destino válido.');
                 enfocarYAnimar(destinoInputRef, 'destino');
                 return;
             }
-            
             if (faltaFecha) {
                 setError('Por favor selecciona una fecha de viaje.');
                 enfocarYAnimar(fechaInputRef, 'fecha');
@@ -207,41 +214,63 @@ const Inicio = () => {
 
         if (
             origenSeleccionado.ciudad === destinoSeleccionado.ciudad &&
-            origenSeleccionado.terminal === destinoSeleccionado.terminal
+            origenSeleccionado.terminalId === destinoSeleccionado.terminalId
         ) {
             setError('El origen y destino no pueden ser iguales.');
-            // Animar destino ya que es el que debe cambiar
             enfocarYAnimar(destinoInputRef, 'destino');
             return;
         }
 
-    setError('');
-    setMostrandoLoader(true); // Mostrar loader
+        setError('');
+        setMostrandoLoader(true);
 
-    setTimeout(() => {
-        setMostrandoLoader(false);
-        const params = new URLSearchParams({
-            origenCiudad: origenSeleccionado.ciudad,
-            origenTerminal: origenSeleccionado.terminal,
-            destinoCiudad: destinoSeleccionado.ciudad,
-            destinoTerminal: destinoSeleccionado.terminal,
-            fecha,
-            pasajeros: pasajeros.reduce((a, b) => a + b, 0)
-        }).toString();
-        navigate(`/SeleccionViaje?${params}`);
-    }, 2000); // 2 segundos
+        setTimeout(() => {
+            setMostrandoLoader(false);
+            const params = new URLSearchParams({
+                origenCiudad: origenSeleccionado.ciudad,
+                origenTerminal: origenSeleccionado.terminalId, // <-- ID
+                destinoCiudad: destinoSeleccionado.ciudad,
+                destinoTerminal: destinoSeleccionado.terminalId, // <-- ID
+                fecha,
+                pasajeros: pasajeros.reduce((a, b) => a + b, 0)
+            }).toString();
+            navigate(`/SeleccionViaje?${params}`);
+        }, 2000);
     };
 
     // NUEVO: Función para el botón "Compra ya"
-    const handleCompraYa = () => {
-        // Animar el botón primero
+    const handleCompraYa = async () => {
         setBotonAnimando(true);
         setTimeout(() => setBotonAnimando(false), 1000);
 
-        // Pequeño delay antes de ejecutar la lógica de búsqueda
-        setTimeout(() => {
+        setMostrandoLoader(true);
+
+        try {
+            const response = await fetch('http://localhost:8000/viajes/precio/min');
+            const data = await response.json();
+
+            if (data.success && data.data) {
+                const viaje = data.data;
+                const params = new URLSearchParams({
+                    origenCiudad: viaje.ruta?.terminalOrigen?.ciudad?.nombre || '',
+                    origenTerminal: viaje.ruta?.terminalOrigen?.nombre || '',
+                    destinoCiudad: viaje.ruta?.terminalDestino?.ciudad?.nombre || '',
+                    destinoTerminal: viaje.ruta?.terminalDestino?.nombre || '',
+                    fecha: viaje.fecha_salida?.slice(0, 10) || '',
+                    pasajeros: 1,
+                    viajeId: viaje.id
+                }).toString();
+                setMostrandoLoader(false);
+                navigate(`/SeleccionViaje?${params}`);
+            } else {
+                setMostrandoLoader(false);
+                // Si no hay viaje mínimo, ejecuta búsqueda normal
+                handleBuscar();
+            }
+        } catch (error) {
+            setMostrandoLoader(false);
             handleBuscar();
-        }, 200);
+        }
     };
 
     // NUEVO: useEffect para cargar el precio mínimo

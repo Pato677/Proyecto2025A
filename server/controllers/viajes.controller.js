@@ -594,16 +594,11 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
     const { fecha_salida } = req.params;
     const page = parseInt(req.query.page) || 1;
     const size = parseInt(req.query.size) || 4;
-    const orden = req.query.orden || ''; // 'precio' o 'hora'
+    const orden = req.query.orden || '';
+    const terminalOrigen = req.query.terminalOrigen;
+    const terminalDestino = req.query.terminalDestino;
     const offset = (page - 1) * size;
     const limit = size;
-
-    if (!fecha_salida) {
-      return res.status(400).json({
-        success: false,
-        message: 'El parámetro fecha_salida es requerido'
-      });
-    }
 
     const { Op } = require('sequelize');
     const inicioDia = new Date(fecha_salida);
@@ -611,26 +606,32 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
     const finDia = new Date(fecha_salida);
     finDia.setHours(23, 59, 59, 999);
 
-    // Definir el orden dinámico
+    // Filtros dinámicos
+    let where = {
+      fecha_salida: {
+        [Op.between]: [inicioDia, finDia]
+      }
+    };
+
+    let rutaWhere = {};
+    if (terminalOrigen) rutaWhere.terminal_origen_id = terminalOrigen;
+    if (terminalDestino) rutaWhere.terminal_destino_id = terminalDestino;
+
+    // Orden dinámico
     let order = [];
     if (orden === 'precio') {
       order = [['precio', 'ASC']];
     } else if (orden === 'hora') {
-      // Ordenar por hora_salida de la ruta asociada
       order = [[{ model: Ruta, as: 'ruta' }, 'hora_salida', 'ASC']];
     }
 
-    // Consulta paginada y ordenada
     const viajes = await Viaje.findAll({
-      where: {
-        fecha_salida: {
-          [Op.between]: [inicioDia, finDia]
-        }
-      },
+      where,
       include: [
         {
           model: Ruta,
           as: 'ruta',
+          where: rutaWhere,
           include: [
             {
               model: UsuarioCooperativa,
@@ -639,22 +640,12 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
             {
               model: Terminal,
               as: 'terminalOrigen',
-              include: [
-                {
-                  model: Ciudad,
-                  as: 'ciudad'
-                }
-              ]
+              include: [{ model: Ciudad, as: 'ciudad' }]
             },
             {
               model: Terminal,
               as: 'terminalDestino',
-              include: [
-                {
-                  model: Ciudad,
-                  as: 'ciudad'
-                }
-              ]
+              include: [{ model: Ciudad, as: 'ciudad' }]
             }
           ]
         },
@@ -670,11 +661,14 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
 
     // Total de viajes sin paginación
     const totalViajes = await Viaje.count({
-      where: {
-        fecha_salida: {
-          [Op.between]: [inicioDia, finDia]
+      where,
+      include: [
+        {
+          model: Ruta,
+          as: 'ruta',
+          where: rutaWhere
         }
-      }
+      ]
     });
 
     res.status(200).json({
@@ -685,7 +679,6 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
       size
     });
   } catch (error) {
-    console.error('Error al obtener viajes por fecha_salida:', error);
     res.status(500).json({
       success: false,
       message: 'Error al obtener viajes por fecha_salida',

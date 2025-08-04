@@ -65,22 +65,7 @@ const TripCard = ({
         <div className="pill-arrow">
           <span className="pill-arro">&#9660;</span>
         </div>
-        {unidad?.imagen_path && (
-          <img
-            src={unidad.imagen_path}
-            alt={`Bus ${unidad.numero_unidad || ""}`}
-            style={{
-              position: "absolute",
-              right: 10,
-              bottom: 8,
-              width: 54,
-              height: 32,
-              objectFit: "cover",
-              borderRadius: "6px",
-              boxShadow: "0 2px 8px #0002"
-            }}
-          />
-        )}
+       
       </div>
     </div>
   );

@@ -24,10 +24,13 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
       console.log('📡 Respuesta del servidor:', data);
 
       if (data.success && Array.isArray(data.data)) {
-        // Transformar los datos a la estructura esperada por el componente
+        // Estructura: [{ ciudad: 'Quito', terminales: [{ id: 1, nombre: 'Quitumbe' }, ...] }, ...]
         const terminalData = data.data.map(ciudad => ({
           ciudad: ciudad.nombre,
-          terminales: ciudad.terminales.map(terminal => terminal.nombre)
+          terminales: ciudad.terminales.map(terminal => ({
+            id: terminal.id,
+            nombre: terminal.nombre
+          }))
         }));
         
         console.log('✅ Terminales procesados:', terminalData);
@@ -58,9 +61,10 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
   }, [cargarTerminales]);
 
   // Crear versión memoizada de onChange
-  const memoizedOnChange = useCallback((ciudad, terminal) => {
+  const memoizedOnChange = useCallback((ciudad, terminalNombre, terminalId) => {
+    console.log("onChange enviado al padre:", { ciudad, terminalNombre, terminalId });
     if (onChange) {
-      onChange(ciudad, terminal);
+      onChange(ciudad, terminalNombre, terminalId);
     }
   }, [onChange]);
 
@@ -87,7 +91,7 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
     // Verificar si el input actual es una selección válida completa
     const esSeleccionCompleta = allTerminales.some(ciudad => 
       ciudad.terminales.some(terminal => 
-        input === `${ciudad.ciudad} (${terminal})`
+        input.trim() === `${ciudad.ciudad} (${terminal.nombre})`
       )
     );
     
@@ -119,7 +123,7 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
         .filter(terminal => {
           return searchTerms.some(term => 
             t.ciudad.toLowerCase().includes(term) ||
-            terminal.toLowerCase().includes(term)
+            terminal.nombre.toLowerCase().includes(term)
           );
         })
         .map(terminal => ({
@@ -154,12 +158,13 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
   };
 
   const handleSelect = (ciudad, terminal) => {
-    setInput(`${ciudad} (${terminal})`);
+    setInput(`${ciudad} (${terminal.nombre})`);
     setSuggestions([]);
     setIsOpen(false);
     setSelectedIndex(-1);
+    console.log("Seleccionado:", { ciudad, terminalNombre: terminal.nombre, terminalId: terminal.id });
     if (memoizedOnChange) {
-      memoizedOnChange(ciudad, terminal);
+      memoizedOnChange(ciudad, terminal.nombre, terminal.id);
     }
     
     // Pasar el focus al siguiente input si existe la referencia
@@ -245,10 +250,10 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
     e.target.select();
     
     const esSeleccionCompleta = allTerminales.some(ciudad => 
-      ciudad.terminales.some(terminal => 
-        input === `${ciudad.ciudad} (${terminal})`
-      )
-    );
+  ciudad.terminales.some(terminal => 
+    input.trim() === `${ciudad.ciudad} (${terminal.nombre})`
+  )
+);
     
     if (input.length > 0 && !esSeleccionCompleta) {
       setIsOpen(true);
@@ -303,7 +308,7 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
         >
           {suggestions.map((s, idx) => (
             <li
-              key={`${s.ciudad}-${s.terminal}-${idx}`}
+              key={`${s.ciudad}-${s.terminal.nombre}-${s.terminal.id}-${idx}`}
               className={`autocomplete-item ${selectedIndex === idx ? 'selected' : ''}`}
               onClick={() => handleSelect(s.ciudad, s.terminal)}
               role="option"
@@ -314,7 +319,7 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
               </span>
               <span className="separator"> (</span>
               <span className="terminal-text">
-                {highlightMatch(s.terminal, s.searchTerm)}
+                {highlightMatch(s.terminal.nombre, s.searchTerm)}
               </span>
               <span className="separator">)</span>
             </li>

@@ -51,7 +51,15 @@ const TripSelectionPage = () => {
   useEffect(() => {
     if (!fechaSeleccionada) return;
 
-    axios.get(`http://localhost:8000/viajes/fecha/${fechaSeleccionada}?page=${currentPage}&size=${viajesPorPagina}${orden ? `&orden=${orden}` : ''}`)
+    const query = [
+      `page=${currentPage}`,
+      `size=${viajesPorPagina}`,
+      orden ? `orden=${orden}` : '',
+      origenTerminal ? `terminalOrigen=${origenTerminal}` : '',
+      destinoTerminal ? `terminalDestino=${destinoTerminal}` : ''
+    ].filter(Boolean).join('&');
+
+    axios.get(`http://localhost:8000/viajes/fecha/${fechaSeleccionada}?${query}`)
       .then(res => {
         if (res.data.success && Array.isArray(res.data.data)) {
           setViajes(res.data.data);
@@ -65,7 +73,18 @@ const TripSelectionPage = () => {
         setViajes([]);
         setTotalPaginas(1);
       });
-  }, [fechaSeleccionada, currentPage, viajesPorPagina, orden]);
+  }, [fechaSeleccionada, currentPage, viajesPorPagina, orden, origenTerminal, destinoTerminal]);
+
+  useEffect(() => {
+    if (viajes.length > 0 && params.get('viajeId')) {
+      const viajeId = Number(params.get('viajeId'));
+      const existe = viajes.find(v => v.id === viajeId);
+      if (existe) {
+        setSelectedTrip(viajeId);
+        setShowDetails(true);
+      }
+    }
+  }, [viajes, params]);
 
   // Manejadores
   const handleSelectTrip = (id) => {
