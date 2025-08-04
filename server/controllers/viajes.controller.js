@@ -698,10 +698,10 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
 // Obtener precio mínimo de viajes vigentes
 module.exports.getPrecioMinimo = async (req, res) => {
   try {
-    // Obtener todos los viajes vigentes con precio > 0
-    const ahora = new Date();
-    
-    const viajes = await Viaje.findAll({
+    const viajeMinimo = await Viaje.findOne({
+      where: {
+        precio: { [require('sequelize').Op.gt]: 0 }
+      },
       include: [
         {
           model: Ruta,
@@ -716,49 +716,35 @@ module.exports.getPrecioMinimo = async (req, res) => {
               model: Terminal,
               as: 'terminalDestino',
               include: [{ model: Ciudad, as: 'ciudad' }]
+            },
+            {
+              model: UsuarioCooperativa,
+              as: 'UsuarioCooperativa'
             }
           ]
+        },
+        {
+          model: Unidad,
+          as: 'unidad'
         }
       ],
-      where: {
-        precio: {
-          [require('sequelize').Op.gt]: 0 // Solo viajes con precio mayor a 0
-        }
-      }
+      order: [['precio', 'ASC']]
     });
 
-    
-    // Filtrar viajes vigentes (combinando fecha_salida + hora_salida)
-    const viajesVigentes = viajes.filter(viaje => {
-      if (!viaje.fecha_salida || !viaje.ruta?.hora_salida) {
-        return false;
-      }
-
-      // Combinar fecha_salida del viaje con hora_salida de la ruta
-      const fechaViaje = new Date(viaje.fecha_salida);
-      const [hora, minutos] = viaje.ruta.hora_salida.split(':');
-      fechaViaje.setHours(parseInt(hora), parseInt(minutos), 0, 0);
-
-      return fechaViaje > ahora; // Solo viajes futuros
-    });
-
-    if (viajesVigentes.length === 0) {
+    if (!viajeMinimo) {
       return res.json({
         success: true,
-        precioMinimo: 8.00, // Precio base por defecto
-        mensaje: 'No hay viajes disponibles, mostrando precio base'
+        precioMinimo: 8.00,
+        mensaje: 'No hay viajes disponibles, mostrando precio base',
+        data: null
       });
     }
 
-    // Encontrar el precio mínimo
-    const precios = viajesVigentes.map(viaje => parseFloat(viaje.precio));
-    const precioMinimo = Math.min(...precios);
-
     res.json({
       success: true,
-      precioMinimo: parseFloat(precioMinimo.toFixed(2)),
-      totalViajes: viajesVigentes.length,
-      mensaje: 'Precio mínimo obtenido correctamente'
+      precioMinimo: parseFloat(viajeMinimo.precio),
+      mensaje: 'Viaje con precio mínimo obtenido correctamente',
+      data: viajeMinimo
     });
 
   } catch (error) {
@@ -766,9 +752,9 @@ module.exports.getPrecioMinimo = async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor',
-      precioMinimo: 8.00, // Fallback
-      mensaje: 'Error al consultar precios, mostrando precio base'
+      precioMinimo: 8.00,
+      mensaje: 'Error al consultar precios, mostrando precio base',
+      data: null
     });
   }
-  
 };

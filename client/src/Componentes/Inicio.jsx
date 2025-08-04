@@ -249,20 +249,15 @@ const Inicio = () => {
         const obtenerPrecioMinimo = async () => {
             setCargandoPrecio(true);
             try {
-                const response = await fetch('http://localhost:8000/viajes/precio-minimo');
+                const response = await fetch('http://localhost:8000/viajes/precio/min');
                 const data = await response.json();
                 
                 if (data.success && data.precioMinimo) {
-                    setPrecioMinimo(data.precioMinimo);
-                    console.log(`Precio mínimo cargado: $${data.precioMinimo} (${data.totalViajes || 0} viajes disponibles)`);
+                    setPrecioMinimo(Number(data.precioMinimo));
                 } else {
-                    // Fallback en caso de respuesta sin éxito
                     setPrecioMinimo(8.00);
-                    console.warn('No se pudo obtener precio mínimo, usando fallback');
                 }
             } catch (error) {
-                console.error('Error al obtener precio mínimo:', error);
-                // Fallback en caso de error de conexión
                 setPrecioMinimo(8.00);
             } finally {
                 setCargandoPrecio(false);
