@@ -47,11 +47,11 @@ const TripSelectionPage = () => {
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
 
-  // Cargar viajes desde el endpoint por fecha y página
+  // Cargar viajes desde el endpoint por fecha, página y orden
   useEffect(() => {
     if (!fechaSeleccionada) return;
 
-    axios.get(`http://localhost:8000/viajes/fecha/${fechaSeleccionada}?page=${currentPage}&size=${viajesPorPagina}`)
+    axios.get(`http://localhost:8000/viajes/fecha/${fechaSeleccionada}?page=${currentPage}&size=${viajesPorPagina}${orden ? `&orden=${orden}` : ''}`)
       .then(res => {
         if (res.data.success && Array.isArray(res.data.data)) {
           setViajes(res.data.data);
@@ -65,7 +65,7 @@ const TripSelectionPage = () => {
         setViajes([]);
         setTotalPaginas(1);
       });
-  }, [fechaSeleccionada, currentPage, viajesPorPagina]);
+  }, [fechaSeleccionada, currentPage, viajesPorPagina, orden]);
 
   // Manejadores
   const handleSelectTrip = (id) => {
@@ -140,11 +140,7 @@ const TripSelectionPage = () => {
           <button
             className={`filtro-btn${orden === 'precio' ? ' activa' : ''}`}
             onClick={() => {
-              if (orden === 'precio') {
-                setOrden('');
-              } else {
-                setOrden('precio');
-              }
+              setOrden(orden === 'precio' ? '' : 'precio');
               setCurrentPage(1);
             }}
           >
@@ -153,11 +149,7 @@ const TripSelectionPage = () => {
           <button
             className={`filtro-btn${orden === 'hora' ? ' activa' : ''}`}
             onClick={() => {
-              if (orden === 'hora') {
-                setOrden('');
-              } else {
-                setOrden('hora');
-              }
+              setOrden(orden === 'hora' ? '' : 'hora');
               setCurrentPage(1);
             }}
           >

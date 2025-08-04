@@ -594,6 +594,7 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
     const { fecha_salida } = req.params;
     const page = parseInt(req.query.page) || 1;
     const size = parseInt(req.query.size) || 4;
+    const orden = req.query.orden || ''; // 'precio' o 'hora'
     const offset = (page - 1) * size;
     const limit = size;
 
@@ -610,7 +611,16 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
     const finDia = new Date(fecha_salida);
     finDia.setHours(23, 59, 59, 999);
 
-    // Consulta paginada
+    // Definir el orden dinámico
+    let order = [];
+    if (orden === 'precio') {
+      order = [['precio', 'ASC']];
+    } else if (orden === 'hora') {
+      // Ordenar por hora_salida de la ruta asociada
+      order = [[{ model: Ruta, as: 'ruta' }, 'hora_salida', 'ASC']];
+    }
+
+    // Consulta paginada y ordenada
     const viajes = await Viaje.findAll({
       where: {
         fecha_salida: {
@@ -654,7 +664,8 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
         }
       ],
       offset,
-      limit
+      limit,
+      order
     });
 
     // Total de viajes sin paginación
