@@ -44,16 +44,20 @@ const TripSelectionPage = () => {
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
   const viajesPorPagina = 4;
 
-  // Cargar viajes
+  // Cargar viajes desde el endpoint por fecha
   useEffect(() => {
-    if (!origenCiudad || !destinoCiudad) return;
-    
-    axios.get(`http://localhost:3000/Viajes`, {
-      params: { origenCiudad, destinoCiudad }
-    })
-    .then(res => setViajes(res.data))
-    .catch(() => setViajes([]));
-  }, [origenCiudad, destinoCiudad]);
+    if (!fechaSeleccionada) return;
+
+    axios.get(`http://localhost:8000/viajes/fecha/${fechaSeleccionada}`)
+      .then(res => {
+        if (res.data.success && Array.isArray(res.data.data)) {
+          setViajes(res.data.data);
+        } else {
+          setViajes([]);
+        }
+      })
+      .catch(() => setViajes([]));
+  }, [fechaSeleccionada]);
 
   // Manejadores
   const handleSelectTrip = (id) => {
@@ -86,12 +90,12 @@ const TripSelectionPage = () => {
   // Ordenar viajes
   let viajesOrdenados = [...viajes];
   if (orden === 'precio') {
-    viajesOrdenados.sort((a, b) => a.precio - b.precio);
+    viajesOrdenados.sort((a, b) => Number(a.precio) - Number(b.precio));
   } else if (orden === 'hora') {
     viajesOrdenados.sort((a, b) => {
-      const [ha, ma] = a.horaSalida.split(':').map(Number);
-      const [hb, mb] = b.horaSalida.split(':').map(Number);
-      // Para mostrar primero los que salen más temprano:
+      // Usar hora_salida de la ruta
+      const [ha, ma] = a.ruta?.hora_salida?.split(':').map(Number) || [0,0];
+      const [hb, mb] = b.ruta?.hora_salida?.split(':').map(Number) || [0,0];
       return ha !== hb ? ha - hb : ma - mb;
     });
   }
@@ -162,12 +166,19 @@ const TripSelectionPage = () => {
                 <div className="badge-viaje-seleccionado">Viaje Seleccionado</div>
               )}
               <TripCard
-                horaSalida={viaje.horaSalida}
-                horaLlegada={viaje.horaLlegada}
-                empresa={viaje.empresa}
+                horaSalida={viaje.ruta?.hora_salida}
+                horaLlegada={viaje.ruta?.hora_llegada}
+                empresa={viaje.ruta?.UsuarioCooperativa?.razon_social}
                 precio={viaje.precio}
+                terminalOrigen={viaje.ruta?.terminalOrigen?.nombre}
+                terminalDestino={viaje.ruta?.terminalDestino?.nombre}
+                ciudadOrigen={viaje.ruta?.terminalOrigen?.ciudad?.nombre}
+                ciudadDestino={viaje.ruta?.terminalDestino?.ciudad?.nombre}
+                unidad={viaje.unidad}
               />
-              {selectedTrip === viaje.id && showDetails && <TripDetails />}
+              {selectedTrip === viaje.id && showDetails && (
+                <TripDetails viaje={viaje} />
+              )}
             </div>
           ))}
         </div>
