@@ -23,7 +23,7 @@ function parseLocalDate(fechaStr) {
   return new Date(year, month - 1, day); // Mes base 0
 }
 
-export default function DateCarousel({ fechaSeleccionada }) {
+export default function DateCarousel({ fechaSeleccionada, onFechaChange }) {
   // Si no hay fechaSeleccionada, usa hoy
   const initialBaseDate = fechaSeleccionada
     ? parseLocalDate(fechaSeleccionada)
@@ -40,9 +40,20 @@ export default function DateCarousel({ fechaSeleccionada }) {
       nueva.setHours(0, 0, 0, 0);
       setSelected(nueva);
       setBaseDate(nueva);
-      
     }
   }, [fechaSeleccionada]);
+
+  // Al seleccionar una fecha, llama a la función del padre
+  const handleSelectDate = (d) => {
+    if (onFechaChange) {
+      // Formatea la fecha a 'YYYY-MM-DD'
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      onFechaChange(`${yyyy}-${mm}-${dd}`);
+    }
+    setSelected(d);
+  };
 
   // Genera 7 fechas: 3 antes, la base, 3 después
   const dates = [];
@@ -80,7 +91,7 @@ export default function DateCarousel({ fechaSeleccionada }) {
             <button
               key={d.label}
               className={`date-item${active ? ' active' : ''}${disabled ? ' disabled' : ''}`}
-              onClick={() => !disabled && setSelected(d.value)}
+              onClick={() => !disabled && handleSelectDate(d.value)}
               disabled={disabled}
             >
               {d.label}

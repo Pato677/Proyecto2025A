@@ -28,22 +28,24 @@ const TripSelectionPage = () => {
   const origenTerminal = params.get('origenTerminal');
   const destinoCiudad = params.get('destinoCiudad');
   const destinoTerminal = params.get('destinoTerminal');
-  const fechaSeleccionada = params.get('fecha');
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(
+    params.get('fecha') || new Date().toISOString().slice(0, 10)
+  );
   const pasajeros = params.get('pasajeros');
 
   // Estados
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [showDetails, setShowDetails] = useState(true);
-  const [viajes, setViajes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const viajesPorPagina = 4;
+  const [viajes, setViajes] = useState([]);
+  const [totalPaginas, setTotalPaginas] = useState(1);
   const [orden, setOrden] = useState('');
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [mostrarLogin, setMostrarLogin] = useState(false);
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
-  const [totalPaginas, setTotalPaginas] = useState(1);
-  const viajesPorPagina = 4;
 
   // Cargar viajes desde el endpoint por fecha y página
   useEffect(() => {
@@ -106,6 +108,12 @@ const TripSelectionPage = () => {
     });
   }
 
+  // Cuando cambia la fecha, regresa a la página 1
+  const handleFechaChange = (nuevaFecha) => {
+    setFechaSeleccionada(nuevaFecha);
+    setCurrentPage(1);
+  };
+
   return (
     <div className="trip-selection-page">
       <Header 
@@ -118,7 +126,10 @@ const TripSelectionPage = () => {
       />
 
       <main className="contenido-viajes">
-        <DateCarousel fechaSeleccionada={fechaSeleccionada} />
+        <DateCarousel
+          fechaSeleccionada={fechaSeleccionada}
+          onFechaChange={handleFechaChange}
+        />
 
         <h2 className="titulo-viaje">
           Viaje: {origenCiudad} - {destinoCiudad}
