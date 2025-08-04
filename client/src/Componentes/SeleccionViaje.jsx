@@ -166,31 +166,38 @@ const TripSelectionPage = () => {
         </div>
 
         <div className="lista-viajes">
-          {viajes.map((viaje) => (
-            <div
-              key={viaje.id}
-              className={`viaje-item ${selectedTrip === viaje.id ? 'viaje-seleccionado' : ''}`}
-              onClick={() => handleSelectTrip(viaje.id)}
-            >
-              {selectedTrip === viaje.id && (
-                <div className="badge-viaje-seleccionado">Viaje Seleccionado</div>
-              )}
-              <TripCard
-                horaSalida={viaje.ruta?.hora_salida}
-                horaLlegada={viaje.ruta?.hora_llegada}
-                empresa={viaje.ruta?.UsuarioCooperativa?.razon_social}
-                precio={viaje.precio}
-                terminalOrigen={viaje.ruta?.terminalOrigen?.nombre}
-                terminalDestino={viaje.ruta?.terminalDestino?.nombre}
-                ciudadOrigen={viaje.ruta?.terminalOrigen?.ciudad?.nombre}
-                ciudadDestino={viaje.ruta?.terminalDestino?.ciudad?.nombre}
-                unidad={viaje.unidad}
-              />
-              {selectedTrip === viaje.id && showDetails && (
-                <TripDetails viaje={viaje} />
-              )}
+          {viajes.length === 0 ? (
+            <div className="mensaje-sin-viajes">
+              <h3>Ups... Sentimos las molestias</h3>
+              <p>No encontramos viajes en esta ruta.<br />Prueba con una fecha diferente.</p>
             </div>
-          ))}
+          ) : (
+            viajes.map((viaje) => (
+              <div
+                key={viaje.id}
+                className={`viaje-item ${selectedTrip === viaje.id ? 'viaje-seleccionado' : ''}`}
+                onClick={() => handleSelectTrip(viaje.id)}
+              >
+                {selectedTrip === viaje.id && (
+                  <div className="badge-viaje-seleccionado">Viaje Seleccionado</div>
+                )}
+                <TripCard
+                  horaSalida={viaje.ruta?.hora_salida}
+                  horaLlegada={viaje.ruta?.hora_llegada}
+                  empresa={viaje.ruta?.UsuarioCooperativa?.razon_social}
+                  precio={viaje.precio}
+                  terminalOrigen={viaje.ruta?.terminalOrigen?.nombre}
+                  terminalDestino={viaje.ruta?.terminalDestino?.nombre}
+                  ciudadOrigen={viaje.ruta?.terminalOrigen?.ciudad?.nombre}
+                  ciudadDestino={viaje.ruta?.terminalDestino?.ciudad?.nombre}
+                  unidad={viaje.unidad}
+                />
+                {selectedTrip === viaje.id && showDetails && (
+                  <TripDetails viaje={viaje} />
+                )}
+              </div>
+            ))
+          )}
         </div>
 
         <div className="paginacion">
