@@ -597,6 +597,7 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
     const orden = req.query.orden || '';
     const terminalOrigen = req.query.terminalOrigen;
     const terminalDestino = req.query.terminalDestino;
+    const viajeId = req.query.viajeId;
     const offset = (page - 1) * size;
     const limit = size;
 
@@ -625,6 +626,7 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
       order = [[{ model: Ruta, as: 'ruta' }, 'hora_salida', 'ASC']];
     }
 
+    // Consulta principal (paginada)
     const viajes = await Viaje.findAll({
       where,
       include: [
@@ -633,31 +635,42 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
           as: 'ruta',
           where: rutaWhere,
           include: [
-            {
-              model: UsuarioCooperativa,
-              as: 'UsuarioCooperativa'
-            },
-            {
-              model: Terminal,
-              as: 'terminalOrigen',
-              include: [{ model: Ciudad, as: 'ciudad' }]
-            },
-            {
-              model: Terminal,
-              as: 'terminalDestino',
-              include: [{ model: Ciudad, as: 'ciudad' }]
-            }
+            { model: UsuarioCooperativa, as: 'UsuarioCooperativa' },
+            { model: Terminal, as: 'terminalOrigen', include: [{ model: Ciudad, as: 'ciudad' }] },
+            { model: Terminal, as: 'terminalDestino', include: [{ model: Ciudad, as: 'ciudad' }] }
           ]
         },
-        {
-          model: Unidad,
-          as: 'unidad'
-        }
+        { model: Unidad, as: 'unidad' }
       ],
       offset,
       limit,
       order
     });
+
+    // Si hay viajeId y no está en la lista, agrégalo
+    let viajeExtra = null;
+    if (viajeId && !viajes.some(v => v.id === Number(viajeId))) {
+      viajeExtra = await Viaje.findOne({
+        where: { id: viajeId },
+        include: [
+          {
+            model: Ruta,
+            as: 'ruta',
+            include: [
+              { model: UsuarioCooperativa, as: 'UsuarioCooperativa' },
+              { model: Terminal, as: 'terminalOrigen', include: [{ model: Ciudad, as: 'ciudad' }] },
+              { model: Terminal, as: 'terminalDestino', include: [{ model: Ciudad, as: 'ciudad' }] }
+            ]
+          },
+          { model: Unidad, as: 'unidad' }
+        ]
+      });
+    }
+
+    let viajesFinal = viajes;
+    if (viajeExtra) {
+      viajesFinal = [viajeExtra, ...viajes];
+    }
 
     // Total de viajes sin paginación
     const totalViajes = await Viaje.count({
@@ -673,8 +686,8 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: viajes,
-      total: totalViajes,
+      data: viajesFinal,
+      total: viajesFinal.length,
       page,
       size
     });

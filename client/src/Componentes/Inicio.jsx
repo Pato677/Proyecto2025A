@@ -253,9 +253,9 @@ const Inicio = () => {
                 const viaje = data.data;
                 const params = new URLSearchParams({
                     origenCiudad: viaje.ruta?.terminalOrigen?.ciudad?.nombre || '',
-                    origenTerminal: viaje.ruta?.terminalOrigen?.nombre || '',
+                    origenTerminal: viaje.ruta?.terminalOrigen?.id || '', 
                     destinoCiudad: viaje.ruta?.terminalDestino?.ciudad?.nombre || '',
-                    destinoTerminal: viaje.ruta?.terminalDestino?.nombre || '',
+                    destinoTerminal: viaje.ruta?.terminalDestino?.id || '',
                     fecha: viaje.fecha_salida?.slice(0, 10) || '',
                     pasajeros: 1,
                     viajeId: viaje.id

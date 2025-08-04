@@ -86,6 +86,31 @@ const TripSelectionPage = () => {
     }
   }, [viajes, params]);
 
+  useEffect(() => {
+    const viajeId = params.get('viajeId');
+    if (
+      viajeId &&
+      fechaSeleccionada &&
+      origenTerminal &&
+      destinoTerminal &&
+      viajes.length >= 0 &&
+      !viajes.some(v => v.id === Number(viajeId))
+    ) {
+      axios.get(`http://localhost:8000/viajes/${viajeId}`)
+        .then(res => {
+          if (res.data.success && res.data.data) {
+            setViajes(prev => {
+              // Solo agrega si no existe
+              if (!prev.some(v => v.id === res.data.data.id)) {
+                return [res.data.data, ...prev];
+              }
+              return prev;
+            });
+          }
+        });
+    }
+  }, [viajes, params, fechaSeleccionada, origenTerminal, destinoTerminal]);
+
   // Manejadores
   const handleSelectTrip = (id) => {
     setSelectedTrip(id);
