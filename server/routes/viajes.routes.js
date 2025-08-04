@@ -2,6 +2,8 @@ const ViajesController = require('../controllers/viajes.controller');
 
 module.exports = function(app){
 
+    // Obtener todos los viajes por fecha_salida
+    app.get('/viajes/fecha/:fecha_salida', ViajesController.getViajesByFechaSalida);
 
     // Obtener viajes por cooperativa (todos)
     app.get('/viajes/cooperativa/:cooperativaId', ViajesController.getViajesByCooperativa);

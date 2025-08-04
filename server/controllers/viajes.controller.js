@@ -588,6 +588,83 @@ module.exports.getViajesVigentesParaUsuarios = async (req, res) => {
   }
 };
 
+// Obtener todos los viajes por fecha_salida
+module.exports.getViajesByFechaSalida = async (req, res) => {
+  try {
+    const { fecha_salida } = req.params;
+    if (!fecha_salida) {
+      return res.status(400).json({
+        success: false,
+        message: 'El parámetro fecha_salida es requerido'
+      });
+    }
+
+    const { Op } = require('sequelize');
+    const inicioDia = new Date(fecha_salida);
+    inicioDia.setHours(0, 0, 0, 0);
+    const finDia = new Date(fecha_salida);
+    finDia.setHours(23, 59, 59, 999);
+
+    const viajes = await Viaje.findAll({
+      where: {
+        fecha_salida: {
+          [Op.between]: [inicioDia, finDia]
+        }
+      },
+      include: [
+        {
+          model: Ruta,
+          as: 'ruta',
+          include: [
+            {
+              model: require('../models').UsuarioCooperativa,
+              as: 'UsuarioCooperativa'
+            },
+            {
+              model: require('../models').Terminal,
+              as: 'terminalOrigen',
+              include: [
+                {
+                  model: require('../models').Ciudad,
+                  as: 'ciudad'
+                }
+              ]
+            },
+            {
+              model: require('../models').Terminal,
+              as: 'terminalDestino',
+              include: [
+                {
+                  model: require('../models').Ciudad,
+                  as: 'ciudad'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          model: Unidad,
+          as: 'unidad'
+        }
+      ]
+    });
+
+    res.status(200).json({
+      success: true,
+      data: viajes,
+      total: viajes.length
+    });
+  } catch (error) {
+    console.error('Error al obtener viajes por fecha_salida:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener viajes por fecha_salida',
+      error: error.message
+    });
+  }
+};
+
+
 // Obtener precio mínimo de viajes vigentes
 module.exports.getPrecioMinimo = async (req, res) => {
   try {
@@ -620,6 +697,7 @@ module.exports.getPrecioMinimo = async (req, res) => {
       }
     });
 
+    
     // Filtrar viajes vigentes (combinando fecha_salida + hora_salida)
     const viajesVigentes = viajes.filter(viaje => {
       if (!viaje.fecha_salida || !viaje.ruta?.hora_salida) {
@@ -662,4 +740,5 @@ module.exports.getPrecioMinimo = async (req, res) => {
       mensaje: 'Error al consultar precios, mostrando precio base'
     });
   }
+  
 };
