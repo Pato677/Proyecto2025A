@@ -1,0 +1,60 @@
+.bus-loader-container {
+  background-color: #fff;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.bus-loader-video {
+  width: 250px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: none;
+  background: #fff;
+  margin-bottom: 32px;
+  opacity: 1 !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Texto "Cargando..." con puntos animados */
+.bus-loader-text {
+  font-size: 1.4rem;
+  color: #1565c0;
+  font-weight: 500;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.bus-loader-dots {
+  display: inline-block;
+  margin-left: 6px;
+}
+
+.bus-loader-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin: 0 2px;
+  border-radius: 50%;
+  background: #1565c0;
+  opacity: 0.5;
+  animation: busLoaderDot 1.2s infinite;
+}
+
+.bus-loader-dot:nth-child(1) { animation-delay: 0s; }
+.bus-loader-dot:nth-child(2) { animation-delay: 0.3s; }
+.bus-loader-dot:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes busLoaderDot {
+  0%, 80%, 100% { opacity: 0.5; transform: scale(1); }
+  40% { opacity: 1; transform: scale(1.3); }
+}

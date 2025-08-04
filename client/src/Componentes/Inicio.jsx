@@ -18,7 +18,7 @@ import DatePicker from './DatePicker';
 import PasajerosMenu from './PasajerosMenu';
 import ModalRastreoBoleto from "./ModalRastreoBoleto";
 import CarruselImagenes from './CarruselImagenes';
-
+import BusLoader from './BusLoader';
 const Inicio = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -30,6 +30,7 @@ const Inicio = () => {
     const fechaInputRef = useRef(null);
 
     // Estados para el modal
+    const [mostrandoLoader, setMostrandoLoader] = useState(false);
     const [mostrarLogin, setMostrarLogin] = useState(false);
     const [mostrarRegistro, setMostrarRegistro] = useState(false);
     const [mostrarRegistroCooperativa, setMostrarRegistroCooperativa] = useState(false);
@@ -214,7 +215,11 @@ const Inicio = () => {
             return;
         }
 
-        setError('');
+    setError('');
+    setMostrandoLoader(true); // Mostrar loader
+
+    setTimeout(() => {
+        setMostrandoLoader(false);
         const params = new URLSearchParams({
             origenCiudad: origenSeleccionado.ciudad,
             origenTerminal: origenSeleccionado.terminal,
@@ -224,6 +229,7 @@ const Inicio = () => {
             pasajeros: pasajeros.reduce((a, b) => a + b, 0)
         }).toString();
         navigate(`/SeleccionViaje?${params}`);
+    }, 2000); // 2 segundos
     };
 
     // NUEVO: Función para el botón "Compra ya"
@@ -265,8 +271,12 @@ const Inicio = () => {
 
         obtenerPrecioMinimo();
     }, []); // Solo se ejecuta una vez al montar el componente
+if (mostrandoLoader) {
+    return <BusLoader />;
+}
 
     return (
+        
         <div className="inicio-container">
             <Header
                 currentStep={1}
