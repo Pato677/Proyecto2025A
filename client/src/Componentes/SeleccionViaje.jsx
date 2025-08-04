@@ -42,22 +42,28 @@ const TripSelectionPage = () => {
   const [mostrarLogin, setMostrarLogin] = useState(false);
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
+  const [totalPaginas, setTotalPaginas] = useState(1);
   const viajesPorPagina = 4;
 
-  // Cargar viajes desde el endpoint por fecha
+  // Cargar viajes desde el endpoint por fecha y página
   useEffect(() => {
     if (!fechaSeleccionada) return;
 
-    axios.get(`http://localhost:8000/viajes/fecha/${fechaSeleccionada}`)
+    axios.get(`http://localhost:8000/viajes/fecha/${fechaSeleccionada}?page=${currentPage}&size=${viajesPorPagina}`)
       .then(res => {
         if (res.data.success && Array.isArray(res.data.data)) {
           setViajes(res.data.data);
+          setTotalPaginas(Math.ceil(res.data.total / viajesPorPagina));
         } else {
           setViajes([]);
+          setTotalPaginas(1);
         }
       })
-      .catch(() => setViajes([]));
-  }, [fechaSeleccionada]);
+      .catch(() => {
+        setViajes([]);
+        setTotalPaginas(1);
+      });
+  }, [fechaSeleccionada, currentPage, viajesPorPagina]);
 
   // Manejadores
   const handleSelectTrip = (id) => {
@@ -99,13 +105,6 @@ const TripSelectionPage = () => {
       return ha !== hb ? ha - hb : ma - mb;
     });
   }
-
-  // Paginación
-  const totalPaginas = Math.ceil(viajesOrdenados.length / viajesPorPagina);
-  const viajesPagina = viajesOrdenados.slice(
-    (currentPage - 1) * viajesPorPagina,
-    currentPage * viajesPorPagina
-  );
 
   return (
     <div className="trip-selection-page">
@@ -156,7 +155,7 @@ const TripSelectionPage = () => {
         </div>
 
         <div className="lista-viajes">
-          {viajesPagina.map((viaje) => (
+          {viajes.map((viaje) => (
             <div
               key={viaje.id}
               className={`viaje-item ${selectedTrip === viaje.id ? 'viaje-seleccionado' : ''}`}

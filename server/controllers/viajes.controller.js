@@ -592,6 +592,11 @@ module.exports.getViajesVigentesParaUsuarios = async (req, res) => {
 module.exports.getViajesByFechaSalida = async (req, res) => {
   try {
     const { fecha_salida } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const size = parseInt(req.query.size) || 4;
+    const offset = (page - 1) * size;
+    const limit = size;
+
     if (!fecha_salida) {
       return res.status(400).json({
         success: false,
@@ -605,6 +610,7 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
     const finDia = new Date(fecha_salida);
     finDia.setHours(23, 59, 59, 999);
 
+    // Consulta paginada
     const viajes = await Viaje.findAll({
       where: {
         fecha_salida: {
@@ -617,25 +623,25 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
           as: 'ruta',
           include: [
             {
-              model: require('../models').UsuarioCooperativa,
+              model: UsuarioCooperativa,
               as: 'UsuarioCooperativa'
             },
             {
-              model: require('../models').Terminal,
+              model: Terminal,
               as: 'terminalOrigen',
               include: [
                 {
-                  model: require('../models').Ciudad,
+                  model: Ciudad,
                   as: 'ciudad'
                 }
               ]
             },
             {
-              model: require('../models').Terminal,
+              model: Terminal,
               as: 'terminalDestino',
               include: [
                 {
-                  model: require('../models').Ciudad,
+                  model: Ciudad,
                   as: 'ciudad'
                 }
               ]
@@ -646,13 +652,26 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
           model: Unidad,
           as: 'unidad'
         }
-      ]
+      ],
+      offset,
+      limit
+    });
+
+    // Total de viajes sin paginación
+    const totalViajes = await Viaje.count({
+      where: {
+        fecha_salida: {
+          [Op.between]: [inicioDia, finDia]
+        }
+      }
     });
 
     res.status(200).json({
       success: true,
       data: viajes,
-      total: viajes.length
+      total: totalViajes,
+      page,
+      size
     });
   } catch (error) {
     console.error('Error al obtener viajes por fecha_salida:', error);
