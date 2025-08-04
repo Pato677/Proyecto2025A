@@ -19,14 +19,25 @@ function calcularDuracion(horaSalida, horaLlegada) {
   return `${horas}h ${minutos}min`;
 }
 
-const TripCard = ({ horaSalida, horaLlegada, empresa, precio }) => {
+const TripCard = ({
+  horaSalida,
+  horaLlegada,
+  empresa,
+  precio,
+  terminalOrigen,
+  terminalDestino,
+  ciudadOrigen,
+  ciudadDestino,
+  unidad
+}) => {
   return (
     <div className="tripcard-container">
       <div className="tripcard-left">
         <div className="tripcard-row">
           <div className="tripcard-hour">
             <span className="hour-big">{horaSalida}</span>
-            <span className="city">Quito</span>
+            <span className="city">{ciudadOrigen || terminalOrigen}</span>
+            <span className="city-small">{terminalOrigen}</span>
           </div>
           <div className="tripcard-line">
             <div className="tripcard-dot"></div>
@@ -35,7 +46,8 @@ const TripCard = ({ horaSalida, horaLlegada, empresa, precio }) => {
           </div>
           <div className="tripcard-hour">
             <span className="hour-big">{horaLlegada}</span>
-            <span className="city city-bold">Guayaqghuil</span>
+            <span className="city city-bold">{ciudadDestino || terminalDestino}</span>
+            <span className="city-small">{terminalDestino}</span>
           </div>
         </div>
         <div className="tripcard-info">
@@ -53,6 +65,22 @@ const TripCard = ({ horaSalida, horaLlegada, empresa, precio }) => {
         <div className="pill-arrow">
           <span className="pill-arro">&#9660;</span>
         </div>
+        {unidad?.imagen_path && (
+          <img
+            src={unidad.imagen_path}
+            alt={`Bus ${unidad.numero_unidad || ""}`}
+            style={{
+              position: "absolute",
+              right: 10,
+              bottom: 8,
+              width: 54,
+              height: 32,
+              objectFit: "cover",
+              borderRadius: "6px",
+              boxShadow: "0 2px 8px #0002"
+            }}
+          />
+        )}
       </div>
     </div>
   );
