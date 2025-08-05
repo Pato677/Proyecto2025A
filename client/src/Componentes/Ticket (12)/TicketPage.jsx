@@ -5,7 +5,6 @@ import Footer from '../Footer';
 import TicketInfo from './TicketInfo';
 import '../Estilos/Ticket.css';
 import Button from '../Button';
-import html2pdf from 'html2pdf.js';
 import jsPDF from 'jspdf';
 import logo from '../Imagenes/Logo.png'; // Asegúrate de que la ruta sea correcta
 
@@ -82,8 +81,8 @@ function TicketPage() {
       }
     : {};
 
-  //const qrString = boletoActual && viaje && compra
-  const qrString = "Holi"
+  const qrString = boletoActual && viaje && compra
+  
     ? [
         `Boleto: ${boletoActual.codigo}`,
         `Pasajero: ${boletoActual.Pasajero?.nombres || compra.Pasajero?.nombres || ''} ${boletoActual.Pasajero?.apellidos || compra.Pasajero?.apellidos || ''}`,
@@ -100,106 +99,119 @@ function TicketPage() {
   const handleImprimir = () => {
     const doc = new jsPDF();
 
+    // COLORES DE MARCA
+    const azulMarca = "#1e90ff"; // Cambia por tu azul de marca si es otro
+    const grisClaro = "#f4f8fb";
+    const grisOscuro = "#222";
+
     // Logo (mantén relación de aspecto)
-    const logoWidth = 50;
+    const logoWidth = 45;
     const logoHeight = 18;
     doc.addImage(logo, 'PNG', 15, 10, logoWidth, logoHeight);
 
     // Título principal
     doc.setFontSize(20);
-    doc.setTextColor(40, 40, 40);
+    doc.setTextColor(30, 144, 255); // Azul marca
     doc.text('Boleto de Viaje', 105, 25, { align: 'center' });
 
-    // Línea separadora
-    doc.setDrawColor(100, 100, 100);
+    // Línea separadora azul
+    doc.setDrawColor(30, 144, 255);
+    doc.setLineWidth(1);
     doc.line(15, 32, 195, 32);
 
-    // Datos del viaje (alineados y con negrita en los valores)
+    // Fondo gris claro para la sección principal
+    doc.setFillColor(244, 248, 251);
+    doc.roundedRect(15, 35, 180, 60, 3, 3, 'F');
+
+    // Datos del viaje
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
-    let y = 40;
+    let y = 43;
+    doc.setFont(undefined, 'bold');
     doc.text('Cooperativa:', 20, y);
-    doc.setFont(undefined, 'bold');
+    doc.setFont(undefined, 'normal');
     doc.text(`${datosViaje.cooperativa}`, 55, y);
-    doc.setFont(undefined, 'normal');
 
+    doc.setFont(undefined, 'bold');
     doc.text('Bus N°:', 120, y);
-    doc.setFont(undefined, 'bold');
+    doc.setFont(undefined, 'normal');
     doc.text(`${datosViaje.busNumero}`, 140, y);
-    doc.setFont(undefined, 'normal');
 
-    y += 10;
+    y += 8;
+    doc.setFont(undefined, 'bold');
     doc.text('Origen:', 20, y);
-    doc.setFont(undefined, 'bold');
+    doc.setFont(undefined, 'normal');
     doc.text(`${datosViaje.origen}`, 45, y);
-    doc.setFont(undefined, 'normal');
 
+    doc.setFont(undefined, 'bold');
     doc.text('Destino:', 120, y);
-    doc.setFont(undefined, 'bold');
+    doc.setFont(undefined, 'normal');
     doc.text(`${datosViaje.destino}`, 145, y);
-    doc.setFont(undefined, 'normal');
 
-    y += 10;
+    y += 8;
+    doc.setFont(undefined, 'bold');
     doc.text('Salida:', 20, y);
-    doc.setFont(undefined, 'bold');
+    doc.setFont(undefined, 'normal');
     doc.text(`${datosViaje.horaSalida}`, 45, y);
-    doc.setFont(undefined, 'normal');
 
+    doc.setFont(undefined, 'bold');
     doc.text('Llegada:', 120, y);
-    doc.setFont(undefined, 'bold');
+    doc.setFont(undefined, 'normal');
     doc.text(`${datosViaje.horaLlegada}`, 145, y);
-    doc.setFont(undefined, 'normal');
 
-    y += 10;
-    doc.text('Fecha de viaje:', 20, y);
+    y += 8;
     doc.setFont(undefined, 'bold');
-    doc.text(formatearFechaLarga(datosViaje.fecha), 60, y);
+    doc.text('Fecha de viaje:', 20, y);
     doc.setFont(undefined, 'normal');
+    doc.text(formatearFechaLarga(datosViaje.fecha), 60, y);
 
-    // Datos del pasajero
+    // Sección pasajero con fondo azul claro
     y += 15;
+    doc.setFillColor(225, 240, 255);
+    doc.roundedRect(15, y - 6, 180, 32, 3, 3, 'F');
     doc.setFontSize(13);
-    doc.setTextColor(40, 40, 40);
+    doc.setTextColor(30, 144, 255);
+    doc.setFont(undefined, 'bold');
     doc.text('Datos del Pasajero', 20, y);
 
     y += 8;
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
-    doc.text('Nombre:', 20, y);
     doc.setFont(undefined, 'bold');
+    doc.text('Nombre:', 20, y);
+    doc.setFont(undefined, 'normal');
     doc.text(
       `${boletoActual.Pasajero?.nombres || compra.Pasajero?.nombres || ''} ${boletoActual.Pasajero?.apellidos || compra.Pasajero?.apellidos || ''}`,
       45, y
     );
-    doc.setFont(undefined, 'normal');
 
     y += 8;
+    doc.setFont(undefined, 'bold');
     doc.text('Cédula:', 20, y);
-    doc.setFont(undefined, 'bold');
+    doc.setFont(undefined, 'normal');
     doc.text(`${boletoActual.Pasajero?.cedula || compra.Pasajero?.cedula || ''}`, 45, y);
-    doc.setFont(undefined, 'normal');
 
-    y += 8;
-    doc.text('Asiento:', 20, y);
     doc.setFont(undefined, 'bold');
-    doc.text(`${datosViaje.asiento}`, 45, y);
+    doc.text('Asiento:', 120, y);
     doc.setFont(undefined, 'normal');
+    doc.text(`${datosViaje.asiento}`, 145, y);
 
     y += 8;
+    doc.setFont(undefined, 'bold');
     doc.text('Código Boleto:', 20, y);
-    doc.setFont(undefined, 'bold');
-    doc.text(`${datosViaje.codigoBoleto}`, 60, y);
     doc.setFont(undefined, 'normal');
+    doc.setTextColor(30, 144, 255);
+    doc.text(`${datosViaje.codigoBoleto}`, 60, y);
 
-    // QR debajo del código de boleto
+    // QR debajo del código de boleto, centrado
     y += 10;
     const qrImg = document.querySelector('.ticket-qr');
     if (qrImg && qrImg.src) {
       const img = new window.Image();
       img.crossOrigin = 'Anonymous';
       img.onload = function () {
-        // Centrado horizontal
         doc.addImage(img, 'PNG', 80, y, 50, 50);
+
         // Instrucciones
         let yInstr = y + 60;
         doc.setFontSize(11);
@@ -211,7 +223,7 @@ function TicketPage() {
         // Contacto
         yInstr += 15;
         doc.setFontSize(10);
-        doc.setTextColor(0, 102, 204);
+        doc.setTextColor(30, 144, 255);
         doc.textWithLink('¿Dudas o consultas? Contáctanos:', 20, yInstr, { url: 'mailto:info@transportesec.com' });
         yInstr += 6;
         doc.setTextColor(0, 0, 0);
@@ -232,12 +244,12 @@ function TicketPage() {
 
       y += 15;
       doc.setFontSize(10);
-      doc.setTextColor(0, 102, 204);
-      doc.textWithLink('¿Dudas o consultas? Contáctanos:', 20, y, { url: 'mailto:info@transportesec.com' });
+      doc.setTextColor(30, 144, 255);
+      doc.textWithLink('¿Dudas o consultas? Contáctanos:', 20, y, { url: 'mailto:contacto@transportesec.com' });
       y += 6;
       doc.setTextColor(0, 0, 0);
-      doc.text('Teléfono: 0999999999', 20, y);
-      doc.text('Email: info@transportesec.com', 80, y);
+      doc.text('Teléfono: +593 2 600 1234', 20, y);
+      doc.text('Email: contacto@transportesec.com', 80, y);
 
       doc.save(`boleto_${boletoActual?.codigo || 'ticket'}.pdf`);
     }
