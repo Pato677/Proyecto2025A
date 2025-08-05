@@ -22,7 +22,7 @@ function TicketInfo({ datosViaje}) {
         </div>
         <div className="info-item-2">
           <div className="info-item"><strong>Bus N°:</strong> {datosViaje.busNumero}</div>
-          <div className="info-item"><strong>Fecha de viaje:</strong> {formatearFecha(datosViaje.fecha) || '27/05/2025'}</div>
+          <div className="info-item"><strong>Fecha de viaje:</strong> {formatearFecha(datosViaje.fecha) || 'N/A'}</div>
         </div>
       </div>
     </div>
