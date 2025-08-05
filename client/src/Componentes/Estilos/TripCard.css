@@ -6,10 +6,12 @@
   box-shadow: 0 1px 6px #0001;
   font-family: 'Inter', Arial, sans-serif;
   width: 100%;
-  height: 85px;
+  min-width: 380px;      /* Aumenta el ancho mínimo */
+  max-width: 950px;      /* Aumenta el ancho máximo */
+  height: 95px;          /* Un poco más alto */
   overflow: hidden;
   align-items: center;
-
+  margin: 0 auto;        /* Centra la tarjeta */
 }
 
 .tripcard-left {
@@ -30,11 +32,12 @@
 }
 
 .tripcard-hour {
-  flex: 1;
+  flex: 1.2;             /* Más espacio para el texto */
+  min-width: 90px;       /* Aumenta el ancho mínimo */
+  max-width: 140px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 58px;
 }
 
 .hour-big {
@@ -58,9 +61,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30%;
+  width: 22%;
+  min-width: 40px;
+  max-width: 120px;
+  flex: 1.2;
   gap: 3px;
-  flex: 2;
 }
 
 .tripcard-dot {
@@ -160,4 +165,85 @@
   line-height: 0;
   font-weight: 1000;
   pointer-events: none;
+}
+
+/* RESPONSIVE: Ajusta la fila principal en móviles */
+@media (max-width: 700px) {
+  .tripcard-container {
+    flex-direction: column;
+    min-width: 0;
+    max-width: 100vw;
+    width: 100%;
+    height: auto;
+    padding: 0;
+  }
+  .tripcard-left {
+    flex-direction: column;
+    padding: 10px 6px 4px 6px;
+    align-items: stretch;
+  }
+  .tripcard-row {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 4px;
+    padding: 0;
+  }
+  .tripcard-hour {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    align-items: flex-start;
+    text-align: left;
+    margin-bottom: 2px;
+  }
+  .hour-big {
+    font-size: 1.05rem;
+  }
+  .city, .city-small {
+    font-size: 0.93rem;
+    word-break: break-word;
+    white-space: normal;
+  }
+  .tripcard-line {
+    width: 100%;
+    min-width: 40px;
+    margin: 4px 0;
+  }
+  .tripcard-info {
+    align-items: flex-start;
+    margin-top: 4px;
+    font-size: 0.92rem;
+  }
+  .tripcard-pricepill {
+    min-width: 100px;
+    border-radius: 0 0 18px 18px;
+    width: 100%;
+    justify-content: flex-end;
+    padding: 0 10px 8px 0;
+  }
+  .pill-content {
+    padding: 10px 0 8px 0;
+  }
+}
+
+/* Evita que el texto se salga o se deforme */
+.tripcard-hour, .city, .city-small {
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+/* Ajusta el tamaño de fuente en pantallas pequeñas */
+@media (max-width: 500px) {
+  .tripcard-container {
+    font-size: 0.95rem;
+  }
+  .hour-big {
+    font-size: 0.98rem;
+  }
+  .pill-price {
+    font-size: 1.2rem;
+  }
 }
