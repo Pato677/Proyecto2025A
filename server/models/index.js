@@ -69,6 +69,10 @@ ViajeAsiento.belongsTo(Viaje, { foreignKey: 'viaje_id' });
 Asiento.hasMany(ViajeAsiento, { foreignKey: 'asiento_id' });
 ViajeAsiento.belongsTo(Asiento, { foreignKey: 'asiento_id' });
 
+// Boleto - Asiento (FK: asiento_id)
+Asiento.hasMany(Boleto, { foreignKey: 'asiento_id' });
+Boleto.belongsTo(Asiento, { foreignKey: 'asiento_id' });
+
 // Parada (tabla intermedia) - Ruta y Terminal (muchos a muchos)
 Ruta.belongsToMany(Terminal, { through: Parada, foreignKey: 'ruta_id', otherKey: 'terminal_id' });
 Terminal.belongsToMany(Ruta, { through: Parada, foreignKey: 'terminal_id', otherKey: 'ruta_id' });

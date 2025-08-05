@@ -863,24 +863,40 @@ async function cargarDatosPrueba() {
 
     // 13. Crear boletos para las compras
     console.log('🎫 Creando boletos...');
+
+    // Función para generar un código de boleto aleatorio tipo BOL-XXXXXX-XXXXXX
+    function generarCodigoBoleto() {
+      const parte1 = Math.floor(100000 + Math.random() * 900000); // 6 dígitos
+      const parte2 = Math.random().toString(36).substring(2, 8).toUpperCase(); // 6 letras/números
+      return `BOL-${parte1}-${parte2}`;
+    }
+
+    // Función para obtener un asiento aleatorio (del 1 al 44 como string)
+    function asientoAleatorio() {
+      return (Math.floor(Math.random() * 44) + 1).toString();
+    }
+
     await Boleto.bulkCreate([
       {
-        codigo: `BOL-${Date.now()}-001`,
+        codigo: generarCodigoBoleto(),
         valor: viajesCreados[0].precio,
         compra_id: compras[0].id,
-        pasajero_id: pasajeros[0].id
+        pasajero_id: pasajeros[0].id,
+        asiento_id: asientoAleatorio()
       },
       {
-        codigo: `BOL-${Date.now()}-002`,
+        codigo: generarCodigoBoleto(),
         valor: viajesCreados[1].precio,
         compra_id: compras[1].id,
-        pasajero_id: pasajeros[1].id
+        pasajero_id: pasajeros[1].id,
+        asiento_id: asientoAleatorio()
       },
       {
-        codigo: `BOL-${Date.now()}-003`,
+        codigo: generarCodigoBoleto(),
         valor: viajesCreados[5].precio,
         compra_id: compras[2].id,
-        pasajero_id: pasajeros[2].id
+        pasajero_id: pasajeros[2].id,
+        asiento_id: asientoAleatorio()
       }
     ]);
 
