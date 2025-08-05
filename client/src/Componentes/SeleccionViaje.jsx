@@ -113,8 +113,13 @@ const TripSelectionPage = () => {
 
   // Manejadores
   const handleSelectTrip = (id) => {
-    setSelectedTrip(id);
-    setShowDetails(true);
+    if (selectedTrip === id) {
+      setSelectedTrip(null);      // Deselecciona si ya está seleccionado
+      setShowDetails(false);
+    } else {
+      setSelectedTrip(id);
+      setShowDetails(true);
+    }
   };
 
   const handleLogout = () => {
