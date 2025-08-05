@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import Header from './Header';
@@ -18,17 +18,31 @@ const RegistroPasajerosPage = () => {
   const formRef = useRef();
 
   // Variable de prueba para el número de pasajeros (posteriormente se obtendrá via query)
-  const numeroPasajerosPrueba = 2; // Cambiar este valor para probar con diferentes números de pasajeros
-  const viajeIdPrueba = 2; // ID del viaje para pruebas (posteriormente se obtendrá via query)
+  // Cambiar este valor para probar con diferentes números de pasajeros
+  
   
   // Obtener número de pasajeros de la URL
   const params = new URLSearchParams(location.search);
-  const pasajeros = numeroPasajerosPrueba; // Usar la variable de prueba
+   // Usar la variable de prueba
   
-  // Obtener datos de pasajeros existentes si vienen de vuelta desde otra página
-  const pasajerosDataStr = params.get('pasajerosData');
-  const datosExistentes = pasajerosDataStr ? JSON.parse(pasajerosDataStr) : null;
+  // Limpiar localStorage si es una nueva compra (parámetro fresh)
+  useEffect(() => {
+    const isFreshStart = params.get('fresh') === 'true';
+    if (isFreshStart) {
+      localStorage.removeItem('pasajerosData');
+      localStorage.removeItem('asientosSeleccionados');
+      console.log('Nueva compra iniciada - localStorage limpiado');
+    }
+  }, []);
+  
+  // Obtener datos de pasajeros existentes desde localStorage
+  const datosExistentes = localStorage.getItem('pasajerosData') 
+    ? JSON.parse(localStorage.getItem('pasajerosData')) 
+    : null;
 
+   const numeroPasajerosPrueba = parseInt(params.get('pasajeros'), 10);
+  const pasajeros = numeroPasajerosPrueba; // Usar la variable de prueba
+  const viajeIdPrueba = parseInt(params.get('viajeId'), 10); // ID del viaje para pruebas (posteriormente se obtendrá via query)
   // Estado para el formulario actual
   const [formIndex, setFormIndex] = useState(0);
   const [mostrarLogin, setMostrarLogin] = useState(false);
@@ -51,9 +65,11 @@ const RegistroPasajerosPage = () => {
 
   // Esta función se pasará al formulario
   const handleRegistroExitoso = () => {
-    // Pasar los datos de los pasajeros y el ID del viaje a la siguiente página
+    // Guardar los datos de los pasajeros en localStorage
+    localStorage.setItem('pasajerosData', JSON.stringify(datosPasajeros));
+    
+    // Pasar solo el ID del viaje por URL
     const params = new URLSearchParams(location.search);
-    params.set('pasajerosData', JSON.stringify(datosPasajeros));
     params.set('viajeId', viajeIdPrueba);
     navigate(`/SeleccionAsientosPage?${params.toString()}`);
   };
@@ -148,11 +164,9 @@ const RegistroPasajerosPage = () => {
         </div>
         <div className="contenedor-botones">
           <Button text="Atras" width='150px' onClick={() => {
-            // Guardar datos actuales en los parámetros antes de navegar hacia atrás
-            const currentParams = new URLSearchParams(location.search);
-            currentParams.set('pasajerosData', JSON.stringify(datosPasajeros));
-            // Mantener otros parámetros y regresar a la página anterior
-            navigate(-1, { state: { pasajerosData: datosPasajeros } });
+            // Guardar datos actuales en localStorage antes de navegar hacia atrás
+            localStorage.setItem('pasajerosData', JSON.stringify(datosPasajeros));
+            navigate(-1);
           }} />
           <Button text="Aceptar" width='150px' onClick={handleAceptar} />
         </div>

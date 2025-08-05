@@ -98,7 +98,7 @@ async function cargarDatosPrueba() {
     // 3. Crear asientos (numeración estándar de bus)
     console.log('💺 Creando asientos...');
     const asientos = [];
-    for (let i = 1; i <= 60; i++) { // Aumentado para buses de 2 pisos
+    for (let i = 1; i <= 44; i++) { // Aumentado para buses de 2 pisos
       asientos.push({ numeracion: i.toString() });
     }
     await Asiento.bulkCreate(asientos);

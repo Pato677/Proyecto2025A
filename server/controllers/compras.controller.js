@@ -171,6 +171,7 @@ const crearCompraCompleta = async (req, res) => {
       success: true,
       message: 'Compra creada exitosamente',
       data: {
+        id: compra.id,
         compra: compra,
         pasajeros: pasajerosCreados,
         boletos: boletosCreados,

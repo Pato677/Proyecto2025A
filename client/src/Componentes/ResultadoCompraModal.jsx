@@ -11,13 +11,16 @@ const ResultadoCompraModal = ({
   const navigate = useNavigate();
   if (!open || !datosCompra) return null;
 
-  const { 
-    codigoCompra, 
-    totalPasajeros, 
-    totalBoletos, 
-    precioBase, 
-    pasajeros 
-  } = datosCompra;
+  // Agregar logs para debug
+  console.log('Datos completos recibidos en modal:', datosCompra);
+  
+  // Extraer datos correctamente de la estructura del backend
+  const id = datosCompra.id;
+  const codigoCompra = datosCompra.codigoCompra;
+  const totalPasajeros = datosCompra.totalPasajeros;
+  const totalBoletos = datosCompra.totalBoletos;
+  const precioBase = datosCompra.precioBase;
+  const pasajeros = datosCompra.pasajeros;
 
   const calcularTotal = () => {
     if (pasajeros && pasajeros.length > 0) {
@@ -27,10 +30,16 @@ const ResultadoCompraModal = ({
   };
 
   const handleAceptar = () => {
-    // Navegar a TicketPage con el código de compra como parámetro
-    if (codigoCompra) {
-      navigate(`/TicketPage?codigoBoleto=${codigoCompra}`);
+    // Limpiar localStorage antes de navegar
+    localStorage.removeItem('pasajerosData');
+    localStorage.removeItem('asientosSeleccionados');
+    
+    // Navegar a TicketPage con el ID de compra como parámetro
+    if (id) {
+      navigate(`/TicketPage?compraId=${id}`);
     } else {
+      console.error('No se encontró el ID de compra');
+      console.log('datosCompra disponible:', datosCompra);
       onCerrar();
     }
   };
@@ -50,9 +59,9 @@ const ResultadoCompraModal = ({
           <div className="resultado-section">
             <h3>Información de la Compra</h3>
             <div className="resultado-details">
-              <p><strong>Código de Compra:</strong> <span className="codigo-compra">{codigoCompra}</span></p>
-              <p><strong>Total de Pasajeros:</strong> {totalPasajeros}</p>
-              <p><strong>Boletos Generados:</strong> {totalBoletos}</p>
+              <p><strong>Código de Compra:</strong> <span className="codigo-compra">{id || 'N/A'}</span></p>
+              <p><strong>Total de Pasajeros:</strong> {totalPasajeros || 0}</p>
+              <p><strong>Boletos Generados:</strong> {totalBoletos || 0}</p>
               <p><strong>Total Pagado:</strong> <span className="precio-total">${calcularTotal()}</span></p>
             </div>
           </div>

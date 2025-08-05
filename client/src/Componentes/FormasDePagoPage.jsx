@@ -34,17 +34,18 @@ const FormasDePagoPage = () => {
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
   
-  // Obtener datos de los parámetros
-  const pasajerosDataStr = params.get('pasajerosData');
-  const asientosSeleccionadosStr = params.get('asientosSeleccionados');
+  // Obtener datos desde localStorage
+  const pasajerosData = localStorage.getItem('pasajerosData') 
+    ? JSON.parse(localStorage.getItem('pasajerosData')) 
+    : [];
+  const asientosSeleccionados = localStorage.getItem('asientosSeleccionados') 
+    ? JSON.parse(localStorage.getItem('asientosSeleccionados')) 
+    : [];
+  
   const viajeId = params.get('viajeId');
   const origenCiudad = params.get('origenCiudad');
   const destinoCiudad = params.get('destinoCiudad');
   const fecha = params.get('fecha');
-  
-  // Parsear datos
-  const pasajerosData = pasajerosDataStr ? JSON.parse(pasajerosDataStr) : [];
-  const asientosSeleccionados = asientosSeleccionadosStr ? JSON.parse(asientosSeleccionadosStr) : [];
   
   // Cargar datos del viaje desde el servidor
   useEffect(() => {
@@ -197,11 +198,16 @@ const FormasDePagoPage = () => {
       if (response.data.success) {
         const datosRespuesta = response.data.data;
         
+        console.log('Datos respuesta del backend:', datosRespuesta);
+        
         // Agregar información de pasajeros con precios para mostrar en el modal
         const datosCompraCompletos = {
           ...datosRespuesta,
           pasajeros: pasajerosConPrecio
         };
+        
+        console.log('Datos compra completos:', datosCompraCompletos);
+        console.log('ID de compra:', datosCompraCompletos.id);
         
         setDatosCompraExitosa(datosCompraCompletos);
         setShowResultadoModal(true);
@@ -239,8 +245,11 @@ const FormasDePagoPage = () => {
   const handleCerrarResultado = () => {
     setShowResultadoModal(false);
     setDatosCompraExitosa(null);
-    // Redirigir a la página principal
-    navigate('/');
+    // Limpiar localStorage al finalizar la compra
+    localStorage.removeItem('pasajerosData');
+    localStorage.removeItem('asientosSeleccionados');
+    // NO redirigir al home, mantener en la misma página para permitir nuevas compras
+    console.log('Modal cerrado, localStorage limpiado');
   };
   return (
     <div className="pago-resumen-page">

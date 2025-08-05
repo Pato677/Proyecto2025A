@@ -139,7 +139,8 @@ const TripSelectionPage = () => {
       destinoTerminal,
       fecha: fechaSeleccionada,
       pasajeros,
-      viajeId: selectedTrip
+      viajeId: selectedTrip,
+      fresh: 'true' // Agregar parámetro para limpiar localStorage
     }).toString();
     navigate(`/RegistroPasajerosPage?${params}`);
   };

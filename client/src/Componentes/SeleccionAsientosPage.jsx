@@ -14,18 +14,20 @@ const SeleccionAsientosPage = () => {
   const { usuario, logout } = useAuth();
   const params = new URLSearchParams(location.search);
   
-  // Obtener datos de los pasajeros de la URL
-  const pasajerosDataStr = params.get('pasajerosData');
-  const pasajerosData = pasajerosDataStr ? JSON.parse(pasajerosDataStr) : [];
+  // Obtener datos de los pasajeros desde localStorage
+  const pasajerosData = localStorage.getItem('pasajerosData') 
+    ? JSON.parse(localStorage.getItem('pasajerosData')) 
+    : [];
   const numeroPasajeros = pasajerosData.length;
   const viajeId = params.get('viajeId');
   
-  // Obtener asientos previamente seleccionados si existen
-  const asientosYaSeleccionadosStr = params.get('asientosSeleccionados');
-  const asientosYaSeleccionados = asientosYaSeleccionadosStr ? JSON.parse(asientosYaSeleccionadosStr) : [];
+  // Obtener asientos previamente seleccionados desde localStorage
+  const asientosYaSeleccionados = localStorage.getItem('asientosSeleccionados') 
+    ? JSON.parse(localStorage.getItem('asientosSeleccionados')) 
+    : [];
 
   // Estado para el precio del viaje
-  const [precioViaje, setPrecioViaje] = useState(12.25);
+  const [precioViaje, setPrecioViaje] = useState(0.00);
 
   // Cargar datos del viaje
   useEffect(() => {
@@ -33,7 +35,7 @@ const SeleccionAsientosPage = () => {
       axios.get(`http://localhost:8000/viajes/${viajeId}`)
         .then(res => {
           if (res.data.success && res.data.data) {
-            setPrecioViaje(parseFloat(res.data.data.precio) || 12.25);
+            setPrecioViaje(parseFloat(res.data.data.precio) || 0);
           }
         })
         .catch(error => {
@@ -46,7 +48,7 @@ const SeleccionAsientosPage = () => {
   const [asientosSeleccionados, setAsientosSeleccionados] = useState(asientosYaSeleccionados);
   
   // Estado para mostrar qué pasajero está seleccionando asiento
-  const [pasajeroActual, setPasajeroActual] = useState(asientosYaSeleccionados.length > 0 ? asientosYaSeleccionados.length - 1 : 0);
+  const [pasajeroActual, setPasajeroActual] = useState(asientosYaSeleccionados.length > 0 ? asientosYaSeleccionados.length : 0);
 
   const handleSeleccionAsiento = (numeroAsiento) => {
     if (asientosSeleccionados.length < numeroPasajeros && 
@@ -73,16 +75,21 @@ const SeleccionAsientosPage = () => {
   };
 
   const handleAtras = () => {
-    // Mantener todos los parámetros actuales y regresar a registro de pasajeros
+    // Guardar los asientos actuales en localStorage antes de navegar hacia atrás
+    localStorage.setItem('asientosSeleccionados', JSON.stringify(asientosSeleccionados));
+    
+    // Mantener solo el viajeId y otros parámetros necesarios en la URL
     const allParams = new URLSearchParams(location.search);
     navigate(`/RegistroPasajerosPage?${allParams.toString()}`);
   };
 
   const handleAceptar = () => {
     if (asientosSeleccionados.length === numeroPasajeros) {
-      // Pasar los datos de pasajeros y asientos a la siguiente página
+      // Guardar los asientos seleccionados en localStorage
+      localStorage.setItem('asientosSeleccionados', JSON.stringify(asientosSeleccionados));
+      
+      // Pasar solo el viajeId por URL
       const allParams = new URLSearchParams(location.search);
-      allParams.set('asientosSeleccionados', JSON.stringify(asientosSeleccionados));
       navigate(`/FormasDePagoPage?${allParams.toString()}`);
     } else {
       alert(`Debe seleccionar ${numeroPasajeros} asientos para todos los pasajeros.`);
