@@ -107,7 +107,7 @@ const RutasPanel = ({ cooperativaId = 1 }) => { // Por defecto cooperativa 1 par
   // Cargar rutas, terminales y cooperativas al inicio
   useEffect(() => {
     recargarRutas(1);
-    cargarTerminales();
+    //cargarTerminales();
     cargarCooperativas();
   }, [cooperativaId]); // Recargar cuando cambie la cooperativa
 
