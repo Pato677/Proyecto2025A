@@ -1,7 +1,7 @@
 const {Sequelize} = require("sequelize");
 
 const username = "root";
-const password = "admin";
+const password = "root";
 //const password = "root";
 const bdd_name = "transportesec";
 const hostName = "localhost";
