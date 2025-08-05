@@ -19,7 +19,7 @@ function TicketPage() {
       fetch(`http://localhost:8000/api/compras/${compraId}`)
         .then(res => res.json())
         .then(data => {
-          console.log("Compra recibida:", data);
+          
           setCompra(data.data); // Asegúrate de usar data.data si tu backend responde con { success, data }
         });
     }
@@ -33,7 +33,7 @@ function TicketPage() {
         fetch(`http://localhost:8000/viajes/${viajeId}`)
           .then(res => res.json())
           .then(data => {
-            console.log("Viaje recibido:", data);
+            
             setViaje(data.data);
           });
       }
@@ -62,6 +62,20 @@ function TicketPage() {
         codigoBoleto: boletoActual.codigo || '',
       }
     : {};
+
+  const qrString = boletoActual && viaje && compra
+    ? [
+        `Boleto: ${boletoActual.codigo}`,
+        `Pasajero: ${boletoActual.Pasajero?.nombres || compra.Pasajero?.nombres || ''} ${boletoActual.Pasajero?.apellidos || compra.Pasajero?.apellidos || ''}`,
+        `Cédula: ${boletoActual.Pasajero?.cedula || compra.Pasajero?.cedula || ''}`,
+        `Salida: ${viaje.fecha_salida ? new Date(viaje.fecha_salida).toLocaleString() : ''}`,
+        `Origen: ${viaje.ruta?.terminalOrigen?.ciudad?.nombre || ''}`,
+        `Destino: ${viaje.ruta?.terminalDestino?.ciudad?.nombre || ''}`,
+        `Cooperativa: ${viaje.ruta?.UsuarioCooperativa?.razon_social || ''}`,
+        `Bus: ${viaje.unidad?.numero_unidad || ''}`,
+        `Asiento: ${boletoActual.asiento || ''}`
+      ].join('\n')
+    : '';
 
   return (
     <div className="ticket-page">
@@ -93,7 +107,7 @@ function TicketPage() {
         </div>
         <div className="ticket-qr-section">
           <img
-            src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${boletoActual?.codigo || compraId}`}
+            src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrString)}`}
             alt="QR Code"
             className="ticket-qr"
           />
