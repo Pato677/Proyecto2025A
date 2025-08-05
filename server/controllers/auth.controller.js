@@ -248,7 +248,8 @@ const login = async (req, res) => {
         ...datosUsuario,
         nombres: usuario.UsuarioFinal.nombres,
         apellidos: usuario.UsuarioFinal.apellidos,
-        cedula: usuario.UsuarioFinal.cedula
+        cedula: usuario.UsuarioFinal.cedula,
+        fecha_nacimiento: usuario.UsuarioFinal.fecha_nacimiento
         // No incluimos estado para usuarios finales
       };
     } else if (usuario.rol === 'cooperativa' && usuario.UsuarioCooperativa) {

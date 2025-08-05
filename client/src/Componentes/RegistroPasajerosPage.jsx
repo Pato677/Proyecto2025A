@@ -50,8 +50,13 @@ const RegistroPasajerosPage = () => {
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
 
   // Estado para los datos de los pasajeros - usar datos existentes si están disponibles
-  const [datosPasajeros, setDatosPasajeros] = useState(
-    datosExistentes || Array.from({ length: pasajeros }, () => ({
+  const [datosPasajeros, setDatosPasajeros] = useState(() => {
+    if (datosExistentes) {
+      return datosExistentes;
+    }
+    
+    // Crear array de pasajeros vacío
+    const pasajerosVacios = Array.from({ length: pasajeros }, () => ({
       nombres: '',
       apellidos: '',
       cedula: '',
@@ -60,8 +65,38 @@ const RegistroPasajerosPage = () => {
       anio: '',
       correo: '',
       telefono: ''
-    }))
-  );
+    }));
+
+    // Si hay usuario logueado, prellenar el primer pasajero (titular) con sus datos
+    if (usuario && pasajerosVacios.length > 0) {
+      console.log('Datos del usuario logueado:', usuario);
+      
+      // Extraer día, mes y año de fecha_nacimiento si existe
+      let dia = '', mes = '', anio = '';
+      if (usuario.fecha_nacimiento) {
+        const fechaNac = new Date(usuario.fecha_nacimiento);
+        dia = fechaNac.getDate().toString();
+        mes = (fechaNac.getMonth() + 1).toString();
+        anio = fechaNac.getFullYear().toString();
+        console.log('Fecha de nacimiento procesada:', { dia, mes, anio });
+      }
+
+      pasajerosVacios[0] = {
+        nombres: usuario.nombres || '',
+        apellidos: usuario.apellidos || '',
+        cedula: usuario.cedula || '',
+        dia: dia,
+        mes: mes,
+        anio: anio,
+        correo: usuario.correo || '',
+        telefono: usuario.telefono || ''
+      };
+      
+      console.log('Datos precargados para el titular:', pasajerosVacios[0]);
+    }
+
+    return pasajerosVacios;
+  });
 
   // Esta función se pasará al formulario
   const handleRegistroExitoso = () => {
