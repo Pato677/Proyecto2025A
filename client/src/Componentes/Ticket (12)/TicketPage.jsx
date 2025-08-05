@@ -7,6 +7,20 @@ import '../Estilos/Ticket.css';
 import Button from '../Button';
 import html2pdf from 'html2pdf.js';
 import jsPDF from 'jspdf';
+import logo from '../Imagenes/Logo.png'; // Asegúrate de que la ruta sea correcta
+
+function formatearFechaLarga(fechaStr) {
+  if (!fechaStr) return '';
+  const meses = [
+    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+    'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+  ];
+  const fecha = new Date(fechaStr);
+  const dia = fecha.getDate().toString().padStart(2, '0');
+  const mes = meses[fecha.getMonth()];
+  const anio = fecha.getFullYear();
+  return `${dia} de ${mes} de ${anio}`;
+}
 
 function TicketPage() {
   const [searchParams] = useSearchParams();
@@ -86,40 +100,145 @@ function TicketPage() {
   const handleImprimir = () => {
     const doc = new jsPDF();
 
-    // Título
-    doc.setFontSize(18);
-    doc.text('Boleto de Viaje', 105, 20, { align: 'center' });
+    // Logo (mantén relación de aspecto)
+    const logoWidth = 50;
+    const logoHeight = 18;
+    doc.addImage(logo, 'PNG', 15, 10, logoWidth, logoHeight);
 
-    // Información principal
+    // Título principal
+    doc.setFontSize(20);
+    doc.setTextColor(40, 40, 40);
+    doc.text('Boleto de Viaje', 105, 25, { align: 'center' });
+
+    // Línea separadora
+    doc.setDrawColor(100, 100, 100);
+    doc.line(15, 32, 195, 32);
+
+    // Datos del viaje (alineados y con negrita en los valores)
     doc.setFontSize(12);
-    doc.text(`Cooperativa: ${datosViaje.cooperativa}`, 20, 40);
-    doc.text(`Viaje: ${datosViaje.origen} - ${datosViaje.destino}`, 20, 50);
-    doc.text(`Salida: ${datosViaje.horaSalida} - Llegada: ${datosViaje.horaLlegada}`, 20, 60);
-    doc.text(`Bus N°: ${datosViaje.busNumero}`, 20, 70);
-    doc.text(`Fecha de viaje: ${datosViaje.fecha}`, 20, 80);
-    doc.text(`Pasajero: ${boletoActual.Pasajero?.nombres || ''} ${boletoActual.Pasajero?.apellidos || ''}`, 20, 90);
-    doc.text(`Cédula: ${boletoActual.Pasajero?.cedula || ''}`, 20, 100);
-    doc.text(`Asiento: ${datosViaje.asiento}`, 20, 110);
-    doc.text(`Código Boleto: ${datosViaje.codigoBoleto}`, 20, 120);
+    doc.setTextColor(0, 0, 0);
+    let y = 40;
+    doc.text('Cooperativa:', 20, y);
+    doc.setFont(undefined, 'bold');
+    doc.text(`${datosViaje.cooperativa}`, 55, y);
+    doc.setFont(undefined, 'normal');
 
-    // Instrucciones
-    doc.setFontSize(10);
-    doc.text('Presente este código como su boleto para ingresar en la unidad de transporte.', 20, 140);
-    doc.text('Obtendrá una copia del mismo directamente a su correo electrónico.', 20, 146);
+    doc.text('Bus N°:', 120, y);
+    doc.setFont(undefined, 'bold');
+    doc.text(`${datosViaje.busNumero}`, 140, y);
+    doc.setFont(undefined, 'normal');
 
-    // QR: Carga la imagen y agrégala al PDF
+    y += 10;
+    doc.text('Origen:', 20, y);
+    doc.setFont(undefined, 'bold');
+    doc.text(`${datosViaje.origen}`, 45, y);
+    doc.setFont(undefined, 'normal');
+
+    doc.text('Destino:', 120, y);
+    doc.setFont(undefined, 'bold');
+    doc.text(`${datosViaje.destino}`, 145, y);
+    doc.setFont(undefined, 'normal');
+
+    y += 10;
+    doc.text('Salida:', 20, y);
+    doc.setFont(undefined, 'bold');
+    doc.text(`${datosViaje.horaSalida}`, 45, y);
+    doc.setFont(undefined, 'normal');
+
+    doc.text('Llegada:', 120, y);
+    doc.setFont(undefined, 'bold');
+    doc.text(`${datosViaje.horaLlegada}`, 145, y);
+    doc.setFont(undefined, 'normal');
+
+    y += 10;
+    doc.text('Fecha de viaje:', 20, y);
+    doc.setFont(undefined, 'bold');
+    doc.text(formatearFechaLarga(datosViaje.fecha), 60, y);
+    doc.setFont(undefined, 'normal');
+
+    // Datos del pasajero
+    y += 15;
+    doc.setFontSize(13);
+    doc.setTextColor(40, 40, 40);
+    doc.text('Datos del Pasajero', 20, y);
+
+    y += 8;
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Nombre:', 20, y);
+    doc.setFont(undefined, 'bold');
+    doc.text(
+      `${boletoActual.Pasajero?.nombres || compra.Pasajero?.nombres || ''} ${boletoActual.Pasajero?.apellidos || compra.Pasajero?.apellidos || ''}`,
+      45, y
+    );
+    doc.setFont(undefined, 'normal');
+
+    y += 8;
+    doc.text('Cédula:', 20, y);
+    doc.setFont(undefined, 'bold');
+    doc.text(`${boletoActual.Pasajero?.cedula || compra.Pasajero?.cedula || ''}`, 45, y);
+    doc.setFont(undefined, 'normal');
+
+    y += 8;
+    doc.text('Asiento:', 20, y);
+    doc.setFont(undefined, 'bold');
+    doc.text(`${datosViaje.asiento}`, 45, y);
+    doc.setFont(undefined, 'normal');
+
+    y += 8;
+    doc.text('Código Boleto:', 20, y);
+    doc.setFont(undefined, 'bold');
+    doc.text(`${datosViaje.codigoBoleto}`, 60, y);
+    doc.setFont(undefined, 'normal');
+
+    // QR debajo del código de boleto
+    y += 10;
     const qrImg = document.querySelector('.ticket-qr');
     if (qrImg && qrImg.src) {
-      // Carga la imagen como base64 y agrégala
       const img = new window.Image();
       img.crossOrigin = 'Anonymous';
       img.onload = function () {
-        // Agrega el QR al PDF (x, y, width, height)
-        doc.addImage(img, 'PNG', 140, 40, 50, 50);
+        // Centrado horizontal
+        doc.addImage(img, 'PNG', 80, y, 50, 50);
+        // Instrucciones
+        let yInstr = y + 60;
+        doc.setFontSize(11);
+        doc.setTextColor(60, 60, 60);
+        doc.text('Presente este código como su boleto para ingresar en la unidad de transporte.', 20, yInstr);
+        yInstr += 6;
+        doc.text('Obtendrá una copia del mismo directamente a su correo electrónico.', 20, yInstr);
+
+        // Contacto
+        yInstr += 15;
+        doc.setFontSize(10);
+        doc.setTextColor(0, 102, 204);
+        doc.textWithLink('¿Dudas o consultas? Contáctanos:', 20, yInstr, { url: 'mailto:info@transportesec.com' });
+        yInstr += 6;
+        doc.setTextColor(0, 0, 0);
+        doc.text('Teléfono: 0999999999', 20, yInstr);
+        doc.text('Email: info@transportesec.com', 80, yInstr);
+
         doc.save(`boleto_${boletoActual?.codigo || 'ticket'}.pdf`);
       };
       img.src = qrImg.src;
     } else {
+      // Si no hay QR, igual muestra instrucciones y contacto
+      y += 60;
+      doc.setFontSize(11);
+      doc.setTextColor(60, 60, 60);
+      doc.text('Presente este código como su boleto para ingresar en la unidad de transporte.', 20, y);
+      y += 6;
+      doc.text('Obtendrá una copia del mismo directamente a su correo electrónico.', 20, y);
+
+      y += 15;
+      doc.setFontSize(10);
+      doc.setTextColor(0, 102, 204);
+      doc.textWithLink('¿Dudas o consultas? Contáctanos:', 20, y, { url: 'mailto:info@transportesec.com' });
+      y += 6;
+      doc.setTextColor(0, 0, 0);
+      doc.text('Teléfono: 0999999999', 20, y);
+      doc.text('Email: info@transportesec.com', 80, y);
+
       doc.save(`boleto_${boletoActual?.codigo || 'ticket'}.pdf`);
     }
   };
