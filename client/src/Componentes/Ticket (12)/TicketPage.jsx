@@ -36,7 +36,7 @@ function TicketPage() {
 
   useEffect(() => {
     if (compraId && compraId !== 'N/A') {
-      fetch(`http://localhost:8000/api/compras/${compraId}`)
+      fetch(`http://localhost:8000/compras/${compraId}`)
         .then(res => res.json())
         .then(data => {
           setCompra(data.data); // Asegúrate de usar data.data si tu backend responde con { success, data }
