@@ -5,6 +5,7 @@ import axios from 'axios';
 import SeatSelector from './SeatSelector';
 import StepProgress from './StepProgress'; // Asegúrate de que la ruta sea correcta
 import Login from './Login';
+import SimpleErrorModal from './SimpleErrorModal';
 import { FaUser } from 'react-icons/fa';
 import './Estilos/SeleccionAsientosPage.css';
 import Footer from './Footer';
@@ -60,6 +61,16 @@ const SeleccionAsientosPage = () => {
   // Estados para el modal de login y menú de usuario
   const [mostrarLogin, setMostrarLogin] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Estado para el modal de error
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Función helper para mostrar errores
+  const mostrarError = (mensaje) => {
+    setErrorMessage(mensaje);
+    setShowErrorModal(true);
+  };
 
   // Estado para mapear IDs a numeraciones de asientos
   const [asientosMap, setAsientosMap] = useState({});
@@ -210,7 +221,7 @@ const SeleccionAsientosPage = () => {
       
       navigate(`/FormasDePagoPage?${nuevosParams.toString()}`);
     } else {
-      alert(`Debe seleccionar ${numeroPasajeros} asientos para todos los pasajeros.`);
+      mostrarError(`Debe seleccionar ${numeroPasajeros} asientos para todos los pasajeros.`);
     }
   };
   return (
@@ -363,6 +374,14 @@ const SeleccionAsientosPage = () => {
             cerrar={() => setMostrarLogin(false)}
             onLoginExitoso={handleLoginExitoso}
             shouldRedirect={false}
+          />
+        )}
+
+        {/* Modal de Error */}
+        {showErrorModal && (
+          <SimpleErrorModal
+            mensaje={errorMessage}
+            cerrar={() => setShowErrorModal(false)}
           />
         )}
       

@@ -1098,7 +1098,6 @@ async function cargarDatosPrueba() {
         });
       }
 
-<<<<<<< HEAD
       // NUEVOS VIAJES PARA OTRAS RUTAS (2-3 viajes por día para cada ruta)
       
       // Viajes para ruta R011 (Velotax: Quitumbe - Guayaquil temprano)
@@ -1730,23 +1729,6 @@ async function cargarDatosPrueba() {
         ruta_id: rutas[0].id, // Quito - Guayaquil EXPRESS NOCTURNO
         unidad_id: unidades[0].id
       });
-=======
-      // Para el resto de rutas (rutas[1] en adelante), crea 1 viaje diario por ruta
-      for (let r = 1; r < rutas.length; r++) {
-        // Puedes variar la hora y el precio si lo deseas, aquí se usa una hora base y alterna unidad
-        const horaSalida = '08:00:00';
-        const horaLlegada = '16:00:00';
-        const precioBase = 10 + r; // solo para variar el precio
-        viajes.push({
-          fecha_salida: crearFechaHora(fechaViaje, horaSalida),
-          fecha_llegada: crearFechaLlegada(fechaViaje, horaSalida, horaLlegada),
-          numero_asientos_ocupados: 0,
-          precio: precioBase,
-          ruta_id: rutas[r].id,
-          unidad_id: unidades[(r + dia) % unidades.length].id // alterna unidad por ruta y día
-        });
-      }
->>>>>>> 660c3356ad11e938b16e61a4e504cbd2a24f09f7
     }
 
     console.log(`📊 Total de viajes a crear: ${viajes.length}`);

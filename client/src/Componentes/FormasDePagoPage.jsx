@@ -13,6 +13,7 @@ import ResultadoCompraModal from './ResultadoCompraModal';
 import Login from './Login';
 import Registro from './Registro';
 import PerfilUsuarioModal from './PerfilUsuarioModal';
+import SimpleErrorModal from './SimpleErrorModal';
 
 const FormasDePagoPage = () => {
   const location = useLocation();
@@ -63,6 +64,16 @@ const FormasDePagoPage = () => {
   const [mostrarLogin, setMostrarLogin] = useState(false);
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
+
+  // Estado para el modal de error
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Función helper para mostrar errores
+  const mostrarError = (mensaje) => {
+    setErrorMessage(mensaje);
+    setShowErrorModal(true);
+  };
   
   // Obtener datos desde URL
   const pasajerosData = decodificarDatosPasajeros();
@@ -202,23 +213,23 @@ const FormasDePagoPage = () => {
   const handleAceptar = () => {
     // Validar que se haya seleccionado una forma de pago
     if (!formaPagoSeleccionada) {
-      alert('Por favor, seleccione una forma de pago');
+      mostrarError('Por favor, seleccione una forma de pago');
       return;
     }
 
     // Validar que tengamos todos los datos necesarios
     if (!pasajerosData || pasajerosData.length === 0) {
-      alert('No se encontraron datos de pasajeros');
+      mostrarError('No se encontraron datos de pasajeros');
       return;
     }
 
     if (!asientosSeleccionados || asientosSeleccionados.length === 0) {
-      alert('No se encontraron asientos seleccionados');
+      mostrarError('No se encontraron asientos seleccionados');
       return;
     }
 
     if (!viajeId) {
-      alert('No se encontró el ID del viaje');
+      mostrarError('No se encontró el ID del viaje');
       return;
     }
 
@@ -263,7 +274,8 @@ const FormasDePagoPage = () => {
         setDatosCompraExitosa(datosCompraCompletos);
         setShowResultadoModal(true);
       } else {
-        alert('Error al procesar la compra: ' + response.data.message);
+        console.log('Error del servidor:', response.data.message);
+        mostrarError('Error al procesar la compra: ' + response.data.message);
       }
 
     } catch (error) {
@@ -273,16 +285,20 @@ const FormasDePagoPage = () => {
         // Error del servidor
         const errorData = error.response.data;
         if (errorData.asientosOcupados) {
-          alert(`Error: Algunos asientos ya están ocupados: ${errorData.asientosOcupados.join(', ')}\nPor favor, seleccione otros asientos.`);
+          console.log('Asientos ocupados:', errorData.asientosOcupados);
+          mostrarError(`Error: Algunos asientos ya están ocupados: ${errorData.asientosOcupados.join(', ')}\n\nPor favor, seleccione otros asientos.`);
         } else {
-          alert('Error al procesar la compra: ' + (errorData.error || errorData.message || 'Error desconocido'));
+          console.log('Error del servidor:', errorData.error || errorData.message);
+          mostrarError('Error al procesar la compra: ' + (errorData.error || errorData.message || 'Error desconocido'));
         }
       } else if (error.request) {
         // Error de red
-        alert('Error de conexión. Verifique su conexión a internet.');
+        console.log('Error de conexión a internet');
+        mostrarError('Error de conexión. Verifique su conexión a internet.');
       } else {
         // Otro tipo de error
-        alert('Error inesperado: ' + error.message);
+        console.log('Error inesperado:', error.message);
+        mostrarError('Error inesperado: ' + error.message);
       }
     } finally {
       setProcesandoPago(false);
@@ -300,66 +316,69 @@ const FormasDePagoPage = () => {
     console.log('Modal cerrado');
   };
   return (
-    <div className="pago-resumen-page">
-      <header >
-        <Header 
-          currentStep={5} 
-          totalSteps={5}
-          usuario={usuario}
-          onLogout={() => logout()}
-          onLoginClick={() => setMostrarLogin(true)}
-          onPerfilClick={() => setMostrarPerfil(true)}
-        />
-      </header>
-
-      <div className="contenido-pago">
-        <div>
-            <h2 className="titulo-pago">Formas de Pago</h2>
-
-        </div>
-
-        <div className="ticket-info-box">
-            {cargandoViaje ? (
-              <div>Cargando datos del viaje...</div>
-            ) : (
-              <TicketInfo datosViaje={datosViaje} />
-            )}
-        </div>
-
-        {/* Forma de pago */}
-        <div className="forma-pago-box">
-          <label className='lblFormadepago'>Forma de pago</label>
-          <select 
-            className='select-forma-pago'
-            value={formaPagoSeleccionada}
-            onChange={(e) => setFormaPagoSeleccionada(e.target.value)}
-          >
-            <option value="">Seleccione una opción</option>
-            <option value="transferencia">Transferencia</option>
-            <option value="tarjeta">Tarjeta de crédito/débito</option>
-            <option value="efectivo">Efectivo</option>
-          </select>
-        </div>
-        <div className="tabla-pasajeros-box">
-            <TablaPasajeros pasajeros={pasajerosConPrecio} />
-        </div>
-
-        {/* Botones */}
-        <div className="contenedor-botones">
-          <Button text="Atras" width='150px' onClick={handleAtras} />
-          <Button 
-            text={procesandoPago ? "Procesando..." : "Aceptar"} 
-            width='150px' 
-            onClick={handleAceptar}
-            disabled={procesandoPago}
+    <>
+      <div className="pago-resumen-page">
+        <header >
+          <Header 
+            currentStep={5} 
+            totalSteps={5}
+            usuario={usuario}
+            onLogout={() => logout()}
+            onLoginClick={() => setMostrarLogin(true)}
+            onPerfilClick={() => setMostrarPerfil(true)}
           />
+        </header>
+
+        <div className="contenido-pago">
+          <div>
+              <h2 className="titulo-pago">Formas de Pago</h2>
+          </div>
+
+          <div className="ticket-info-box">
+              {cargandoViaje ? (
+                <div>Cargando datos del viaje...</div>
+              ) : (
+                <TicketInfo datosViaje={datosViaje} />
+              )}
+          </div>
+
+          {/* Forma de pago */}
+          <div className="forma-pago-box">
+            <label className='lblFormadepago'>Forma de pago</label>
+            <select 
+              className='select-forma-pago'
+              value={formaPagoSeleccionada}
+              onChange={(e) => setFormaPagoSeleccionada(e.target.value)}
+            >
+              <option value="">Seleccione una opción</option>
+              <option value="transferencia">Transferencia</option>
+              <option value="tarjeta">Tarjeta de crédito/débito</option>
+              <option value="efectivo">Efectivo</option>
+            </select>
+          </div>
+          <div className="tabla-pasajeros-box">
+              <TablaPasajeros pasajeros={pasajerosConPrecio} />
+          </div>
+
+          {/* Botones */}
+          <div className="contenedor-botones">
+            <Button text="Atras" width='150px' onClick={handleAtras} />
+            <Button 
+              text={procesandoPago ? "Procesando..." : "Aceptar"} 
+              width='150px' 
+              onClick={handleAceptar}
+              disabled={procesandoPago}
+            />
+          </div>
         </div>
+
+        <footer>
+          <Footer />
+        </footer>
       </div>
 
-      <footer>
-        <Footer />
-      </footer>
-
+      {/* Modales fuera del contenedor principal para evitar problemas de z-index */}
+      
       {/* Modal de Confirmación de Compra */}
       <ConfirmacionCompraModal
         open={showConfirmacionModal}
@@ -407,7 +426,15 @@ const FormasDePagoPage = () => {
           cerrar={() => setMostrarPerfil(false)}
         />
       )}
-    </div>
+
+      {/* Modal de Error */}
+      {showErrorModal && (
+        <SimpleErrorModal
+          message={errorMessage}
+          onClose={() => setShowErrorModal(false)}
+        />
+      )}
+    </>
   );
 };
 
