@@ -7,6 +7,7 @@ import PasajerosForm from './PasajerosForm';
 import Login from './Login';
 import Registro from './Registro';
 import PerfilUsuarioModal from './PerfilUsuarioModal';
+import ErrorModal from './ErrorModal';
 import './Estilos/RegistroPasajerosPage.css';
 import Button from './Button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -52,6 +53,10 @@ const RegistroPasajerosPage = () => {
   const [mostrarLogin, setMostrarLogin] = useState(false);
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
+
+  // Estado para el modal de errores
+  const [erroresValidacion, setErroresValidacion] = useState([]);
+  const [mostrarErrorModal, setMostrarErrorModal] = useState(false);
 
   // Estado para los datos de los pasajeros - usar datos de URL si están disponibles
   const [datosPasajeros, setDatosPasajeros] = useState(() => {
@@ -145,30 +150,65 @@ const RegistroPasajerosPage = () => {
   };
 
   const handleAceptar = () => {
-    // Validar todos los formularios de pasajeros
-    let todosValidos = true;
+    // Validar todos los formularios de pasajeros y recopilar errores
+    const errores = [];
     
     for (let i = 0; i < numeroPasajeros; i++) {
       const pasajero = datosPasajeros[i];
+      const numerosPasajero = i + 1;
       
       // Validaciones básicas para todos los pasajeros
-      if (!pasajero.nombres || !pasajero.apellidos || !pasajero.cedula || 
-          !pasajero.dia || !pasajero.mes || !pasajero.anio) {
-        todosValidos = false;
-        break;
+      if (!pasajero.nombres) {
+        errores.push({
+          pasajero: numerosPasajero,
+          mensaje: 'El campo nombres es requerido'
+        });
+      }
+      
+      if (!pasajero.apellidos) {
+        errores.push({
+          pasajero: numerosPasajero,
+          mensaje: 'El campo apellidos es requerido'
+        });
+      }
+      
+      if (!pasajero.cedula) {
+        errores.push({
+          pasajero: numerosPasajero,
+          mensaje: 'El campo cédula es requerido'
+        });
+      }
+      
+      if (!pasajero.dia || !pasajero.mes || !pasajero.anio) {
+        errores.push({
+          pasajero: numerosPasajero,
+          mensaje: 'La fecha de nacimiento es requerida (día, mes y año)'
+        });
       }
       
       // Validaciones adicionales para el primer pasajero (titular)
-      if (i === 0 && (!pasajero.correo || !pasajero.telefono)) {
-        todosValidos = false;
-        break;
+      if (i === 0) {
+        if (!pasajero.correo) {
+          errores.push({
+            pasajero: numerosPasajero,
+            mensaje: 'El campo correo es requerido para el titular'
+          });
+        }
+        
+        if (!pasajero.telefono) {
+          errores.push({
+            pasajero: numerosPasajero,
+            mensaje: 'El campo teléfono es requerido para el titular'
+          });
+        }
       }
     }
     
-    if (todosValidos) {
+    if (errores.length === 0) {
       handleRegistroExitoso();
     } else {
-      alert('Por favor, complete todos los datos requeridos de todos los pasajeros antes de continuar.');
+      setErroresValidacion(errores);
+      setMostrarErrorModal(true);
     }
   };
 
@@ -278,6 +318,17 @@ const RegistroPasajerosPage = () => {
       {mostrarPerfil && (
         <PerfilUsuarioModal
           cerrar={() => setMostrarPerfil(false)}
+        />
+      )}
+
+      {/* Modal de Errores de Validación */}
+      {mostrarErrorModal && (
+        <ErrorModal
+          errores={erroresValidacion}
+          cerrar={() => {
+            setMostrarErrorModal(false);
+            setErroresValidacion([]);
+          }}
         />
       )}
     </div>
