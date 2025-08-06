@@ -1,34 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Estilos/ModalRastreoBoleto.css";
 
 const ModalRastreoBoleto = ({ open, onClose }) => {
-  const [numeroBoleto, setNumeroBoleto] = useState("");
+  const [input, setInput] = useState(""); // Solo lo que el usuario escribe
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState(""); // 'error' | 'info'
 
+  // Limpiar campos al cerrar el modal
+  useEffect(() => {
+    if (!open) {
+      setInput("");
+      setMensaje("");
+      setTipoMensaje("");
+    }
+  }, [open]);
+
   if (!open) return null;
 
-  const handleBuscar = () => {
-    if (!numeroBoleto.trim()) {
-      setMensaje("Por favor ingresa un número de boleto.");
-      setTipoMensaje("error");
-      return;
+  // Formatea el input para el formato BOL-XXXXXX-XXXXXX
+  const formatBoleto = (value) => {
+    let clean = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    clean = clean.slice(0, 12);
+    if (clean.length > 0) {
+      if (clean.length <= 6) {
+        return clean;
+      }
+      // Si ya hay más de 6, inserta el guión después del sexto
+      return clean.slice(0, 6) + '-' + clean.slice(6);
     }
-    if (!/^\d+$/.test(numeroBoleto.trim())) {
-      setMensaje("El número de boleto solo debe contener dígitos.");
-      setTipoMensaje("error");
-      return;
-    }
-    if (numeroBoleto.trim().length < 4) {
-      setMensaje("Debe ingresar un formato de boleto válido (mínimo 4 dígitos).");
-      setTipoMensaje("error");
-      return;
-    }
-    // Aquí podrías agregar más validaciones si lo necesitas
+    return clean;
+  };
 
+  const handleInputChange = (e) => {
+    setMensaje("");
+    setTipoMensaje("");
+    setInput(formatBoleto(e.target.value));
+  };
+
+  const handleBuscar = () => {
+    const boletoCompleto = `BOL-${formatBoleto(input)}`;
+    if (!input.trim() || input.length < 13) {
+      setMensaje("Debe ingresar un número de boleto válido (BOL-XXXXXX-XXXXXX).");
+      setTipoMensaje("error");
+      return;
+    }
     setMensaje("Buscando boleto...");
     setTipoMensaje("info");
-    // Simula búsqueda (puedes reemplazar esto por tu lógica real)
+    // Aquí tu lógica real de búsqueda, usando boletoCompleto
     setTimeout(() => {
       setMensaje("Boleto no encontrado o función de rastreo aún no implementada.");
       setTipoMensaje("error");
@@ -40,16 +58,16 @@ const ModalRastreoBoleto = ({ open, onClose }) => {
       <div className="modal-rastreo-contenido">
         <button className="modal-rastreo-cerrar" onClick={onClose}>×</button>
         <h3>Rastrea tu boleto</h3>
-        <input
-          type="text"
-          placeholder="Número de boleto"
-          value={numeroBoleto}
-          onChange={e => {
-            setNumeroBoleto(e.target.value);
-            setMensaje("");
-            setTipoMensaje("");
-          }}
-        />
+        <div className="modal-rastreo-input-row">
+          <span>BOL-</span>
+          <input
+            type="text"
+            placeholder="XXXXXX-XXXXXX"
+            maxLength={13}
+            value={formatBoleto(input)}
+            onChange={handleInputChange}
+          />
+        </div>
         {mensaje && (
           <div className={`modal-rastreo-mensaje ${tipoMensaje}`}>
             {mensaje}

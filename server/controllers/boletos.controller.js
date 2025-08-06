@@ -1,23 +1,14 @@
-const { Boleto, Usuario, Viaje, PasajeroBoleto } = require('../models');
+const { Boleto, Pasajero, Compra, Viaje } = require('../models');
 
 // Obtener todos los boletos
 const getAllBoletos = async (req, res) => {
     try {
         const boletos = await Boleto.findAll({
             include: [
+                Pasajero,
                 {
-                    model: Usuario,
-                    as: 'usuario',
-                    attributes: ['id', 'nombres', 'apellidos', 'correo']
-                },
-                {
-                    model: Viaje,
-                    as: 'viaje',
-                    attributes: ['id', 'fecha_viaje', 'hora_salida', 'precio']
-                },
-                {
-                    model: PasajeroBoleto,
-                    as: 'pasajeros'
+                    model: Compra,
+                    include: [Viaje]
                 }
             ]
         });
@@ -28,43 +19,25 @@ const getAllBoletos = async (req, res) => {
     }
 };
 
-// Obtener boleto por ID
+// Obtener boleto por código
 const getBoletosById = async (req, res) => {
     try {
         const { id } = req.params;
-        const boleto = await Boleto.findByPk(id, {
+        const boleto = await Boleto.findOne({
+            where: { codigo: id },
             include: [
+                Pasajero,
                 {
-                    model: Usuario,
-                    as: 'usuario',
-                    attributes: ['id', 'nombres', 'apellidos', 'correo', 'telefono']
-                },
-                {
-                    model: Viaje,
-                    as: 'viaje',
-                    include: [
-                        {
-                            model: Ruta,
-                            as: 'ruta',
-                            include: ['ciudadOrigen', 'ciudadDestino', 'terminalOrigen', 'terminalDestino']
-                        },
-                        {
-                            model: Unidad,
-                            as: 'unidad'
-                        }
-                    ]
-                },
-                {
-                    model: PasajeroBoleto,
-                    as: 'pasajeros'
+                    model: Compra,
+                    include: [Viaje]
                 }
             ]
         });
-        
+
         if (!boleto) {
             return res.status(404).json({ error: 'Boleto no encontrado' });
         }
-        
+
         res.json(boleto);
     } catch (error) {
         console.error('Error al obtener boleto:', error);
@@ -72,35 +45,23 @@ const getBoletosById = async (req, res) => {
     }
 };
 
-// Obtener boletos por usuario
-const getBoletosByUsuario = async (req, res) => {
+// Obtener boletos por pasajero
+const getBoletosByPasajero = async (req, res) => {
     try {
-        const { usuarioId } = req.params;
+        const { pasajeroId } = req.params;
         const boletos = await Boleto.findAll({
-            where: { usuarioId },
+            where: { pasajero_id: pasajeroId },
             include: [
+                Pasajero,
                 {
-                    model: Viaje,
-                    as: 'viaje',
-                    include: [
-                        {
-                            model: Ruta,
-                            as: 'ruta',
-                            include: ['ciudadOrigen', 'ciudadDestino']
-                        }
-                    ]
-                },
-                {
-                    model: PasajeroBoleto,
-                    as: 'pasajeros'
+                    model: Compra,
+                    include: [Viaje]
                 }
-            ],
-            order: [['fecha_boleto', 'DESC']]
+            ]
         });
-        
         res.json(boletos);
     } catch (error) {
-        console.error('Error al obtener boletos del usuario:', error);
+        console.error('Error al obtener boletos del pasajero:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
@@ -108,51 +69,32 @@ const getBoletosByUsuario = async (req, res) => {
 // Crear nuevo boleto
 const createBoleto = async (req, res) => {
     try {
-        const { 
-            viajeId, 
-            usuarioId, 
-            numeroAsientos, 
-            asientosSeleccionados, 
-            precioTotal, 
-            metodoPago,
-            pasajeros 
-        } = req.body;
-        
+        const { valor, compra_id, pasajero_id, viaje_id } = req.body;
         // Generar código único para el boleto
-        const codigoBoleto = `BOL-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-        
+        const codigo = `BOL-${Date.now()}-${Math.floor(Math.random()*1000).toString().padStart(3, '0')}`;
+
         const nuevoBoleto = await Boleto.create({
-            viajeId,
-            usuarioId,
-            numeroAsientos,
-            asientosSeleccionados,
-            precioTotal,
-            metodoPago,
-            codigoBoleto,
-            estadoPago: 'pendiente'
+            codigo,
+            valor,
+            compra_id,
+            pasajero_id,
+            viaje_id
         });
-        
-        // Crear registros de pasajeros si se proporcionan
-        if (pasajeros && pasajeros.length > 0) {
-            const pasajerosData = pasajeros.map(pasajero => ({
-                boletoId: nuevoBoleto.id,
-                nombre: pasajero.nombre,
-                apellido: pasajero.apellido,
-                cedula: pasajero.cedula,
-                numeroAsiento: pasajero.numeroAsiento
-            }));
-            
-            await PasajeroBoleto.bulkCreate(pasajerosData);
-        }
-        
-        res.status(201).json(nuevoBoleto);
+
+        const boletoCompleto = await Boleto.findByPk(nuevoBoleto.codigo, {
+            include: [
+                Pasajero,
+                {
+                    model: Compra,
+                    include: [Viaje]
+                }
+            ]
+        });
+
+        res.status(201).json(boletoCompleto);
     } catch (error) {
         console.error('Error al crear boleto:', error);
-        if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
-            res.status(400).json({ error: error.message });
-        } else {
-            res.status(500).json({ error: 'Error interno del servidor' });
-        }
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
 
@@ -160,70 +102,44 @@ const createBoleto = async (req, res) => {
 const updateBoleto = async (req, res) => {
     try {
         const { id } = req.params;
-        const { 
-            numeroAsientos, 
-            asientosSeleccionados, 
-            precioTotal, 
-            metodoPago, 
-            estadoPago 
-        } = req.body;
-        
+        const { valor } = req.body;
+
         const boleto = await Boleto.findByPk(id);
         if (!boleto) {
             return res.status(404).json({ error: 'Boleto no encontrado' });
         }
-        
-        await boleto.update({
-            numeroAsientos,
-            asientosSeleccionados,
-            precioTotal,
-            metodoPago,
-            estadoPago
+
+        await boleto.update({ valor });
+
+        const boletoCompleto = await Boleto.findByPk(id, {
+            include: [
+                Pasajero,
+                {
+                    model: Compra,
+                    include: [Viaje]
+                }
+            ]
         });
-        
-        res.json(boleto);
+
+        res.json(boletoCompleto);
     } catch (error) {
         console.error('Error al actualizar boleto:', error);
-        if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
-            res.status(400).json({ error: error.message });
-        } else {
-            res.status(500).json({ error: 'Error interno del servidor' });
-        }
-    }
-};
-
-// Cancelar boleto
-const cancelarBoleto = async (req, res) => {
-    try {
-        const { id } = req.params;
-        
-        const boleto = await Boleto.findByPk(id);
-        if (!boleto) {
-            return res.status(404).json({ error: 'Boleto no encontrado' });
-        }
-        
-        await boleto.update({ estadoPago: 'cancelado' });
-        res.json({ message: 'Boleto cancelado correctamente' });
-    } catch (error) {
-        console.error('Error al cancelar boleto:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
 
-// Confirmar pago de boleto
-const confirmarPago = async (req, res) => {
+// Eliminar boleto
+const deleteBoleto = async (req, res) => {
     try {
         const { id } = req.params;
-        
         const boleto = await Boleto.findByPk(id);
         if (!boleto) {
             return res.status(404).json({ error: 'Boleto no encontrado' });
         }
-        
-        await boleto.update({ estadoPago: 'pagado' });
-        res.json({ message: 'Pago confirmado correctamente', boleto });
+        await boleto.destroy();
+        res.json({ message: 'Boleto eliminado correctamente' });
     } catch (error) {
-        console.error('Error al confirmar pago:', error);
+        console.error('Error al eliminar boleto:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
@@ -231,9 +147,8 @@ const confirmarPago = async (req, res) => {
 module.exports = {
     getAllBoletos,
     getBoletosById,
-    getBoletosByUsuario,
+    getBoletosByPasajero,
     createBoleto,
     updateBoleto,
-    cancelarBoleto,
-    confirmarPago
+    deleteBoleto
 };

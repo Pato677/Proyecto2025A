@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate} from 'react-router-dom';
 import React from 'react';
 import { AuthProvider } from './Componentes/AuthContext';
 import ProtectedRoute from './Componentes/ProtectedRoute';
@@ -31,7 +31,10 @@ function App() {
         <BrowserRouter>
           <Routes>
             {/* Rutas públicas */}
-            <Route path="/" element={<Indice />} />
+            
+            <Route path="/Indice" element={<Indice />} />
+            
+            <Route path="/" element={<Navigate to="/Inicio" replace />} />
             <Route path="/Inicio" element={<Inicio />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/PasajeroForm" element={<Registro />} />
