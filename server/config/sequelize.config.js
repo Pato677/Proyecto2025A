@@ -1,8 +1,8 @@
-const {Sequelize} = require("sequelize");
+require('dotenv').config();
+const { Sequelize } = require("sequelize");
 
-const username = "root";
-const password = "admin";
-//const password = "root";
+const username = process.env.DB_USER;
+const password = process.env.DB_PASS;
 const bdd_name = "transportesec";
 const hostName = "localhost";
 
@@ -62,11 +62,6 @@ const recreateDatabase = async () => {
 // Función para sincronizar la base de datos
 const initializeDatabase = async () => {
     try {
-        //EN el sync si se utiliza el parametro de entrafa force: true, se eliminan las tablas existentes y se crean de nuevo
-        //Con el alter:true se actualizan las tablas existentes sin perder los datos, pero puede causar problemas si hay cambios incompatibles (Hace el mejor intento de mantener los datos)
-        //Lo recomendable en el desarrollo es usar force true
-        //En producción no se debe utilizar ninguno.
-
         // 🔥 ACTIVAR PARA RECARGAR DATOS AUTOMÁTICAMENTE 
         const forceRecreate = true; // Cambiar a false cuando no quieras recrear
         
