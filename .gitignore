@@ -1,3 +1,2 @@
 node_modules
-sequelize.config.js
-server/config/sequelize.config.js
+.env
