@@ -155,7 +155,6 @@ const TripSelectionPage = () => {
         const mm = String(fechaProxima.getMonth() + 1).padStart(2, '0');
         const dd = String(fechaProxima.getDate()).padStart(2, '0');
         const fechaFormateada = `${yyyy}-${mm}-${dd}`;
-        console.log('Fecha más próxima para seleccionar en DateCarousel:', fechaFormateada);
         if (fechaSeleccionada !== fechaFormateada) {
           setFechaSeleccionada(fechaFormateada);
         }
@@ -340,12 +339,14 @@ const TripSelectionPage = () => {
               navigate(`/Inicio?${params}`);
             }}
           />
+          
           <Button
             text="Aceptar"
             width="150px"
-            disabled={!selectedTrip}
+            
             onClick={() => {
               if (!selectedTrip) {
+                
                 setShowInfoModal(true);
                 return;
               }
