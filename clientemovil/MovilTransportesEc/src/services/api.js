@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000'; // Cambia esta URL por la de tu servidor
+const API_BASE_URL = 'http://192.168.247.115:8000'; // IP de tu PC
 
 // Configuración global de axios
 const api = axios.create({
@@ -37,11 +37,10 @@ export const AuthService = {
   // Registro de usuario final
   register: async (userData) => {
     try {
-      const response = await api.post('/auth/registro', {
+      const response = await api.post('/auth/registro/usuario', {
         correo: userData.correo,
         contrasena: userData.contrasena,
         telefono: userData.telefono,
-        rol: 'final',
         datosUsuarioFinal: {
           nombres: userData.nombres,
           apellidos: userData.apellidos,

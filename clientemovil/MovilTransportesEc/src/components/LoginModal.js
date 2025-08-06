@@ -11,8 +11,10 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { AuthService } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const LoginModal = ({ visible, onClose, onOpenRegister }) => {
+  const { login } = useAuth();
   const [credentials, setCredentials] = useState({
     correo: '',
     contrasena: '',
@@ -38,12 +40,21 @@ const LoginModal = ({ visible, onClose, onOpenRegister }) => {
       const response = await AuthService.login(credentials.correo, credentials.contrasena);
       
       if (response.success) {
+        // Solo permitir usuarios finales en la app móvil
+        if (response.configuracion?.dashboard !== 'usuario') {
+          Alert.alert('Error', 'Esta aplicación es solo para usuarios finales. Use la aplicación web para otros tipos de usuario.');
+          setLoading(false);
+          return;
+        }
+
+        // Guardar en el contexto de autenticación
+        await login(response.usuario, response.token);
+        
         Alert.alert('Éxito', response.mensajeBienvenida || 'Inicio de sesión exitoso', [
           {
             text: 'OK',
             onPress: () => {
-              onClose();
-              // Aquí podrías navegar a otra pantalla o actualizar el estado global
+              handleClose();
             }
           }
         ]);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,19 +9,61 @@ import {
   Image,
   SafeAreaView,
   StatusBar,
-  Modal
+  Modal,
+  Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LoginModal from '../components/LoginModal';
 import RegisterModal from '../components/RegisterModal';
+import { useAuth } from '../context/AuthContext';
+import { LocationService } from '../services/api';
 
 const HomeScreen = ({ navigation }) => {
+  const { user, logout, isAuthenticated } = useAuth();
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [passengers, setPassengers] = useState(1);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [cities, setCities] = useState([]);
+  const [terminals, setTerminals] = useState([]);
+
+  // Cargar datos iniciales desde la base de datos
+  useEffect(() => {
+    loadInitialData();
+  }, []);
+
+  const loadInitialData = async () => {
+    try {
+      // Cargar ciudades
+      const citiesResponse = await LocationService.getCities();
+      if (citiesResponse.success) {
+        setCities(citiesResponse.data);
+      }
+    } catch (error) {
+      console.error('Error loading initial data:', error);
+    }
+  };
+
+  const handleLogout = async () => {
+    Alert.alert(
+      'Cerrar Sesión',
+      '¿Estás seguro que deseas cerrar sesión?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Cerrar Sesión',
+          onPress: async () => {
+            await logout();
+          },
+        },
+      ]
+    );
+  };
 
   const handleSearch = () => {
     // Validar campos antes de buscar
@@ -58,13 +100,25 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.headerTitle}>TransportesEC</Text>
         </View>
         <View style={styles.headerRight}>
-          <TouchableOpacity 
-            style={styles.headerButton}
-            onPress={() => setShowLogin(true)}
-          >
-            <Icon name="person" size={24} color="#fff" />
-            <Text style={styles.headerButtonText}>Iniciar Sesión</Text>
-          </TouchableOpacity>
+          {isAuthenticated ? (
+            <TouchableOpacity 
+              style={styles.headerButton}
+              onPress={handleLogout}
+            >
+              <Icon name="person" size={24} color="#fff" />
+              <Text style={styles.headerButtonText}>
+                Hola, {user?.datosUsuarioFinal?.nombres || user?.nombres || 'Usuario'}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity 
+              style={styles.headerButton}
+              onPress={() => setShowLogin(true)}
+            >
+              <Icon name="person" size={24} color="#fff" />
+              <Text style={styles.headerButtonText}>Iniciar Sesión</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 

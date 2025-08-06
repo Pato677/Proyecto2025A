@@ -63,27 +63,11 @@ const RegisterModal = ({ visible, onClose, onOpenLogin }) => {
     setLoading(true);
     
     try {
-      // Verificar si el correo ya existe
-      const correoExiste = await AuthService.checkEmailExists(formData.correo);
-      if (correoExiste) {
-        setErrors(prev => ({ ...prev, correo: 'Este correo ya está registrado' }));
-        setLoading(false);
-        return;
-      }
-      
-      // Verificar si la cédula ya existe
-      const cedulaExiste = await AuthService.checkCedulaExists(formData.cedula);
-      if (cedulaExiste) {
-        setErrors(prev => ({ ...prev, cedula: 'Esta cédula ya está registrada' }));
-        setLoading(false);
-        return;
-      }
-      
-      // Registrar usuario
+      // Registrar usuario directamente
       const response = await AuthService.register(formData);
       
       if (response.success) {
-        Alert.alert('Éxito', 'Registro exitoso', [
+        Alert.alert('Éxito', 'Registro exitoso. Ahora puedes iniciar sesión.', [
           {
             text: 'OK',
             onPress: () => {
@@ -97,6 +81,7 @@ const RegisterModal = ({ visible, onClose, onOpenLogin }) => {
       }
       
     } catch (error) {
+      console.error('Error en registro:', error);
       Alert.alert('Error', error.message || 'Error al registrar usuario');
     } finally {
       setLoading(false);
