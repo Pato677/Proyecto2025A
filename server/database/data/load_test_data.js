@@ -839,6 +839,156 @@ async function cargarDatosPrueba() {
           "Guayaquil, Ecuador",
           "Portoviejo, Ecuador"
         ])
+      },
+      {
+        numero_ruta: 'R011',
+        hora_salida: '06:30:00',
+        hora_llegada: '15:30:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[2].id, // Guayaquil
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Avenida Velasco Ibarra, La Tola, Itchimbia, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "De los Milagros, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "Lex & Justice, Río de Janeiro, Larrea, San Juan, Quito, Distrito Metropolitano de Quito, Pichincha, 170118, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R012',
+        hora_salida: '08:25:00',
+        hora_llegada: '21:30:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[2].id, // Guayaquil
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Avenida Velasco Ibarra, La Tola, Itchimbia, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "De los Milagros, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "Lex & Justice, Río de Janeiro, Larrea, San Juan, Quito, Distrito Metropolitano de Quito, Pichincha, 170118, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R013',
+        hora_salida: '09:10:00',
+        hora_llegada: '21:30:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[2].id, // Guayaquil
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Avenida Velasco Ibarra, La Tola, Itchimbia, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "De los Milagros, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "Lex & Justice, Río de Janeiro, Larrea, San Juan, Quito, Distrito Metropolitano de Quito, Pichincha, 170118, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R014',
+        hora_salida: '10:05:00',
+        hora_llegada: '22:30:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[2].id, // Guayaquil
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Avenida Velasco Ibarra, La Tola, Itchimbia, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "De los Milagros, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "Lex & Justice, Río de Janeiro, Larrea, San Juan, Quito, Distrito Metropolitano de Quito, Pichincha, 170118, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R015',
+        hora_salida: '11:45:00',
+        hora_llegada: '23:30:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[2].id, // Guayaquil
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Avenida Velasco Ibarra, La Tola, Itchimbia, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "De los Milagros, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "Lex & Justice, Río de Janeiro, Larrea, San Juan, Quito, Distrito Metropolitano de Quito, Pichincha, 170118, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R016',
+        hora_salida: '12:21:00',
+        hora_llegada: '21:48:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[2].id, // Guayaquil
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Avenida Velasco Ibarra, La Tola, Itchimbia, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "De los Milagros, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "Lex & Justice, Río de Janeiro, Larrea, San Juan, Quito, Distrito Metropolitano de Quito, Pichincha, 170118, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R017',
+        hora_salida: '14:25:00',
+        hora_llegada: '23:30:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[2].id, // Guayaquil
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Avenida Velasco Ibarra, La Tola, Itchimbia, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "De los Milagros, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "Lex & Justice, Río de Janeiro, Larrea, San Juan, Quito, Distrito Metropolitano de Quito, Pichincha, 170118, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R018',
+        hora_salida: '15:25:00',
+        hora_llegada: '23:25:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[2].id, // Guayaquil
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Avenida Velasco Ibarra, La Tola, Itchimbia, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "De los Milagros, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "Lex & Justice, Río de Janeiro, Larrea, San Juan, Quito, Distrito Metropolitano de Quito, Pichincha, 170118, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R019',
+        hora_salida: '16:05:00',
+        hora_llegada: '23:30:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[2].id, // Guayaquil
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Avenida Velasco Ibarra, La Tola, Itchimbia, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "De los Milagros, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "Lex & Justice, Río de Janeiro, Larrea, San Juan, Quito, Distrito Metropolitano de Quito, Pichincha, 170118, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R020',
+        hora_salida: '17:25:00',
+        hora_llegada: '00:30:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[2].id, // Guayaquil
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Avenida Velasco Ibarra, La Tola, Itchimbia, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "De los Milagros, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "Lex & Justice, Río de Janeiro, Larrea, San Juan, Quito, Distrito Metropolitano de Quito, Pichincha, 170118, Ecuador"
+        ])
       }
     ], { returning: true });
 
@@ -874,6 +1024,7 @@ async function cargarDatosPrueba() {
     // Horarios para los 12 viajes diarios Quito(Quitumbe) - Guayaquil
     const horariosQuitoGuayaquil = [
       { salida: '05:00:00', llegada: '13:00:00', precio: 12.25 },
+      { salida: '18:00:00', llegada: '02:00:00', precio: 15.25 },
       { salida: '06:00:00', llegada: '14:00:00', precio: 12.50 },
       { salida: '07:00:00', llegada: '15:00:00', precio: 13.00 },
       { salida: '08:00:00', llegada: '16:00:00', precio: 13.25 },
@@ -883,16 +1034,16 @@ async function cargarDatosPrueba() {
       { salida: '12:00:00', llegada: '20:00:00', precio: 14.25 },
       { salida: '13:30:00', llegada: '21:30:00', precio: 14.50 },
       { salida: '15:00:00', llegada: '23:00:00', precio: 14.75 },
-      { salida: '16:30:00', llegada: '00:30:00', precio: 15.00 },
-      { salida: '18:00:00', llegada: '02:00:00', precio: 15.25 }
+      { salida: '16:30:00', llegada: '00:30:00', precio: 15.00 }
+      
     ];
 
     // Día específico para los 12 viajes (ejemplo: hoy)
     const fechaViaje = new Date(); // hoy
 
     const viajesExtra = [
-      { salida: '05:10:00', llegada: '13:10:00', precio: 12.35, asientos: 2, unidad: unidades[0].id },
       { salida: '06:15:00', llegada: '14:15:00', precio: 12.60, asientos: 5, unidad: unidades[1].id },
+      { salida: '05:10:00', llegada: '13:10:00', precio: 12.35, asientos: 2, unidad: unidades[0].id },
       { salida: '07:20:00', llegada: '15:20:00', precio: 13.10, asientos: 8, unidad: unidades[2].id },
       { salida: '08:25:00', llegada: '16:25:00', precio: 13.35, asientos: 12, unidad: unidades[3].id },
       { salida: '09:30:00', llegada: '17:30:00', precio: 13.60, asientos: 15, unidad: unidades[4].id },
@@ -904,6 +1055,20 @@ async function cargarDatosPrueba() {
       { salida: '16:40:00', llegada: '00:40:00', precio: 15.10, asientos: 33, unidad: unidades[0].id },
       { salida: '18:05:00', llegada: '02:05:00', precio: 15.35, asientos: 36, unidad: unidades[1].id }
     ];
+    const rutasQuitoGuayaquilIds = [
+      rutas[0].id,   // R001 (id=1)
+      rutas[10]?.id, // R011 (id=11)
+      rutas[11]?.id, // R012 (id=12)
+      rutas[12]?.id, // R013 (id=13)
+      rutas[13]?.id, // R014 (id=14)
+      rutas[14]?.id, // R015 (id=15)
+      rutas[15]?.id, // R016 (id=16)
+      rutas[16]?.id, // R017 (id=17)
+      rutas[17]?.id, // R018 (id=18)
+      rutas[18]?.id, // R019 (id=19)
+      rutas[19]?.id  // R020 (id=20)
+    ].filter(Boolean); // Por si alguna no existe
+
 
     for (const v of viajesExtra) {
       viajes.push({
@@ -920,28 +1085,34 @@ async function cargarDatosPrueba() {
     for (let dia = 0; dia < 4; dia++) {
       const fechaViaje = generarFechaFutura(dia); // dia=0 es hoy
 
-      // 12 viajes diarios SOLO para la ruta Quito(Quitumbe) - Guayaquil (rutas[0], id=1)
+
       for (let i = 0; i < horariosQuitoGuayaquil.length; i++) {
+        const rutaIdx = i % rutasQuitoGuayaquilIds.length;
         viajes.push({
           fecha_salida: crearFechaHora(fechaViaje, horariosQuitoGuayaquil[i].salida),
           fecha_llegada: crearFechaLlegada(fechaViaje, horariosQuitoGuayaquil[i].salida, horariosQuitoGuayaquil[i].llegada),
           numero_asientos_ocupados: 0,
           precio: horariosQuitoGuayaquil[i].precio,
-          ruta_id: rutas[0].id, // Quito(Quitumbe) - Guayaquil
+          ruta_id: rutasQuitoGuayaquilIds[rutaIdx], // alterna entre rutas 1, 11, ..., 20
           unidad_id: unidades[i % unidades.length].id // alterna unidades
         });
       }
 
-      // Si quieres viajes para otras rutas, agrégalos aquí (pero no 12 por día)
-      // Ejemplo: solo 1 viaje por día para otras rutas
-      // viajes.push({
-      //   fecha_salida: crearFechaHora(fechaViaje, '12:15:00'),
-      //   fecha_llegada: crearFechaLlegada(fechaViaje, '12:15:00', '19:20:00'),
-      //   numero_asientos_ocupados: 0,
-      //   precio: 15.75,
-      //   ruta_id: rutas[3].id,
-      //   unidad_id: unidades[4].id
-      // });
+      // Para el resto de rutas (rutas[1] en adelante), crea 1 viaje diario por ruta
+      for (let r = 1; r < rutas.length; r++) {
+        // Puedes variar la hora y el precio si lo deseas, aquí se usa una hora base y alterna unidad
+        const horaSalida = '08:00:00';
+        const horaLlegada = '16:00:00';
+        const precioBase = 10 + r; // solo para variar el precio
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, horaSalida),
+          fecha_llegada: crearFechaLlegada(fechaViaje, horaSalida, horaLlegada),
+          numero_asientos_ocupados: 0,
+          precio: precioBase,
+          ruta_id: rutas[r].id,
+          unidad_id: unidades[(r + dia) % unidades.length].id // alterna unidad por ruta y día
+        });
+      }
     }
 
     console.log(`📊 Total de viajes a crear: ${viajes.length}`);
