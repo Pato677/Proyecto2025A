@@ -235,7 +235,9 @@ const TripSelectionPage = () => {
         />
 
         <h2 className="titulo-viaje">
-          Viaje: {origenCiudad} - {destinoCiudad}
+          {params.get('precio-min') === 'true'
+            ? 'Mostrando los viajes más económicos'
+            : `Viaje: ${origenCiudad} - ${destinoCiudad}`}
         </h2>
 
         <div className="filtros">
