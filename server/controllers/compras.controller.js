@@ -148,7 +148,7 @@ const crearCompraCompleta = async (req, res) => {
       const codigoBoleto = generarCodigoBoleto();
       
       // Asignar el asiento correspondiente al pasajero
-      const asientoAsignado = asientosSeleccionados[i];
+      const asientoAsignado = parseInt(asientosSeleccionados[i]);
       
       console.log(`Creando boleto ${i + 1}: Pasajero ${pasajero.nombres} ${pasajero.apellidos}, Asiento: ${asientoAsignado}, Precio: $${precio}`);
       
@@ -168,13 +168,9 @@ const crearCompraCompleta = async (req, res) => {
     // 4. Crear registros en viaje_asientos
     const viajeAsientosCreados = [];
     for (let i = 0; i < asientosSeleccionados.length; i++) {
-      const asientoId = asientosSeleccionados[i];
-      
-      // Generar ID único para viaje_asiento
-      const viajeAsientoId = `${viajeId}-${asientoId}-${Date.now()}-${i}`;
+      const asientoId = parseInt(asientosSeleccionados[i]);
       
       const viajeAsiento = await ViajeAsiento.create({
-        id: viajeAsientoId,
         asiento_id: asientoId,
         viaje_id: parseInt(viajeId)
       }, { transaction });

@@ -3,7 +3,7 @@ const sequelize = require('../config/sequelize.config');
 
 const Asiento = sequelize.define('Asiento', {
   numeracion: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     primaryKey: true,
     allowNull: false
   }
