@@ -22,10 +22,13 @@ function RegisterUnitsPage() {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const { usuario } = useAuth();
 
-  useEffect(() => {
-    if (!usuario?.id) return;
+  // Obtener el ID de la cooperativa del usuario logueado
+  const cooperativaId = usuario?.cooperativa_id;
 
-    axios.get(`http://localhost:8000/unidades/cooperativa/${usuario.id}`)
+  useEffect(() => {
+    if (!cooperativaId) return;
+
+    axios.get(`http://localhost:8000/unidades/cooperativa/${cooperativaId}`)
       .then(res => {
         const unidadesArray = res.data.data;
         if (Array.isArray(unidadesArray)) {
@@ -42,7 +45,7 @@ function RegisterUnitsPage() {
         console.error('Error al cargar unidades:', error);
         setUnidades([]);
       });
-  }, [usuario]);
+  }, [cooperativaId]);
 
   const totalPaginas = Math.ceil(unidades.length / unidadesPorPagina);
   const startIdx = (currentPage - 1) * unidadesPorPagina;
@@ -56,7 +59,7 @@ function RegisterUnitsPage() {
       placa: datosUnidad.placa,
       numeroUnidad: datosUnidad.numeroUnidad,
       imagen: datosUnidad.imagen,
-      cooperativaId: usuario.id,
+      cooperativaId: cooperativaId,
       conductorId: datosUnidad.conductor_id,
       controladorId: datosUnidad.controlador_id
     };
