@@ -102,3 +102,26 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+.password-field {
+  position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #fff;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.eye-icon:active,
+.eye-icon:focus {
+  color: #347bb5;
+}

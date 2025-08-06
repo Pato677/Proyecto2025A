@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaLock, FaSignInAlt } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "./AuthContext";
 import UsuarioCrud from "./ComponentesCRUD/UsuarioCrud";
 import "./Estilos/Login.css";
@@ -12,7 +13,7 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso, shouldRedirect = true })
         correo: "",
         contrasena: ""
     });
-    
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -22,7 +23,6 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso, shouldRedirect = true })
             ...prev,
             [name]: value
         }));
-        
         if (error) setError("");
     }, [error]);
 
@@ -30,7 +30,6 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso, shouldRedirect = true })
         e.preventDefault();
         setLoading(true);
         setError("");
-        
         try {
             // Validaciones básicas
             if (!credenciales.correo || !credenciales.contrasena) {
@@ -129,16 +128,24 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso, shouldRedirect = true })
                         />
                     </div>
 
-                    <div className="login-field">
+                    <div className="login-field password-field">
                         <FaLock className="field-icon" />
                         <input 
-                            type="password" 
+                            type={showPassword ? "text" : "password"}
                             name="contrasena"
                             placeholder="Ingrese su contraseña"
                             value={credenciales.contrasena}
                             onChange={handleChange}
                             required
                         />
+                        <span
+                            className="eye-icon"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            tabIndex={0}
+                            style={{ cursor: "pointer", marginLeft: "8px", color: "#fff" }}
+                        >
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </span>
                     </div>
 
                     <div className="login-buttons">
