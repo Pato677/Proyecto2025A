@@ -5,7 +5,7 @@ import logo from './Imagenes/Logo.png';
 import { FiGlobe, FiUser, FiChevronDown, FiSettings, FiLogOut } from 'react-icons/fi';
 import './Estilos/Admin.css';
 
-const HeaderAdmin = () => {
+const HeaderAdmin = ({ onPerfilClick }) => {
   const { usuario, logout } = useAuth();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -54,7 +54,18 @@ const HeaderAdmin = () => {
 
   const handlePerfilClick = () => {
     setShowDropdown(false);
-    navigate('/PerfilUsuario');
+    
+    // Bloquear acceso al perfil para superusuarios
+    if (usuario?.rol === 'superuser') {
+      alert('⛔ Acceso restringido: El perfil del superadministrador no puede ser modificado por razones de seguridad.');
+      return;
+    }
+    
+    if (onPerfilClick) {
+      onPerfilClick();
+    } else {
+      navigate('/PerfilUsuario');
+    }
   };
 
   const handleLogoutClick = () => {
@@ -87,9 +98,16 @@ const HeaderAdmin = () => {
           
           {showDropdown && (
             <div className="header-admin__dropdown">
-              <div className="header-admin__dropdown-item" onClick={handlePerfilClick}>
+              <div 
+                className={`header-admin__dropdown-item ${usuario?.rol === 'superuser' ? 'disabled' : ''}`}
+                onClick={handlePerfilClick}
+                title={usuario?.rol === 'superuser' ? 'Perfil bloqueado por seguridad' : 'Ver mi perfil'}
+              >
                 <FiSettings className="header-admin__dropdown-icon" />
                 <span>Mi Perfil</span>
+                {usuario?.rol === 'superuser' && (
+                  <span className="locked-indicator">🔒</span>
+                )}
               </div>
               <div className="header-admin__dropdown-item" onClick={handleLogoutClick}>
                 <FiLogOut className="header-admin__dropdown-icon" />

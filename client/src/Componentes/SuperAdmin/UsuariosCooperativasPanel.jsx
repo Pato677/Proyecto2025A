@@ -14,15 +14,21 @@ const UsuariosCooperativasPanel = () => {
   const [modalUsuarioOpen, setModalUsuarioOpen] = useState(false);
   const [modalCooperativaOpen, setModalCooperativaOpen] = useState(false);
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
+  const [filtroRol, setFiltroRol] = useState('todos');
   const porPagina = 6;
 
   // Cargar usuarios
   const cargarUsuarios = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `http://localhost:8000/usuarios?page=${pagina}&limit=${porPagina}`
-      );
+      let url = `http://localhost:8000/usuarios?page=${pagina}&limit=${porPagina}`;
+      
+      // Agregar filtro por rol si no es "todos"
+      if (filtroRol !== 'todos') {
+        url += `&rol=${filtroRol}`;
+      }
+
+      const response = await axios.get(url);
       
       if (response.data.success) {
         setUsuarios(response.data.data);
@@ -89,14 +95,38 @@ const UsuariosCooperativasPanel = () => {
     return usuario.rol;
   };
 
-  // Cargar datos al montar el componente y cuando cambie la página
+  // Manejar cambio de filtro
+  const manejarCambioFiltro = (nuevoFiltro) => {
+    setFiltroRol(nuevoFiltro);
+    setPagina(1); // Resetear a la primera página cuando se cambia el filtro
+  };
+
+  // Cargar datos al montar el componente y cuando cambie la página o filtro
   useEffect(() => {
     cargarUsuarios();
-  }, [pagina]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pagina, filtroRol]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="panel-box">
-      <h3>👥 Usuarios y Cooperativas</h3>
+      <div className="panel-header">
+        <h3>👥 Usuarios y Cooperativas</h3>
+        
+        {/* Filtro por tipo de rol */}
+        <div className="filter-section">
+          <label htmlFor="filtro-rol">Filtrar por tipo:</label>
+          <select
+            id="filtro-rol"
+            value={filtroRol}
+            onChange={(e) => manejarCambioFiltro(e.target.value)}
+            className="filter-select"
+          >
+            <option value="todos">Todos</option>
+            <option value="cooperativa">Cooperativas</option>
+            <option value="final">Usuarios</option>
+            <option value="superuser">Super Usuarios</option>
+          </select>
+        </div>
+      </div>
       
       {loading ? (
         <div className="loading-container">

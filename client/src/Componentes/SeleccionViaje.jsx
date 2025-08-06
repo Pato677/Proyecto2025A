@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
@@ -21,7 +21,7 @@ const TripSelectionPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { usuario, logout } = useAuth();
-  const params = new URLSearchParams(location.search);
+  const params = useMemo(() => new URLSearchParams(location.search), [location.search]);
   
   // Parámetros de búsqueda
   const origenCiudad = params.get('origenCiudad');
@@ -49,6 +49,32 @@ const TripSelectionPage = () => {
 
   // Cargar viajes desde el endpoint por fecha, página y orden
   useEffect(() => {
+    // Si el parámetro precio-min está presente, cargar los viajes más baratos
+    if (params.get('precio-min') === 'true') {
+      axios.get('http://localhost:8000/viajes/precio/min')
+        .then(res => {
+          if (res.data.success && Array.isArray(res.data.data)) {
+            // Filtrar solo los viajes cuya fecha_salida coincida con la fecha seleccionada
+            const viajesFiltrados = res.data.data.filter(viaje => {
+              // Formatea la fecha_salida a 'YYYY-MM-DD'
+              const fechaViaje = new Date(viaje.fecha_salida).toISOString().slice(0, 10);
+              return fechaViaje === fechaSeleccionada;
+            });
+            setViajes(viajesFiltrados);
+            setTotalPaginas(1);
+          } else {
+            setViajes([]);
+            setTotalPaginas(1);
+          }
+        })
+        .catch(() => {
+          setViajes([]);
+          setTotalPaginas(1);
+        });
+      return;
+    }
+
+    // ...búsqueda normal por fecha...
     if (!fechaSeleccionada) return;
 
     const query = [
@@ -73,7 +99,7 @@ const TripSelectionPage = () => {
         setViajes([]);
         setTotalPaginas(1);
       });
-  }, [fechaSeleccionada, currentPage, viajesPorPagina, orden, origenTerminal, destinoTerminal]);
+  }, [fechaSeleccionada, currentPage, viajesPorPagina, orden, origenTerminal, destinoTerminal, params]);
 
   useEffect(() => {
     if (viajes.length > 0 && params.get('viajeId')) {
@@ -327,6 +353,7 @@ const TripSelectionPage = () => {
               setMostrarRegistro(true);
             }}
             onLoginExitoso={handleLoginExitoso}
+            shouldRedirect={false}
           />
         )}
 

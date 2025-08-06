@@ -492,3 +492,82 @@
   padding-top: 16px;
   border-top: 1px solid #e9ecef;
 }
+
+/* Estilos para el header del panel con filtro */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 24px;
+  gap: 20px;
+}
+
+.panel-header h3 {
+  margin-bottom: 0;
+  color: #2176ab;
+  font-size: 1.5rem;
+  font-weight: 600;
+  border-bottom: 3px solid #56aee9;
+  padding-bottom: 12px;
+  flex: 1;
+}
+
+.filter-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: fit-content;
+}
+
+.filter-section label {
+  font-weight: 600;
+  color: #2176ab;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.filter-select {
+  padding: 8px 12px;
+  border: 2px solid #2176ab;
+  border-radius: 6px;
+  background: #fff;
+  color: #2176ab;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 150px;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #56aee9;
+  box-shadow: 0 0 0 2px rgba(86, 174, 233, 0.2);
+}
+
+.filter-select:hover {
+  border-color: #56aee9;
+  background: #f8fbff;
+}
+
+/* Responsive design para el header */
+@media (max-width: 768px) {
+  .panel-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+  
+  .panel-header h3 {
+    text-align: center;
+  }
+  
+  .filter-section {
+    justify-content: center;
+  }
+  
+  .filter-select {
+    min-width: 200px;
+  }
+}

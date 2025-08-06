@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import HeaderAdmin from './HeaderAdmin';
 import Footer from './Footer';
+import PerfilUsuarioModal from './PerfilUsuarioModal';
 import RegistrarUnidadesPage from './RegistrarUnidadesPage';
 import RutasPanel from './RutasPanel';
 import ConductoresPage from './ConductoresPage';
@@ -17,6 +18,7 @@ const panels = [
 
 function DashboardPage() {
   const [selectedModule, setSelectedModule] = useState(null);
+  const [mostrarPerfil, setMostrarPerfil] = useState(false);
   
   // Encontrar el panel seleccionado
   const selectedPanel = panels.find(p => p.key === selectedModule);
@@ -26,6 +28,11 @@ function DashboardPage() {
     if (panel && panel.available) {
       setSelectedModule(moduleName);
     }
+  };
+
+  // Función para manejar el modal de perfil
+  const handlePerfilClick = () => {
+    setMostrarPerfil(true);
   };
 
   // Función para renderizar el contenido principal
@@ -70,7 +77,7 @@ function DashboardPage() {
 
   return (
     <div className="dashboard-grid-layout">
-      <HeaderAdmin />
+      <HeaderAdmin onPerfilClick={handlePerfilClick} />
       <div className="dashboard-admin">
         <aside className="dashboard-sidebar">
           <h2>Panel Administrativo</h2>
@@ -93,6 +100,13 @@ function DashboardPage() {
         </main>
       </div>
       <Footer />
+
+      {/* Modal de Perfil */}
+      {mostrarPerfil && (
+        <PerfilUsuarioModal
+          cerrar={() => setMostrarPerfil(false)}
+        />
+      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate} from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
 import TicketInfo from './TicketInfo';
+import Login from '../Login';
 import '../Estilos/Ticket.css';
 import Button from '../Button';
 import jsPDF from 'jspdf';
@@ -29,10 +30,28 @@ function TicketPage() {
   const [compra, setCompra] = useState(null);
   const [boletoIndex, setBoletoIndex] = useState(0);
   const [viaje, setViaje] = useState(null);
+  const [mostrarLogin, setMostrarLogin] = useState(false);
   
 
   // Mueve el useRef aquí, junto con los otros hooks
   const ticketRef = React.useRef();
+
+  // Función para manejar el clic en "Iniciar Sesión"
+  const handleLoginClick = () => {
+    setMostrarLogin(true);
+  };
+
+  // Función para cerrar el modal de login
+  const cerrarLogin = () => {
+    setMostrarLogin(false);
+  };
+
+  // Función para manejar login exitoso
+  const handleLoginExitoso = (usuario) => {
+    console.log('Login exitoso:', usuario);
+    setMostrarLogin(false);
+    // Aquí puedes agregar lógica adicional si es necesario
+  };
 
   useEffect(() => {
     if (compraId && compraId !== 'N/A') {
@@ -267,7 +286,11 @@ function TicketPage() {
 
   return (
     <div className="ticket-page">
-      <Header currentStep={5} totalSteps={5} />
+      <Header 
+        currentStep={5} 
+        totalSteps={5} 
+        onLoginClick={handleLoginClick}
+      />
       <main className="ticket-main" ref={ticketRef}>
         <div className="ticket-info-box">
           <TicketInfo datosViaje={datosViaje} />
@@ -316,6 +339,15 @@ function TicketPage() {
         </div>
       </main>
       <Footer />
+      
+      {/* Modal de Login */}
+      {mostrarLogin && (
+        <Login 
+          cerrar={cerrarLogin}
+          onLoginExitoso={handleLoginExitoso}
+          shouldRedirect={false}
+        />
+      )}
     </div>
   );
 }

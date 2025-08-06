@@ -6,6 +6,7 @@ const password = process.env.DB_PASS;
 const bdd_name = "transportesec";
 const hostName = "localhost";
 
+
 // Exporta la instancia para los modelos
 const sequelize = new Sequelize(bdd_name, username, password, {
     host: hostName,

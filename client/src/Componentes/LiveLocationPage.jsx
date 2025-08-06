@@ -1,14 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import Footer from './Footer';
 import Button from './Button';
+import Login from './Login';
+import PerfilUsuarioModal from './PerfilUsuarioModal';
 import { FaSearch, FaGlobe, FaUserCircle } from "react-icons/fa";
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Estilos/LiveLocation.css';
 
-function LiveLocationHeader({ usuario, onLogout }) {
+function LiveLocationHeader({ usuario, onLogout, onLoginClick, onPerfilClick }) {
+  const [numeroBoleto, setNumeroBoleto] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
   const getNombreUsuario = () => {
     if (!usuario) return 'Iniciar Sesión';
     
@@ -29,25 +36,87 @@ function LiveLocationHeader({ usuario, onLogout }) {
     return usuario.correo?.split('@')[0] || 'Usuario';
   };
 
+  const handleBuscarBoleto = () => {
+    if (numeroBoleto.trim()) {
+      console.log('Buscando boleto:', numeroBoleto);
+      // Aquí puedes agregar la lógica para buscar el boleto
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleBuscarBoleto();
+    }
+  };
+
+  const handleLogout = () => {
+    onLogout();
+    setMenuOpen(false);
+  };
+
   return (
     <header className="live-header">
       <div className="live-header-left">
         <img src={require('./Imagenes/Logo.png')} alt="Logo" className="live-logo" />
         <span className="live-title">Transportes EC</span>
       </div>
-      <div className="live-header-right">
-        <div className="live-search">
-          <FaSearch className="live-search-icon" />
+      
+      <div className="live-header-center">
+        <div className="boleto-search">
+          <input
+            type="text"
+            placeholder="Ingrese número de boleto"
+            value={numeroBoleto}
+            onChange={(e) => setNumeroBoleto(e.target.value)}
+            onKeyPress={handleKeyPress}
+            className="boleto-input"
+          />
+          <button 
+            onClick={handleBuscarBoleto}
+            className="search-button"
+            title="Buscar boleto"
+          >
+            <FaSearch />
+          </button>
         </div>
-        <span className="live-ticket-code">AB4M3</span>
-        <span className="live-separator">|</span>
+      </div>
+
+      <div className="live-header-right">
         <FaGlobe className="live-globe" />
         <span className="live-language">Español</span>
         <span className="live-separator">|</span>
-        <FaUserCircle className="live-user" />
-        <span className="live-user-label" onClick={usuario && onLogout ? onLogout : undefined} style={{ cursor: usuario ? 'pointer' : 'default' }}>
-          {getNombreUsuario()}
-        </span>
+        
+        {/* Sección de usuario con funcionalidad de login */}
+        <div className="user-section">
+          {usuario ? (
+            <div
+              className="user-dropdown"
+              onMouseEnter={() => setMenuOpen(true)}
+              onMouseLeave={() => setMenuOpen(false)}
+            >
+              <FaUserCircle className="live-user" />
+              <span className="user-name">
+                {usuario.nombres ? usuario.nombres.split(' ')[0] : 
+                 usuario.correo ? usuario.correo.split('@')[0] : 
+                 'Usuario'} 
+              </span>
+              {menuOpen && (
+                <div className="dropdown-content">
+                  <div onClick={() => {
+                    onPerfilClick();
+                    setMenuOpen(false);
+                  }}>Mi perfil</div>
+                  <div onClick={handleLogout}>Cerrar sesión</div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="login-area" onClick={onLoginClick}>
+              <FaUserCircle className="live-user" />
+              <span className="login-text">Iniciar Sesión</span>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
@@ -126,10 +195,36 @@ function LiveMapSimulation() {
 
 function LiveLocationPage() {
   const { usuario, logout } = useAuth();
+  const [mostrarLogin, setMostrarLogin] = useState(false);
+  const [mostrarPerfil, setMostrarPerfil] = useState(false);
+
+  // Funciones para manejar login
+  const handleLoginClick = () => {
+    setMostrarLogin(true);
+  };
+
+  const handleLoginExitoso = (usuarioData) => {
+    console.log('Login exitoso:', usuarioData);
+    setMostrarLogin(false);
+  };
+
+  // Función para manejar perfil
+  const handlePerfilClick = () => {
+    setMostrarPerfil(true);
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
   
   return (
     <div className="ticket-page">
-      <LiveLocationHeader usuario={usuario} onLogout={() => logout()} />
+      <LiveLocationHeader 
+        usuario={usuario} 
+        onLogout={handleLogout}
+        onLoginClick={handleLoginClick}
+        onPerfilClick={handlePerfilClick}
+      />
       <main className="live-main-content">
         <h1 className="live-title-main">Ubicación en Tiempo Real</h1>
         <p className="live-estimated-time">Hora de llegada aproximada: 21:35</p>
@@ -146,6 +241,22 @@ function LiveLocationPage() {
         </div>
       </main>
       <Footer />
+
+      {/* Modal de Login */}
+      {mostrarLogin && (
+        <Login 
+          cerrar={() => setMostrarLogin(false)}
+          onLoginExitoso={handleLoginExitoso}
+          shouldRedirect={false}
+        />
+      )}
+
+      {/* Modal de Perfil */}
+      {mostrarPerfil && (
+        <PerfilUsuarioModal
+          cerrar={() => setMostrarPerfil(false)}
+        />
+      )}
     </div>
   );
 }
