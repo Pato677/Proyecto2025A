@@ -182,6 +182,18 @@ const login = async (req, res) => {
       ]
     });
 
+    console.log('=== DEBUG Login Backend ===');
+    console.log('Usuario encontrado:', usuario ? 'SÍ' : 'NO');
+    if (usuario) {
+      console.log('usuario.id:', usuario.id);
+      console.log('usuario.rol:', usuario.rol);
+      console.log('usuario.UsuarioCooperativa:', usuario.UsuarioCooperativa);
+      if (usuario.UsuarioCooperativa) {
+        console.log('usuario.UsuarioCooperativa.id:', usuario.UsuarioCooperativa.id);
+      }
+    }
+    console.log('=============================');
+
     if (!usuario) {
       return res.status(401).json({
         success: false,
@@ -255,6 +267,7 @@ const login = async (req, res) => {
     } else if (usuario.rol === 'cooperativa' && usuario.UsuarioCooperativa) {
       datosUsuario = {
         ...datosUsuario,
+        cooperativa_id: usuario.UsuarioCooperativa.id, // ID de la tabla cooperativas
         razon_social: usuario.UsuarioCooperativa.razon_social,
         ruc: usuario.UsuarioCooperativa.ruc,
         permiso_operacion: usuario.UsuarioCooperativa.permiso_operacion,
@@ -271,6 +284,11 @@ const login = async (req, res) => {
     } else if (usuario.rol === 'superuser') {
       configuracion = { dashboard: 'superuser' };
     }
+
+    console.log('=== DEBUG Datos Finales ===');
+    console.log('datosUsuario a enviar:', datosUsuario);
+    console.log('datosUsuario.cooperativa_id:', datosUsuario.cooperativa_id);
+    console.log('============================');
 
     res.json({
       success: true,
