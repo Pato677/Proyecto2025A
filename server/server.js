@@ -48,6 +48,20 @@ ensureDatabaseAndSync().then(() => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
+const usuariosRoutes = require('./routes/usuario.routes');
+const rutasRoutes = require('./routes/rutas.routes');
+const viajesRoutes = require('./routes/viajes.routes');
+const unidadesRoutes = require('./routes/unidades.routes');
+const asientosRoutes = require('./routes/asientos.routes');
+const cooperativasRoutes = require('./routes/cooperativas.routes');
+const conductoresRoutes = require('./routes/conductores.routes');
+const terminalesRoutes = require('./routes/terminales.routes');
+const ciudadesRoutes = require('./routes/ciudades.routes');
+const boletosRoutes = require('./routes/boletos.routes');
+const ciudadesTerminalesRoutes = require('./routes/ciudadesTerminales.routes');
+const pasajerosRoutes = require('./routes/pasajeros.routes');
+const comprasRoutes = require('./routes/compras.routes');
+
 // Aplicar rutas
 app.use('/usuarios', usuariosRoutes);
 //app.use('/api/compras', comprasRoutes);
