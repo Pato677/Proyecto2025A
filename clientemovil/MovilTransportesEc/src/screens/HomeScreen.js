@@ -16,6 +16,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import LoginModal from '../components/LoginModal';
 import RegisterModal from '../components/RegisterModal';
 import AutocompleteInput from '../components/AutocompleteInput'; // Componente de autocomplete
+import UserMenu from '../components/UserMenu';
+import UserProfile from '../components/UserProfile';
 import { useAuth } from '../context/AuthContext';
 import { LocationService } from '../services/api';
 
@@ -27,6 +29,8 @@ const HomeScreen = ({ navigation }) => {
   const [passengers, setPassengers] = useState(1);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
   const [cities, setCities] = useState([]);
   const [terminals, setTerminals] = useState([]);
   
@@ -73,6 +77,14 @@ const HomeScreen = ({ navigation }) => {
         },
       ]
     );
+  };
+
+  const handleUserMenuPress = () => {
+    setShowUserMenu(true);
+  };
+
+  const handleProfilePress = () => {
+    setShowUserProfile(true);
   };
 
   // Manejar selección de origen
@@ -128,7 +140,7 @@ const HomeScreen = ({ navigation }) => {
           {isAuthenticated ? (
             <TouchableOpacity 
               style={styles.headerButton}
-              onPress={handleLogout}
+              onPress={handleUserMenuPress}
             >
               <Icon name="person" size={24} color="#fff" />
               <Text style={styles.headerButtonText}>
@@ -271,6 +283,19 @@ const HomeScreen = ({ navigation }) => {
           setShowRegister(false);
           setShowLogin(true);
         }}
+      />
+
+      <UserMenu
+        user={user}
+        visible={showUserMenu}
+        onClose={() => setShowUserMenu(false)}
+        onProfilePress={handleProfilePress}
+        onLogout={handleLogout}
+      />
+
+      <UserProfile
+        visible={showUserProfile}
+        onClose={() => setShowUserProfile(false)}
       />
     </SafeAreaView>
   );
