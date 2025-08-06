@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Estilos/ViajeModal.css';
 
-const COOPERATIVA_ID = 1; // ID de la cooperativa para pruebas
-
-const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades }) => {
+const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades, cooperativaId }) => {
   const [viaje, setViaje] = useState({
     fecha_salida: '',
     fecha_llegada: '',
@@ -82,8 +80,8 @@ const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades }) 
     }
 
     // Filtrar rutas que pertenecen a la cooperativa (validación adicional)
-    const rutasCooperativa = rutas.filter(ruta => ruta.cooperativa_id === COOPERATIVA_ID);
-    console.log(`Rutas totales: ${rutas.length}, Rutas de cooperativa ${COOPERATIVA_ID}: ${rutasCooperativa.length}`);
+    const rutasCooperativa = rutas.filter(ruta => ruta.cooperativa_id === cooperativaId);
+    console.log(`Rutas totales: ${rutas.length}, Rutas de cooperativa ${cooperativaId}: ${rutasCooperativa.length}`);
     const cantidadRutas = rutasCooperativa.length > 0 ? rutasCooperativa.length : rutas.length;
 
     if (window.confirm(`¿Estás seguro de que deseas crear ${cantidadRutas} viajes (uno por cada ruta de la cooperativa) para la fecha ${viaje.fecha_salida}?\n\nNota: Los viajes se crearán con precio $0.00 y sin unidades asignadas. Podrá configurarlos después usando el botón "Actualizar".`)) {
