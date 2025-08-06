@@ -320,7 +320,6 @@ function TicketPage() {
           Obtendrá una copia del mismo directamente a su correo electrónico.
         </p>
         <div className="ticket-button-group">
-          <Button text="Atras" width='150px'/>
           <Button text="Imprimir" width='150px' onClick={handleImprimir}/>
         </div>
       </main>
