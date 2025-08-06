@@ -97,18 +97,37 @@ console.log('Todas las rutas cargadas exitosamente!');
       });
     });
 
+    function printAllEndpoints(app) {
+      const endpoints = [];
+      app._router.stack.forEach((middleware) => {
+        if (middleware.route) {
+          // routes registered directly on the app
+          const methods = Object.keys(middleware.route.methods)
+            .map(m => m.toUpperCase())
+            .join(', ');
+          endpoints.push(`${methods} ${middleware.route.path}`);
+        } else if (middleware.name === 'router') {
+          // router middleware 
+          middleware.handle.stack.forEach((handler) => {
+            if (handler.route) {
+              const methods = Object.keys(handler.route.methods)
+                .map(m => m.toUpperCase())
+                .join(', ');
+              endpoints.push(`${methods} ${handler.route.path}`);
+            }
+          });
+        }
+      });
+      console.log('📋 Endpoints disponibles:');
+      endpoints.forEach(e => console.log('   ', e));
+    }
+
     // Inicio del servidor
     app.listen(port, () => {
       console.log('🚀 SERVIDOR BACKEND INICIADO');
       console.log('==============================');
       console.log(`🌐 URL: http://localhost:${port}`);
-      console.log('📋 Endpoints disponibles:');
-      console.log('   🔐 POST /auth/login - Login universal');
-      console.log('   👤 POST /auth/registro/usuario - Registro usuario');
-      console.log('   🏢 POST /auth/registro/cooperativa - Registro cooperativa');
-      console.log('   📊 GET /ciudades-terminales/plano - Datos tabla');
-      console.log('   🏙️ GET /ciudades - Listado ciudades');
-      console.log('   🚌 GET /terminales - Listado terminales');
+      printAllEndpoints(app);
       console.log('==============================');
     });
 });
