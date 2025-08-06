@@ -602,10 +602,8 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
     const limit = size;
 
     const { Op } = require('sequelize');
-    const inicioDia = new Date(fecha_salida);
-    inicioDia.setHours(0, 0, 0, 0);
-    const finDia = new Date(fecha_salida);
-    finDia.setHours(23, 59, 59, 999);
+    const inicioDia = new Date(fecha_salida + 'T00:00:00.000Z');
+    const finDia = new Date(fecha_salida + 'T23:59:59.999Z');
 
     // Filtros dinámicos
     let where = {
@@ -687,7 +685,7 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
     res.status(200).json({
       success: true,
       data: viajesFinal,
-      total: viajesFinal.length,
+      total: totalViajes,
       page,
       size
     });
