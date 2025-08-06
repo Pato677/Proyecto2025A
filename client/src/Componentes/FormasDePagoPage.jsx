@@ -6,7 +6,7 @@ import './Estilos/FormasDePagoPage.css';
 import Header from './Header';
 import Footer from './Footer';
 import TablaPasajeros from './TablaPasajeros';
-import TicketInfo from './Ticket (12)/TicketInfo';
+import TicketInfo from './Ticket/TicketInfo';
 import Button from './Button';
 import ConfirmacionCompraModal from './ConfirmacionCompraModal';
 import ResultadoCompraModal from './ResultadoCompraModal';

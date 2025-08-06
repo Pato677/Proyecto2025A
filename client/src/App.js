@@ -6,7 +6,7 @@ import ProtectedRoute from './Componentes/ProtectedRoute';
 import Inicio from './Componentes/Inicio';
 import Indice from './Componentes/Indice';
 import Login from './Componentes/Login';
-import TicketPage from './Componentes/Ticket (12)/TicketPage';
+import TicketPage from './Componentes/Ticket/TicketPage';
 import LiveLocationPage from './Componentes/LiveLocationPage';
 import DashboardPage from './Componentes/DashboardPage';
 import RegisterUnitsPage from './Componentes/RegistrarUnidadesPage';
