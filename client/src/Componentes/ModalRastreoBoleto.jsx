@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Estilos/ModalRastreoBoleto.css";
 
 const ModalRastreoBoleto = ({ open, onClose }) => {
   const [input, setInput] = useState(""); // Solo lo que el usuario escribe
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState(""); // 'error' | 'info'
+  const navigate = useNavigate();
 
   // Limpiar campos al cerrar el modal
   useEffect(() => {
@@ -37,20 +39,34 @@ const ModalRastreoBoleto = ({ open, onClose }) => {
     setInput(formatBoleto(e.target.value));
   };
 
-  const handleBuscar = () => {
+  const handleBuscar = async () => {
     const boletoCompleto = `BOL-${formatBoleto(input)}`;
-    if (!input.trim() || input.length < 13) {
+    if (!input.trim() || formatBoleto(input).length < 13) {
       setMensaje("Debe ingresar un número de boleto válido (BOL-XXXXXX-XXXXXX).");
       setTipoMensaje("error");
       return;
     }
     setMensaje("Buscando boleto...");
     setTipoMensaje("info");
-    // Aquí tu lógica real de búsqueda, usando boletoCompleto
-    setTimeout(() => {
-      setMensaje("Boleto no encontrado o función de rastreo aún no implementada.");
+    try {
+      const res = await fetch(`http://localhost:8000/boletos/${boletoCompleto}`);
+      if (!res.ok) {
+        setMensaje("Boleto no encontrado.");
+        setTipoMensaje("error");
+        return;
+      }
+      const data = await res.json();
+      if (data && data.compra_id) {
+        // Redirige a TicketPage con el compraId
+        navigate(`/TicketPage?compraId=${data.compra_id}`);
+      } else {
+        setMensaje("No se encontró el boleto o no tiene compra asociada.");
+        setTipoMensaje("error");
+      }
+    } catch (error) {
+      setMensaje("Error al buscar el boleto.");
       setTipoMensaje("error");
-    }, 1500);
+    }
   };
 
   return (
