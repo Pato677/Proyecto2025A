@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Estilos/ViajeUpdateModal.css';
 import axios from 'axios';
+import SimpleErrorModal from './SimpleErrorModal';
 
 const ViajeUpdateModal = ({ open, onClose, onSave, initialData, cooperativaId }) => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,15 @@ const ViajeUpdateModal = ({ open, onClose, onSave, initialData, cooperativaId })
     unidad_id: ''
   });
   const [unidades, setUnidades] = useState([]);
+  
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Función helper para mostrar errores locales
+  const mostrarError = (mensaje) => {
+    setErrorMessage(mensaje);
+    setShowErrorModal(true);
+  };
 
   // Cargar unidades de la cooperativa al abrir el modal
   useEffect(() => {
@@ -48,12 +58,12 @@ const ViajeUpdateModal = ({ open, onClose, onSave, initialData, cooperativaId })
     
     // Validaciones
     if (!formData.precio || !formData.unidad_id) {
-      alert('Por favor completa todos los campos');
+      mostrarError('Por favor completa todos los campos');
       return;
     }
 
     if (parseFloat(formData.precio) <= 0) {
-      alert('El precio debe ser mayor a 0');
+      mostrarError('El precio debe ser mayor a 0');
       return;
     }
 
@@ -128,6 +138,13 @@ const ViajeUpdateModal = ({ open, onClose, onSave, initialData, cooperativaId })
           </div>
         </form>
       </div>
+      
+      {showErrorModal && (
+        <SimpleErrorModal
+          message={errorMessage}
+          onClose={() => setShowErrorModal(false)}
+        />
+      )}
     </div>
   );
 };

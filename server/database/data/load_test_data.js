@@ -932,16 +932,637 @@ async function cargarDatosPrueba() {
         });
       }
 
-      // Si quieres viajes para otras rutas, agrégalos aquí (pero no 12 por día)
-      // Ejemplo: solo 1 viaje por día para otras rutas
-      // viajes.push({
-      //   fecha_salida: crearFechaHora(fechaViaje, '12:15:00'),
-      //   fecha_llegada: crearFechaLlegada(fechaViaje, '12:15:00', '19:20:00'),
-      //   numero_asientos_ocupados: 0,
-      //   precio: 15.75,
-      //   ruta_id: rutas[3].id,
-      //   unidad_id: unidades[4].id
-      // });
+      // NUEVOS VIAJES PARA OTRAS RUTAS (2-3 viajes por día para cada ruta)
+      
+      // Viajes para ruta R011 (Velotax: Quitumbe - Guayaquil temprano)
+      if (rutas.length > 11) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '06:00:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '06:00:00', '14:00:00'),
+          numero_asientos_ocupados: 0,
+          precio: 12.75,
+          ruta_id: rutas[1].id, // R011
+          unidad_id: unidades[(dia + 1) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R012 (Velotax: Carcelén - Guayaquil)
+      if (rutas.length > 12) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '08:15:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '08:15:00', '16:15:00'),
+          numero_asientos_ocupados: 0,
+          precio: 13.25,
+          ruta_id: rutas[2].id, // R012
+          unidad_id: unidades[(dia + 2) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R013 (Velotax: Quitumbe - Cuenca)
+      if (rutas.length > 13) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '10:45:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '10:45:00', '18:45:00'),
+          numero_asientos_ocupados: 0,
+          precio: 16.50,
+          ruta_id: rutas[3].id, // R013
+          unidad_id: unidades[(dia + 3) % unidades.length].id
+        });
+        
+        // Segundo viaje para Cuenca
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '15:30:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '15:30:00', '23:30:00'),
+          numero_asientos_ocupados: 0,
+          precio: 17.00,
+          ruta_id: rutas[3].id, // R013
+          unidad_id: unidades[(dia + 4) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R014 (Velotax: Quitumbe - Loja)
+      if (rutas.length > 14) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '14:30:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '14:30:00', '20:30:00'),
+          numero_asientos_ocupados: 0,
+          precio: 18.75,
+          ruta_id: rutas[4].id, // R014
+          unidad_id: unidades[(dia + 5) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R015 (Velotax: Carcelén - Manta)
+      if (rutas.length > 15) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '16:00:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '16:00:00', '22:00:00'),
+          numero_asientos_ocupados: 0,
+          precio: 14.25,
+          ruta_id: rutas[5].id, // R015
+          unidad_id: unidades[(dia + 6) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R016 (Velotax: Quitumbe - Machala)
+      if (rutas.length > 16) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '18:20:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '18:20:00', '02:20:00'),
+          numero_asientos_ocupados: 0,
+          precio: 19.50,
+          ruta_id: rutas[6].id, // R016
+          unidad_id: unidades[(dia + 7) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R017 (Velotax: Carcelén - Ibarra)
+      if (rutas.length > 17) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '20:15:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '20:15:00', '04:15:00'),
+          numero_asientos_ocupados: 0,
+          precio: 8.75,
+          ruta_id: rutas[7].id, // R017
+          unidad_id: unidades[(dia + 8) % unidades.length].id
+        });
+        
+        // Segundo viaje a Ibarra (más temprano)
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '07:30:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '07:30:00', '15:30:00'),
+          numero_asientos_ocupados: 0,
+          precio: 8.50,
+          ruta_id: rutas[7].id, // R017
+          unidad_id: unidades[(dia + 9) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R018 (Velotax: Quitumbe - Ambato)
+      if (rutas.length > 18) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '05:30:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '05:30:00', '13:30:00'),
+          numero_asientos_ocupados: 0,
+          precio: 6.25,
+          ruta_id: rutas[8].id, // R018
+          unidad_id: unidades[(dia + 1) % unidades.length].id
+        });
+        
+        // Segundo viaje a Ambato
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '12:45:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '12:45:00', '20:45:00'),
+          numero_asientos_ocupados: 0,
+          precio: 6.50,
+          ruta_id: rutas[8].id, // R018
+          unidad_id: unidades[(dia + 2) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R019 (Velotax: Quitumbe - Santo Domingo)
+      if (rutas.length > 19) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '07:45:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '07:45:00', '15:45:00'),
+          numero_asientos_ocupados: 0,
+          precio: 7.75,
+          ruta_id: rutas[9].id, // R019
+          unidad_id: unidades[(dia + 3) % unidades.length].id
+        });
+        
+        // Segundo viaje a Santo Domingo
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '14:20:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '14:20:00', '22:20:00'),
+          numero_asientos_ocupados: 0,
+          precio: 8.00,
+          ruta_id: rutas[9].id, // R019
+          unidad_id: unidades[(dia + 4) % unidades.length].id
+        });
+      }
+
+      // Viajes de REGRESO para ruta R020 (Guayaquil - Quitumbe)
+      if (rutas.length > 20) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '09:30:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '09:30:00', '17:30:00'),
+          numero_asientos_ocupados: 0,
+          precio: 12.50,
+          ruta_id: rutas[10].id, // R020
+          unidad_id: unidades[(dia + 5) % unidades.length].id
+        });
+        
+        // Segundo viaje de regreso
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '16:15:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '16:15:00', '00:15:00'),
+          numero_asientos_ocupados: 0,
+          precio: 13.00,
+          ruta_id: rutas[10].id, // R020
+          unidad_id: unidades[(dia + 6) % unidades.length].id
+        });
+      }
+
+      // Viajes de REGRESO para ruta R021 (Cuenca - Quitumbe)
+      if (rutas.length > 21) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '11:00:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '11:00:00', '19:00:00'),
+          numero_asientos_ocupados: 0,
+          precio: 16.25,
+          ruta_id: rutas[11].id, // R021
+          unidad_id: unidades[(dia + 7) % unidades.length].id
+        });
+      }
+
+      // Viajes para OTRAS COOPERATIVAS
+
+      // Viajes para ruta R002 (Panamericana: Quitumbe - Guayaquil)
+      if (rutas.length > 12) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '14:20:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '14:20:00', '22:30:00'),
+          numero_asientos_ocupados: 0,
+          precio: 13.75,
+          ruta_id: rutas[12].id, // R002
+          unidad_id: unidades[(dia + 8) % unidades.length].id
+        });
+        
+        // Segundo viaje Panamericana
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '22:45:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '22:45:00', '06:45:00'),
+          numero_asientos_ocupados: 0,
+          precio: 14.25,
+          ruta_id: rutas[12].id, // R002
+          unidad_id: unidades[(dia + 9) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R003 (Flota Imbabura: Carcelén - Guayaquil)
+      if (rutas.length > 13) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '15:30:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '15:30:00', '23:30:00'),
+          numero_asientos_ocupados: 0,
+          precio: 14.00,
+          ruta_id: rutas[13].id, // R003
+          unidad_id: unidades[(dia + 1) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R004 (Santa: Quitumbe - Cuenca)
+      if (rutas.length > 14) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '12:15:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '12:15:00', '19:20:00'),
+          numero_asientos_ocupados: 0,
+          precio: 15.75,
+          ruta_id: rutas[14].id, // R004
+          unidad_id: unidades[(dia + 2) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R005 (Esmeraldas: Carcelén - Cuenca)
+      if (rutas.length > 15) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '10:00:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '10:00:00', '17:30:00'),
+          numero_asientos_ocupados: 0,
+          precio: 16.00,
+          ruta_id: rutas[15].id, // R005
+          unidad_id: unidades[(dia + 3) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R006 (San Cristóbal: Ambato - Manta)
+      if (rutas.length > 16) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '07:03:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '07:03:00', '15:03:00'),
+          numero_asientos_ocupados: 0,
+          precio: 11.50,
+          ruta_id: rutas[16].id, // R006
+          unidad_id: unidades[(dia + 4) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R007 (San Cristóbal: Ambato - Loja)
+      if (rutas.length > 17) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '15:54:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '15:54:00', '01:54:00'),
+          numero_asientos_ocupados: 0,
+          precio: 15.25,
+          ruta_id: rutas[17].id, // R007
+          unidad_id: unidades[(dia + 5) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R008 (Andina: Guayaquil - Quitumbe - REGRESO)
+      if (rutas.length > 18) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '09:00:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '09:00:00', '17:00:00'),
+          numero_asientos_ocupados: 0,
+          precio: 12.75,
+          ruta_id: rutas[18].id, // R008
+          unidad_id: unidades[(dia + 6) % unidades.length].id
+        });
+        
+        // Segundo viaje Andina
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '19:30:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '19:30:00', '03:30:00'),
+          numero_asientos_ocupados: 0,
+          precio: 13.25,
+          ruta_id: rutas[18].id, // R008
+          unidad_id: unidades[(dia + 7) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R009 (Panamericana: Guayaquil - Carcelén - REGRESO)
+      if (rutas.length > 19) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '08:15:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '08:15:00', '16:15:00'),
+          numero_asientos_ocupados: 0,
+          precio: 13.50,
+          ruta_id: rutas[19].id, // R009
+          unidad_id: unidades[(dia + 8) % unidades.length].id
+        });
+      }
+
+      // Viajes para ruta R010 (San Cristóbal: Loja - Manta)
+      if (rutas.length > 20) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '06:28:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '06:28:00', '12:28:00'),
+          numero_asientos_ocupados: 0,
+          precio: 17.75,
+          ruta_id: rutas[20].id, // R010
+          unidad_id: unidades[(dia + 9) % unidades.length].id
+        });
+      }
+
+      // ========== VIAJES ADICIONALES PARA TODAS LAS COOPERATIVAS ==========
+
+      // COOPERATIVA PANAMERICANA (ID = 2) - Más viajes
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '05:45:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '05:45:00', '13:45:00'),
+        numero_asientos_ocupados: 0,
+        precio: 12.00,
+        ruta_id: rutas[12].id, // R002 - Quitumbe - Guayaquil
+        unidad_id: unidades[1].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '11:30:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '11:30:00', '19:30:00'),
+        numero_asientos_ocupados: 0,
+        precio: 12.75,
+        ruta_id: rutas[12].id, // R002 - Quitumbe - Guayaquil
+        unidad_id: unidades[1].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '17:15:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '17:15:00', '01:15:00'),
+        numero_asientos_ocupados: 0,
+        precio: 13.50,
+        ruta_id: rutas[12].id, // R002 - Quitumbe - Guayaquil
+        unidad_id: unidades[1].id
+      });
+
+      // COOPERATIVA FLOTA IMBABURA (ID = 3) - Más viajes
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '06:20:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '06:20:00', '14:20:00'),
+        numero_asientos_ocupados: 0,
+        precio: 13.25,
+        ruta_id: rutas[13].id, // R003 - Carcelén - Guayaquil
+        unidad_id: unidades[2].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '12:00:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '12:00:00', '20:00:00'),
+        numero_asientos_ocupados: 0,
+        precio: 14.00,
+        ruta_id: rutas[13].id, // R003 - Carcelén - Guayaquil
+        unidad_id: unidades[2].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '19:45:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '19:45:00', '03:45:00'),
+        numero_asientos_ocupados: 0,
+        precio: 14.75,
+        ruta_id: rutas[13].id, // R003 - Carcelén - Guayaquil
+        unidad_id: unidades[2].id
+      });
+
+      // COOPERATIVA TRANSPORTES LOJA (ID = 4) - Nuevos viajes
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '08:30:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '08:30:00', '16:30:00'),
+        numero_asientos_ocupados: 0,
+        precio: 15.50,
+        ruta_id: rutas[14].id, // R004 - Quitumbe - Cuenca (usando ruta de Santa)
+        unidad_id: unidades[3].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '14:45:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '14:45:00', '22:45:00'),
+        numero_asientos_ocupados: 0,
+        precio: 16.25,
+        ruta_id: rutas[14].id, // R004 - Quitumbe - Cuenca
+        unidad_id: unidades[3].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '21:20:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '21:20:00', '05:20:00'),
+        numero_asientos_ocupados: 0,
+        precio: 17.00,
+        ruta_id: rutas[14].id, // R004 - Quitumbe - Cuenca
+        unidad_id: unidades[3].id
+      });
+
+      // COOPERATIVA SANTA (ID = 5) - Más viajes
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '07:15:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '07:15:00', '15:15:00'),
+        numero_asientos_ocupados: 0,
+        precio: 15.75,
+        ruta_id: rutas[15].id, // R005 - Carcelén - Cuenca (usando ruta de Esmeraldas)
+        unidad_id: unidades[4].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '13:40:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '13:40:00', '21:40:00'),
+        numero_asientos_ocupados: 0,
+        precio: 16.50,
+        ruta_id: rutas[15].id, // R005 - Carcelén - Cuenca
+        unidad_id: unidades[4].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '20:10:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '20:10:00', '04:10:00'),
+        numero_asientos_ocupados: 0,
+        precio: 17.25,
+        ruta_id: rutas[15].id, // R005 - Carcelén - Cuenca
+        unidad_id: unidades[4].id
+      });
+
+      // COOPERATIVA ESMERALDAS (ID = 6) - Nuevos viajes
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '06:45:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '06:45:00', '14:45:00'),
+        numero_asientos_ocupados: 0,
+        precio: 11.25,
+        ruta_id: rutas[16].id, // R006 - Ambato - Manta (usando ruta de San Cristóbal)
+        unidad_id: unidades[5].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '13:20:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '13:20:00', '21:20:00'),
+        numero_asientos_ocupados: 0,
+        precio: 12.00,
+        ruta_id: rutas[16].id, // R006 - Ambato - Manta
+        unidad_id: unidades[5].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '18:35:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '18:35:00', '02:35:00'),
+        numero_asientos_ocupados: 0,
+        precio: 12.75,
+        ruta_id: rutas[16].id, // R006 - Ambato - Manta
+        unidad_id: unidades[5].id
+      });
+
+      // CIFERAL (ID = 7) - Nuevos viajes
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '09:10:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '09:10:00', '17:10:00'),
+        numero_asientos_ocupados: 0,
+        precio: 14.25,
+        ruta_id: rutas[17].id, // R007 - Ambato - Loja (usando ruta de San Cristóbal)
+        unidad_id: unidades[6].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '16:25:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '16:25:00', '00:25:00'),
+        numero_asientos_ocupados: 0,
+        precio: 15.00,
+        ruta_id: rutas[17].id, // R007 - Ambato - Loja
+        unidad_id: unidades[6].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '22:50:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '22:50:00', '06:50:00'),
+        numero_asientos_ocupados: 0,
+        precio: 15.75,
+        ruta_id: rutas[17].id, // R007 - Ambato - Loja
+        unidad_id: unidades[6].id
+      });
+
+      // REINA DEL CAMINO (ID = 8) - Nuevos viajes
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '05:30:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '05:30:00', '13:30:00'),
+        numero_asientos_ocupados: 0,
+        precio: 12.50,
+        ruta_id: rutas[18].id, // R008 - Guayaquil - Quitumbe (usando ruta de Andina)
+        unidad_id: unidades[7].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '12:45:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '12:45:00', '20:45:00'),
+        numero_asientos_ocupados: 0,
+        precio: 13.25,
+        ruta_id: rutas[18].id, // R008 - Guayaquil - Quitumbe
+        unidad_id: unidades[7].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '20:00:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '20:00:00', '04:00:00'),
+        numero_asientos_ocupados: 0,
+        precio: 14.00,
+        ruta_id: rutas[18].id, // R008 - Guayaquil - Quitumbe
+        unidad_id: unidades[7].id
+      });
+
+      // COOPERATIVA ANDINA (ID = 9) - Más viajes
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '07:30:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '07:30:00', '15:30:00'),
+        numero_asientos_ocupados: 0,
+        precio: 13.00,
+        ruta_id: rutas[19].id, // R009 - Guayaquil - Carcelén (usando ruta de Panamericana)
+        unidad_id: unidades[8].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '14:20:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '14:20:00', '22:20:00'),
+        numero_asientos_ocupados: 0,
+        precio: 13.75,
+        ruta_id: rutas[19].id, // R009 - Guayaquil - Carcelén
+        unidad_id: unidades[8].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '21:40:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '21:40:00', '05:40:00'),
+        numero_asientos_ocupados: 0,
+        precio: 14.50,
+        ruta_id: rutas[19].id, // R009 - Guayaquil - Carcelén
+        unidad_id: unidades[8].id
+      });
+
+      // SAN CRISTÓBAL (ID = 10) - Más viajes
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '08:15:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '08:15:00', '16:15:00'),
+        numero_asientos_ocupados: 0,
+        precio: 17.25,
+        ruta_id: rutas[20].id, // R010 - Loja - Manta
+        unidad_id: unidades[9].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '15:00:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '15:00:00', '23:00:00'),
+        numero_asientos_ocupados: 0,
+        precio: 18.00,
+        ruta_id: rutas[20].id, // R010 - Loja - Manta
+        unidad_id: unidades[9].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '22:30:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '22:30:00', '06:30:00'),
+        numero_asientos_ocupados: 0,
+        precio: 18.75,
+        ruta_id: rutas[20].id, // R010 - Loja - Manta
+        unidad_id: unidades[9].id
+      });
+
+      // ========== VIAJES ESPECIALES Y ADICIONALES ==========
+
+      // Viajes especiales de fin de semana (solo sábados y domingos)
+      const esFindeSemana = fechaViaje.getDay() === 0 || fechaViaje.getDay() === 6;
+      
+      if (esFindeSemana) {
+        // Viajes especiales de Velotax para fines de semana
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '04:30:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '04:30:00', '12:30:00'),
+          numero_asientos_ocupados: 0,
+          precio: 11.75,
+          ruta_id: rutas[0].id, // Quito - Guayaquil especial
+          unidad_id: unidades[0].id
+        });
+
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '23:45:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '23:45:00', '07:45:00'),
+          numero_asientos_ocupados: 0,
+          precio: 15.50,
+          ruta_id: rutas[0].id, // Quito - Guayaquil nocturno especial
+          unidad_id: unidades[0].id
+        });
+
+        // Viajes especiales de otras cooperativas
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '03:00:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '03:00:00', '11:00:00'),
+          numero_asientos_ocupados: 0,
+          precio: 12.25,
+          ruta_id: rutas[12].id, // Panamericana especial
+          unidad_id: unidades[1].id
+        });
+
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, '01:15:00'),
+          fecha_llegada: crearFechaLlegada(fechaViaje, '01:15:00', '09:15:00'),
+          numero_asientos_ocupados: 0,
+          precio: 13.75,
+          ruta_id: rutas[13].id, // Flota Imbabura especial
+          unidad_id: unidades[2].id
+        });
+      }
+
+      // Viajes expresos (más caros pero más rápidos)
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '10:30:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '10:30:00', '17:00:00'),
+        numero_asientos_ocupados: 0,
+        precio: 16.50, // Precio premium
+        ruta_id: rutas[0].id, // Quito - Guayaquil EXPRESS
+        unidad_id: unidades[0].id
+      });
+
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, '17:30:00'),
+        fecha_llegada: crearFechaLlegada(fechaViaje, '17:30:00', '00:00:00'),
+        numero_asientos_ocupados: 0,
+        precio: 17.25, // Precio premium nocturno
+        ruta_id: rutas[0].id, // Quito - Guayaquil EXPRESS NOCTURNO
+        unidad_id: unidades[0].id
+      });
     }
 
     console.log(`📊 Total de viajes a crear: ${viajes.length}`);

@@ -3,6 +3,7 @@ import ViajesTable from './ViajesTable';
 import ActionButtons from './ActionButtons';
 import ViajeModal from './ViajeModal';
 import ViajeUpdateModal from './ViajeUpdateModal';
+import ErrorModal from './ErrorModal';
 import { useAuth } from './AuthContext';
 import './Estilos/ViajesPanel.css';
 import axios from 'axios';
@@ -22,6 +23,20 @@ const ViajesPanel = () => {
   const [rutas, setRutas] = useState([]);
   const [unidades, setUnidades] = useState([]);
   const [asientosOcupados, setAsientosOcupados] = useState({});
+  const [paginationInfo, setPaginationInfo] = useState({
+    totalPages: 0,
+    totalItems: 0,
+    hasNextPage: false,
+    hasPrevPage: false
+  });
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  
+  // Función para mostrar error modal
+  const mostrarError = (mensaje) => {
+    setErrorMessage(mensaje);
+    setShowErrorModal(true);
+  };
   
   // Obtener el ID de la cooperativa del usuario logueado
   const cooperativaId = usuario?.cooperativa_id;
@@ -61,14 +76,18 @@ const ViajesPanel = () => {
     }
   }, []);
 
-  // 🔄 Recargar viajes desde el servidor
-  const recargarViajes = useCallback(() => {
+  // 🔄 Recargar viajes desde el servidor con paginación
+  const recargarViajes = useCallback((page = currentPage) => {
     if (!API_URL_Viajes) return; // Si no hay URL, no hacer nada
     
-    axios.get(API_URL_Viajes)
+    // Agregar parámetros de paginación a la URL
+    const urlConPaginacion = `${API_URL_Viajes}?page=${page}&limit=${viajesPorPagina}`;
+    console.log(`📄 Cargando página ${page} con URL:`, urlConPaginacion);
+    
+    axios.get(urlConPaginacion)
       .then(res => {
         console.log('Respuesta completa del servidor:', res.data);
-        // El controlador devuelve los viajes vigentes filtrados en el backend
+        
         if (res.data.success && res.data.data) {
           console.log('📅 Fechas de viajes RECIBIDOS desde el backend:', res.data.data.map(viaje => ({
             id: viaje.id,
@@ -77,22 +96,48 @@ const ViajesPanel = () => {
             tipo_fecha_salida: typeof viaje.fecha_salida,
             tipo_fecha_llegada: typeof viaje.fecha_llegada
           })));
+          
           setViajes(res.data.data);
-          console.log('Viajes vigentes cargados desde backend:', res.data.data.length);
-          // Cargar asientos ocupados para cada viaje
+          
+          // Actualizar información de paginación
+          if (res.data.pagination) {
+            setPaginationInfo({
+              totalPages: res.data.pagination.totalPages,
+              totalItems: res.data.pagination.totalItems,
+              hasNextPage: res.data.pagination.hasNextPage,
+              hasPrevPage: res.data.pagination.hasPrevPage
+            });
+            console.log('📊 Información de paginación:', res.data.pagination);
+          }
+          
+          console.log(`Viajes vigentes cargados desde backend (página ${page}):`, res.data.data.length);
+          
+          // Cargar asientos ocupados para cada viaje de esta página
           cargarAsientosOcupados(res.data.data);
         } else {
           console.log('No hay viajes vigentes o respuesta sin éxito');
           setViajes([]);
           setAsientosOcupados({});
+          setPaginationInfo({
+            totalPages: 0,
+            totalItems: 0,
+            hasNextPage: false,
+            hasPrevPage: false
+          });
         }
       })
       .catch(error => {
         console.error('Error al cargar viajes:', error);
         setViajes([]);
         setAsientosOcupados({});
+        setPaginationInfo({
+          totalPages: 0,
+          totalItems: 0,
+          hasNextPage: false,
+          hasPrevPage: false
+        });
       });
-  }, [API_URL_Viajes, cargarAsientosOcupados]);
+  }, [API_URL_Viajes, cargarAsientosOcupados, currentPage]);
 
   // Cargar viajes, rutas y unidades al inicio
   useEffect(() => {
@@ -149,11 +194,12 @@ const ViajesPanel = () => {
     );
   }
 
-  const totalPaginas = Math.ceil(viajes.length / viajesPorPagina);
-  const startIdx = (currentPage - 1) * viajesPorPagina;
-  const endIdx = startIdx + viajesPorPagina;
-  // Agregar información de asientos ocupados a los viajes de la página actual
-  const viajesPagina = viajes.slice(startIdx, endIdx).map(viaje => ({
+  // Usar información de paginación del servidor
+  const totalPaginas = paginationInfo.totalPages;
+  
+  // Los viajes ya vienen paginados del servidor, no necesitamos slice
+  // Agregar información de asientos ocupados a los viajes
+  const viajesConAsientos = viajes.map(viaje => ({
     ...viaje,
     asientos_ocupados_reales: asientosOcupados[viaje.id] || 0
   }));
@@ -174,12 +220,15 @@ const ViajesPanel = () => {
           fecha_salida: res.data.data?.fecha_salida,
           fecha_llegada: res.data.data?.fecha_llegada
         });
-        recargarViajes();
+        // Recargar primera página para ver el nuevo viaje
+        setCurrentPage(1);
+        recargarViajes(1);
         setShowModal(false);
       })
       .catch(error => {
         console.error('Error al crear viaje:', error);
-        alert("Error al crear el viaje");
+        console.log('Error del servidor:', error.response?.data?.message || error.message);
+        mostrarError("Error al crear el viaje");
       });
   };
 
@@ -192,7 +241,7 @@ const ViajesPanel = () => {
       const rutasValidas = rutas.filter(ruta => ruta.id);
       
       if (rutasValidas.length === 0) {
-        alert('No hay rutas válidas para crear viajes');
+        mostrarError('No hay rutas válidas para crear viajes');
         return;
       }
 
@@ -236,7 +285,9 @@ const ViajesPanel = () => {
       
       if (exitosos > 0) {
         console.log(`${exitosos} viajes creados exitosamente`);
-        recargarViajes();
+        // Recargar primera página para ver los nuevos viajes
+        setCurrentPage(1);
+        recargarViajes(1);
         setShowModal(false);
         
         if (fallidos > 0) {
@@ -244,21 +295,25 @@ const ViajesPanel = () => {
             .filter(r => r.status === 'rejected')
             .map(r => r.reason?.response?.data?.message || 'Error desconocido')
             .join('\n');
-          alert(`Se crearon ${exitosos} viajes exitosamente, pero ${fallidos} fallaron.\n\nLos viajes creados no tienen unidades asignadas. Use el botón "Actualizar" para asignar unidades y precios.\n\nErrores:\n${errores}`);
+          console.log('Errores del servidor al crear viajes:', errores);
+          mostrarError(`Se crearon ${exitosos} viajes exitosamente, pero ${fallidos} fallaron.\n\nLos viajes creados no tienen unidades asignadas. Use el botón "Actualizar" para asignar unidades y precios.\n\nErrores:\n${errores}`);
         } else {
-          alert(`¡Éxito! Se crearon ${exitosos} viajes para todas las rutas.\n\nLos viajes no tienen unidades asignadas. Use el botón "Actualizar" para asignar unidades y modificar precios.`);
+          console.log(`✅ ${exitosos} viajes creados exitosamente para todas las rutas`);
+          mostrarError(`¡Éxito! Se crearon ${exitosos} viajes para todas las rutas.\n\nLos viajes no tienen unidades asignadas. Use el botón "Actualizar" para asignar unidades y modificar precios.`);
         }
       } else {
         const errores = resultados
           .filter(r => r.status === 'rejected')
           .map(r => r.reason?.response?.data?.message || 'Error desconocido')
           .join('\n');
-        alert(`No se pudo crear ningún viaje.\n\nErrores:\n${errores}`);
+        console.log('Errores del servidor al crear viajes:', errores);
+        mostrarError(`No se pudo crear ningún viaje.\n\nErrores:\n${errores}`);
       }
       
     } catch (error) {
       console.error('Error al crear múltiples viajes:', error);
-      alert('Error inesperado al crear los viajes múltiples');
+      console.log('Error inesperado:', error.message);
+      mostrarError('Error inesperado al crear los viajes múltiples');
     }
   };
 
@@ -280,13 +335,15 @@ const ViajesPanel = () => {
     axios.put(`${API_URL_Viajes_CRUD}/${viajeEdit.id}`, viajeCompleto)
       .then(res => {
         console.log('Viaje actualizado exitosamente:', res.data);
-        recargarViajes();
+        // Mantener la página actual para ver el viaje actualizado
+        recargarViajes(currentPage);
         setShowUpdateModal(false);
         setViajeEdit(null);
       })
       .catch(error => {
         console.error('Error al actualizar viaje:', error);
-        alert("Error al actualizar el viaje");
+        console.log('Error del servidor:', error.response?.data?.message || error.message);
+        mostrarError("Error al actualizar el viaje");
       });
   };
 
@@ -322,19 +379,78 @@ const ViajesPanel = () => {
       axios.delete(`${API_URL_Viajes_CRUD}/${viaje.id}`)
         .then((res) => {
           console.log('Viaje eliminado exitosamente:', res.data);
-          setViajes(prev => prev.filter(v => v.id !== viaje.id));
           setSelectedId(null);
+          // Recargar página actual o ir a la anterior si quedó vacía
+          if (viajes.length === 1 && currentPage > 1) {
+            const nuevaPagina = currentPage - 1;
+            setCurrentPage(nuevaPagina);
+            recargarViajes(nuevaPagina);
+          } else {
+            recargarViajes(currentPage);
+          }
         })
         .catch(error => {
           console.error('Error al eliminar viaje:', error);
-          alert("Error al eliminar el viaje");
+          console.log('Error del servidor:', error.response?.data?.message || error.message);
+          mostrarError("Error al eliminar el viaje");
         });
     }
   };
 
   const handlePageChange = (num) => {
+    console.log(`📄 Cambiando a página ${num}`);
     setCurrentPage(num);
-    setSelectedId(null);
+    setSelectedId(null); // Limpiar selección al cambiar página
+    recargarViajes(num); // Cargar viajes de la nueva página
+  };
+
+  // Función para generar los números de página a mostrar
+  const generatePageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5; // Máximo número de páginas visibles
+    
+    if (totalPaginas <= maxVisiblePages) {
+      // Si hay pocas páginas, mostrar todas
+      for (let i = 1; i <= totalPaginas; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      // Si hay muchas páginas, mostrar solo un rango
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPaginas, currentPage + 2);
+      
+      // Ajustar el rango para mantener 5 páginas visibles cuando sea posible
+      if (endPage - startPage + 1 < maxVisiblePages) {
+        if (startPage === 1) {
+          endPage = Math.min(totalPaginas, startPage + maxVisiblePages - 1);
+        } else if (endPage === totalPaginas) {
+          startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+      }
+      
+      // Agregar primera página y puntos suspensivos si es necesario
+      if (startPage > 1) {
+        pageNumbers.push(1);
+        if (startPage > 2) {
+          pageNumbers.push('...');
+        }
+      }
+      
+      // Agregar páginas del rango actual
+      for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+      }
+      
+      // Agregar puntos suspensivos y última página si es necesario
+      if (endPage < totalPaginas) {
+        if (endPage < totalPaginas - 1) {
+          pageNumbers.push('...');
+        }
+        pageNumbers.push(totalPaginas);
+      }
+    }
+    
+    return pageNumbers;
   };
 
   return (
@@ -345,25 +461,82 @@ const ViajesPanel = () => {
           <div className="viajes-content">
             <div className="viajes-table-wrapper">
               <ViajesTable
-                viajes={viajesPagina}
+                viajes={viajesConAsientos}
                 selectedId={selectedId}
                 setSelectedId={setSelectedId}
               />
 
               {/* Paginación */}
               <div className="pagination">
-                <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>&lt;</button>
-                {Array.from({ length: totalPaginas }, (_, i) => (
-                  <button
-                    key={i + 1}
-                    className={currentPage === i + 1 ? 'active' : ''}
-                    onClick={() => handlePageChange(i + 1)}
+                {/* Botón primera página */}
+                {totalPaginas > 5 && currentPage > 3 && (
+                  <button 
+                    className="nav-button"
+                    onClick={() => handlePageChange(1)} 
+                    title="Primera página"
                   >
-                    {i + 1}
+                    &#8676;
                   </button>
-                ))}
-                <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPaginas}>&gt;</button>
+                )}
+                
+                <button 
+                  className="nav-button"
+                  onClick={() => handlePageChange(currentPage - 1)} 
+                  disabled={currentPage === 1 || !paginationInfo.hasPrevPage}
+                  title="Página anterior"
+                >
+                  &#8249;
+                </button>
+                
+                {generatePageNumbers().map((pageNum, index) => 
+                  pageNum === '...' ? (
+                    <span key={`ellipsis-${index}`} className="ellipsis">
+                      &#8230;
+                    </span>
+                  ) : (
+                    <button
+                      key={pageNum}
+                      className={currentPage === pageNum ? 'active' : ''}
+                      onClick={() => handlePageChange(pageNum)}
+                      title={`Página ${pageNum}`}
+                    >
+                      {pageNum}
+                    </button>
+                  )
+                )}
+                
+                <button 
+                  className="nav-button"
+                  onClick={() => handlePageChange(currentPage + 1)} 
+                  disabled={currentPage === totalPaginas || !paginationInfo.hasNextPage}
+                  title="Página siguiente"
+                >
+                  &#8250;
+                </button>
+                
+                {/* Botón última página */}
+                {totalPaginas > 5 && currentPage < totalPaginas - 2 && (
+                  <button 
+                    className="nav-button"
+                    onClick={() => handlePageChange(totalPaginas)} 
+                    title="Última página"
+                  >
+                    &#8677;
+                  </button>
+                )}
               </div>
+              
+              {/* Información de paginación */}
+              {paginationInfo.totalItems > 0 && (
+                <div className="pagination-info">
+                  <p>
+                    Mostrando {((currentPage - 1) * viajesPorPagina) + 1} - {Math.min(currentPage * viajesPorPagina, paginationInfo.totalItems)} de {paginationInfo.totalItems} viajes vigentes
+                  </p>
+                  <p>
+                    Página {currentPage} de {totalPaginas}
+                  </p>
+                </div>
+              )}
             </div>
 
             <ActionButtons
@@ -396,6 +569,13 @@ const ViajesPanel = () => {
         onSave={handleUpdateViaje}
         initialData={viajeEdit}
         cooperativaId={cooperativaId}
+      />
+
+      {/* Modal de error */}
+      <ErrorModal
+        open={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        message={errorMessage}
       />
     </div>
   );

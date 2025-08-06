@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Estilos/ViajeModal.css';
+import SimpleErrorModal from './SimpleErrorModal';
 
 const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades, cooperativaId }) => {
   const [viaje, setViaje] = useState({
@@ -10,6 +11,33 @@ const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades, co
     ruta_id: '',
     unidad_id: ''
   });
+  
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingMultipleData, setPendingMultipleData] = useState(null);
+
+  // Función helper para mostrar errores locales
+  const mostrarError = (mensaje) => {
+    setErrorMessage(mensaje);
+    setShowErrorModal(true);
+  };
+
+  // Función para confirmar creación de múltiples viajes
+  const confirmarMultiplesViajes = (viajesData, cantidadRutas) => {
+    setErrorMessage(`¿Estás seguro de que deseas crear ${cantidadRutas} viajes (uno por cada ruta de la cooperativa) para la fecha ${viajesData.fecha_salida}?\n\nNota: Los viajes se crearán con precio $0.00 y sin unidades asignadas. Podrá configurarlos después usando el botón "Actualizar".`);
+    setPendingMultipleData(viajesData);
+    setShowConfirmModal(true);
+  };
+
+  // Función para proceder con la creación de múltiples viajes
+  const procederConMultiplesViajes = () => {
+    if (pendingMultipleData && onSaveMultiple) {
+      onSaveMultiple(pendingMultipleData);
+      setPendingMultipleData(null);
+    }
+    setShowConfirmModal(false);
+  };
 
   // Resetear formulario cuando se abre el modal
   useEffect(() => {
@@ -22,6 +50,11 @@ const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades, co
         ruta_id: '',
         unidad_id: ''
       });
+      // Limpiar estados de modales
+      setShowErrorModal(false);
+      setShowConfirmModal(false);
+      setErrorMessage('');
+      setPendingMultipleData(null);
     }
   }, [open]);
 
@@ -35,22 +68,22 @@ const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades, co
     
     // Validaciones básicas para viaje único
     if (!viaje.fecha_salida) {
-      alert('Por favor, complete la fecha de salida');
+      mostrarError('Por favor, complete la fecha de salida');
       return;
     }
 
     if (!viaje.precio) {
-      alert('Por favor, complete el precio para crear un viaje único');
+      mostrarError('Por favor, complete el precio para crear un viaje único');
       return;
     }
 
     if (!viaje.ruta_id || !viaje.unidad_id) {
-      alert('Para crear un viaje único, debe seleccionar una ruta y una unidad específicas');
+      mostrarError('Para crear un viaje único, debe seleccionar una ruta y una unidad específicas');
       return;
     }
 
     if (viaje.fecha_llegada && new Date(viaje.fecha_salida) > new Date(viaje.fecha_llegada)) {
-      alert('La fecha de llegada debe ser igual o posterior a la fecha de salida');
+      mostrarError('La fecha de llegada debe ser igual o posterior a la fecha de salida');
       return;
     }
 
@@ -69,13 +102,13 @@ const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades, co
   const handleCreateMultipleTrips = () => {
     // Validación básica para múltiples viajes - solo requiere fecha de salida
     if (!viaje.fecha_salida) {
-      alert('Por favor, complete la fecha de salida para crear viajes múltiples');
+      mostrarError('Por favor, complete la fecha de salida para crear viajes múltiples');
       return;
     }
 
     // Verificar que hay rutas disponibles
     if (!rutas || rutas.length === 0) {
-      alert('No hay rutas disponibles para esta cooperativa');
+      mostrarError('No hay rutas disponibles para esta cooperativa');
       return;
     }
 
@@ -84,19 +117,16 @@ const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades, co
     console.log(`Rutas totales: ${rutas.length}, Rutas de cooperativa ${cooperativaId}: ${rutasCooperativa.length}`);
     const cantidadRutas = rutasCooperativa.length > 0 ? rutasCooperativa.length : rutas.length;
 
-    if (window.confirm(`¿Estás seguro de que deseas crear ${cantidadRutas} viajes (uno por cada ruta de la cooperativa) para la fecha ${viaje.fecha_salida}?\n\nNota: Los viajes se crearán con precio $0.00 y sin unidades asignadas. Podrá configurarlos después usando el botón "Actualizar".`)) {
-      const viajesData = {
-        fecha_salida: viaje.fecha_salida,
-        fecha_llegada: viaje.fecha_llegada || viaje.fecha_salida, // Si no hay fecha de llegada, usar la misma fecha de salida
-        numero_asientos_ocupados: parseInt(viaje.numero_asientos_ocupados) || 0,
-        precio: 0, // Precio por defecto en 0 para poder modificar después
-        rutas: rutasCooperativa.length > 0 ? rutasCooperativa : rutas // Usar rutas filtradas si están disponibles
-      };
+    const viajesData = {
+      fecha_salida: viaje.fecha_salida,
+      fecha_llegada: viaje.fecha_llegada || viaje.fecha_salida, // Si no hay fecha de llegada, usar la misma fecha de salida
+      numero_asientos_ocupados: parseInt(viaje.numero_asientos_ocupados) || 0,
+      precio: 0, // Precio por defecto en 0 para poder modificar después
+      rutas: rutasCooperativa.length > 0 ? rutasCooperativa : rutas // Usar rutas filtradas si están disponibles
+    };
 
-      if (onSaveMultiple) {
-        onSaveMultiple(viajesData);
-      }
-    }
+    // Mostrar confirmación personalizada
+    confirmarMultiplesViajes(viajesData, cantidadRutas);
   };
 
   if (!open) return null;
@@ -198,6 +228,42 @@ const ViajeModal = ({ open, onClose, onSave, onSaveMultiple, rutas, unidades, co
           </div>
         </form>
       </div>
+      
+      {/* Modal de Error */}
+      {showErrorModal && (
+        <SimpleErrorModal
+          message={errorMessage}
+          onClose={() => setShowErrorModal(false)}
+        />
+      )}
+      
+      {/* Modal de Confirmación */}
+      {showConfirmModal && (
+        <div className="viaje-modal-bg">
+          <div className="viaje-modal-content">
+            <h3>Confirmar Creación de Múltiples Viajes</h3>
+            <div style={{ marginBottom: '20px', lineHeight: '1.5' }}>
+              <p>{errorMessage}</p>
+            </div>
+            <div className="viaje-modal-btns">
+              <button 
+                type="button" 
+                className="viaje-modal-cancel"
+                onClick={() => setShowConfirmModal(false)}
+              >
+                Cancelar
+              </button>
+              <button 
+                type="button" 
+                className="viaje-modal-save"
+                onClick={procederConMultiplesViajes}
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

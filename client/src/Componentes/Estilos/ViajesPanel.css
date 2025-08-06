@@ -363,10 +363,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  padding: 15px;
+  gap: 6px;
+  padding: 15px 10px;
   background-color: #f8f9fa;
   border-top: 1px solid #dee2e6;
+  flex-wrap: wrap;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .pagination button {
@@ -378,22 +381,153 @@
   border-radius: 4px;
   font-size: 14px;
   transition: all 0.2s;
+  min-width: 40px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .pagination button:hover:not(:disabled) {
   background-color: #f0f0f0;
   border-color: #2176ab;
+  transform: translateY(-1px);
 }
 
 .pagination button.active {
   background-color: #2176ab;
   color: white;
   border-color: #2176ab;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(33, 118, 171, 0.2);
 }
 
 .pagination button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  background-color: #f5f5f5;
+}
+
+/* Botones especiales de navegación */
+.pagination button.nav-button {
+  background-color: #2176ab;
+  color: white;
+  border-color: #2176ab;
+  font-weight: bold;
+}
+
+.pagination button.nav-button:hover:not(:disabled) {
+  background-color: #1a5d8a;
+  border-color: #1a5d8a;
+}
+
+.pagination button.nav-button:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  color: #666;
+}
+
+/* Puntos suspensivos */
+.pagination .ellipsis {
+  padding: 8px 4px;
+  color: #666;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+  .pagination {
+    gap: 4px;
+    padding: 10px 5px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .pagination::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .pagination::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+  }
+
+  .pagination::-webkit-scrollbar-thumb {
+    background: #2176ab;
+    border-radius: 2px;
+  }
+
+  .pagination button {
+    padding: 6px 10px;
+    font-size: 12px;
+    min-width: 35px;
+    height: 32px;
+  }
+
+  .pagination .ellipsis {
+    padding: 6px 2px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    gap: 2px;
+    padding: 8px 3px;
+  }
+
+  .pagination button {
+    padding: 5px 8px;
+    font-size: 11px;
+    min-width: 30px;
+    height: 28px;
+  }
+}
+
+/* Información de paginación */
+.pagination-info {
+  text-align: center;
+  padding: 12px 10px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.pagination-info p {
+  margin: 2px 0;
+  font-weight: 500;
+}
+
+.pagination-info p:first-child {
+  color: #2176ab;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .pagination-info {
+    font-size: 12px;
+    padding: 10px 8px;
+  }
+  
+  .pagination-info p {
+    margin: 1px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-info {
+    font-size: 11px;
+    padding: 8px 5px;
+  }
 }
 
 .viajes-panel-container {

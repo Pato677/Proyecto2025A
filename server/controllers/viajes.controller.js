@@ -289,6 +289,7 @@ module.exports.getViajesByCooperativa = async (req, res) => {
 module.exports.getViajesVigentesByCooperativa = async (req, res) => {
   try {
     const { cooperativaId } = req.params;
+    const { page = 1, limit = 4 } = req.query; // Parámetros de paginación
     
     if (!cooperativaId) {
       return res.status(400).json({
@@ -297,8 +298,13 @@ module.exports.getViajesVigentesByCooperativa = async (req, res) => {
       });
     }
 
-    // Obtener todos los viajes de la cooperativa con sus rutas
-    const viajes = await Viaje.findAll({
+    // Convertir a números
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+    const offset = (pageNumber - 1) * limitNumber;
+
+    // Obtener todos los viajes de la cooperativa con sus rutas (sin paginación inicial)
+    const todosLosViajes = await Viaje.findAll({
       include: [
         { 
           model: Ruta, 
@@ -330,7 +336,7 @@ module.exports.getViajesVigentesByCooperativa = async (req, res) => {
 
     // Filtrar viajes vigentes combinando fecha_salida + hora_salida de la ruta
     const ahora = new Date();
-    const viajesVigentes = viajes.filter(viaje => {
+    const viajesVigentes = todosLosViajes.filter(viaje => {
       if (!viaje.fecha_salida || !viaje.ruta?.hora_salida) {
         return false; // Si no tiene fecha o hora, no es válido
       }
@@ -343,11 +349,27 @@ module.exports.getViajesVigentesByCooperativa = async (req, res) => {
       return fechaViaje > ahora; // Solo viajes futuros
     });
 
+    // Aplicar paginación a los viajes vigentes
+    const totalViajesVigentes = viajesVigentes.length;
+    const totalPaginas = Math.ceil(totalViajesVigentes / limitNumber);
+    const viajesPaginados = viajesVigentes.slice(offset, offset + limitNumber);
+
+    console.log(`📄 Paginación - Página: ${pageNumber}, Límite: ${limitNumber}, Offset: ${offset}`);
+    console.log(`📊 Total viajes vigentes: ${totalViajesVigentes}, Total páginas: ${totalPaginas}`);
+    console.log(`📋 Viajes en esta página: ${viajesPaginados.length}`);
+
     res.status(200).json({
       success: true,
       message: `Viajes vigentes encontrados para la cooperativa ${cooperativaId}`,
-      data: viajesVigentes,
-      total: viajesVigentes.length
+      data: viajesPaginados,
+      pagination: {
+        currentPage: pageNumber,
+        totalPages: totalPaginas,
+        totalItems: totalViajesVigentes,
+        itemsPerPage: limitNumber,
+        hasNextPage: pageNumber < totalPaginas,
+        hasPrevPage: pageNumber > 1
+      }
     });
     
   } catch (error) {
