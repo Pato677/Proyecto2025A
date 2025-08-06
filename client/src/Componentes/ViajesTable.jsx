@@ -4,8 +4,42 @@ import './Estilos/ViajesTable.css';
 const ViajesTable = ({ viajes, selectedId, setSelectedId }) => {
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
+    
+    // Agregar logs para debuggear
+    console.log('📅 formatDate recibió:', dateString, 'tipo:', typeof dateString);
+    
+    // Si la fecha viene en formato YYYY-MM-DD, trabajar directamente con el string
+    if (typeof dateString === 'string' && dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      const [year, month, day] = dateString.split('-');
+      const fecha = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      console.log('📅 Fecha creada (caso YYYY-MM-DD):', fecha.toLocaleDateString());
+      return fecha.toLocaleDateString();
+    }
+    
+    // Si la fecha viene con hora (formato datetime), extraer solo la fecha
+    if (typeof dateString === 'string' && dateString.includes('T')) {
+      const fechaSolo = dateString.split('T')[0]; // Tomar solo la parte de la fecha
+      const [year, month, day] = fechaSolo.split('-');
+      const fecha = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      console.log('📅 Fecha creada (caso datetime):', fecha.toLocaleDateString());
+      return fecha.toLocaleDateString();
+    }
+    
+    // Si la fecha viene solo como YYYY-MM-DD pero dentro de un string más largo
+    if (typeof dateString === 'string') {
+      const match = dateString.match(/(\d{4}-\d{2}-\d{2})/);
+      if (match) {
+        const [year, month, day] = match[1].split('-');
+        const fecha = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        console.log('📅 Fecha creada (caso regex):', fecha.toLocaleDateString());
+        return fecha.toLocaleDateString();
+      }
+    }
+    
+    // Para otros formatos, usar el método original como último recurso
     const date = new Date(dateString);
-    return date.toLocaleDateString(); // Solo mostrar la fecha, sin la hora
+    console.log('📅 Fecha creada (caso original):', date.toLocaleDateString());
+    return date.toLocaleDateString();
   };
 
   const formatPrice = (price) => {
