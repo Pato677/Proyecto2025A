@@ -1,12 +1,12 @@
 const express = require('express');
-const router = express.Router();
+
 const UsuarioController = require('../controllers/usuario.controller');
 const authMiddleware = require('../middleware/auth.middleware');
 
 // Comentamos temporalmente la autenticación para pruebas
 // router.use(authMiddleware);
 // router.use(authMiddleware.requireRole('superusuario'));
-
+module.exports = function(router){
 // Login de usuario (público - sin autenticación)
 router.post('/login', UsuarioController.login);
 
@@ -43,4 +43,5 @@ router.get('/debug/emails', UsuarioController.listarEmails);
 // Ruta especial para actualizar contraseñas planas (solo desarrollo)
 router.post('/actualizar-contrasenas', UsuarioController.actualizarContrasenasPlanas);
 
-module.exports = router;
+//module.exports = router;
+}

@@ -62,19 +62,21 @@ const ciudadesTerminalesRoutes = require('./routes/ciudadesTerminales.routes');
 const pasajerosRoutes = require('./routes/pasajeros.routes');
 const comprasRoutes = require('./routes/compras.routes');
 
-app.use('/usuarios', usuariosRoutes);
-app.use('/rutas', rutasRoutes);
-app.use('/viajes', viajesRoutes);
-app.use('/unidades', unidadesRoutes);
-app.use('/asientos', asientosRoutes);
-app.use('/cooperativas', cooperativasRoutes);
-app.use('/conductores', conductoresRoutes);
-app.use('/terminales', terminalesRoutes);
-app.use('/ciudades', ciudadesRoutes);
-app.use('/boletos', boletosRoutes);
-app.use('/ciudades-terminales', ciudadesTerminalesRoutes);
-app.use('/pasajeros', pasajerosRoutes);
-app.use('/compras', comprasRoutes);
+//app.use('/usuarios', usuariosRoutes);
+// Rutas con funciones
+rutasRoutes(app);
+viajesRoutes(app);
+unidadesRoutes(app);
+asientosRoutes(app);
+cooperativasRoutes(app);
+conductoresRoutes(app);
+terminalesRoutes(app);
+ciudadesRoutes(app);
+boletosRoutes(app);
+ciudadesTerminalesRoutes(app);
+pasajerosRoutes(app);
+comprasRoutes(app);
+usuariosRoutes(app);
 console.log('Todas las rutas cargadas exitosamente!');
 
 
