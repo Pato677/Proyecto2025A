@@ -16,20 +16,20 @@ router.get('/cooperativas/desactivadas', UsuarioController.getCooperativasDesact
 // Obtener todos los usuarios con filtros y paginación
 router.get('/', UsuarioController.getAllUsuarios);
 
-// Obtener usuario por ID con información completa
-router.get('/:id', UsuarioController.getUsuarioById);
+// Obtener usuario por ID con información completa (requiere autenticación)
+router.get('/:id', authMiddleware, UsuarioController.getUsuarioById);
 
 // Crear nuevo usuario (solo superusuarios)
 router.post('/', UsuarioController.createUsuario);
 
-// Actualizar usuario
-router.put('/:id', UsuarioController.updateUsuario);
+// Actualizar usuario (requiere autenticación)
+router.put('/:id', authMiddleware, UsuarioController.updateUsuario);
 
 // Actualizar estado de cooperativa específicamente
 router.patch('/:id/estado', UsuarioController.actualizarEstadoCooperativa);
 
-// Eliminar usuario
-router.delete('/:id', UsuarioController.deleteUsuario);
+// Eliminar usuario (requiere autenticación)
+router.delete('/:id', authMiddleware, UsuarioController.deleteUsuario);
 
 // Verificar si email existe
 router.get('/verificar-email/:correo', UsuarioController.verificarEmail);

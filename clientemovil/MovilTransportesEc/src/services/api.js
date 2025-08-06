@@ -70,10 +70,12 @@ export const AuthService = {
   // Registro de usuario final
   register: async (userData) => {
     try {
-      const response = await api.post('/auth/registro/usuario', {
+      // Usar la misma ruta y estructura que el cliente web
+      const response = await api.post('/usuarios', {
         correo: userData.correo,
         contrasena: userData.contrasena,
         telefono: userData.telefono,
+        rol: "final", // Especificar que es un usuario final
         datosUsuarioFinal: {
           nombres: userData.nombres,
           apellidos: userData.apellidos,
@@ -90,7 +92,7 @@ export const AuthService = {
   // Verificar si el correo ya existe
   checkEmailExists: async (correo) => {
     try {
-      const response = await api.get(`/auth/verificar-correo/${correo}`);
+      const response = await api.get(`/usuarios/verificar-email/${correo}`);
       return response.data.existe;
     } catch (error) {
       return false;
@@ -100,10 +102,54 @@ export const AuthService = {
   // Verificar si la cédula ya existe
   checkCedulaExists: async (cedula) => {
     try {
-      const response = await api.get(`/auth/verificar-cedula/${cedula}`);
+      const response = await api.get(`/usuarios/verificar-cedula/${cedula}`);
       return response.data.existe;
     } catch (error) {
       return false;
+    }
+  },
+};
+
+export const UserService = {
+  // Obtener datos del usuario por ID
+  getUserById: async (id, token) => {
+    try {
+      const response = await api.get(`/usuarios/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Error al obtener datos del usuario');
+    }
+  },
+
+  // Actualizar usuario
+  updateUser: async (id, userData, token) => {
+    try {
+      const response = await api.put(`/usuarios/${id}`, userData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Error al actualizar usuario');
+    }
+  },
+
+  // Eliminar usuario
+  deleteUser: async (id, token) => {
+    try {
+      const response = await api.delete(`/usuarios/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Error al eliminar usuario');
     }
   },
 };

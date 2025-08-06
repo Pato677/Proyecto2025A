@@ -79,12 +79,28 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = async (updatedUserData) => {
+    try {
+      // Actualizar estado
+      setUser(updatedUserData);
+      
+      // Actualizar AsyncStorage
+      await AsyncStorage.setItem('user', JSON.stringify(updatedUserData));
+      
+      return true;
+    } catch (error) {
+      console.error('Error updating user data:', error);
+      return false;
+    }
+  };
+
   const value = {
     user,
     token,
     loading,
     login,
     logout,
+    updateUser,
     isAuthenticated: !!user && !!token,
   };
 
