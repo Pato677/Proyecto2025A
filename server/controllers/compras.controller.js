@@ -31,25 +31,33 @@ const crearCompraCompleta = async (req, res) => {
 
     // Validaciones
     if (!pasajeros || !Array.isArray(pasajeros) || pasajeros.length === 0) {
+      await transaction.rollback();
       return res.status(400).json({ 
+        success: false,
         error: 'Se requiere al menos un pasajero' 
       });
     }
 
     if (!asientosSeleccionados || !Array.isArray(asientosSeleccionados)) {
+      await transaction.rollback();
       return res.status(400).json({ 
+        success: false,
         error: 'Se requieren asientos seleccionados' 
       });
     }
 
     if (pasajeros.length !== asientosSeleccionados.length) {
+      await transaction.rollback();
       return res.status(400).json({ 
+        success: false,
         error: 'El número de pasajeros debe coincidir con el número de asientos seleccionados' 
       });
     }
 
     if (!viajeId) {
+      await transaction.rollback();
       return res.status(400).json({ 
+        success: false,
         error: 'Se requiere el ID del viaje' 
       });
     }
@@ -57,30 +65,33 @@ const crearCompraCompleta = async (req, res) => {
     // Obtener datos del viaje para el precio
     const viaje = await Viaje.findByPk(viajeId);
     if (!viaje) {
+      await transaction.rollback();
       return res.status(404).json({ 
+        success: false,
         error: 'Viaje no encontrado' 
       });
     }
 
     const precioBase = parseFloat(viaje.precio) || 12.25;
 
-    // TODO: Verificar disponibilidad de asientos (comentado temporalmente)
-    /*
+    // Verificar disponibilidad de asientos
     const asientosOcupados = await ViajeAsiento.findAll({
       where: { 
         viaje_id: viajeId,
         asiento_id: asientosSeleccionados
-      }
+      },
+      transaction
     });
 
     if (asientosOcupados.length > 0) {
       const asientosNoDisponibles = asientosOcupados.map(va => va.asiento_id);
+      await transaction.rollback();
       return res.status(400).json({ 
+        success: false,
         error: 'Algunos asientos ya están ocupados',
         asientosOcupados: asientosNoDisponibles
       });
     }
-    */
 
     // 1. Crear todos los pasajeros
     const pasajerosCreados = [];
@@ -136,12 +147,20 @@ const crearCompraCompleta = async (req, res) => {
       // Crear código único para cada boleto
       const codigoBoleto = generarCodigoBoleto();
       
+      // Asignar el asiento correspondiente al pasajero
+      const asientoAsignado = asientosSeleccionados[i];
+      
+      console.log(`Creando boleto ${i + 1}: Pasajero ${pasajero.nombres} ${pasajero.apellidos}, Asiento: ${asientoAsignado}, Precio: $${precio}`);
+      
       const boleto = await Boleto.create({
         codigo: codigoBoleto,
         valor: precio,
         compra_id: compra.id,
-        pasajero_id: pasajero.id
+        pasajero_id: pasajero.id,
+        asiento_id: asientoAsignado
       }, { transaction });
+      
+      console.log(`✅ Boleto creado: ${codigoBoleto} con asiento ${asientoAsignado}`);
       
       boletosCreados.push(boleto);
     }
@@ -165,6 +184,45 @@ const crearCompraCompleta = async (req, res) => {
 
     // Confirmar transacción
     await transaction.commit();
+    
+    console.log(`✅ Compra completada exitosamente:`);
+    console.log(`   - ID de compra: ${compra.id}`);
+    console.log(`   - Código de compra: ${codigoCompra}`);
+    console.log(`   - Total pasajeros: ${pasajerosCreados.length}`);
+    console.log(`   - Total boletos: ${boletosCreados.length}`);
+    console.log(`   - Asientos asignados: ${asientosSeleccionados.join(', ')}`);
+
+    // Preparar datos de respuesta con información completa
+    const boletosConInfo = boletosCreados.map((boleto, index) => {
+      const pasajero = pasajerosCreados[index];
+      const pasajeroData = pasajeros[index];
+      
+      // Calcular edad nuevamente para la respuesta
+      const fechaNacimiento = new Date(pasajero.fecha_nacimiento);
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+      const mesActual = hoy.getMonth();
+      const diaActual = hoy.getDate();
+      
+      if (mesActual < fechaNacimiento.getMonth() || 
+          (mesActual === fechaNacimiento.getMonth() && diaActual < fechaNacimiento.getDate())) {
+        edad--;
+      }
+      
+      return {
+        codigo: boleto.codigo,
+        valor: parseFloat(boleto.valor).toFixed(2),
+        asiento: boleto.asiento_id,
+        pasajero: {
+          id: pasajero.id,
+          nombres: pasajero.nombres,
+          apellidos: pasajero.apellidos,
+          cedula: pasajero.cedula,
+          edad: edad,
+          esMenor: edad < 18
+        }
+      };
+    });
 
     // Respuesta exitosa
     res.status(201).json({
@@ -172,22 +230,34 @@ const crearCompraCompleta = async (req, res) => {
       message: 'Compra creada exitosamente',
       data: {
         id: compra.id,
-        compra: compra,
-        pasajeros: pasajerosCreados,
-        boletos: boletosCreados,
-        viajeAsientos: viajeAsientosCreados,
         codigoCompra: codigoCompra,
+        fecha: compra.fecha,
+        emailContacto: compra.email_contacto,
+        telefonoContacto: compra.telefono_contacto,
+        viajeId: compra.viaje_id,
         totalPasajeros: pasajerosCreados.length,
         totalBoletos: boletosCreados.length,
-        precioBase: precioBase
+        precioBase: precioBase.toFixed(2),
+        boletos: boletosConInfo,
+        pasajeros: boletosConInfo.map(b => ({
+          ...b.pasajero,
+          asiento: b.asiento,
+          precio: b.valor,
+          codigoBoleto: b.codigo
+        }))
       }
     });
 
   } catch (error) {
     // Revertir transacción en caso de error
-    await transaction.rollback();
+    try {
+      await transaction.rollback();
+    } catch (rollbackError) {
+      console.error('Error al hacer rollback:', rollbackError);
+    }
     console.error('Error al crear compra:', error);
     res.status(500).json({ 
+      success: false,
       error: 'Error interno del servidor', 
       details: error.message 
     });

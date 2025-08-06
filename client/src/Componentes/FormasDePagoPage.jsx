@@ -218,10 +218,12 @@ const FormasDePagoPage = () => {
       // Realizar petición POST al backend
       const response = await axios.post('http://localhost:8000/compras', datosCompra);
 
-      if (response.data.success) {
+      // Manejar respuesta exitosa - verificar tanto success como status code
+      if (response.status === 201 && (response.data.success === true || response.data.message === 'Compra creada exitosamente')) {
         const datosRespuesta = response.data.data;
         
         console.log('Datos respuesta del backend:', datosRespuesta);
+        console.log('Compra creada exitosamente');
         
         // Agregar información de pasajeros con precios para mostrar en el modal
         const datosCompraCompletos = {
@@ -235,7 +237,9 @@ const FormasDePagoPage = () => {
         setDatosCompraExitosa(datosCompraCompletos);
         setShowResultadoModal(true);
       } else {
-        console.log('Error al procesar la compra:', response.data.message);
+        // Manejar respuesta no exitosa del backend
+        console.log('Error al procesar la compra:', response.data.error || response.data.message || 'Error desconocido');
+        console.log('Respuesta completa del servidor:', response.data);
       }
 
     } catch (error) {
@@ -244,18 +248,35 @@ const FormasDePagoPage = () => {
       if (error.response) {
         // Error del servidor
         const errorData = error.response.data;
-        if (errorData.asientosOcupados) {
-          console.log(`Error: Algunos asientos ya están ocupados: ${errorData.asientosOcupados.join(', ')}`);
-          console.log('Se requiere seleccionar otros asientos');
+        const statusCode = error.response.status;
+        
+        console.log(`Error del servidor (${statusCode}):`, errorData);
+        
+        // Manejar diferentes tipos de errores del servidor
+        if (statusCode === 400) {
+          // Errores de validación
+          console.log('Error de validación:', errorData.error || 'Datos inválidos');
+          if (errorData.asientosOcupados) {
+            console.log(`Asientos ocupados: ${errorData.asientosOcupados.join(', ')}`);
+            console.log('Se requiere seleccionar otros asientos');
+          }
+        } else if (statusCode === 404) {
+          console.log('Recurso no encontrado:', errorData.error || 'Viaje no encontrado');
+        } else if (statusCode === 500) {
+          console.log('Error interno del servidor:', errorData.error || errorData.details || 'Error desconocido');
+          if (errorData.details) {
+            console.log('Detalles del error:', errorData.details);
+          }
         } else {
           console.log('Error del servidor:', errorData.error || errorData.message || 'Error desconocido');
         }
       } else if (error.request) {
         // Error de red
-        console.log('Error de conexión. Se requiere verificar la conexión a internet.');
+        console.log('Error de conexión: No se pudo conectar con el servidor');
+        console.log('Verifica tu conexión a internet y que el servidor esté ejecutándose');
       } else {
         // Otro tipo de error
-        console.log('Error inesperado:', error.message);
+        console.log('Error inesperado al configurar la petición:', error.message);
       }
     } finally {
       setProcesandoPago(false);
