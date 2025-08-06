@@ -17,7 +17,7 @@ router.get('/cooperativas/desactivadas', UsuarioController.getCooperativasDesact
 router.get('/', UsuarioController.getAllUsuarios);
 
 // Obtener usuario por ID con información completa (requiere autenticación)
-router.get('/:id', authMiddleware, UsuarioController.getUsuarioById);
+router.get('/:id', UsuarioController.getUsuarioById);
 
 // Crear nuevo usuario (solo superusuarios)
 router.post('/', UsuarioController.createUsuario);
