@@ -17,18 +17,9 @@ const UsuarioCooperativa = sequelize.define('UsuarioCooperativa', {
   ruc: {
     type: DataTypes.STRING
   },
-  email: {
-    type: DataTypes.STRING
-  },
-  telefono: {
-    type: DataTypes.STRING
-  },
-  password: {
-    type: DataTypes.STRING
-  },
   estado: {
-    type: DataTypes.STRING,
-    defaultValue: 'desactivo'
+  type: DataTypes.STRING,
+  defaultValue: 'desactivo'
   },
   createdAt: {
     type: DataTypes.DATE,
