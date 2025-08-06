@@ -1180,6 +1180,7 @@ async function main() {
 // Ejecutar si es llamado directamente
 if (require.main === module) {
   main();
+  //
 }
 
 module.exports = { cargarDatosPrueba };
