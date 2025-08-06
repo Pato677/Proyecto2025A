@@ -93,13 +93,12 @@ function TicketPage() {
         busNumero: viaje.unidad?.numero_unidad || '',
         fecha: viaje.fecha_salida || '',
         pasajero: boletoActual.Pasajero?.nombre || '',
-        asiento: boletoActual.asiento || '',
+        asiento: boletoActual.asiento_id || '', // <-- usa asiento_id
         codigoBoleto: boletoActual.codigo || '',
       }
     : {};
 
   const qrString = boletoActual && viaje && compra
-  
     ? [
         `Boleto: ${boletoActual.codigo}`,
         `Pasajero: ${boletoActual.Pasajero?.nombres || compra.Pasajero?.nombres || ''} ${boletoActual.Pasajero?.apellidos || compra.Pasajero?.apellidos || ''}`,
@@ -109,7 +108,7 @@ function TicketPage() {
         `Destino: ${viaje.ruta?.terminalDestino?.ciudad?.nombre || ''}`,
         `Cooperativa: ${viaje.ruta?.UsuarioCooperativa?.razon_social || ''}`,
         `Bus: ${viaje.unidad?.numero_unidad || ''}`,
-        `Asiento: ${boletoActual.asiento || ''}`
+        `Asiento: ${boletoActual.asiento_id || ''}` 
       ].join('\n')
     : '';
 
@@ -272,7 +271,7 @@ function TicketPage() {
     }
   };
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrString)}}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrString)}`;
 
   return (
     <div className="ticket-page">
