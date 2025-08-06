@@ -137,6 +137,34 @@ const TripSelectionPage = () => {
     }
   }, [viajes, params, fechaSeleccionada, origenTerminal, destinoTerminal]);
 
+  // Si precio-min=true, busca la fecha más próxima y actualiza fechaSeleccionada
+  useEffect(() => {
+    if (params.get('precio-min') === 'true' && viajes.length > 0) {
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+
+      // Buscar la fecha más próxima (>= hoy)
+      const fechasValidas = viajes
+        .map(v => new Date(v.fecha_salida))
+        .filter(d => d >= hoy)
+        .sort((a, b) => a - b);
+
+      if (fechasValidas.length > 0) {
+        const fechaProxima = fechasValidas[0];
+        const yyyy = fechaProxima.getFullYear();
+        const mm = String(fechaProxima.getMonth() + 1).padStart(2, '0');
+        const dd = String(fechaProxima.getDate()).padStart(2, '0');
+        const fechaFormateada = `${yyyy}-${mm}-${dd}`;
+        console.log('Fecha más próxima para seleccionar en DateCarousel:', fechaFormateada);
+        if (fechaSeleccionada !== fechaFormateada) {
+          setFechaSeleccionada(fechaFormateada);
+        }
+      } else {
+        console.log('No hay fechas válidas para seleccionar en DateCarousel');
+      }
+    }
+  }, [viajes, params, fechaSeleccionada]);
+
   // Manejadores
   const handleSelectTrip = (id) => {
     if (selectedTrip === id) {

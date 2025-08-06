@@ -94,8 +94,9 @@ const ResultadoCompraModal = ({
           )}
 
           <div className="resultado-warning">
-            <p><strong>Importante:</strong> Guarde el código de compra para futuras referencias. 
-            Este código le permitirá consultar su boleto y realizar check-in.</p>
+            <p>
+              <strong>Importante:</strong> Recuerde que puede consultar el estado de su viaje y descargar sus boletos en cualquier momento usando su número de boleto. Además, este código será necesario para realizar el check-in antes de abordar.
+            </p>
           </div>
         </div>
 
