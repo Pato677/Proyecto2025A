@@ -506,7 +506,7 @@ async function cargarDatosPrueba() {
     const rutas = await Ruta.bulkCreate([
       // Rutas Quito - Guayaquil
       {
-        numero_ruta: 'R001',
+        numero_ruta: 'VLX-QG-001',
         hora_salida: '13:30:00',
         hora_llegada: '21:30:00',
         cooperativa_id: cooperativasCreadas[0].id, // Velotax
@@ -521,7 +521,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R002',
+        numero_ruta: 'PAN-QG-002',
         hora_salida: '14:20:00',
         hora_llegada: '22:30:00',
         cooperativa_id: cooperativasCreadas[1].id, // Panamericana
@@ -535,7 +535,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R003',
+        numero_ruta: 'FI-CG-003',
         hora_salida: '15:30:00',
         hora_llegada: '23:30:00',
         cooperativa_id: cooperativasCreadas[2].id, // Flota Imbabura
@@ -550,7 +550,7 @@ async function cargarDatosPrueba() {
       },
       // Rutas Quito - Cuenca
       {
-        numero_ruta: 'R004',
+        numero_ruta: 'STA-QC-004',
         hora_salida: '12:15:00',
         hora_llegada: '19:20:00',
         cooperativa_id: cooperativasCreadas[4].id, // Santa
@@ -564,7 +564,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R005',
+        numero_ruta: 'ESM-CC-005',
         hora_salida: '10:00:00',
         hora_llegada: '17:30:00',
         cooperativa_id: cooperativasCreadas[5].id, // Esmeraldas
@@ -581,7 +581,7 @@ async function cargarDatosPrueba() {
       },
       // Rutas Ambato - Otras ciudades
       {
-        numero_ruta: 'R006',
+        numero_ruta: 'SCB-AM-006',
         hora_salida: '07:03:00',
         hora_llegada: '15:03:00',
         cooperativa_id: cooperativasCreadas[9].id, // San Cristóbal
@@ -596,7 +596,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R007',
+        numero_ruta: 'SCB-AL-007',
         hora_salida: '15:54:00',
         hora_llegada: '01:54:00',
         cooperativa_id: cooperativasCreadas[9].id, // San Cristóbal
@@ -612,7 +612,7 @@ async function cargarDatosPrueba() {
       },
       // Rutas de regreso Guayaquil - Quito
       {
-        numero_ruta: 'R008',
+        numero_ruta: 'AND-GQ-008',
         hora_salida: '09:00:00',
         hora_llegada: '17:00:00',
         cooperativa_id: cooperativasCreadas[8].id, // Andina
@@ -628,7 +628,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R009',
+        numero_ruta: 'PAN-GC-009',
         hora_salida: '08:15:00',
         hora_llegada: '16:15:00',
         cooperativa_id: cooperativasCreadas[1].id, // Panamericana
@@ -645,7 +645,7 @@ async function cargarDatosPrueba() {
       },
       // Más rutas para completar
       {
-        numero_ruta: 'R010',
+        numero_ruta: 'SCB-LM-010',
         hora_salida: '06:28:00',
         hora_llegada: '12:28:00',
         cooperativa_id: cooperativasCreadas[9].id, // San Cristóbal
@@ -660,7 +660,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R011',
+        numero_ruta: 'VLX-QG-011',
         hora_salida: '06:30:00',
         hora_llegada: '15:30:00',
         cooperativa_id: cooperativasCreadas[0].id, // Velotax
@@ -675,7 +675,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R012',
+        numero_ruta: 'VLX-QG-012',
         hora_salida: '08:25:00',
         hora_llegada: '21:30:00',
         cooperativa_id: cooperativasCreadas[0].id, // Velotax
@@ -690,7 +690,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R013',
+        numero_ruta: 'VLX-QG-013',
         hora_salida: '09:10:00',
         hora_llegada: '21:30:00',
         cooperativa_id: cooperativasCreadas[0].id, // Velotax
@@ -705,7 +705,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R014',
+        numero_ruta: 'VLX-QG-014',
         hora_salida: '10:05:00',
         hora_llegada: '22:30:00',
         cooperativa_id: cooperativasCreadas[0].id, // Velotax
@@ -720,7 +720,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R015',
+        numero_ruta: 'VLX-QG-015',
         hora_salida: '11:45:00',
         hora_llegada: '23:30:00',
         cooperativa_id: cooperativasCreadas[0].id, // Velotax
@@ -735,7 +735,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R016',
+        numero_ruta: 'VLX-QG-016',
         hora_salida: '12:21:00',
         hora_llegada: '21:48:00',
         cooperativa_id: cooperativasCreadas[0].id, // Velotax
@@ -750,7 +750,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R017',
+        numero_ruta: 'VLX-QG-017',
         hora_salida: '14:25:00',
         hora_llegada: '23:30:00',
         cooperativa_id: cooperativasCreadas[0].id, // Velotax
@@ -765,7 +765,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R018',
+        numero_ruta: 'VLX-QG-018',
         hora_salida: '15:25:00',
         hora_llegada: '23:25:00',
         cooperativa_id: cooperativasCreadas[0].id, // Velotax
@@ -780,7 +780,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R019',
+        numero_ruta: 'VLX-QG-019',
         hora_salida: '16:05:00',
         hora_llegada: '23:30:00',
         cooperativa_id: cooperativasCreadas[0].id, // Velotax
@@ -795,7 +795,7 @@ async function cargarDatosPrueba() {
         ])
       },
       {
-        numero_ruta: 'R020',
+        numero_ruta: 'VLX-QG-020',
         hora_salida: '17:25:00',
         hora_llegada: '00:30:00',
         cooperativa_id: cooperativasCreadas[0].id, // Velotax
