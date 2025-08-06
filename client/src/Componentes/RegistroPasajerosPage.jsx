@@ -167,8 +167,8 @@ const RegistroPasajerosPage = () => {
       return datosExistentes;
     }
     
-    // Crear array de pasajeros vacío
-    const pasajerosVacios = Array.from({ length: pasajeros }, () => ({
+    // Crear array de pasajeros vacío (sin precargar datos automáticamente)
+    return Array.from({ length: pasajeros }, () => ({
       nombres: '',
       apellidos: '',
       cedula: '',
@@ -178,37 +178,44 @@ const RegistroPasajerosPage = () => {
       correo: '',
       telefono: ''
     }));
+  });
 
-    // Si hay usuario logueado, prellenar el primer pasajero (titular) con sus datos
-    if (usuario && pasajerosVacios.length > 0) {
-      console.log('Datos del usuario logueado:', usuario);
-      
-      // Extraer día, mes y año de fecha_nacimiento si existe
-      let dia = '', mes = '', anio = '';
-      if (usuario.fecha_nacimiento) {
-        const fechaNac = new Date(usuario.fecha_nacimiento);
-        dia = fechaNac.getDate().toString();
-        mes = (fechaNac.getMonth() + 1).toString();
-        anio = fechaNac.getFullYear().toString();
-        console.log('Fecha de nacimiento procesada:', { dia, mes, anio });
-      }
-
-      pasajerosVacios[0] = {
-        nombres: usuario.nombres || '',
-        apellidos: usuario.apellidos || '',
-        cedula: usuario.cedula || '',
-        dia: dia,
-        mes: mes,
-        anio: anio,
-        correo: usuario.correo || '',
-        telefono: usuario.telefono || ''
-      };
-      
-      console.log('Datos precargados para el titular:', pasajerosVacios[0]);
+  // Función para cargar los datos del usuario en el titular
+  const cargarDatosUsuario = () => {
+    if (!usuario) return;
+    
+    console.log('Cargando datos del usuario logueado:', usuario);
+    
+    // Extraer día, mes y año de fecha_nacimiento si existe
+    let dia = '', mes = '', anio = '';
+    if (usuario.fecha_nacimiento) {
+      const fechaNac = new Date(usuario.fecha_nacimiento);
+      dia = fechaNac.getDate().toString();
+      mes = (fechaNac.getMonth() + 1).toString();
+      anio = fechaNac.getFullYear().toString();
+      console.log('Fecha de nacimiento procesada:', { dia, mes, anio });
     }
 
-    return pasajerosVacios;
-  });
+    const datosUsuario = {
+      nombres: usuario.nombres || '',
+      apellidos: usuario.apellidos || '',
+      cedula: usuario.cedula || '',
+      dia: dia,
+      mes: mes,
+      anio: anio,
+      correo: usuario.correo || '',
+      telefono: usuario.telefono || ''
+    };
+
+    // Actualizar solo el primer pasajero (titular)
+    setDatosPasajeros(prev => 
+      prev.map((pasajero, index) => 
+        index === 0 ? datosUsuario : pasajero
+      )
+    );
+    
+    console.log('Datos cargados para el titular:', datosUsuario);
+  };
 
   // Esta función se pasará al formulario
   const handleRegistroExitoso = () => {
@@ -335,6 +342,17 @@ const RegistroPasajerosPage = () => {
             <ChevronLeft size={28} />
           </button>
           <div className="formulario-pasajero">
+            {/* Botón para cargar datos del usuario solo si está logueado y es el titular */}
+            {usuario && formIndex === 0 && (
+              <div className="cargar-datos-usuario">
+                <Button 
+                  text="Cargar mis datos" 
+                  width="180px" 
+                  onClick={cargarDatosUsuario}
+                  style={{ marginBottom: '10px' }}
+                />
+              </div>
+            )}
             <PasajerosForm
               ref={formRef}
               key={formIndex}

@@ -1,3 +1,21 @@
+/*
+ * Script de carga de datos de prueba para el sistema de transportes
+ * 
+ * MODIFICACIONES RECIENTES:
+ * - ✅ Asientos creados como INTEGER en lugar de string
+ * - ✅ Viajes inician con numero_asientos_ocupados = 0
+ * - ✅ Se crean registros ViajeAsiento para simular asientos ocupados
+ * - ✅ Se actualiza numero_asientos_ocupados basado en registros ViajeAsiento
+ * - ✅ Función asientoAleatorio() devuelve INTEGER
+ * - ✅ Agregado ViajeAsiento a las importaciones
+ * 
+ * FLUJO:
+ * 1. Crear viajes con 0 asientos ocupados inicialmente
+ * 2. Para cada viaje, generar aleatoriamente algunos asientos ocupados
+ * 3. Crear registros en la tabla viaje_asientos
+ * 4. Actualizar numero_asientos_ocupados con la cantidad real
+ */
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -13,6 +31,7 @@ const {
   Ruta,
   Viaje,
   Asiento,
+  ViajeAsiento,
   Pasajero,
   Compra,
   Boleto
@@ -99,7 +118,7 @@ async function cargarDatosPrueba() {
     console.log('💺 Creando asientos...');
     const asientos = [];
     for (let i = 1; i <= 44; i++) { // Aumentado para buses de 2 pisos
-      asientos.push({ numeracion: i.toString() });
+      asientos.push({ numeracion: i });
     }
     await Asiento.bulkCreate(asientos);
 
@@ -669,7 +688,7 @@ async function cargarDatosPrueba() {
         {
           fecha_salida: crearFechaHora(fechaViaje, '13:30:00'),
           fecha_llegada: crearFechaLlegada(fechaViaje, '13:30:00', '21:30:00'),
-          numero_asientos_ocupados: Math.floor(Math.random() * 15),
+          numero_asientos_ocupados: 0,
           precio: 12.25,
           ruta_id: rutas[0].id,
           unidad_id: unidades[0].id
@@ -677,7 +696,7 @@ async function cargarDatosPrueba() {
         {
           fecha_salida: crearFechaHora(fechaViaje, '14:20:00'),
           fecha_llegada: crearFechaLlegada(fechaViaje, '14:20:00', '22:30:00'),
-          numero_asientos_ocupados: Math.floor(Math.random() * 20),
+          numero_asientos_ocupados: 0,
           precio: 14.83,
           ruta_id: rutas[1].id,
           unidad_id: unidades[1].id
@@ -685,7 +704,7 @@ async function cargarDatosPrueba() {
         {
           fecha_salida: crearFechaHora(fechaViaje, '15:30:00'),
           fecha_llegada: crearFechaLlegada(fechaViaje, '15:30:00', '23:30:00'),
-          numero_asientos_ocupados: Math.floor(Math.random() * 25),
+          numero_asientos_ocupados: 0,
           precio: 17.85,
           ruta_id: rutas[2].id,
           unidad_id: unidades[2].id
@@ -697,7 +716,7 @@ async function cargarDatosPrueba() {
         {
           fecha_salida: crearFechaHora(fechaViaje, '12:15:00'),
           fecha_llegada: crearFechaLlegada(fechaViaje, '12:15:00', '19:20:00'),
-          numero_asientos_ocupados: Math.floor(Math.random() * 18),
+          numero_asientos_ocupados: 0,
           precio: 15.75,
           ruta_id: rutas[3].id,
           unidad_id: unidades[4].id
@@ -705,7 +724,7 @@ async function cargarDatosPrueba() {
         {
           fecha_salida: crearFechaHora(fechaViaje, '10:00:00'),
           fecha_llegada: crearFechaLlegada(fechaViaje, '10:00:00', '17:30:00'),
-          numero_asientos_ocupados: Math.floor(Math.random() * 22),
+          numero_asientos_ocupados: 0,
           precio: 13.40,
           ruta_id: rutas[4].id,
           unidad_id: unidades[5].id
@@ -718,7 +737,7 @@ async function cargarDatosPrueba() {
           {
             fecha_salida: crearFechaHora(fechaViaje, '07:03:00'),
             fecha_llegada: crearFechaLlegada(fechaViaje, '07:03:00', '15:03:00'),
-            numero_asientos_ocupados: Math.floor(Math.random() * 10),
+            numero_asientos_ocupados: 0,
             precio: 6.64, // Precio más bajo
             ruta_id: rutas[5].id,
             unidad_id: unidades[6].id
@@ -726,7 +745,7 @@ async function cargarDatosPrueba() {
           {
             fecha_salida: crearFechaHora(fechaViaje, '15:54:00'),
             fecha_llegada: crearFechaLlegada(fechaViaje, '15:54:00', '01:54:00'), // Llegada al día siguiente
-            numero_asientos_ocupados: Math.floor(Math.random() * 12),
+            numero_asientos_ocupados: 0,
             precio: 32.00, // Precio más alto para viaje nocturno largo
             ruta_id: rutas[6].id,
             unidad_id: unidades[7].id
@@ -739,7 +758,7 @@ async function cargarDatosPrueba() {
         {
           fecha_salida: crearFechaHora(fechaViaje, '09:00:00'),
           fecha_llegada: crearFechaLlegada(fechaViaje, '09:00:00', '17:00:00'),
-          numero_asientos_ocupados: Math.floor(Math.random() * 16),
+          numero_asientos_ocupados: 0,
           precio: 13.00,
           ruta_id: rutas[7].id,
           unidad_id: unidades[8].id
@@ -747,7 +766,7 @@ async function cargarDatosPrueba() {
         {
           fecha_salida: crearFechaHora(fechaViaje, '08:15:00'),
           fecha_llegada: crearFechaLlegada(fechaViaje, '08:15:00', '16:15:00'),
-          numero_asientos_ocupados: Math.floor(Math.random() * 19),
+          numero_asientos_ocupados: 0,
           precio: 16.50,
           ruta_id: rutas[8].id,
           unidad_id: unidades[9].id
@@ -760,7 +779,7 @@ async function cargarDatosPrueba() {
           {
             fecha_salida: crearFechaHora(fechaViaje, '06:28:00'),
             fecha_llegada: crearFechaLlegada(fechaViaje, '06:28:00', '12:28:00'),
-            numero_asientos_ocupados: Math.floor(Math.random() * 8),
+            numero_asientos_ocupados: 0,
             precio: 18.90,
             ruta_id: rutas[9].id,
             unidad_id: unidades[Math.floor(Math.random() * unidades.length)].id
@@ -769,7 +788,7 @@ async function cargarDatosPrueba() {
           {
             fecha_salida: crearFechaHora(fechaViaje, '11:00:00'),
             fecha_llegada: crearFechaLlegada(fechaViaje, '11:00:00', '18:30:00'),
-            numero_asientos_ocupados: Math.floor(Math.random() * 12),
+            numero_asientos_ocupados: 0,
             precio: 5.50, // Precio aún más bajo
             ruta_id: rutas[Math.floor(Math.random() * 5)].id,
             unidad_id: unidades[Math.floor(Math.random() * unidades.length)].id
@@ -799,6 +818,48 @@ async function cargarDatosPrueba() {
     console.log(`✅ Viajes válidos a insertar: ${viajesValidos.length}`);
 
     const viajesCreados = await Viaje.bulkCreate(viajesValidos, { returning: true });
+
+    // 10.5. Crear registros ViajeAsiento para simular asientos ocupados
+    console.log('💺 Creando asientos ocupados para viajes...');
+    
+    const viajeAsientosCreados = [];
+    
+    // Función para generar asientos ocupados aleatorios para un viaje
+    const generarAsientosOcupados = (maxAsientos = 15) => {
+      const numAsientosOcupados = Math.floor(Math.random() * maxAsientos);
+      const asientosOcupados = new Set();
+      
+      while (asientosOcupados.size < numAsientosOcupados) {
+        const asientoRandom = Math.floor(Math.random() * 44) + 1; // Asientos del 1 al 44
+        asientosOcupados.add(asientoRandom);
+      }
+      
+      return Array.from(asientosOcupados);
+    };
+    
+    // Para cada viaje creado, generar algunos asientos ocupados
+    for (const viaje of viajesCreados) {
+      const asientosOcupados = generarAsientosOcupados(15); // Máximo 15 asientos ocupados
+      
+      // Crear registros ViajeAsiento
+      for (const asientoId of asientosOcupados) {
+        viajeAsientosCreados.push({
+          viaje_id: viaje.id,
+          asiento_id: asientoId
+        });
+      }
+      
+      // Actualizar el numero_asientos_ocupados del viaje
+      await viaje.update({
+        numero_asientos_ocupados: asientosOcupados.length
+      });
+    }
+    
+    // Crear todos los registros ViajeAsiento
+    if (viajeAsientosCreados.length > 0) {
+      await ViajeAsiento.bulkCreate(viajeAsientosCreados);
+      console.log(`✅ ${viajeAsientosCreados.length} asientos ocupados creados`);
+    }
 
     // 11. Crear algunos pasajeros de ejemplo
     console.log('👥 Creando pasajeros de ejemplo...');
@@ -871,9 +932,9 @@ async function cargarDatosPrueba() {
       return `BOL-${parte1}-${parte2}`;
     }
 
-    // Función para obtener un asiento aleatorio (del 1 al 44 como string)
+    // Función para obtener un asiento aleatorio (del 1 al 44 como integer)
     function asientoAleatorio() {
-      return (Math.floor(Math.random() * 44) + 1).toString();
+      return Math.floor(Math.random() * 44) + 1;
     }
 
     await Boleto.bulkCreate([
@@ -912,9 +973,20 @@ async function cargarDatosPrueba() {
     console.log(`   🚌 Unidades: ${unidades.length}`);
     console.log(`   🛣️ Rutas: ${rutas.length}`);
     console.log(`   ✈️ Viajes: ${viajesCreados.length}`);
+    console.log(`   🎯 Asientos ocupados: ${viajeAsientosCreados.length}`);
     console.log(`   👥 Pasajeros: ${pasajeros.length}`);
     console.log(`   🛒 Compras: ${compras.length}`);
     console.log(`   🎫 Boletos: 3`);
+
+    // Mostrar estadísticas de asientos ocupados
+    const asientosOcupadosPorViaje = viajesCreados.map(v => v.numero_asientos_ocupados);
+    const totalAsientosOcupados = asientosOcupadosPorViaje.reduce((a, b) => a + b, 0);
+    const promedioAsientosOcupados = totalAsientosOcupados / viajesCreados.length;
+
+    console.log('\n🎯 ESTADÍSTICAS DE ASIENTOS:');
+    console.log(`   💺 Total asientos disponibles por viaje: 44`);
+    console.log(`   🎯 Total asientos ocupados: ${totalAsientosOcupados}`);
+    console.log(`   📊 Promedio asientos ocupados por viaje: ${promedioAsientosOcupados.toFixed(1)}`);
 
     // Mostrar estadísticas de precios
     const precios = viajesCreados.map(v => parseFloat(v.precio));

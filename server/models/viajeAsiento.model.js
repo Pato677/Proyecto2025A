@@ -3,12 +3,13 @@ const sequelize = require('../config/sequelize.config');
 
 const ViajeAsiento = sequelize.define('ViajeAsiento', {
   id: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     primaryKey: true,
-    allowNull: false
+    allowNull: false,
+    autoIncrement: true
   },
   asiento_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false
   },
   viaje_id: {
