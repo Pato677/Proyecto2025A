@@ -520,6 +520,187 @@ async function cargarDatosPrueba() {
           "Lex & Justice, Río de Janeiro, Larrea, San Juan, Quito, Distrito Metropolitano de Quito, Pichincha, 170118, Ecuador"
         ])
       },
+      // NUEVAS RUTAS PARA VELOTAX (cooperativa_id = 1)
+      {
+        numero_ruta: 'R011',
+        hora_salida: '06:00:00',
+        hora_llegada: '14:00:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[2].id, // Guayaquil
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Aloag, Ecuador",
+          "Machachi, Ecuador",
+          "Latacunga, Ecuador",
+          "Babahoyo, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R012',
+        hora_salida: '08:15:00',
+        hora_llegada: '16:15:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[1].id, // Carcelén
+        terminal_destino_id: terminales[2].id, // Guayaquil
+        paradas: JSON.stringify([
+          "Terminal Terrestre Carcelén",
+          "Terminal Terrestre de Guayaquil",
+          "Otavalo, Ecuador",
+          "Ibarra, Ecuador",
+          "Tulcán, Ecuador",
+          "Santo Domingo, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R013',
+        hora_salida: '10:45:00',
+        hora_llegada: '18:45:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[3].id, // Cuenca
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Cuenca",
+          "Machachi, Ecuador",
+          "Latacunga, Ecuador",
+          "Ambato, Ecuador",
+          "Riobamba, Ecuador",
+          "Azogues, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R014',
+        hora_salida: '14:30:00',
+        hora_llegada: '20:30:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[6].id, // Loja
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Loja",
+          "Latacunga, Ecuador",
+          "Riobamba, Ecuador",
+          "Cuenca, Ecuador",
+          "Catamayo, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R015',
+        hora_salida: '16:00:00',
+        hora_llegada: '22:00:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[1].id, // Carcelén
+        terminal_destino_id: terminales[8].id, // Manta
+        paradas: JSON.stringify([
+          "Terminal Terrestre Carcelén",
+          "Terminal Terrestre de Manta",
+          "Otavalo, Ecuador",
+          "Ibarra, Ecuador",
+          "Santo Domingo, Ecuador",
+          "Portoviejo, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R016',
+        hora_salida: '18:20:00',
+        hora_llegada: '02:20:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[7].id, // Machala
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Machala",
+          "Aloag, Ecuador",
+          "Latacunga, Ecuador",
+          "Riobamba, Ecuador",
+          "Cuenca, Ecuador",
+          "El Oro, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R017',
+        hora_salida: '20:15:00',
+        hora_llegada: '04:15:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[1].id, // Carcelén
+        terminal_destino_id: terminales[9].id, // Ibarra
+        paradas: JSON.stringify([
+          "Terminal Terrestre Carcelén",
+          "Terminal Terrestre de Ibarra",
+          "Calderón, Ecuador",
+          "Tabacundo, Ecuador",
+          "Cayambe, Ecuador",
+          "Otavalo, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R018',
+        hora_salida: '05:30:00',
+        hora_llegada: '13:30:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[4].id, // Ambato
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Ambato",
+          "Sangolquí, Ecuador",
+          "Machachi, Ecuador",
+          "Latacunga, Ecuador",
+          "Salcedo, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R019',
+        hora_salida: '07:45:00',
+        hora_llegada: '15:45:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[0].id, // Quitumbe
+        terminal_destino_id: terminales[12].id, // Santo Domingo
+        paradas: JSON.stringify([
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Santo Domingo",
+          "Aloag, Ecuador",
+          "La Maná, Ecuador",
+          "Quevedo, Ecuador"
+        ])
+      },
+      // Rutas de regreso para Velotax
+      {
+        numero_ruta: 'R020',
+        hora_salida: '09:30:00',
+        hora_llegada: '17:30:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[2].id, // Guayaquil
+        terminal_destino_id: terminales[0].id, // Quitumbe
+        paradas: JSON.stringify([
+          "Terminal Terrestre de Guayaquil",
+          "Terminal Terrestre Quitumbe",
+          "Durán, Ecuador",
+          "Milagro, Ecuador",
+          "Babahoyo, Ecuador",
+          "Quevedo, Ecuador",
+          "Santo Domingo, Ecuador"
+        ])
+      },
+      {
+        numero_ruta: 'R021',
+        hora_salida: '11:00:00',
+        hora_llegada: '19:00:00',
+        cooperativa_id: cooperativasCreadas[0].id, // Velotax
+        terminal_origen_id: terminales[3].id, // Cuenca
+        terminal_destino_id: terminales[0].id, // Quitumbe
+        paradas: JSON.stringify([
+          "Terminal Terrestre de Cuenca",
+          "Terminal Terrestre Quitumbe",
+          "Azogues, Ecuador",
+          "Cañar, Ecuador",
+          "Riobamba, Ecuador",
+          "Ambato, Ecuador",
+          "Latacunga, Ecuador"
+        ])
+      },
       {
         numero_ruta: 'R002',
         hora_salida: '14:20:00',
