@@ -704,10 +704,28 @@ module.exports.getViajesByFechaSalida = async (req, res) => {
 // Obtener precio mínimo de viajes vigentes
 module.exports.getPrecioMinimo = async (req, res) => {
   try {
-    const viajeMinimo = await Viaje.findOne({
-      where: {
-        precio: { [require('sequelize').Op.gt]: 0 }
-      },
+    const { Op } = require('sequelize');
+    // 1. Buscar el precio mínimo
+    const minResult = await Viaje.findOne({
+      where: { precio: { [Op.gt]: 0 } },
+      order: [['precio', 'ASC']],
+      attributes: ['precio'],
+    });
+
+    if (!minResult) {
+      return res.json({
+        success: true,
+        precioMinimo: 8.00,
+        mensaje: 'No hay viajes disponibles, mostrando precio base',
+        data: []
+      });
+    }
+
+    const precioMinimo = minResult.precio;
+
+    // 2. Buscar todos los viajes con ese precio mínimo
+    const viajesMinimos = await Viaje.findAll({
+      where: { precio: precioMinimo },
       include: [
         {
           model: Ruta,
@@ -737,20 +755,11 @@ module.exports.getPrecioMinimo = async (req, res) => {
       order: [['precio', 'ASC']]
     });
 
-    if (!viajeMinimo) {
-      return res.json({
-        success: true,
-        precioMinimo: 8.00,
-        mensaje: 'No hay viajes disponibles, mostrando precio base',
-        data: null
-      });
-    }
-
     res.json({
       success: true,
-      precioMinimo: parseFloat(viajeMinimo.precio),
-      mensaje: 'Viaje con precio mínimo obtenido correctamente',
-      data: viajeMinimo
+      precioMinimo: parseFloat(precioMinimo),
+      mensaje: 'Viajes con precio mínimo obtenidos correctamente',
+      data: viajesMinimos
     });
 
   } catch (error) {
@@ -760,7 +769,7 @@ module.exports.getPrecioMinimo = async (req, res) => {
       error: 'Error interno del servidor',
       precioMinimo: 8.00,
       mensaje: 'Error al consultar precios, mostrando precio base',
-      data: null
+      data: []
     });
   }
 };
