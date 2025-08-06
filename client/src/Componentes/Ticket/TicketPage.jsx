@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate} from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
-import TicketInfo from './TicketInfo';
+import TicketInfo from './TicketInfoBoleto';
 import Login from '../Login';
 import '../Estilos/Ticket.css';
 import Button from '../Button';
