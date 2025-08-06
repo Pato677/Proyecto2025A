@@ -4,6 +4,8 @@ import ActionButtons from './ActionButtons';
 import ParadasModal from './ParadasModal';
 import RutaModal from './RutasModal';
 import RutaForm from './RutaForm';
+import SimpleErrorModal from './SimpleErrorModal';
+import ConfirmModal from './ConfirmModal';
 import './Estilos/RutasPanel.css';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
@@ -34,16 +36,33 @@ const RutasPanel = () => { // Por defecto cooperativa 1 para pruebas
   });
   const { usuario } = useAuth();
 
+  // Estado para el modal de error
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Estado para el modal de confirmación
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [rutaAEliminar, setRutaAEliminar] = useState(null);
+
+  // Función helper para mostrar errores
+  const mostrarError = (mensaje) => {
+    setErrorMessage(mensaje);
+    setShowErrorModal(true);
+  };
+
+  // Obtener el ID de la cooperativa del usuario logueado
+  const cooperativaId = usuario?.cooperativa_id;
+
   // 🔄 Recargar rutas desde el servidor con paginación por cooperativa
   const recargarRutas = useCallback(async (page = currentPage) => {
     setLoading(true);
     try {
       // Usar endpoint por cooperativa
-      const response = await axios.get(`${API_URL_Rutas}/cooperativa/${usuario.id}?page=${page}&limit=${rutasPorPagina}`);
+      const response = await axios.get(`${API_URL_Rutas}/cooperativa/${cooperativaId}?page=${page}&limit=${rutasPorPagina}`);
       if (response.data.success) {
         setRutas(response.data.data);
         setPagination(response.data.pagination);
-        console.log(`Rutas cargadas para cooperativa ${usuario.id}: ${response.data.data.length} de ${response.data.pagination.totalItems}`);
+        console.log(`Rutas cargadas para cooperativa ${cooperativaId}: ${response.data.data.length} de ${response.data.pagination.totalItems}`);
       } else {
         setRutas([]);
         console.error('Error en la respuesta:', response.data.message);
@@ -98,7 +117,7 @@ const RutasPanel = () => { // Por defecto cooperativa 1 para pruebas
     recargarRutas(1);
     //cargarTerminales();
     cargarCooperativas();
-  }, [usuario.id]); // Recargar cuando cambie la cooperativa
+  }, [cooperativaId]); // Recargar cuando cambie la cooperativa
 
   // Guardar nueva ruta o editar ruta existente
   const handleSaveRuta = async (nuevaRuta) => {
@@ -114,7 +133,7 @@ const RutasPanel = () => { // Por defecto cooperativa 1 para pruebas
           terminalDestinoId: nuevaRuta.terminalDestinoId,
           horaSalida: nuevaRuta.horaSalida,
           horaLlegada: nuevaRuta.horaLlegada,
-          cooperativaId: usuario.id // Usar el ID de la cooperativa actual
+          cooperativaId: cooperativaId // Usar el ID de la cooperativa actual
         };
 
         const response = await axios.post(API_URL_Rutas, rutaData);
@@ -122,7 +141,7 @@ const RutasPanel = () => { // Por defecto cooperativa 1 para pruebas
           console.log('Ruta creada exitosamente:', response.data.data);
           await recargarRutas(currentPage);
           setShowModal(false);
-          alert('Ruta creada exitosamente');
+          mostrarError('✅ Ruta creada exitosamente');
         } else {
           throw new Error(response.data.message);
         }
@@ -152,14 +171,15 @@ const RutasPanel = () => { // Por defecto cooperativa 1 para pruebas
           await recargarRutas(currentPage);
           setShowModal(false);
           setRutaEdit(null);
-          alert('Ruta actualizada exitosamente');
+          mostrarError('✅ Ruta actualizada exitosamente');
         } else {
           throw new Error(response.data.message);
         }
       }
     } catch (error) {
       console.error('Error al guardar ruta:', error);
-      alert(`Error al guardar la ruta: ${error.response?.data?.message || error.message}`);
+      console.log('Error del servidor:', error.response?.data?.message || error.message);
+      mostrarError(`Error al guardar la ruta: ${error.response?.data?.message || error.message}`);
     } finally {
       setLoading(false);
     }
@@ -175,12 +195,12 @@ const RutasPanel = () => { // Por defecto cooperativa 1 para pruebas
   // Abrir modal para editar
   const handleActualizar = () => {
     if (!selectedId) {
-      alert('Por favor selecciona una ruta para actualizar');
+      mostrarError('Por favor selecciona una ruta para actualizar');
       return;
     }
     const ruta = rutas.find(r => r.id === selectedId);
     if (!ruta) {
-      alert('Ruta no encontrada');
+      mostrarError('Ruta no encontrada');
       return;
     }
     setRutaEdit(ruta);
@@ -222,37 +242,52 @@ const RutasPanel = () => { // Por defecto cooperativa 1 para pruebas
   // Eliminar ruta
   const handleEliminar = async () => {
     if (!selectedId) {
-      alert('Por favor selecciona una ruta para eliminar');
+      mostrarError('Por favor selecciona una ruta para eliminar');
       return;
     }
     
     const ruta = rutas.find(r => r.id === selectedId);
     if (!ruta) {
-      alert('Ruta no encontrada');
+      mostrarError('Ruta no encontrada');
       return;
     }
 
-    if (!window.confirm(`¿Estás seguro de que deseas eliminar la ruta ${ruta.numeroRuta}?`)) {
-      return;
-    }
+    // Mostrar modal de confirmación en lugar de window.confirm
+    setRutaAEliminar(ruta);
+    setShowConfirmModal(true);
+  };
 
+  // Confirmar eliminación de ruta
+  const confirmarEliminacion = async () => {
+    if (!rutaAEliminar) return;
+
+    setShowConfirmModal(false);
     setLoading(true);
+    
     try {
-      const response = await axios.delete(`${API_URL_Rutas}/${ruta.id}`);
+      const response = await axios.delete(`${API_URL_Rutas}/${rutaAEliminar.id}`);
       if (response.data.success) {
         console.log('Ruta eliminada exitosamente');
         await recargarRutas(currentPage);
         setSelectedId(null);
-        alert('Ruta eliminada exitosamente');
+        mostrarError('✅ Ruta eliminada exitosamente');
       } else {
         throw new Error(response.data.message);
       }
     } catch (error) {
       console.error('Error al eliminar ruta:', error);
-      alert(`Error al eliminar la ruta: ${error.response?.data?.message || error.message}`);
+      console.log('Error del servidor:', error.response?.data?.message || error.message);
+      mostrarError(`Error al eliminar la ruta: ${error.response?.data?.message || error.message}`);
     } finally {
       setLoading(false);
+      setRutaAEliminar(null);
     }
+  };
+
+  // Cancelar eliminación
+  const cancelarEliminacion = () => {
+    setShowConfirmModal(false);
+    setRutaAEliminar(null);
   };
 
   // Cambiar página
@@ -391,6 +426,29 @@ const RutasPanel = () => { // Por defecto cooperativa 1 para pruebas
         terminales={terminales}
         loading={loading}
       />
+
+      {/* Modal de Error */}
+      {showErrorModal && (
+        <SimpleErrorModal
+          message={errorMessage}
+          onClose={() => setShowErrorModal(false)}
+        />
+      )}
+
+      {/* Modal de Confirmación */}
+      {showConfirmModal && rutaAEliminar && (
+        <ConfirmModal
+          open={showConfirmModal}
+          title="Confirmar Eliminación"
+          onCancel={cancelarEliminacion}
+          onConfirm={confirmarEliminacion}
+        >
+          <p>¿Estás seguro de que deseas eliminar la ruta <strong>{rutaAEliminar.numeroRuta}</strong>?</p>
+          <p style={{ color: '#dc3545', fontSize: '0.9em', marginTop: '10px' }}>
+            Esta acción no se puede deshacer.
+          </p>
+        </ConfirmModal>
+      )}
     </div>
   );
 };

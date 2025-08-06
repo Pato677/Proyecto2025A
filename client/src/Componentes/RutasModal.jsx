@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SimpleErrorModal from './SimpleErrorModal';
 import './Estilos/RutasModal.css';
 
 const initialState = {
@@ -11,6 +12,16 @@ const initialState = {
 
 const RutaModal = ({ open, onClose, onSave, initialData, mode = 'add', terminales, loading}) => {
   const [form, setForm] = useState(initialState);
+
+  // Estado para el modal de error
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Función helper para mostrar errores
+  const mostrarError = (mensaje) => {
+    setErrorMessage(mensaje);
+    setShowErrorModal(true);
+  };
 
   useEffect(() => {
     if (initialData && mode === 'edit') {
@@ -51,12 +62,12 @@ const RutaModal = ({ open, onClose, onSave, initialData, mode = 'add', terminale
     
     // Validaciones básicas
     if (!form.numeroRuta || !form.terminalOrigenId || !form.terminalDestinoId || !form.horaSalida || !form.horaLlegada) {
-      alert('Por favor complete todos los campos requeridos');
+      mostrarError('Por favor complete todos los campos requeridos');
       return;
     }
 
     if (form.terminalOrigenId === form.terminalDestinoId) {
-      alert('El terminal de origen y destino no pueden ser el mismo');
+      mostrarError('El terminal de origen y destino no pueden ser el mismo');
       return;
     }
 
@@ -184,6 +195,14 @@ const RutaModal = ({ open, onClose, onSave, initialData, mode = 'add', terminale
           </div>
         </form>
       </div>
+
+      {/* Modal de Error */}
+      {showErrorModal && (
+        <SimpleErrorModal
+          message={errorMessage}
+          onClose={() => setShowErrorModal(false)}
+        />
+      )}
     </div>
   );
 };

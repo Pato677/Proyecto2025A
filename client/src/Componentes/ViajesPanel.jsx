@@ -4,6 +4,7 @@ import ActionButtons from './ActionButtons';
 import ViajeModal from './ViajeModal';
 import ViajeUpdateModal from './ViajeUpdateModal';
 import ErrorModal from './ErrorModal';
+import ConfirmModal from './ConfirmModal';
 import { useAuth } from './AuthContext';
 import './Estilos/ViajesPanel.css';
 import axios from 'axios';
@@ -32,10 +33,24 @@ const ViajesPanel = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   
+  // Estados para modales de confirmación
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+  const [confirmMessage, setConfirmMessage] = useState('');
+  const [confirmTitle, setConfirmTitle] = useState('');
+  
   // Función para mostrar error modal
   const mostrarError = (mensaje) => {
     setErrorMessage(mensaje);
     setShowErrorModal(true);
+  };
+
+  // Función para mostrar modal de confirmación
+  const mostrarConfirmacion = (titulo, mensaje, accion) => {
+    setConfirmTitle(titulo);
+    setConfirmMessage(mensaje);
+    setConfirmAction(() => accion);
+    setShowConfirmModal(true);
   };
   
   // Obtener el ID de la cooperativa del usuario logueado
@@ -245,9 +260,26 @@ const ViajesPanel = () => {
         return;
       }
 
-      if (!window.confirm(`¿Estás seguro de que deseas crear ${rutasValidas.length} viajes (uno por cada ruta) para la fecha ${fecha_salida}?\n\nNota: Los viajes se crearán sin unidades asignadas. Podrá asignar las unidades después usando el botón "Actualizar".`)) {
-        return;
-      }
+      // Mostrar modal de confirmación en lugar de window.confirm
+      const mensaje = `¿Estás seguro de que deseas crear ${rutasValidas.length} viajes (uno por cada ruta) para la fecha ${fecha_salida}?\n\nNota: Los viajes se crearán sin unidades asignadas. Podrá asignar las unidades después usando el botón "Actualizar".`;
+      
+      mostrarConfirmacion(
+        'Crear Múltiples Viajes',
+        mensaje,
+        () => crearViajesMultiples(viajesData)
+      );
+    } catch (error) {
+      console.error('Error al crear múltiples viajes:', error);
+      console.log('Error inesperado:', error.message);
+      mostrarError('Error inesperado al crear los viajes múltiples');
+    }
+  };
+
+  // Función separada para crear los viajes múltiples
+  const crearViajesMultiples = async (viajesData) => {
+    try {
+      const { fecha_salida, fecha_llegada, numero_asientos_ocupados, precio, rutas } = viajesData;
+      const rutasValidas = rutas.filter(ruta => ruta.id);
 
       console.log(`Creando ${rutasValidas.length} viajes...`);
       console.log('📅 Fechas ANTES de crear múltiples viajes:', {
@@ -375,26 +407,35 @@ const ViajesPanel = () => {
     const viaje = viajes.find(v => v.id === selectedId);
     if (!viaje) return;
     
-    if (window.confirm('¿Estás seguro de que deseas eliminar este viaje?')) {
-      axios.delete(`${API_URL_Viajes_CRUD}/${viaje.id}`)
-        .then((res) => {
-          console.log('Viaje eliminado exitosamente:', res.data);
-          setSelectedId(null);
-          // Recargar página actual o ir a la anterior si quedó vacía
-          if (viajes.length === 1 && currentPage > 1) {
-            const nuevaPagina = currentPage - 1;
-            setCurrentPage(nuevaPagina);
-            recargarViajes(nuevaPagina);
-          } else {
-            recargarViajes(currentPage);
-          }
-        })
-        .catch(error => {
-          console.error('Error al eliminar viaje:', error);
-          console.log('Error del servidor:', error.response?.data?.message || error.message);
-          mostrarError("Error al eliminar el viaje");
-        });
-    }
+    // Mostrar modal de confirmación en lugar de window.confirm
+    mostrarConfirmacion(
+      'Eliminar Viaje',
+      `¿Estás seguro de que deseas eliminar este viaje?\n\nRuta: ${viaje.ruta_numero || 'N/A'}\nFecha: ${viaje.fecha_salida}\nEsta acción no se puede deshacer.`,
+      () => confirmarEliminarViaje(viaje)
+    );
+  };
+
+  // Función separada para confirmar eliminación
+  const confirmarEliminarViaje = (viaje) => {
+    axios.delete(`${API_URL_Viajes_CRUD}/${viaje.id}`)
+      .then((res) => {
+        console.log('Viaje eliminado exitosamente:', res.data);
+        setSelectedId(null);
+        // Recargar página actual o ir a la anterior si quedó vacía
+        if (viajes.length === 1 && currentPage > 1) {
+          const nuevaPagina = currentPage - 1;
+          setCurrentPage(nuevaPagina);
+          recargarViajes(nuevaPagina);
+        } else {
+          recargarViajes(currentPage);
+        }
+        mostrarError('✅ Viaje eliminado exitosamente');
+      })
+      .catch(error => {
+        console.error('Error al eliminar viaje:', error);
+        console.log('Error del servidor:', error.response?.data?.message || error.message);
+        mostrarError("Error al eliminar el viaje");
+      });
   };
 
   const handlePageChange = (num) => {
@@ -577,6 +618,31 @@ const ViajesPanel = () => {
         onClose={() => setShowErrorModal(false)}
         message={errorMessage}
       />
+
+      {/* Modal de confirmación */}
+      {showConfirmModal && (
+        <ConfirmModal
+          open={showConfirmModal}
+          title={confirmTitle}
+          onCancel={() => {
+            setShowConfirmModal(false);
+            setConfirmAction(null);
+          }}
+          onConfirm={() => {
+            if (confirmAction) {
+              confirmAction();
+            }
+            setShowConfirmModal(false);
+            setConfirmAction(null);
+          }}
+        >
+          {confirmMessage.split('\n').map((line, index) => (
+            <p key={index} style={{ margin: '5px 0' }}>
+              {line}
+            </p>
+          ))}
+        </ConfirmModal>
+      )}
     </div>
   );
 };

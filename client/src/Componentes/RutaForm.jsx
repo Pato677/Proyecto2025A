@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline, Tooltip, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import axios from 'axios';
+import SimpleErrorModal from './SimpleErrorModal';
 import './Estilos/RutaForm.css';
 import 'leaflet/dist/leaflet.css';
 
@@ -27,7 +28,7 @@ const iconRojo = new L.Icon({
   shadowSize: [41, 41]
 });
 
-const ClickHandler = ({ onUbicacionSeleccionada }) => {
+const ClickHandler = ({ onUbicacionSeleccionada, onError }) => {
   useMapEvents({
     click: async (e) => {
       const { lat, lng } = e.latlng;
@@ -41,10 +42,11 @@ const ClickHandler = ({ onUbicacionSeleccionada }) => {
         if (nombreLugar) {
           onUbicacionSeleccionada(nombreLugar, { lat, lng });
         } else {
-          alert('⚠️ No se pudo obtener la dirección.');
+          onError('No se pudo obtener la dirección.');
         }
       } catch (error) {
-        alert('❌ Error al obtener la dirección desde el mapa.');
+        console.error('Error al obtener la dirección desde el mapa:', error);
+        onError('Error al obtener la dirección desde el mapa.');
       }
     }
   });
@@ -59,6 +61,16 @@ const RutaForm = ({ ruta = {}, onClose, onRutaActualizada }) => {
   const [terminalesDisponibles, setTerminalesDisponibles] = useState([]);
   const [paradaSeleccionada, setParadaSeleccionada] = useState(null);
   const mapRef = useRef(null);
+
+  // Estado para el modal de error
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Función helper para mostrar errores
+  const mostrarError = (mensaje) => {
+    setErrorMessage(mensaje);
+    setShowErrorModal(true);
+  };
 
   // Cargar terminales disponibles al montar el componente
   useEffect(() => {
@@ -230,12 +242,12 @@ const RutaForm = ({ ruta = {}, onClose, onRutaActualizada }) => {
 
   const guardarRuta = async () => {
     if (!ruta.id) {
-      alert('❌ Error: la ruta no tiene un ID válido.');
+      mostrarError('Error: la ruta no tiene un ID válido.');
       return;
     }
 
     if (paradas.length === 0) {
-      alert('❌ Error: Debe agregar al menos una parada.');
+      mostrarError('Error: Debe agregar al menos una parada.');
       return;
     }
 
@@ -250,7 +262,7 @@ const RutaForm = ({ ruta = {}, onClose, onRutaActualizada }) => {
       const response = await axios.put(`http://localhost:8000/rutas/${ruta.id}/paradas`, rutaActualizada);
       
       if (response.data.success) {
-        alert('✅ Paradas actualizadas correctamente.');
+        mostrarError('Paradas actualizadas correctamente.');
         console.log('Paradas actualizadas:', response.data.data);
         if (onRutaActualizada) onRutaActualizada();
         if (onClose) onClose();
@@ -259,7 +271,7 @@ const RutaForm = ({ ruta = {}, onClose, onRutaActualizada }) => {
       }
     } catch (error) {
       console.error('Error al actualizar paradas:', error);
-      alert(`❌ Error al guardar las paradas: ${error.response?.data?.message || error.message}`);
+      mostrarError(`Error al guardar las paradas: ${error.response?.data?.message || error.message}`);
     }
   };
 
@@ -303,7 +315,7 @@ const RutaForm = ({ ruta = {}, onClose, onRutaActualizada }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution="&copy; OpenStreetMap contributors"
         />
-        <ClickHandler onUbicacionSeleccionada={agregarParadaDesdeMapa} />
+        <ClickHandler onUbicacionSeleccionada={agregarParadaDesdeMapa} onError={mostrarError} />
         {marcadores.map((coord, i) => {
           return coord && coord.lat && coord.lng ? (
             <Marker
@@ -392,6 +404,14 @@ const RutaForm = ({ ruta = {}, onClose, onRutaActualizada }) => {
       <button className="btn-control" onClick={guardarRuta}>
         Guardar Ruta
       </button>
+
+      {/* Modal de Error */}
+      {showErrorModal && (
+        <SimpleErrorModal
+          message={errorMessage}
+          onClose={() => setShowErrorModal(false)}
+        />
+      )}
     </section>
   );
 };
