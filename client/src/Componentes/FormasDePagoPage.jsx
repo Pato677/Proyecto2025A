@@ -263,13 +263,7 @@ const FormasDePagoPage = () => {
         setDatosCompraExitosa(datosCompraCompletos);
         setShowResultadoModal(true);
       } else {
-<<<<<<< HEAD
         alert('Error al procesar la compra: ' + response.data.message);
-=======
-        // Manejar respuesta no exitosa del backend
-        console.log('Error al procesar la compra:', response.data.error || response.data.message || 'Error desconocido');
-        console.log('Respuesta completa del servidor:', response.data);
->>>>>>> c4e2f1afcc4c1d2caf08e945c4b904e780430505
       }
 
     } catch (error) {
@@ -278,47 +272,17 @@ const FormasDePagoPage = () => {
       if (error.response) {
         // Error del servidor
         const errorData = error.response.data;
-<<<<<<< HEAD
         if (errorData.asientosOcupados) {
           alert(`Error: Algunos asientos ya están ocupados: ${errorData.asientosOcupados.join(', ')}\nPor favor, seleccione otros asientos.`);
-=======
-        const statusCode = error.response.status;
-        
-        console.log(`Error del servidor (${statusCode}):`, errorData);
-        
-        // Manejar diferentes tipos de errores del servidor
-        if (statusCode === 400) {
-          // Errores de validación
-          console.log('Error de validación:', errorData.error || 'Datos inválidos');
-          if (errorData.asientosOcupados) {
-            console.log(`Asientos ocupados: ${errorData.asientosOcupados.join(', ')}`);
-            console.log('Se requiere seleccionar otros asientos');
-          }
-        } else if (statusCode === 404) {
-          console.log('Recurso no encontrado:', errorData.error || 'Viaje no encontrado');
-        } else if (statusCode === 500) {
-          console.log('Error interno del servidor:', errorData.error || errorData.details || 'Error desconocido');
-          if (errorData.details) {
-            console.log('Detalles del error:', errorData.details);
-          }
->>>>>>> c4e2f1afcc4c1d2caf08e945c4b904e780430505
         } else {
           alert('Error al procesar la compra: ' + (errorData.error || errorData.message || 'Error desconocido'));
         }
       } else if (error.request) {
         // Error de red
-<<<<<<< HEAD
         alert('Error de conexión. Verifique su conexión a internet.');
       } else {
         // Otro tipo de error
         alert('Error inesperado: ' + error.message);
-=======
-        console.log('Error de conexión: No se pudo conectar con el servidor');
-        console.log('Verifica tu conexión a internet y que el servidor esté ejecutándose');
-      } else {
-        // Otro tipo de error
-        console.log('Error inesperado al configurar la petición:', error.message);
->>>>>>> c4e2f1afcc4c1d2caf08e945c4b904e780430505
       }
     } finally {
       setProcesandoPago(false);
