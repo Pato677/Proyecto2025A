@@ -17,6 +17,10 @@ const Boleto = sequelize.define('Boleto', {
   pasajero_id: {
     type: DataTypes.INTEGER,
     allowNull: false
+  },
+  asiento_id: {
+    type: DataTypes.STRING,
+    allowNull: false
   }
 }, {
   tableName: 'boletos',

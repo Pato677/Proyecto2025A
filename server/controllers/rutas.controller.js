@@ -33,14 +33,19 @@ module.exports.getAllRutas = async (req, res) => {
     const rutasFormateadas = rutas.map(ruta => ({
       id: ruta.id,
       numeroRuta: ruta.numero_ruta,
+      numero_ruta: ruta.numero_ruta, // Agregar también con underscore para compatibilidad
       ciudadOrigen: ruta.terminalOrigen?.ciudad?.nombre || 'N/A',
       terminalOrigen: ruta.terminalOrigen?.nombre || 'N/A',
       ciudadDestino: ruta.terminalDestino?.ciudad?.nombre || 'N/A',
       terminalDestino: ruta.terminalDestino?.nombre || 'N/A',
       horaSalida: ruta.hora_salida,
       horaLlegada: ruta.hora_llegada,
+      hora_salida: ruta.hora_salida, // Agregar también con underscore para compatibilidad
+      hora_llegada: ruta.hora_llegada, // Agregar también con underscore para compatibilidad
       paradas: ruta.paradas ? JSON.parse(ruta.paradas) : [],
-      cooperativa: ruta.UsuarioCooperativa?.razon_social || 'N/A'
+      cooperativa: ruta.UsuarioCooperativa?.razon_social || 'N/A',
+      cooperativa_id: ruta.cooperativa_id, // Agregar el ID de la cooperativa
+      UsuarioCooperativa: ruta.UsuarioCooperativa // Mantener la relación completa
     }));
 
     res.status(200).json({
@@ -64,8 +69,10 @@ module.exports.getRutasByCooperativa = async (req, res) => {
   try {
     const { cooperativaId } = req.params;
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit) || 1000; // Aumentar límite por defecto
     const offset = (page - 1) * limit;
+    
+    console.log(`🔍 Buscando rutas para cooperativa ${cooperativaId} con límite ${limit}`);
     
     if (!cooperativaId) {
       return res.status(400).json({
@@ -97,19 +104,29 @@ module.exports.getRutasByCooperativa = async (req, res) => {
       order: [['id', 'ASC']]
     });
 
+    console.log(`📊 Total de rutas encontradas para cooperativa ${cooperativaId}: ${count}`);
+    console.log(`📋 Rutas devueltas en esta página: ${rutas.length}`);
+
     // Formatear datos para el frontend
     const rutasFormateadas = rutas.map(ruta => ({
       id: ruta.id,
       numeroRuta: ruta.numero_ruta,
+      numero_ruta: ruta.numero_ruta, // Agregar también con underscore para compatibilidad
       ciudadOrigen: ruta.terminalOrigen?.ciudad?.nombre || 'N/A',
       terminalOrigen: ruta.terminalOrigen?.nombre || 'N/A',
       ciudadDestino: ruta.terminalDestino?.ciudad?.nombre || 'N/A',
       terminalDestino: ruta.terminalDestino?.nombre || 'N/A',
       horaSalida: ruta.hora_salida,
       horaLlegada: ruta.hora_llegada,
+      hora_salida: ruta.hora_salida, // Agregar también con underscore para compatibilidad
+      hora_llegada: ruta.hora_llegada, // Agregar también con underscore para compatibilidad
       paradas: ruta.paradas ? JSON.parse(ruta.paradas) : [],
-      cooperativa: ruta.UsuarioCooperativa?.razon_social || 'N/A'
+      cooperativa: ruta.UsuarioCooperativa?.razon_social || 'N/A',
+      cooperativa_id: ruta.cooperativa_id, // Agregar el ID de la cooperativa
+      UsuarioCooperativa: ruta.UsuarioCooperativa // Mantener la relación completa
     }));
+
+    console.log(`✅ Enviando ${rutasFormateadas.length} rutas formateadas al frontend`);
 
     res.status(200).json({
       success: true,

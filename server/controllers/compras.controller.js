@@ -244,7 +244,7 @@ const obtenerCompraPorId = async (req, res) => {
         },
         {
           model: Boleto,
-          attributes: ['codigo', 'valor']
+          attributes: ['codigo', 'valor', 'asiento_id']
         }
       ]
     });

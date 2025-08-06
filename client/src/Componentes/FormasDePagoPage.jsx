@@ -193,7 +193,7 @@ const FormasDePagoPage = () => {
       console.log('Enviando datos de compra:', datosCompra);
 
       // Realizar petición POST al backend
-      const response = await axios.post('http://localhost:8000/api/compras', datosCompra);
+      const response = await axios.post('http://localhost:8000/compras', datosCompra);
 
       if (response.data.success) {
         const datosRespuesta = response.data.data;

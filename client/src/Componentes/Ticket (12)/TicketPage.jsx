@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate} from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
 import TicketInfo from './TicketInfo';
@@ -22,13 +22,14 @@ function formatearFechaLarga(fechaStr) {
 }
 
 function TicketPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const compraId = searchParams.get('compraId') || 'N/A';
-
+  const [boleto, setBoleto] = useState(null);
   const [compra, setCompra] = useState(null);
   const [boletoIndex, setBoletoIndex] = useState(0);
   const [viaje, setViaje] = useState(null);
-  const [qrLoaded, setQrLoaded] = useState(false); // Estado para controlar la carga del QR
+  
 
   // Mueve el useRef aquí, junto con los otros hooks
   const ticketRef = React.useRef();
@@ -58,12 +59,20 @@ function TicketPage() {
     }
   }, [compra]);
 
-  if (!compra || !viaje) {
+
+
+  if (!compra || !viaje ||boleto) {
     return <div>Cargando...</div>;
   }
 
   const boletos = compra.Boletos || [];
   const boletoActual = boletos[boletoIndex];
+
+  // Datos del pasajero y asiento desde el backend
+  const pasajero = boletoActual?.Pasajero || {};
+
+  // Datos de viaje desde la compra
+  const viajes = boletoActual?.Compra?.Viaje || {};
 
   // Prepara los datos para TicketInfo
   const datosViaje = boletoActual
@@ -76,13 +85,12 @@ function TicketPage() {
         busNumero: viaje.unidad?.numero_unidad || '',
         fecha: viaje.fecha_salida || '',
         pasajero: boletoActual.Pasajero?.nombre || '',
-        asiento: boletoActual.asiento || '',
+        asiento: boletoActual.asiento_id || '', // <-- usa asiento_id
         codigoBoleto: boletoActual.codigo || '',
       }
     : {};
 
   const qrString = boletoActual && viaje && compra
-  
     ? [
         `Boleto: ${boletoActual.codigo}`,
         `Pasajero: ${boletoActual.Pasajero?.nombres || compra.Pasajero?.nombres || ''} ${boletoActual.Pasajero?.apellidos || compra.Pasajero?.apellidos || ''}`,
@@ -92,17 +100,12 @@ function TicketPage() {
         `Destino: ${viaje.ruta?.terminalDestino?.ciudad?.nombre || ''}`,
         `Cooperativa: ${viaje.ruta?.UsuarioCooperativa?.razon_social || ''}`,
         `Bus: ${viaje.unidad?.numero_unidad || ''}`,
-        `Asiento: ${boletoActual.asiento || ''}`
+        `Asiento: ${boletoActual.asiento_id || ''}` 
       ].join('\n')
     : '';
 
   const handleImprimir = () => {
     const doc = new jsPDF();
-
-    // COLORES DE MARCA
-    const azulMarca = "#1e90ff"; // Cambia por tu azul de marca si es otro
-    const grisClaro = "#f4f8fb";
-    const grisOscuro = "#222";
 
     // Logo (mantén relación de aspecto)
     const logoWidth = 45;
@@ -255,7 +258,12 @@ function TicketPage() {
     }
   };
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrString)}}`;
+  const handleRastrear = () => {
+    // Redirigir a LiveLocationPage con el id de la compra como parámetro en la URI
+    navigate(`/RealTimeMap?compraId=${compraId}`);
+  };
+
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrString)}`;
 
   return (
     <div className="ticket-page">
@@ -291,8 +299,7 @@ function TicketPage() {
             alt="QR Code"
             className="ticket-qr"
             onLoad={() => {
-              console.log("QR cargadooo");
-              setQrLoaded(true);
+
             }}
             onError={() => {
               console.error("Error cargando el QR");
@@ -304,8 +311,8 @@ function TicketPage() {
           Obtendrá una copia del mismo directamente a su correo electrónico.
         </p>
         <div className="ticket-button-group">
-          <Button text="Atras" width='150px'/>
           <Button text="Imprimir" width='150px' onClick={handleImprimir}/>
+          <Button text="Rastrea tu viaje" width='180px' onClick={handleRastrear}/>
         </div>
       </main>
       <Footer />
