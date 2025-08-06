@@ -29,7 +29,7 @@ function TicketPage() {
   const [compra, setCompra] = useState(null);
   const [boletoIndex, setBoletoIndex] = useState(0);
   const [viaje, setViaje] = useState(null);
-  const [qrLoaded, setQrLoaded] = useState(false); // Estado para controlar la carga del QR
+  
 
   // Mueve el useRef aquí, junto con los otros hooks
   const ticketRef = React.useRef();
@@ -299,8 +299,7 @@ function TicketPage() {
             alt="QR Code"
             className="ticket-qr"
             onLoad={() => {
-              console.log("QR cargadooo");
-              setQrLoaded(true);
+
             }}
             onError={() => {
               console.error("Error cargando el QR");
