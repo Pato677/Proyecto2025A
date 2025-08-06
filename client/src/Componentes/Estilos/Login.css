@@ -61,7 +61,14 @@
   outline: none;
   padding: 0.5rem;
   color: white;
-  font-weight: 500;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px #222, 0 0 1px #222;
+}
+
+.login-field input::placeholder {
+  color: #413c3c;
+  font-weight: 400;
+  text-shadow: none;
 }
 
 .field-icon {
