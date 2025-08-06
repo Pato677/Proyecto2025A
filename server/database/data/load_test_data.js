@@ -501,7 +501,7 @@ async function cargarDatosPrueba() {
       }
     ], { returning: true });
 
-    // 9. Crear Rutas (expandido con más rutas basadas en db.json)
+    // 9. Crear Rutas (con paradas como array de strings, compatibles con Leaflet)
     console.log('🛣️ Creando rutas...');
     const rutas = await Ruta.bulkCreate([
       // Rutas Quito - Guayaquil
@@ -513,10 +513,11 @@ async function cargarDatosPrueba() {
         terminal_origen_id: terminales[0].id, // Quitumbe
         terminal_destino_id: terminales[2].id, // Guayaquil
         paradas: JSON.stringify([
-          { nombre: 'Machachi', hora: '14:30' },
-          { nombre: 'Latacunga', hora: '15:30' },
-          { nombre: 'La Maná', hora: '17:00' },
-          { nombre: 'Babahoyo', hora: '19:00' }
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Avenida Velasco Ibarra, La Tola, Itchimbia, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "De los Milagros, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "Lex & Justice, Río de Janeiro, Larrea, San Juan, Quito, Distrito Metropolitano de Quito, Pichincha, 170118, Ecuador"
         ])
       },
       {
@@ -527,9 +528,10 @@ async function cargarDatosPrueba() {
         terminal_origen_id: terminales[0].id, // Quitumbe
         terminal_destino_id: terminales[2].id, // Guayaquil
         paradas: JSON.stringify([
-          { nombre: 'Latacunga', hora: '15:30' },
-          { nombre: 'Ambato', hora: '16:30' },
-          { nombre: 'Babahoyo', hora: '20:00' }
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Guayaquil",
+          "Javier Gutierrez, San Marcos, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador",
+          "De los Milagros, Centro Histórico, Quito, Distrito Metropolitano de Quito, Pichincha, 170114, Ecuador"
         ])
       },
       {
@@ -540,10 +542,10 @@ async function cargarDatosPrueba() {
         terminal_origen_id: terminales[1].id, // Carcelén
         terminal_destino_id: terminales[2].id, // Guayaquil
         paradas: JSON.stringify([
-          { nombre: 'Machachi', hora: '16:30' },
-          { nombre: 'Latacunga', hora: '17:30' },
-          { nombre: 'La Maná', hora: '19:00' },
-          { nombre: 'Milagro', hora: '22:00' }
+          "Terminal Terrestre Carcelén",
+          "Terminal Terrestre de Guayaquil",
+          "Machala, Ecuador",
+          "Portoviejo, Ecuador"
         ])
       },
       // Rutas Quito - Cuenca
@@ -555,10 +557,10 @@ async function cargarDatosPrueba() {
         terminal_origen_id: terminales[0].id, // Quitumbe
         terminal_destino_id: terminales[3].id, // Cuenca
         paradas: JSON.stringify([
-          { nombre: 'Latacunga', hora: '13:30' },
-          { nombre: 'Ambato', hora: '14:30' },
-          { nombre: 'Riobamba', hora: '15:30' },
-          { nombre: 'Azogues', hora: '18:30' }
+          "Terminal Terrestre Quitumbe",
+          "Terminal Terrestre de Cuenca",
+          "Riobamba, Ecuador",
+          "Azogues, Ecuador"
         ])
       },
       {
@@ -569,10 +571,12 @@ async function cargarDatosPrueba() {
         terminal_origen_id: terminales[1].id, // Carcelén
         terminal_destino_id: terminales[3].id, // Cuenca
         paradas: JSON.stringify([
-          { nombre: 'Salcedo', hora: '11:00' },
-          { nombre: 'Ambato', hora: '12:00' },
-          { nombre: 'Guamote', hora: '14:00' },
-          { nombre: 'Cañar', hora: '16:00' }
+          "Terminal Terrestre Carcelén",
+          "Terminal Terrestre de Cuenca",
+          "Salcedo, Ecuador",
+          "Ambato, Ecuador",
+          "Guamote, Ecuador",
+          "Cañar, Ecuador"
         ])
       },
       // Rutas Ambato - Otras ciudades
@@ -584,9 +588,11 @@ async function cargarDatosPrueba() {
         terminal_origen_id: terminales[4].id, // Ambato
         terminal_destino_id: terminales[8].id, // Manta
         paradas: JSON.stringify([
-          { nombre: 'Baños', hora: '08:00' },
-          { nombre: 'Santo Domingo', hora: '11:00' },
-          { nombre: 'Portoviejo', hora: '13:30' }
+          "Terminal Terrestre de Ambato",
+          "Terminal Terrestre de Manta",
+          "Baños, Ecuador",
+          "Santo Domingo, Ecuador",
+          "Portoviejo, Ecuador"
         ])
       },
       {
@@ -597,9 +603,11 @@ async function cargarDatosPrueba() {
         terminal_origen_id: terminales[4].id, // Ambato
         terminal_destino_id: terminales[6].id, // Loja
         paradas: JSON.stringify([
-          { nombre: 'Riobamba', hora: '17:00' },
-          { nombre: 'Cuenca', hora: '21:00' },
-          { nombre: 'Catamayo', hora: '01:00' }
+          "Terminal Terrestre de Ambato",
+          "Terminal Terrestre de Loja",
+          "Riobamba, Ecuador",
+          "Cuenca, Ecuador",
+          "Catamayo, Ecuador"
         ])
       },
       // Rutas de regreso Guayaquil - Quito
@@ -611,10 +619,12 @@ async function cargarDatosPrueba() {
         terminal_origen_id: terminales[2].id, // Guayaquil
         terminal_destino_id: terminales[0].id, // Quitumbe
         paradas: JSON.stringify([
-          { nombre: 'Milagro', hora: '10:00' },
-          { nombre: 'Babahoyo', hora: '11:00' },
-          { nombre: 'Santo Domingo', hora: '13:00' },
-          { nombre: 'Aloag', hora: '15:30' }
+          "Terminal Terrestre de Guayaquil",
+          "Terminal Terrestre Quitumbe",
+          "Milagro, Ecuador",
+          "Babahoyo, Ecuador",
+          "Santo Domingo, Ecuador",
+          "Aloag, Ecuador"
         ])
       },
       {
@@ -625,10 +635,12 @@ async function cargarDatosPrueba() {
         terminal_origen_id: terminales[2].id, // Guayaquil
         terminal_destino_id: terminales[1].id, // Carcelén
         paradas: JSON.stringify([
-          { nombre: 'Durán', hora: '08:30' },
-          { nombre: 'Babahoyo', hora: '10:00' },
-          { nombre: 'Quevedo', hora: '11:30' },
-          { nombre: 'Santo Domingo', hora: '13:00' }
+          "Terminal Terrestre de Guayaquil",
+          "Terminal Terrestre Carcelén",
+          "Durán, Ecuador",
+          "Babahoyo, Ecuador",
+          "Quevedo, Ecuador",
+          "Santo Domingo, Ecuador"
         ])
       },
       // Más rutas para completar
@@ -640,9 +652,11 @@ async function cargarDatosPrueba() {
         terminal_origen_id: terminales[6].id, // Loja
         terminal_destino_id: terminales[8].id, // Manta
         paradas: JSON.stringify([
-          { nombre: 'Machala', hora: '08:00' },
-          { nombre: 'Guayaquil', hora: '10:00' },
-          { nombre: 'Portoviejo', hora: '11:30' }
+          "Terminal Terrestre de Loja",
+          "Terminal Terrestre de Manta",
+          "Machala, Ecuador",
+          "Guayaquil, Ecuador",
+          "Portoviejo, Ecuador"
         ])
       }
     ], { returning: true });
