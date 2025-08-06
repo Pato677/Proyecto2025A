@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate} from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
 import TicketInfo from './TicketInfo';
@@ -22,6 +22,7 @@ function formatearFechaLarga(fechaStr) {
 }
 
 function TicketPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const compraId = searchParams.get('compraId') || 'N/A';
   const [boleto, setBoleto] = useState(null);
@@ -69,18 +70,9 @@ function TicketPage() {
 
   // Datos del pasajero y asiento desde el backend
   const pasajero = boletoActual?.Pasajero || {};
-  const asiento = boletoActual?.asiento_id || '';
-  const codigoBoleto = boletoActual?.codigo || '';
-  const cedula = pasajero?.cedula || '';
-  const nombreCompleto = `${pasajero?.nombres || ''} ${pasajero?.apellidos || ''}`;
-
 
   // Datos de viaje desde la compra
   const viajes = boletoActual?.Compra?.Viaje || {};
-  const busNumero = viajes?.unidad_id || '';
-  const fechaSalida = viajes?.fecha_salida ? formatearFechaLarga(viajes.fecha_salida) : '';
-  const fechaLlegada = viajes?.fecha_llegada ? formatearFechaLarga(viajes.fecha_llegada) : '';
-
 
   // Prepara los datos para TicketInfo
   const datosViaje = boletoActual
@@ -114,11 +106,6 @@ function TicketPage() {
 
   const handleImprimir = () => {
     const doc = new jsPDF();
-
-    // COLORES DE MARCA
-    const azulMarca = "#1e90ff"; // Cambia por tu azul de marca si es otro
-    const grisClaro = "#f4f8fb";
-    const grisOscuro = "#222";
 
     // Logo (mantén relación de aspecto)
     const logoWidth = 45;
@@ -271,6 +258,11 @@ function TicketPage() {
     }
   };
 
+  const handleRastrear = () => {
+    // Redirigir a LiveLocationPage con el id de la compra como parámetro en la URI
+    navigate(`/RealTimeMap?compraId=${compraId}`);
+  };
+
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrString)}`;
 
   return (
@@ -321,6 +313,7 @@ function TicketPage() {
         </p>
         <div className="ticket-button-group">
           <Button text="Imprimir" width='150px' onClick={handleImprimir}/>
+          <Button text="Rastrea tu viaje" width='180px' onClick={handleRastrear}/>
         </div>
       </main>
       <Footer />

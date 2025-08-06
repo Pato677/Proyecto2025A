@@ -173,7 +173,7 @@
 
 .ticket-button-group {
   display: flex;
-  justify-content: center;
+  justify-content:space-between;
   width: 700px;
   max-width: 95vw;
   margin: 15px 0 0 0;
@@ -192,6 +192,8 @@
   transition: background 0.15s, color 0.15s;
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 7px;
 }
 
