@@ -19,6 +19,7 @@ function RegisterUnitsPage() {
   const unidadesPorPagina = 8;
   const [mostrarSimulador, setMostrarSimulador] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const { usuario } = useAuth();
 
   useEffect(() => {
@@ -92,7 +93,10 @@ function RegisterUnitsPage() {
   };
 
   const handleActualizar = () => {
-    if (!selectedId) return;
+    if (!selectedId) {
+      setShowInfoModal(true);
+      return;
+    }
     const unidad = unidades.find(u => u.id === selectedId);
     if (unidad) {
       setUnidadEdit({
@@ -109,7 +113,10 @@ function RegisterUnitsPage() {
   };
 
   const handleEliminar = () => {
-    if (!selectedId) return;
+    if (!selectedId) {
+      setShowInfoModal(true);
+      return;
+    }
     setShowDeleteModal(true);
   };
 
@@ -239,6 +246,10 @@ function RegisterUnitsPage() {
       {mostrarSimulador && (
         <SimuladorUbicacionModal onClose={() => setMostrarSimulador(false)} />
       )}
+
+      <Modal open={showInfoModal} onClose={() => setShowInfoModal(false)}>
+        <h3>Por favor seleccione una unidad antes de continuar.</h3>
+      </Modal>
 
       <ConfirmModal
         open={showDeleteModal}
