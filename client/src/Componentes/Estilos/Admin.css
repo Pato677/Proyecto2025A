@@ -99,6 +99,25 @@
   background-color: #f8f9fa;
 }
 
+.header-admin__dropdown-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: #999;
+}
+
+.header-admin__dropdown-item.disabled:hover {
+  background-color: transparent;
+}
+
+.header-admin__dropdown-item.disabled .header-admin__dropdown-icon {
+  color: #999;
+}
+
+.locked-indicator {
+  margin-left: auto;
+  font-size: 0.9rem;
+}
+
 .header-admin__dropdown-item:not(:last-child) {
   border-bottom: 1px solid #f0f0f0;
 }

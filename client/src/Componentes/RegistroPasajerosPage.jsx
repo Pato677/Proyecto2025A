@@ -378,6 +378,7 @@ const RegistroPasajerosPage = () => {
             setMostrarRegistro(true);
           }}
           onLoginExitoso={handleLoginExitoso}
+          shouldRedirect={false}
         />
       )}
 

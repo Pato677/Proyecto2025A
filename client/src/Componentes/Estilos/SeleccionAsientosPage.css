@@ -32,15 +32,16 @@ body, html {
   padding: 1rem 2rem;
   border-bottom: 2px solid #e5e7eb;
   background-color: white;
-  flex-wrap: wrap;
   width: 100%;
+  position: relative;
+  box-sizing: border-box;
 }
 
 .logo-info {
   display: flex;
   align-items: center;
   gap: 1rem;
-  flex: 1;
+  flex-shrink: 0;
 }
 
 .logo {
@@ -50,11 +51,10 @@ body, html {
 .step-info {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 1.5rem;
-  flex-wrap: wrap;
   flex: 1;
-
+  max-width: 500px;
 }
 
 .precio {
@@ -66,14 +66,13 @@ body, html {
   font-weight: bold;
   color: #0ea5e9;
   cursor: default;
-  flex: 1;
+  white-space: nowrap;
 }
+
 .step-progress {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex: 1;
-  justify-content: center;
 }
 
 /* Main */
@@ -443,4 +442,107 @@ body, html {
 
 .btn-aceptar:disabled:hover {
   background-color: #9ca3af;
+}
+
+/* Estilos para el botón de login/usuario */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  min-width: 120px;
+  justify-content: flex-end;
+}
+
+.login-area {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  background: transparent;
+  transition: opacity 0.2s;
+}
+
+.login-area:hover {
+  opacity: 0.7;
+}
+
+.user-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+}
+
+.user-icon {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.login-text {
+  color: #6b7280;
+  font-weight: 400;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.user-name {
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  min-width: 150px;
+  z-index: 1000;
+  border: 1px solid #e2e8f0;
+}
+
+.dropdown-content div {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.dropdown-content div:hover {
+  background-color: #f8fafc;
+}
+
+.dropdown-content div:first-child {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .step-info {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+  
+  .user-section {
+    order: 2;
+  }
 }

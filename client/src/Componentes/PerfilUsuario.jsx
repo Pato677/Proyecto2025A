@@ -13,6 +13,16 @@ import {
 const PerfilUsuario = () => {
   const navigate = useNavigate();
   const { logout, usuario } = useAuth(); // Obtener el usuario del contexto también
+  
+  // Bloquear acceso para superusuarios
+  useEffect(() => {
+    if (usuario && usuario.rol === 'superuser') {
+      alert('⛔ Acceso restringido: El perfil del superadministrador no puede ser modificado por razones de seguridad.');
+      navigate('/DashboardPage');
+      return;
+    }
+  }, [usuario, navigate]);
+
   const [usuarioState, setUsuarioState] = useState({
     id: "",
     nombres: "",

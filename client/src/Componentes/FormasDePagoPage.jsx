@@ -362,6 +362,7 @@ const FormasDePagoPage = () => {
             setMostrarRegistro(true);
           }}
           onLoginExitoso={handleLoginExitoso}
+          shouldRedirect={false}
         />
       )}
 

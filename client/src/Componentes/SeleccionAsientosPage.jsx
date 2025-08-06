@@ -4,6 +4,8 @@ import { useAuth } from './AuthContext';
 import axios from 'axios';
 import SeatSelector from './SeatSelector';
 import StepProgress from './StepProgress'; // Asegúrate de que la ruta sea correcta
+import Login from './Login';
+import { FaUser } from 'react-icons/fa';
 import './Estilos/SeleccionAsientosPage.css';
 import Footer from './Footer';
 import Logo from './Imagenes/Logo.png';
@@ -28,6 +30,10 @@ const SeleccionAsientosPage = () => {
 
   // Estado para el precio del viaje
   const [precioViaje, setPrecioViaje] = useState(0.00);
+
+  // Estados para el modal de login y menú de usuario
+  const [mostrarLogin, setMostrarLogin] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Cargar datos del viaje
   useEffect(() => {
@@ -74,6 +80,21 @@ const SeleccionAsientosPage = () => {
     }
   };
 
+  // Funciones para manejar login y logout
+  const handleLoginClick = () => {
+    setMostrarLogin(true);
+  };
+
+  const handleLoginExitoso = (usuarioData) => {
+    console.log('Login exitoso:', usuarioData);
+    setMostrarLogin(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setMenuOpen(false);
+  };
+
   const handleAtras = () => {
     // Guardar los asientos actuales en localStorage antes de navegar hacia atrás
     localStorage.setItem('asientosSeleccionados', JSON.stringify(asientosSeleccionados));
@@ -113,6 +134,35 @@ const SeleccionAsientosPage = () => {
           </div>
    
           <button className="precio">USD {precioViaje.toFixed(2).replace('.', ',')}</button>
+        </div>
+        
+        {/* Botón de login/usuario en la esquina superior derecha */}
+        <div className="user-section">
+          {usuario ? (
+            <div
+              className="user-dropdown"
+              onMouseEnter={() => setMenuOpen(true)}
+              onMouseLeave={() => setMenuOpen(false)}
+            >
+              <FaUser className="user-icon" />
+              <span className="user-name">
+                {usuario.nombres ? usuario.nombres.split(' ')[0] : 
+                 usuario.correo ? usuario.correo.split('@')[0] : 
+                 'Usuario'} 
+              </span>
+              {menuOpen && (
+                <div className="dropdown-content">
+                  <div onClick={() => navigate('/PerfilUsuario')}>Mi perfil</div>
+                  <div onClick={handleLogout}>Cerrar sesión</div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="login-area" onClick={handleLoginClick}>
+              <FaUser className="user-icon" />
+              <span className="login-text">Iniciar Sesión</span>
+            </div>
+          )}
         </div>
       </header>
       
@@ -208,6 +258,15 @@ const SeleccionAsientosPage = () => {
 
     
         <Footer />
+
+        {/* Modal de Login */}
+        {mostrarLogin && (
+          <Login 
+            cerrar={() => setMostrarLogin(false)}
+            onLoginExitoso={handleLoginExitoso}
+            shouldRedirect={false}
+          />
+        )}
       
     </div>
   );

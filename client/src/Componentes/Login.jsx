@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaUser, FaLock, FaSignInAlt } from "react-icons/fa";
+import { FaUser, FaLock, FaSignInAlt, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "./AuthContext";
 import UsuarioCrud from "./ComponentesCRUD/UsuarioCrud";
 import "./Estilos/Login.css";
 
-const Login = ({ cerrar, abrirRegistro, onLoginExitoso }) => {
+const Login = ({ cerrar, abrirRegistro, onLoginExitoso, shouldRedirect = true }) => {
     const navigate = useNavigate();
     const { login: authLogin } = useAuth();
     const [credenciales, setCredenciales] = useState({
@@ -15,6 +15,7 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso }) => {
     
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [mostrarContrasena, setMostrarContrasena] = useState(false);
 
     const handleChange = useCallback((e) => {
         const { name, value } = e.target;
@@ -25,6 +26,10 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso }) => {
         
         if (error) setError("");
     }, [error]);
+
+    const toggleMostrarContrasena = useCallback(() => {
+        setMostrarContrasena(prev => !prev);
+    }, []);
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
@@ -59,39 +64,42 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso }) => {
                     onLoginExitoso(loginResponse.usuario);
                 }
                 
-                // Usar setTimeout para asegurar que las actualizaciones de estado se completen
-                setTimeout(() => {
-                    // Redirigir según el dashboard configurado
-                    const dashboard = loginResponse.configuracion.dashboard;
-                    
-                    switch (dashboard) {
-                        case 'usuario':
-                            // Usuarios finales van a la selección de viajes
-                            console.log("🚀 Redirigiendo a interfaz de usuario...");
-                            navigate('/Inicio');
-                            break;
-                        case 'cooperativa':
-                            // Cooperativas van al dashboard administrativo
-                            console.log("🏢 Redirigiendo a dashboard de cooperativa...");
-                            navigate('/dashboard');
-                            break;
-                        case 'admin':
-                            // Administradores van al panel de admin
-                            console.log("👨‍💼 Redirigiendo a panel de administrador...");
-                            navigate('/dashboard');
-                            break;
-                        case 'superuser':
-                            // Super usuario va al panel de super admin
-                            console.log("🔐 Redirigiendo a panel de super usuario...");
-                            navigate('/SuperAdmin');
-                            break;
-                        default:
-                            // Fallback por si hay un rol no manejado
-                            console.log("⚠️ Rol no reconocido, redirigiendo al inicio...");
-                            navigate('/Inicio');
-                            break;
-                    }
-                }, 100); // Delay de 100ms para asegurar que el estado se actualice
+                // Solo redirigir si shouldRedirect es true
+                if (shouldRedirect) {
+                    // Usar setTimeout para asegurar que las actualizaciones de estado se completen
+                    setTimeout(() => {
+                        // Redirigir según el dashboard configurado
+                        const dashboard = loginResponse.configuracion.dashboard;
+                        
+                        switch (dashboard) {
+                            case 'usuario':
+                                // Usuarios finales van a la selección de viajes
+                                console.log("🚀 Redirigiendo a interfaz de usuario...");
+                                navigate('/Inicio');
+                                break;
+                            case 'cooperativa':
+                                // Cooperativas van al dashboard administrativo
+                                console.log("🏢 Redirigiendo a dashboard de cooperativa...");
+                                navigate('/dashboard');
+                                break;
+                            case 'admin':
+                                // Administradores van al panel de admin
+                                console.log("👨‍💼 Redirigiendo a panel de administrador...");
+                                navigate('/dashboard');
+                                break;
+                            case 'superuser':
+                                // Super usuario va al panel de super admin
+                                console.log("🔐 Redirigiendo a panel de super usuario...");
+                                navigate('/SuperAdmin');
+                                break;
+                            default:
+                                // Fallback por si hay un rol no manejado
+                                console.log("⚠️ Rol no reconocido, redirigiendo al inicio...");
+                                navigate('/Inicio');
+                                break;
+                        }
+                    }, 100); // Delay de 100ms para asegurar que el estado se actualice
+                }
                 
             } else {
                 setError("Error en el inicio de sesión");
@@ -102,11 +110,11 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso }) => {
         } finally {
             setLoading(false);
         }
-    }, [credenciales, authLogin, cerrar, onLoginExitoso, navigate]);
+    }, [credenciales, authLogin, cerrar, onLoginExitoso, navigate, shouldRedirect]);
 
     return (
-        <div className="login-overlay" onClick={cerrar}>
-            <div className="login-box" onClick={(e) => e.stopPropagation()}>
+        <div className="login-overlay">
+            <div className="login-box">
                 <button className="login-close" onClick={cerrar}>×</button>
                 <FaSignInAlt className="login-icon" />
                 <h2>Iniciar Sesión</h2>
@@ -129,13 +137,21 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso }) => {
                     <div className="login-field">
                         <FaLock className="field-icon" />
                         <input 
-                            type="password" 
+                            type={mostrarContrasena ? "text" : "password"}
                             name="contrasena"
                             placeholder="Ingrese su contraseña"
                             value={credenciales.contrasena}
                             onChange={handleChange}
                             required
                         />
+                        <button 
+                            type="button" 
+                            className="toggle-password"
+                            onClick={toggleMostrarContrasena}
+                            title={mostrarContrasena ? "Ocultar contraseña" : "Mostrar contraseña"}
+                        >
+                            {mostrarContrasena ? <FaEyeSlash /> : <FaEye />}
+                        </button>
                     </div>
 
                     <div className="login-buttons">

@@ -11,6 +11,16 @@ import {
 
 const PerfilUsuarioModal = ({ cerrar }) => {
   const { logout, usuario } = useAuth();
+  
+  // Bloquear acceso para superusuarios
+  useEffect(() => {
+    if (usuario && usuario.rol === 'superuser') {
+      alert('⛔ Acceso restringido: El perfil del superadministrador no puede ser modificado por razones de seguridad.');
+      cerrar();
+      return;
+    }
+  }, [usuario, cerrar]);
+
   const [usuarioState, setUsuarioState] = useState({
     id: "",
     nombres: "",
@@ -118,6 +128,13 @@ const PerfilUsuarioModal = ({ cerrar }) => {
   const handleActualizar = async (e) => {
     e.preventDefault();
     
+    // Bloquear actualización para superusuarios
+    const usuarioStorage = JSON.parse(localStorage.getItem('usuario'));
+    if (usuarioStorage && usuarioStorage.rol === 'superuser') {
+      alert('⛔ Acceso restringido: El perfil del superadministrador no puede ser modificado por razones de seguridad.');
+      return;
+    }
+    
     if (!validarFormulario()) return;
     
     try {
@@ -167,6 +184,13 @@ const PerfilUsuarioModal = ({ cerrar }) => {
   };
 
   const handleEliminar = async () => {
+    // Bloquear eliminación para superusuarios
+    const usuarioStorage = JSON.parse(localStorage.getItem('usuario'));
+    if (usuarioStorage && usuarioStorage.rol === 'superuser') {
+      alert('⛔ Acceso restringido: El perfil del superadministrador no puede ser eliminado por razones de seguridad.');
+      return;
+    }
+    
     if (!window.confirm("¿Está seguro que desea eliminar su perfil? Esta acción no se puede deshacer.")) return;
     
     try {
