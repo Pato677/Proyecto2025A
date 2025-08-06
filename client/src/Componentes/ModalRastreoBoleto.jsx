@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Estilos/ModalRastreoBoleto.css";
 
 const ModalRastreoBoleto = ({ open, onClose }) => {
   const [input, setInput] = useState(""); // Solo lo que el usuario escribe
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState(""); // 'error' | 'info'
+
+  // Limpiar campos al cerrar el modal
+  useEffect(() => {
+    if (!open) {
+      setInput("");
+      setMensaje("");
+      setTipoMensaje("");
+    }
+  }, [open]);
 
   if (!open) return null;
 
