@@ -6,6 +6,8 @@ import UnidadModal from './UnidadModal';
 import SimuladorUbicacionModal from './SimularUbicacion';
 import { useAuth } from '../Componentes/AuthContext';
 import './Estilos/UnidadModal.css';
+import Modal from './Modal';
+import ConfirmModal from './ConfirmModal';
 
 function RegisterUnitsPage() {
   const [unidades, setUnidades] = useState([]);
@@ -16,6 +18,7 @@ function RegisterUnitsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const unidadesPorPagina = 8;
   const [mostrarSimulador, setMostrarSimulador] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { usuario } = useAuth();
 
   useEffect(() => {
@@ -107,16 +110,20 @@ function RegisterUnitsPage() {
 
   const handleEliminar = () => {
     if (!selectedId) return;
-    if (!window.confirm('¿Estás seguro de que deseas eliminar esta unidad?')) return;
+    setShowDeleteModal(true);
+  };
 
+  const confirmarEliminar = () => {
     axios.delete(`http://localhost:8000/unidades/${selectedId}`)
       .then(() => {
         setUnidades(prev => prev.filter(u => u.id !== selectedId));
         setSelectedId(null);
+        setShowDeleteModal(false);
       })
       .catch(error => {
         console.error('Error al eliminar unidad:', error.response?.data || error.message);
         alert("Error al eliminar unidad: " + (error.response?.data?.error || error.message));
+        setShowDeleteModal(false);
       });
   };
 
@@ -232,6 +239,13 @@ function RegisterUnitsPage() {
       {mostrarSimulador && (
         <SimuladorUbicacionModal onClose={() => setMostrarSimulador(false)} />
       )}
+
+      <ConfirmModal
+        open={showDeleteModal}
+        title="¿Está seguro que desea eliminar esta unidad?"
+        onCancel={() => setShowDeleteModal(false)}
+        onConfirm={confirmarEliminar}
+      />
     </div>
   );
 }

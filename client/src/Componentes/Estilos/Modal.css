@@ -298,3 +298,11 @@ select.form-input option {
   background: #c82333;
   transform: translateY(-2px);
 }
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
