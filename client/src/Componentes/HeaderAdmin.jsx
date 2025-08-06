@@ -55,9 +55,9 @@ const HeaderAdmin = ({ onPerfilClick }) => {
   const handlePerfilClick = () => {
     setShowDropdown(false);
     
-    // Bloquear acceso al perfil para superusuarios
-    if (usuario?.rol === 'superuser') {
-      alert('⛔ Acceso restringido: El perfil del superadministrador no puede ser modificado por razones de seguridad.');
+    // Bloquear acceso al perfil para superusers
+    if (usuario && usuario.rol === 'superuser') {
+      alert('⚠️ El perfil del Superadministrador está protegido y no puede ser modificado por seguridad.');
       return;
     }
     
@@ -99,15 +99,13 @@ const HeaderAdmin = ({ onPerfilClick }) => {
           {showDropdown && (
             <div className="header-admin__dropdown">
               <div 
-                className={`header-admin__dropdown-item ${usuario?.rol === 'superuser' ? 'disabled' : ''}`}
+                className={`header-admin__dropdown-item ${usuario && usuario.rol === 'superuser' ? 'disabled' : ''}`} 
                 onClick={handlePerfilClick}
-                title={usuario?.rol === 'superuser' ? 'Perfil bloqueado por seguridad' : 'Ver mi perfil'}
+                title={usuario && usuario.rol === 'superuser' ? 'Perfil protegido por seguridad' : 'Ver mi perfil'}
               >
                 <FiSettings className="header-admin__dropdown-icon" />
                 <span>Mi Perfil</span>
-                {usuario?.rol === 'superuser' && (
-                  <span className="locked-indicator">🔒</span>
-                )}
+                {usuario && usuario.rol === 'superuser' && <span className="locked-indicator">🔒</span>}
               </div>
               <div className="header-admin__dropdown-item" onClick={handleLogoutClick}>
                 <FiLogOut className="header-admin__dropdown-icon" />

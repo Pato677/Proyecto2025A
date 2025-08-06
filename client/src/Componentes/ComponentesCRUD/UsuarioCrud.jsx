@@ -73,7 +73,7 @@ const UsuarioCrud = {
     // Verificar credenciales de usuario (Login)
     login: async (correo, contrasena) => {
         try {
-            const response = await axios.post(`${API_URL}/login`, {
+            const response = await axios.post(`http://localhost:8000/auth/login`, {
                 correo,
                 contrasena
             }, {

@@ -49,6 +49,7 @@ ensureDatabaseAndSync().then(() => {
     app.use(express.urlencoded({ extended: true }));
 
 const usuariosRoutes = require('./routes/usuarios.routes');
+const authRoutes = require('./routes/auth.routes');
 const rutasRoutes = require('./routes/rutas.routes');
 const viajesRoutes = require('./routes/viajes.routes');
 const unidadesRoutes = require('./routes/unidades.routes');
@@ -62,6 +63,9 @@ const ciudadesTerminalesRoutes = require('./routes/ciudadesTerminales.routes');
 const pasajerosRoutes = require('./routes/pasajeros.routes');
 const comprasRoutes = require('./routes/compras.routes');
 
+
+// Rutas de autenticación
+app.use('/auth', authRoutes);
 
 // Rutas con funciones
 rutasRoutes(app);

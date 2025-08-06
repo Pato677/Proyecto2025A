@@ -7,119 +7,9 @@ import PasajerosForm from './PasajerosForm';
 import Login from './Login';
 import Registro from './Registro';
 import PerfilUsuarioModal from './PerfilUsuarioModal';
-import ErrorModal from './ErrorModal';
 import './Estilos/RegistroPasajerosPage.css';
 import Button from './Button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-// Validaciones
-const validarCedulaEcuatoriana = (cedula) => {
-  if (!cedula || cedula.length !== 10) {
-    return false;
-  }
-
-  // Verificar que solo contenga números
-  if (!/^\d{10}$/.test(cedula)) {
-    return false;
-  }
-
-  // Verificar que los dos primeros dígitos correspondan a una provincia válida (01-24)
-  const provincia = parseInt(cedula.substring(0, 2), 10);
-  if (provincia < 1 || provincia > 24) {
-    return false;
-  }
-
-  // Verificar el tercer dígito (debe ser menor a 6 para personas naturales)
-  const tercerDigito = parseInt(cedula.charAt(2), 10);
-  if (tercerDigito >= 6) {
-    return false;
-  }
-
-  // Algoritmo del dígito verificador
-  const digitoVerificador = parseInt(cedula.charAt(9), 10);
-  const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
-  
-  let suma = 0;
-  for (let i = 0; i < 9; i++) {
-    let valor = parseInt(cedula.charAt(i), 10) * coeficientes[i];
-    if (valor > 9) {
-      valor -= 9;
-    }
-    suma += valor;
-  }
-
-  const residuo = suma % 10;
-  const digitoCalculado = residuo === 0 ? 0 : 10 - residuo;
-
-  return digitoCalculado === digitoVerificador;
-};
-
-const validarCorreo = (correo) => {
-  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return regex.test(correo);
-};
-
-const validarTelefonoEcuatoriano = (telefono) => {
-  if (!telefono || telefono.length !== 10) {
-    return false;
-  }
-
-  // Verificar que solo contenga números
-  if (!/^\d{10}$/.test(telefono)) {
-    return false;
-  }
-
-  // Verificar que comience con 09 (celular) o con código de área válido para fijo
-  const prefijo = telefono.substring(0, 2);
-  
-  // Celulares empiezan con 09
-  if (prefijo === '09') {
-    return true;
-  }
-
-  // Teléfonos fijos - códigos de área válidos en Ecuador
-  const codigosAreaValidos = ['02', '03', '04', '05', '06', '07'];
-  return codigosAreaValidos.includes(prefijo);
-};
-
-const validarFechaNacimiento = (dia, mes, anio) => {
-  if (!dia || !mes || !anio) {
-    return false;
-  }
-
-  const fecha = new Date(parseInt(anio), parseInt(mes) - 1, parseInt(dia));
-  const ahora = new Date();
-  
-  // Verificar que la fecha sea válida
-  if (fecha.getDate() != dia || fecha.getMonth() != mes - 1 || fecha.getFullYear() != anio) {
-    return false;
-  }
-
-  // Verificar que no sea una fecha futura
-  if (fecha > ahora) {
-    return false;
-  }
-
-  return true;
-};
-
-const validarNombres = (nombres) => {
-  if (!nombres || nombres.trim() === '') {
-    return false;
-  }
-  
-  const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
-  return regex.test(nombres.trim()) && nombres.trim().length >= 2;
-};
-
-const validarApellidos = (apellidos) => {
-  if (!apellidos || apellidos.trim() === '') {
-    return false;
-  }
-  
-  const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
-  return regex.test(apellidos.trim());
-};
 
 const RegistroPasajerosPage = () => {
   const navigate = useNavigate();
@@ -158,8 +48,6 @@ const RegistroPasajerosPage = () => {
   const [mostrarLogin, setMostrarLogin] = useState(false);
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
-  const [erroresValidacion, setErroresValidacion] = useState([]);
-  const [mostrarErrores, setMostrarErrores] = useState(false);
 
   // Estado para los datos de los pasajeros - usar datos existentes si están disponibles
   const [datosPasajeros, setDatosPasajeros] = useState(() => {
@@ -233,79 +121,32 @@ const RegistroPasajerosPage = () => {
     );
   };
 
-  // Función para validar todos los pasajeros
-  const validarTodosPasajeros = () => {
-    const errores = [];
+  const handleAceptar = () => {
+    // Validar todos los formularios de pasajeros
+    let todosValidos = true;
     
     for (let i = 0; i < pasajeros; i++) {
       const pasajero = datosPasajeros[i];
-      const numeroPasajero = i + 1;
       
-      // Validar nombres
-      if (!validarNombres(pasajero.nombres)) {
-        errores.push({
-          pasajero: numeroPasajero,
-          mensaje: 'Los nombres son obligatorios y deben contener solo letras'
-        });
-      }
-      
-      // Validar apellidos
-      if (!validarApellidos(pasajero.apellidos)) {
-        errores.push({
-          pasajero: numeroPasajero,
-          mensaje: 'Los apellidos son obligatorios y deben contener solo letras'
-        });
-      }
-      
-      // Validar cédula
-      if (!validarCedulaEcuatoriana(pasajero.cedula)) {
-        errores.push({
-          pasajero: numeroPasajero,
-          mensaje: 'La cédula ecuatoriana ingresada no es válida'
-        });
-      }
-      
-      // Validar fecha de nacimiento
-      if (!validarFechaNacimiento(pasajero.dia, pasajero.mes, pasajero.anio)) {
-        errores.push({
-          pasajero: numeroPasajero,
-          mensaje: 'La fecha de nacimiento no es válida o no puede ser una fecha futura'
-        });
+      // Validaciones básicas para todos los pasajeros
+      if (!pasajero.nombres || !pasajero.apellidos || !pasajero.cedula || 
+          !pasajero.dia || !pasajero.mes || !pasajero.anio) {
+        todosValidos = false;
+        break;
       }
       
       // Validaciones adicionales para el primer pasajero (titular)
-      if (i === 0) {
-        if (!validarCorreo(pasajero.correo)) {
-          errores.push({
-            pasajero: numeroPasajero,
-            mensaje: 'El correo electrónico no tiene un formato válido'
-          });
-        }
-        
-        if (!validarTelefonoEcuatoriano(pasajero.telefono)) {
-          errores.push({
-            pasajero: numeroPasajero,
-            mensaje: 'El teléfono debe tener 10 dígitos y ser un número ecuatoriano válido (celular: 09xxxxxxxx o fijo con código de área válido)'
-          });
-        }
+      if (i === 0 && (!pasajero.correo || !pasajero.telefono)) {
+        todosValidos = false;
+        break;
       }
     }
     
-    return errores;
-  };
-
-  const handleAceptar = () => {
-    const errores = validarTodosPasajeros();
-    
-    if (errores.length > 0) {
-      console.log('Errores de validación encontrados:', errores);
-      setErroresValidacion(errores);
-      setMostrarErrores(true);
-      return;
+    if (todosValidos) {
+      handleRegistroExitoso();
+    } else {
+      alert('Por favor, complete todos los datos requeridos de todos los pasajeros antes de continuar.');
     }
-    
-    console.log('Todos los datos son válidos, procediendo con la compra...');
-    handleRegistroExitoso();
   };
 
   return (
@@ -397,14 +238,6 @@ const RegistroPasajerosPage = () => {
       {mostrarPerfil && (
         <PerfilUsuarioModal
           cerrar={() => setMostrarPerfil(false)}
-        />
-      )}
-
-      {/* Modal de Errores */}
-      {mostrarErrores && (
-        <ErrorModal
-          errores={erroresValidacion}
-          cerrar={() => setMostrarErrores(false)}
         />
       )}
     </div>

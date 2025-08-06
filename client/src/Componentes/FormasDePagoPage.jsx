@@ -10,7 +10,6 @@ import TicketInfo from './Ticket/TicketInfo';
 import Button from './Button';
 import ConfirmacionCompraModal from './ConfirmacionCompraModal';
 import ResultadoCompraModal from './ResultadoCompraModal';
-import ErrorModal from './ErrorModal';
 import Login from './Login';
 import Registro from './Registro';
 import PerfilUsuarioModal from './PerfilUsuarioModal';
@@ -34,8 +33,6 @@ const FormasDePagoPage = () => {
   const [mostrarLogin, setMostrarLogin] = useState(false);
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
-  const [erroresValidacion, setErroresValidacion] = useState([]);
-  const [mostrarErrores, setMostrarErrores] = useState(false);
   
   // Obtener datos desde localStorage
   const pasajerosData = localStorage.getItem('pasajerosData') 
@@ -154,45 +151,25 @@ const FormasDePagoPage = () => {
   };
 
   const handleAceptar = () => {
-    const errores = [];
-
     // Validar que se haya seleccionado una forma de pago
     if (!formaPagoSeleccionada) {
-      errores.push({
-        pasajero: 1,
-        mensaje: 'Por favor, seleccione una forma de pago'
-      });
+      alert('Por favor, seleccione una forma de pago');
+      return;
     }
 
     // Validar que tengamos todos los datos necesarios
     if (!pasajerosData || pasajerosData.length === 0) {
-      console.log('Error: No se encontraron datos de pasajeros');
-      errores.push({
-        pasajero: 1,
-        mensaje: 'No se encontraron datos de pasajeros'
-      });
+      alert('No se encontraron datos de pasajeros');
+      return;
     }
 
     if (!asientosSeleccionados || asientosSeleccionados.length === 0) {
-      console.log('Error: No se encontraron asientos seleccionados');
-      errores.push({
-        pasajero: 1,
-        mensaje: 'No se encontraron asientos seleccionados'
-      });
+      alert('No se encontraron asientos seleccionados');
+      return;
     }
 
     if (!viajeId) {
-      console.log('Error: No se encontró el ID del viaje');
-      errores.push({
-        pasajero: 1,
-        mensaje: 'No se encontró el ID del viaje'
-      });
-    }
-
-    if (errores.length > 0) {
-      console.log('Errores de validación encontrados:', errores);
-      setErroresValidacion(errores);
-      setMostrarErrores(true);
+      alert('No se encontró el ID del viaje');
       return;
     }
 
@@ -235,7 +212,7 @@ const FormasDePagoPage = () => {
         setDatosCompraExitosa(datosCompraCompletos);
         setShowResultadoModal(true);
       } else {
-        console.log('Error al procesar la compra:', response.data.message);
+        alert('Error al procesar la compra: ' + response.data.message);
       }
 
     } catch (error) {
@@ -245,17 +222,16 @@ const FormasDePagoPage = () => {
         // Error del servidor
         const errorData = error.response.data;
         if (errorData.asientosOcupados) {
-          console.log(`Error: Algunos asientos ya están ocupados: ${errorData.asientosOcupados.join(', ')}`);
-          console.log('Se requiere seleccionar otros asientos');
+          alert(`Error: Algunos asientos ya están ocupados: ${errorData.asientosOcupados.join(', ')}\nPor favor, seleccione otros asientos.`);
         } else {
-          console.log('Error del servidor:', errorData.error || errorData.message || 'Error desconocido');
+          alert('Error al procesar la compra: ' + (errorData.error || errorData.message || 'Error desconocido'));
         }
       } else if (error.request) {
         // Error de red
-        console.log('Error de conexión. Se requiere verificar la conexión a internet.');
+        alert('Error de conexión. Verifique su conexión a internet.');
       } else {
         // Otro tipo de error
-        console.log('Error inesperado:', error.message);
+        alert('Error inesperado: ' + error.message);
       }
     } finally {
       setProcesandoPago(false);
@@ -381,14 +357,6 @@ const FormasDePagoPage = () => {
       {mostrarPerfil && (
         <PerfilUsuarioModal
           cerrar={() => setMostrarPerfil(false)}
-        />
-      )}
-
-      {/* Modal de Errores */}
-      {mostrarErrores && (
-        <ErrorModal
-          errores={erroresValidacion}
-          cerrar={() => setMostrarErrores(false)}
         />
       )}
     </div>

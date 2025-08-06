@@ -6,6 +6,7 @@ import RegistrarUnidadesPage from './RegistrarUnidadesPage';
 import RutasPanel from './RutasPanel';
 import ConductoresPage from './ConductoresPage';
 import ViajesPanel from './ViajesPanel';
+import { useAuth } from './AuthContext';
 import './Estilos/DashboardAdmin.css';
 
 // Paneles disponibles - similar a SuperAdminDashboard
@@ -17,6 +18,7 @@ const panels = [
 ];
 
 function DashboardPage() {
+  const { usuario } = useAuth();
   const [selectedModule, setSelectedModule] = useState(null);
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
   
@@ -32,6 +34,11 @@ function DashboardPage() {
 
   // Función para manejar el modal de perfil
   const handlePerfilClick = () => {
+    // Bloquear acceso al perfil para superusers
+    if (usuario && usuario.rol === 'superuser') {
+      alert('⚠️ El perfil del Superadministrador está protegido y no puede ser modificado por seguridad.');
+      return;
+    }
     setMostrarPerfil(true);
   };
 

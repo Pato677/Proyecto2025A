@@ -210,6 +210,11 @@ function LiveLocationPage() {
 
   // Función para manejar perfil
   const handlePerfilClick = () => {
+    // Bloquear acceso al perfil para superusers
+    if (usuario && usuario.rol === 'superuser') {
+      alert('⚠️ El perfil del Superadministrador está protegido y no puede ser modificado por seguridad.');
+      return;
+    }
     setMostrarPerfil(true);
   };
 

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaUser, FaLock, FaSignInAlt, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaUser, FaLock, FaSignInAlt } from "react-icons/fa";
 import { useAuth } from "./AuthContext";
 import UsuarioCrud from "./ComponentesCRUD/UsuarioCrud";
 import "./Estilos/Login.css";
@@ -15,7 +15,6 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso, shouldRedirect = true })
     
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const [mostrarContrasena, setMostrarContrasena] = useState(false);
 
     const handleChange = useCallback((e) => {
         const { name, value } = e.target;
@@ -26,10 +25,6 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso, shouldRedirect = true })
         
         if (error) setError("");
     }, [error]);
-
-    const toggleMostrarContrasena = useCallback(() => {
-        setMostrarContrasena(prev => !prev);
-    }, []);
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
@@ -137,21 +132,13 @@ const Login = ({ cerrar, abrirRegistro, onLoginExitoso, shouldRedirect = true })
                     <div className="login-field">
                         <FaLock className="field-icon" />
                         <input 
-                            type={mostrarContrasena ? "text" : "password"}
+                            type="password" 
                             name="contrasena"
                             placeholder="Ingrese su contraseña"
                             value={credenciales.contrasena}
                             onChange={handleChange}
                             required
                         />
-                        <button 
-                            type="button" 
-                            className="toggle-password"
-                            onClick={toggleMostrarContrasena}
-                            title={mostrarContrasena ? "Ocultar contraseña" : "Mostrar contraseña"}
-                        >
-                            {mostrarContrasena ? <FaEyeSlash /> : <FaEye />}
-                        </button>
                     </div>
 
                     <div className="login-buttons">

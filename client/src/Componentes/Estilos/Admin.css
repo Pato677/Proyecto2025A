@@ -99,14 +99,21 @@
   background-color: #f8f9fa;
 }
 
+.header-admin__dropdown-item:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Estilos para opción deshabilitada de perfil de superuser */
 .header-admin__dropdown-item.disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  background-color: #f8f9fa;
   color: #999;
 }
 
 .header-admin__dropdown-item.disabled:hover {
-  background-color: transparent;
+  background-color: #f8f9fa;
+  color: #999;
 }
 
 .header-admin__dropdown-item.disabled .header-admin__dropdown-icon {
@@ -116,10 +123,6 @@
 .locked-indicator {
   margin-left: auto;
   font-size: 0.9rem;
-}
-
-.header-admin__dropdown-item:not(:last-child) {
-  border-bottom: 1px solid #f0f0f0;
 }
 
 .header-admin__dropdown-icon {

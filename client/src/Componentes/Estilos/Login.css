@@ -52,7 +52,6 @@
   padding: 0.6rem 1rem;
   margin-bottom: 1rem;
   border-radius: 10px;
-  position: relative;
 }
 
 .login-field input {
@@ -102,35 +101,4 @@
   color: #004ca3;
   text-decoration: underline;
   cursor: pointer;
-}
-
-/* Estilos para el botón de mostrar/ocultar contraseña */
-.toggle-password {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 0.2rem;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 0.5rem;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  opacity: 0.8;
-}
-
-.toggle-password:hover {
-  opacity: 1;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.toggle-password:focus {
-  outline: none;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.toggle-password:active {
-  transform: scale(0.95);
 }

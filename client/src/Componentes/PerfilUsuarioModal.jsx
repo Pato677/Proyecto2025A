@@ -11,16 +11,6 @@ import {
 
 const PerfilUsuarioModal = ({ cerrar }) => {
   const { logout, usuario } = useAuth();
-  
-  // Bloquear acceso para superusuarios
-  useEffect(() => {
-    if (usuario && usuario.rol === 'superuser') {
-      alert('⛔ Acceso restringido: El perfil del superadministrador no puede ser modificado por razones de seguridad.');
-      cerrar();
-      return;
-    }
-  }, [usuario, cerrar]);
-
   const [usuarioState, setUsuarioState] = useState({
     id: "",
     nombres: "",
@@ -35,6 +25,15 @@ const PerfilUsuarioModal = ({ cerrar }) => {
 
   const [errores, setErrores] = useState({});
   const [mensaje, setMensaje] = useState("");
+
+  // Verificar si es superuser y bloquear acceso
+  useEffect(() => {
+    if (usuario && usuario.rol === 'superuser') {
+      alert('⚠️ El perfil del Superadministrador está protegido y no puede ser modificado por seguridad.');
+      cerrar();
+      return;
+    }
+  }, [usuario, cerrar]);
 
   useEffect(() => {
     const cargarUsuario = async () => {
@@ -128,10 +127,9 @@ const PerfilUsuarioModal = ({ cerrar }) => {
   const handleActualizar = async (e) => {
     e.preventDefault();
     
-    // Bloquear actualización para superusuarios
-    const usuarioStorage = JSON.parse(localStorage.getItem('usuario'));
-    if (usuarioStorage && usuarioStorage.rol === 'superuser') {
-      alert('⛔ Acceso restringido: El perfil del superadministrador no puede ser modificado por razones de seguridad.');
+    // Verificación adicional de seguridad para superuser
+    if (usuario && usuario.rol === 'superuser') {
+      alert('⚠️ El perfil del Superadministrador no puede ser modificado por seguridad.');
       return;
     }
     
@@ -184,10 +182,9 @@ const PerfilUsuarioModal = ({ cerrar }) => {
   };
 
   const handleEliminar = async () => {
-    // Bloquear eliminación para superusuarios
-    const usuarioStorage = JSON.parse(localStorage.getItem('usuario'));
-    if (usuarioStorage && usuarioStorage.rol === 'superuser') {
-      alert('⛔ Acceso restringido: El perfil del superadministrador no puede ser eliminado por razones de seguridad.');
+    // Verificación adicional de seguridad para superuser
+    if (usuario && usuario.rol === 'superuser') {
+      alert('⚠️ El perfil del Superadministrador no puede ser eliminado por seguridad.');
       return;
     }
     
