@@ -5,12 +5,10 @@ const getAllBoletos = async (req, res) => {
     try {
         const boletos = await Boleto.findAll({
             include: [
-                { model: Pasajero },
-                { 
+                Pasajero,
+                {
                     model: Compra,
-                    include: [
-                        { model: Viaje }
-                    ]
+                    include: [Viaje]
                 }
             ]
         });
@@ -25,19 +23,13 @@ const getAllBoletos = async (req, res) => {
 const getBoletosById = async (req, res) => {
     try {
         const { id } = req.params;
-        const boleto = await Boleto.findByPk(id, {
+        const boleto = await Boleto.findOne({
+            where: { codigo: id },
             include: [
-                {
-                    model: Pasajero,
-                    as: 'pasajero'
-                },
+                Pasajero,
                 {
                     model: Compra,
-                    as: 'compra'
-                },
-                {
-                    model: Viaje,
-                    as: 'viaje'
+                    include: [Viaje]
                 }
             ]
         });
@@ -60,17 +52,10 @@ const getBoletosByPasajero = async (req, res) => {
         const boletos = await Boleto.findAll({
             where: { pasajero_id: pasajeroId },
             include: [
-                {
-                    model: Pasajero,
-                    as: 'pasajero'
-                },
+                Pasajero,
                 {
                     model: Compra,
-                    as: 'compra'
-                },
-                {
-                    model: Viaje,
-                    as: 'viaje'
+                    include: [Viaje]
                 }
             ]
         });
@@ -98,9 +83,11 @@ const createBoleto = async (req, res) => {
 
         const boletoCompleto = await Boleto.findByPk(nuevoBoleto.codigo, {
             include: [
-                { model: Pasajero, as: 'pasajero' },
-                { model: Compra, as: 'compra' },
-                { model: Viaje, as: 'viaje' }
+                Pasajero,
+                {
+                    model: Compra,
+                    include: [Viaje]
+                }
             ]
         });
 
@@ -126,9 +113,11 @@ const updateBoleto = async (req, res) => {
 
         const boletoCompleto = await Boleto.findByPk(id, {
             include: [
-                { model: Pasajero, as: 'pasajero' },
-                { model: Compra, as: 'compra' },
-                { model: Viaje, as: 'viaje' }
+                Pasajero,
+                {
+                    model: Compra,
+                    include: [Viaje]
+                }
             ]
         });
 

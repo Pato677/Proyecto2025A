@@ -24,7 +24,7 @@ function formatearFechaLarga(fechaStr) {
 function TicketPage() {
   const [searchParams] = useSearchParams();
   const compraId = searchParams.get('compraId') || 'N/A';
-
+  const [boleto, setBoleto] = useState(null);
   const [compra, setCompra] = useState(null);
   const [boletoIndex, setBoletoIndex] = useState(0);
   const [viaje, setViaje] = useState(null);
@@ -58,12 +58,29 @@ function TicketPage() {
     }
   }, [compra]);
 
-  if (!compra || !viaje) {
+
+
+  if (!compra || !viaje ||boleto) {
     return <div>Cargando...</div>;
   }
 
   const boletos = compra.Boletos || [];
   const boletoActual = boletos[boletoIndex];
+
+  // Datos del pasajero y asiento desde el backend
+  const pasajero = boletoActual?.Pasajero || {};
+  const asiento = boletoActual?.asiento_id || '';
+  const codigoBoleto = boletoActual?.codigo || '';
+  const cedula = pasajero?.cedula || '';
+  const nombreCompleto = `${pasajero?.nombres || ''} ${pasajero?.apellidos || ''}`;
+
+
+  // Datos de viaje desde la compra
+  const viajes = boletoActual?.Compra?.Viaje || {};
+  const busNumero = viajes?.unidad_id || '';
+  const fechaSalida = viajes?.fecha_salida ? formatearFechaLarga(viajes.fecha_salida) : '';
+  const fechaLlegada = viajes?.fecha_llegada ? formatearFechaLarga(viajes.fecha_llegada) : '';
+
 
   // Prepara los datos para TicketInfo
   const datosViaje = boletoActual
