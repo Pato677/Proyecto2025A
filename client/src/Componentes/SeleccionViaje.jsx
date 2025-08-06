@@ -327,6 +327,7 @@ const TripSelectionPage = () => {
               setMostrarRegistro(true);
             }}
             onLoginExitoso={handleLoginExitoso}
+            shouldRedirect={false}
           />
         )}
 
