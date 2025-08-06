@@ -98,12 +98,18 @@ const ConductorModal = ({ open, onClose, onSave, initialData, mode }) => {
 
   return (
     <div className="conductor-modal-overlay" onClick={onClose}>
-      <div className="conductor-modal-container" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="conductor-modal-container"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          maxHeight: '90vh',
+          overflowY: 'auto'
+        }}
+      >
         <div className="conductor-modal-header">
           <h2>{mode === 'edit' ? 'Editar Personal' : 'Agregar Personal'}</h2>
           <button className="close-btn" onClick={onClose}>&times;</button>
         </div>
-        
         <form onSubmit={handleSubmit} className="conductor-form">
           <div className="form-group">
             <label htmlFor="nombre">Nombre Completo *</label>
