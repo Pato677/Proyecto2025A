@@ -107,3 +107,34 @@ body, html {
   margin-top: 2px;
   display: block;
 }
+
+.error-tiempo-real {
+  color: #d32f2f;
+  font-size: 0.85em;
+  margin-top: 2px;
+  display: block;
+  font-weight: 500;
+}
+
+.input-error {
+  border-color: #d32f2f !important;
+  background-color: #ffebee;
+  box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
+}
+
+.input-error:focus {
+  outline: none;
+  border-color: #d32f2f !important;
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.3);
+}
+
+/* Estilos para inputs normales al hacer focus */
+input:focus {
+  border-color: #3b90c7;
+  box-shadow: 0 0 0 2px rgba(59, 144, 199, 0.2);
+}
+
+select:focus {
+  border-color: #3b90c7;
+  box-shadow: 0 0 0 2px rgba(59, 144, 199, 0.2);
+}

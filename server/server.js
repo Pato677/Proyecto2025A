@@ -48,47 +48,24 @@ ensureDatabaseAndSync().then(() => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    // Rutas de autenticación (públicas)
-    const authRoutes = require('./routes/auth.routes');
-    app.use('/auth', authRoutes);
+// Aplicar rutas
+app.use('/usuarios', usuariosRoutes);
+//app.use('/api/compras', comprasRoutes);
 
-    // Rutas de usuarios
-    const usuariosRoutes = require('./routes/usuario.routes');
-    app.use('/usuarios', usuariosRoutes);
-
-    // Rutas principales
-    const cooperativasRoutes = require('./routes/cooperativas.routes');
-    const unidadesRoutes = require('./routes/unidades.routes');
-    const conductoresRoutes = require('./routes/conductores.routes');
-    const rutasRoutes = require('./routes/rutas.routes');
-    const viajesRoutes = require('./routes/viajes.routes');
-    const comprasRoutes = require('./routes/compras.routes');
-    const pasajerosRoutes = require('./routes/pasajeros.routes');
-    const asientosRoutes = require('./routes/asientos.routes');
-    const terminalesRoutes = require('./routes/terminales.routes');
-    const ciudadesRoutes = require('./routes/ciudades.routes');
-    const boletosRoutes = require('./routes/boletos.routes');
-    const ciudadesTerminalesRoutes = require('./routes/ciudadesTerminales.routes');
-
-    // Aplicar rutas
-    app.use('/usuarios', usuariosRoutes);
-    //app.use('/api/compras', comprasRoutes);
-
-    // Rutas con funciones
-    comprasRoutes(app);
-    rutasRoutes(app);
-    viajesRoutes(app);
-    unidadesRoutes(app);
-    asientosRoutes(app);
-    cooperativasRoutes(app);
-    conductoresRoutes(app);
-    terminalesRoutes(app);
-    ciudadesRoutes(app);
-    boletosRoutes(app);
-    ciudadesTerminalesRoutes(app);
-    pasajerosRoutes(app);
-
-    console.log('Todas las rutas cargadas exitosamente!');
+// Rutas con funciones
+rutasRoutes(app);
+viajesRoutes(app);
+unidadesRoutes(app);
+asientosRoutes(app);
+cooperativasRoutes(app);
+conductoresRoutes(app);
+terminalesRoutes(app);
+ciudadesRoutes(app);
+boletosRoutes(app);
+ciudadesTerminalesRoutes(app);
+pasajerosRoutes(app);
+comprasRoutes(app);
+console.log('Todas las rutas cargadas exitosamente!');
 
 
     // Middleware para manejar rutas no encontradas
