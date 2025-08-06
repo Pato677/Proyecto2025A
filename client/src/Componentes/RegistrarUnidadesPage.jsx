@@ -5,6 +5,7 @@ import Button from './Button';
 import UnidadModal from './UnidadModal';
 import SimuladorUbicacionModal from './SimularUbicacion';
 import { useAuth } from '../Componentes/AuthContext';
+import './Estilos/UnidadModal.css';
 
 function RegisterUnitsPage() {
   const [unidades, setUnidades] = useState([]);
