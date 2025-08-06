@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import logo from './Imagenes/Logo.png';
@@ -9,21 +9,6 @@ const HeaderAdmin = ({ onPerfilClick }) => {
   const { usuario, logout } = useAuth();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef(null);
-
-  // Cerrar el dropdown cuando se hace clic fuera
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   // Obtener el nombre a mostrar según el rol del usuario
   const getNombreUsuario = () => {
@@ -53,7 +38,7 @@ const HeaderAdmin = ({ onPerfilClick }) => {
   };
 
   const handlePerfilClick = () => {
-    setShowDropdown(false);
+    // No cerrar el menú automáticamente para permitir al usuario mantenerlo abierto
     
     // Bloquear acceso al perfil para superusers
     if (usuario && usuario.rol === 'superuser') {
@@ -69,6 +54,7 @@ const HeaderAdmin = ({ onPerfilClick }) => {
   };
 
   const handleLogoutClick = () => {
+    // Cerrar el menú solo al hacer logout ya que redirige a otra página
     setShowDropdown(false);
     logout();
     navigate('/Inicio');
@@ -86,7 +72,7 @@ const HeaderAdmin = ({ onPerfilClick }) => {
           <span>Español</span>
         </div>
         <span className="header-admin__divider">|</span>
-        <div className="header-admin__user-menu" ref={dropdownRef}>
+        <div className="header-admin__user-menu">
           <div 
             className="header-admin__option header-admin__user-toggle"
             onClick={() => setShowDropdown(!showDropdown)}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Estilos/styles.css';
 import Logo from './Imagenes/Logo.png';
 import { useNavigate } from 'react-router-dom';
-import { FaGlobe, FaUser } from 'react-icons/fa';
+import { FaGlobe, FaUser, FaChevronDown } from 'react-icons/fa';
 
 function Header({
   showSearch = true,
@@ -34,7 +34,11 @@ function Header({
     } else {
       navigate('/PerfilUsuario');
     }
-    setMenuOpen(false);
+    // No cerrar el menú automáticamente
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
   };
 
   const progressPercent = Math.max(0, Math.min(100, ((currentStep - 1) / (totalSteps - 1)) * 100));
@@ -72,17 +76,27 @@ function Header({
 
         {showUser && (
           usuario ? (
-            <div
-              className="user-dropdown"
-              onMouseEnter={() => setMenuOpen(true)}
-              onMouseLeave={() => setMenuOpen(false)}
-            >
-              <FaUser className="ticket-icon" />
-              <span className="ticket-login">
-                {usuario.nombres ? usuario.nombres.split(' ')[0] : 
-                 usuario.correo ? usuario.correo.split('@')[0] : 
-                 'Usuario'} 
-              </span>
+            <div className="user-dropdown">
+              <div 
+                className="user-toggle" 
+                onClick={toggleMenu}
+                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+              >
+                <FaUser className="ticket-icon" />
+                <span className="ticket-login">
+                  {usuario.nombres ? usuario.nombres.split(' ')[0] : 
+                   usuario.correo ? usuario.correo.split('@')[0] : 
+                   'Usuario'} 
+                </span>
+                <FaChevronDown 
+                  className="ticket-icon"
+                  style={{ 
+                    marginLeft: '5px', 
+                    transform: menuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.2s ease'
+                  }} 
+                />
+              </div>
               {menuOpen && (
                 <div className="dropdown-content">
                   <div onClick={handlePerfilClick}>Mi perfil</div>
