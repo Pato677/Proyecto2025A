@@ -1,10 +1,11 @@
 require('dotenv').config();
 const { Sequelize } = require("sequelize");
 
-const username = "root";
-const password = "root";
+const username = process.env.DB_USER;
+const password = process.env.DB_PASS;
 const bdd_name = "transportesec";
 const hostName = "localhost";
+
 
 // Exporta la instancia para los modelos
 const sequelize = new Sequelize(bdd_name, username, password, {
