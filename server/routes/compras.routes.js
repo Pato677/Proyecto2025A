@@ -1,17 +1,16 @@
-const express = require('express');
-const router = express.Router();
 const comprasController = require('../controllers/compras.controller');
 
-// POST /api/compras - Crear compra completa
-router.post('/', comprasController.crearCompraCompleta);
+module.exports = function(app){
 
-// GET /api/compras - Obtener todas las compras
-router.get('/', comprasController.obtenerCompras);
+    // POST /api/compras - Crear compra completa
+    app.post('/compras', comprasController.crearCompraCompleta);
 
-// GET /api/compras/:id - Obtener compra por ID
-router.get('/:id', comprasController.obtenerCompraPorId);
+    // GET /api/compras - Obtener todas las compras
+    app.get('/compras', comprasController.obtenerCompras);
 
-// POST /api/compras/verificar-asientos - Verificar disponibilidad de asientos
-router.post('/verificar-asientos', comprasController.verificarDisponibilidadAsientos);
+    // GET /api/compras/:id - Obtener compra por ID
+    app.get('/compras/:id', comprasController.obtenerCompraPorId);
 
-module.exports = router;
+    // POST /api/compras/verificar-asientos - Verificar disponibilidad de asientos
+    app.post('/compras/verificar-asientos', comprasController.verificarDisponibilidadAsientos);
+};

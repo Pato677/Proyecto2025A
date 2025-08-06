@@ -1,17 +1,16 @@
-const express = require('express');
-const router = express.Router();
-const pasajerosController = require('../controllers/pasajeros.controller');
+const PasajerosController = require('../controllers/pasajeros.controller');
 
-// GET /api/pasajeros - Obtener todos los pasajeros
-router.get('/', pasajerosController.obtenerPasajeros);
+module.exports = function(app){
 
-// GET /api/pasajeros/:id - Obtener pasajero por ID
-router.get('/:id', pasajerosController.obtenerPasajeroPorId);
+    // Obtener todos los pasajeros
+    app.get('/pasajeros', PasajerosController.obtenerPasajeros);
 
-// GET /api/pasajeros/cedula/:cedula - Buscar pasajero por cédula
-router.get('/cedula/:cedula', pasajerosController.buscarPasajeroPorCedula);
+    // Obtener pasajero por ID
+    app.get('/pasajeros/:id', PasajerosController.obtenerPasajeroPorId);
 
-// POST /api/pasajeros - Crear nuevo pasajero
-router.post('/', pasajerosController.crearPasajero);
+    // Buscar pasajero por cédula
+    app.get('/pasajeros/cedula/:cedula', PasajerosController.buscarPasajeroPorCedula);
 
-module.exports = router;
+    // Crear nuevo pasajero
+    app.post('/pasajeros', PasajerosController.crearPasajero);
+};
