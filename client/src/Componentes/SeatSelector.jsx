@@ -2,12 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Estilos/SeatSelector.css';
 
-const SeatSelector = ({ onSeleccionAsiento, asientosSeleccionados = [], numeroPasajeros = 1, viajeId }) => {
-  const [occupiedSeats, setOccupiedSeats] = useState([]);
+const SeatSelector = ({ onSeleccionAsiento, asientosSeleccionados = [], numeroPasajeros = 1, viajeId, asientosOcupadosNumeraciones = [] }) => {
   const [availableSeats, setAvailableSeats] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // Cargar asientos disponibles y ocupados
+  // Usar los asientos ocupados que vienen como prop, o hacer fallback a la llamada API
+  const occupiedSeats = asientosOcupadosNumeraciones.length > 0 ? asientosOcupadosNumeraciones : [];
+  
+  console.log('SeatSelector - Asientos ocupados recibidos como prop:', asientosOcupadosNumeraciones);
+  console.log('SeatSelector - Asientos ocupados que se usarán:', occupiedSeats);
+  
+  // Cargar solo los asientos disponibles
   useEffect(() => {
     const cargarAsientos = async () => {
       try {
@@ -20,14 +25,7 @@ const SeatSelector = ({ onSeleccionAsiento, asientosSeleccionados = [], numeroPa
             .map(asiento => asiento.numeracion)
             .sort((a, b) => parseInt(a) - parseInt(b)); // Ordenar numéricamente
           setAvailableSeats(asientos);
-        }
-        
-        // Obtener asientos ocupados del viaje específico
-        if (viajeId) {
-          const ocupadosResponse = await axios.get(`http://localhost:8000/asientos/ocupados/${viajeId}`);
-          if (ocupadosResponse.data.success) {
-            setOccupiedSeats(ocupadosResponse.data.data || []);
-          }
+          console.log('SeatSelector - Asientos disponibles cargados:', asientos);
         }
         
       } catch (error) {
@@ -35,14 +33,13 @@ const SeatSelector = ({ onSeleccionAsiento, asientosSeleccionados = [], numeroPa
         // En caso de error, usar asientos del 1 al 44 como fallback
         const asientosFallback = Array.from({ length: 44 }, (_, i) => (i + 1).toString());
         setAvailableSeats(asientosFallback);
-        setOccupiedSeats(['3', '7', '15', '22', '28']);
       } finally {
         setLoading(false);
       }
     };
     
     cargarAsientos();
-  }, [viajeId]);
+  }, []);
   
   const handleSeatClick = (seat) => {
     const seatStr = seat.toString();
@@ -95,6 +92,12 @@ const SeatSelector = ({ onSeleccionAsiento, asientosSeleccionados = [], numeroPa
             const seatStr = seat.toString();
             const isOccupied = occupiedSeats.map(s => s.toString()).includes(seatStr);
             const isSelected = asientosSeleccionados.map(s => s.toString()).includes(seatStr);
+            
+            // Debug para ver qué está pasando con cada asiento
+            if (isOccupied) {
+              console.log(`Asiento ${seatStr} está marcado como ocupado`);
+            }
+            
             return (
               <button
                 key={seat}

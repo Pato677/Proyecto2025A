@@ -127,32 +127,36 @@ const RegistroPasajerosPage = () => {
   const { usuario, logout } = useAuth();
   const formRef = useRef();
 
-  // Variable de prueba para el número de pasajeros (posteriormente se obtendrá via query)
-  // Cambiar este valor para probar con diferentes números de pasajeros
-  
-  
-  // Obtener número de pasajeros de la URL
+  // Obtener parámetros de la URL
   const params = new URLSearchParams(location.search);
-   // Usar la variable de prueba
-  
-  // Limpiar localStorage si es una nueva compra (parámetro fresh)
-  useEffect(() => {
-    const isFreshStart = params.get('fresh') === 'true';
-    if (isFreshStart) {
-      localStorage.removeItem('pasajerosData');
-      localStorage.removeItem('asientosSeleccionados');
-      console.log('Nueva compra iniciada - localStorage limpiado');
-    }
-  }, []);
-  
-  // Obtener datos de pasajeros existentes desde localStorage
-  const datosExistentes = localStorage.getItem('pasajerosData') 
-    ? JSON.parse(localStorage.getItem('pasajerosData')) 
-    : null;
+  const numeroPasajeros = parseInt(params.get('pasajeros'), 10);
+  const viajeId = parseInt(params.get('viajeId'), 10);
 
-   const numeroPasajerosPrueba = parseInt(params.get('pasajeros'), 10);
-  const pasajeros = numeroPasajerosPrueba; // Usar la variable de prueba
-  const viajeIdPrueba = parseInt(params.get('viajeId'), 10); // ID del viaje para pruebas (posteriormente se obtendrá via query)
+  // Función para decodificar datos de pasajeros desde URL
+  const decodificarDatosPasajeros = () => {
+    const datosEncoded = params.get('datosP');
+    if (datosEncoded) {
+      try {
+        const datosDecoded = decodeURIComponent(datosEncoded);
+        return JSON.parse(datosDecoded);
+      } catch (error) {
+        console.error('Error al decodificar datos de pasajeros:', error);
+        return null;
+      }
+    }
+    return null;
+  };
+
+  // Función para codificar datos de pasajeros para URL
+  const codificarDatosPasajeros = (datos) => {
+    try {
+      const datosString = JSON.stringify(datos);
+      return encodeURIComponent(datosString);
+    } catch (error) {
+      console.error('Error al codificar datos de pasajeros:', error);
+      return '';
+    }
+  };
   // Estado para el formulario actual
   const [formIndex, setFormIndex] = useState(0);
   const [mostrarLogin, setMostrarLogin] = useState(false);
@@ -161,14 +165,16 @@ const RegistroPasajerosPage = () => {
   const [erroresValidacion, setErroresValidacion] = useState([]);
   const [mostrarErrores, setMostrarErrores] = useState(false);
 
-  // Estado para los datos de los pasajeros - usar datos existentes si están disponibles
+  // Estado para los datos de los pasajeros - usar datos de URL si están disponibles
   const [datosPasajeros, setDatosPasajeros] = useState(() => {
-    if (datosExistentes) {
-      return datosExistentes;
+    const datosDeURL = decodificarDatosPasajeros();
+    if (datosDeURL && datosDeURL.length === numeroPasajeros) {
+      console.log('Datos de pasajeros cargados desde URL:', datosDeURL);
+      return datosDeURL;
     }
     
-    // Crear array de pasajeros vacío (sin precargar datos automáticamente)
-    return Array.from({ length: pasajeros }, () => ({
+    // Crear array de pasajeros vacío
+    const pasajerosVacios = Array.from({ length: numeroPasajeros }, () => ({
       nombres: '',
       apellidos: '',
       cedula: '',
@@ -178,6 +184,9 @@ const RegistroPasajerosPage = () => {
       correo: '',
       telefono: ''
     }));
+
+    console.log('Iniciando con datos vacíos para', numeroPasajeros, 'pasajeros');
+    return pasajerosVacios;
   });
 
   // Función para cargar los datos del usuario en el titular
@@ -217,15 +226,22 @@ const RegistroPasajerosPage = () => {
     console.log('Datos cargados para el titular:', datosUsuario);
   };
 
-  // Esta función se pasará al formulario
+  // Esta función navegará con los datos en la URL
   const handleRegistroExitoso = () => {
-    // Guardar los datos de los pasajeros en localStorage
-    localStorage.setItem('pasajerosData', JSON.stringify(datosPasajeros));
+    console.log('Navegando a selección de asientos con datos:', datosPasajeros);
     
-    // Pasar solo el ID del viaje por URL
-    const params = new URLSearchParams(location.search);
-    params.set('viajeId', viajeIdPrueba);
-    navigate(`/SeleccionAsientosPage?${params.toString()}`);
+    // Crear nueva URL con todos los parámetros necesarios
+    const nuevosParams = new URLSearchParams();
+    nuevosParams.set('viajeId', viajeId.toString());
+    nuevosParams.set('pasajeros', numeroPasajeros.toString());
+    
+    // Codificar datos de pasajeros en la URL
+    const datosEncoded = codificarDatosPasajeros(datosPasajeros);
+    if (datosEncoded) {
+      nuevosParams.set('datosP', datosEncoded);
+    }
+    
+    navigate(`/SeleccionAsientosPage?${nuevosParams.toString()}`);
   };
 
   const handleLoginExitoso = (usuarioData) => {
@@ -244,7 +260,7 @@ const RegistroPasajerosPage = () => {
   const validarTodosPasajeros = () => {
     const errores = [];
     
-    for (let i = 0; i < pasajeros; i++) {
+    for (let i = 0; i < numeroPasajeros; i++) {
       const pasajero = datosPasajeros[i];
       const numeroPasajero = i + 1;
       
@@ -362,13 +378,13 @@ const RegistroPasajerosPage = () => {
               onRegistroExitoso={handleRegistroExitoso}
             />
             <div className="info-pasajero">
-              Pasajero {formIndex + 1} de {pasajeros}
+              Pasajero {formIndex + 1} de {numeroPasajeros}
             </div>
           </div>
           <button
             className="pagina-btn flecha-pasajero"
             onClick={() => setFormIndex(formIndex + 1)}
-            disabled={formIndex === pasajeros - 1}
+            disabled={formIndex === numeroPasajeros - 1}
             aria-label="Pasajero siguiente"
           >
             <ChevronRight size={28} />
@@ -376,9 +392,15 @@ const RegistroPasajerosPage = () => {
         </div>
         <div className="contenedor-botones">
           <Button text="Atras" width='150px' onClick={() => {
-            // Guardar datos actuales en localStorage antes de navegar hacia atrás
-            localStorage.setItem('pasajerosData', JSON.stringify(datosPasajeros));
-            navigate(-1);
+            // Navegar hacia atrás manteniendo los datos actuales en la URL
+            const nuevosParams = new URLSearchParams(location.search);
+            const datosEncoded = codificarDatosPasajeros(datosPasajeros);
+            if (datosEncoded) {
+              nuevosParams.set('datosP', datosEncoded);
+            }
+            
+            // Navegar específicamente a la página de resultados con todos los parámetros preservados
+            navigate(`/ResultadosBusquedaPage?${nuevosParams.toString()}`);
           }} />
           <Button text="Aceptar" width='150px' onClick={handleAceptar} />
         </div>
