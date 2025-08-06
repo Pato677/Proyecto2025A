@@ -3,6 +3,9 @@ const { Sequelize } = require("sequelize");
 
 const username = process.env.DB_USER;
 const password = process.env.DB_PASS;
+//const username = "root";
+//const password = "francis2569";
+//const password = "root";
 const bdd_name = "transportesec";
 const hostName = "localhost";
 

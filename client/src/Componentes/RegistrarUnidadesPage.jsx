@@ -4,52 +4,79 @@ import './Estilos/RegisterUnits.css';
 import Button from './Button';
 import UnidadModal from './UnidadModal';
 import SimuladorUbicacionModal from './SimularUbicacion';
+import { useAuth } from '../Componentes/AuthContext';
 
 function RegisterUnitsPage() {
   const [unidades, setUnidades] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState('add'); 
+  const [modalMode, setModalMode] = useState('add');
   const [unidadEdit, setUnidadEdit] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const unidadesPorPagina = 8;
   const [mostrarSimulador, setMostrarSimulador] = useState(false);
+  const { usuario } = useAuth();
 
   useEffect(() => {
-    axios.get('http://localhost:3000/unidades')
+    if (!usuario?.id) return;
+
+    axios.get(`http://localhost:8000/unidades/cooperativa/${usuario.id}`)
       .then(res => {
-        setUnidades(res.data);
-        if (res.data.length > 0) {
-          setSelectedId(res.data[0].id);
+        const unidadesArray = res.data.data;
+        if (Array.isArray(unidadesArray)) {
+          setUnidades(unidadesArray);
+          if (unidadesArray.length > 0) {
+            setSelectedId(unidadesArray[0].id);
+          }
+        } else {
+          console.error('Respuesta inesperada:', res.data);
+          setUnidades([]);
         }
       })
-      .catch(() => setUnidades([]));
-  }, []);
+      .catch(error => {
+        console.error('Error al cargar unidades:', error);
+        setUnidades([]);
+      });
+  }, [usuario]);
 
   const totalPaginas = Math.ceil(unidades.length / unidadesPorPagina);
   const startIdx = (currentPage - 1) * unidadesPorPagina;
   const endIdx = startIdx + unidadesPorPagina;
-  const unidadesPagina = unidades.slice(startIdx, endIdx);
+  const unidadesPagina = Array.isArray(unidades) ? unidades.slice(startIdx, endIdx) : [];
 
   const unidadSeleccionada = unidades.find(u => u.id === selectedId);
 
-  const handleSaveUnidad = (nuevaUnidad) => {
+  const handleSaveUnidad = (datosUnidad) => {
+    const payload = {
+      placa: datosUnidad.placa,
+      numeroUnidad: datosUnidad.numeroUnidad,
+      imagen: datosUnidad.imagen,
+      cooperativaId: usuario.id,
+      conductorId: datosUnidad.conductor_id,
+      controladorId: datosUnidad.controlador_id
+    };
+
     if (modalMode === 'add') {
-      const newId = unidades.length > 0 ? Math.max(...unidades.map(u => Number(u.id))) + 1 : 1;
-      const unidadConId = { ...nuevaUnidad, id: newId };
-      axios.post('http://localhost:3000/unidades', unidadConId)
+      axios.post('http://localhost:8000/unidades/cooperativa', payload)
         .then(res => {
           setUnidades(prev => [...prev, res.data]);
           setShowModal(false);
           setSelectedId(res.data.id);
+        })
+        .catch(error => {
+          console.error('Error al guardar unidad:', error.response?.data || error.message);
+          alert("Error al guardar unidad: " + (error.response?.data?.error || error.message));
         });
     } else if (modalMode === 'edit' && unidadEdit) {
-      axios.put(`http://localhost:3000/unidades/${unidadEdit.id}`, { ...nuevaUnidad, id: unidadEdit.id })
+      axios.put(`http://localhost:8000/unidades/${unidadEdit.id}`, payload)
         .then(res => {
           setUnidades(prev => prev.map(u => u.id === unidadEdit.id ? res.data : u));
           setShowModal(false);
-          setSelectedId(unidadEdit.id);
           setUnidadEdit(null);
+        })
+        .catch(error => {
+          console.error('Error al actualizar unidad:', error.response?.data || error.message);
+          alert("Error al actualizar unidad: " + (error.response?.data?.error || error.message));
         });
     }
   };
@@ -62,25 +89,33 @@ function RegisterUnitsPage() {
 
   const handleActualizar = () => {
     if (!selectedId) return;
-    axios.get(`http://localhost:3000/unidades/${selectedId}`)
-      .then(res => {
-        setUnidadEdit(res.data);
-        setModalMode('edit');
-        setShowModal(true);
+    const unidad = unidades.find(u => u.id === selectedId);
+    if (unidad) {
+      setUnidadEdit({
+        id: unidad.id,
+        placa: unidad.placa,
+        numeroUnidad: unidad.numero_unidad,
+        imagen: unidad.imagen_path,
+        conductor_id: unidad.conductor_id,
+        controlador_id: unidad.controlador_id
       });
+      setModalMode('edit');
+      setShowModal(true);
+    }
   };
 
   const handleEliminar = () => {
     if (!selectedId) return;
-    axios.delete(`http://localhost:3000/unidades/${selectedId}`)
+    if (!window.confirm('¿Estás seguro de que deseas eliminar esta unidad?')) return;
+
+    axios.delete(`http://localhost:8000/unidades/${selectedId}`)
       .then(() => {
         setUnidades(prev => prev.filter(u => u.id !== selectedId));
-        setTimeout(() => {
-          setSelectedId(prev => {
-            const restantes = unidades.filter(u => u.id !== selectedId);
-            return restantes.length > 0 ? restantes[0].id : null;
-          });
-        }, 0);
+        setSelectedId(null);
+      })
+      .catch(error => {
+        console.error('Error al eliminar unidad:', error.response?.data || error.message);
+        alert("Error al eliminar unidad: " + (error.response?.data?.error || error.message));
       });
   };
 
@@ -105,8 +140,6 @@ function RegisterUnitsPage() {
                     <th>Nº de unidad</th>
                     <th>Conductor</th>
                     <th>Controlador</th>
-                    <th>Nº de pisos</th>
-                    <th>Nro de asientos</th>
                     <th>Ubicación</th>
                   </tr>
                 </thead>
@@ -120,11 +153,9 @@ function RegisterUnitsPage() {
                         style={{ cursor: 'pointer' }}
                       >
                         <td>{unidad.placa}</td>
-                        <td>{unidad.numeroUnidad}</td>
-                        <td>{unidad.conductor}</td>
-                        <td>{unidad.controlador}</td>
-                        <td>{unidad.pisos}</td>
-                        <td>{unidad.asientos}</td>
+                        <td>{unidad.numero_unidad}</td>
+                        <td>{unidad.Conductor?.nombre || 'N/A'}</td>
+                        <td>{unidad.Controlador?.nombre || 'N/A'}</td>
                         <td>
                           <button
                             className="ver-ruta-btn"
@@ -137,7 +168,7 @@ function RegisterUnitsPage() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={7} style={{ textAlign: 'center' }}>No hay unidades registradas</td>
+                      <td colSpan={5} style={{ textAlign: 'center' }}>No hay unidades registradas</td>
                     </tr>
                   )}
                 </tbody>
@@ -170,7 +201,7 @@ function RegisterUnitsPage() {
 
             <div className="register-units-image-box">
               <img
-                src={unidadSeleccionada?.imagen || "https://via.placeholder.com/400x200?text=Sin+imagen"}
+                src={unidadSeleccionada?.imagen_path || "https://via.placeholder.com/400x200?text=Sin+imagen"}
                 alt="Bus"
                 className="register-units-image"
               />
@@ -185,7 +216,7 @@ function RegisterUnitsPage() {
         </div>
 
         <div className="register-units-btn-group">
-          <Button text="Atras" width='200px'/>
+          <Button text="Atras" width='200px' />
         </div>
       </main>
 

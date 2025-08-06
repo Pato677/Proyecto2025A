@@ -1,21 +1,16 @@
 const { Conductor, Cooperativa } = require('../models');
 
-// Obtener todos los conductores
+// Obtener todos los conductores -- FUNCIONA
 const getAllConductores = async (req, res) => {
     try {
-        const conductores = await Conductor.findAll({
-            include: [
-                {
-                    model: Cooperativa,
-                    as: 'cooperativa',
-                    attributes: ['id', 'razonSocial']
-                }
-            ]
-        });
+        const conductores = await Conductor.findAll();
         res.json(conductores);
     } catch (error) {
         console.error('Error al obtener conductores:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        res.status(500).json({ 
+            error: 'Error interno del servidor',
+            message: error.message 
+        });
     }
 };
 

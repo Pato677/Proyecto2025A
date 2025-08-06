@@ -6,13 +6,14 @@ import RutaModal from './RutasModal';
 import RutaForm from './RutaForm';
 import './Estilos/RutasPanel.css';
 import axios from 'axios';
+import { useAuth } from './AuthContext';
 
 const rutasPorPagina = 4;
 // URL de la API del backend
 const API_URL_Rutas = "http://localhost:8000/rutas";
 const API_URL_Terminales = "http://localhost:8000/terminales";
 
-const RutasPanel = ({ cooperativaId = 1 }) => { // Por defecto cooperativa 1 para pruebas
+const RutasPanel = () => { // Por defecto cooperativa 1 para pruebas
   const [rutas, setRutas] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -31,17 +32,18 @@ const RutasPanel = ({ cooperativaId = 1 }) => { // Por defecto cooperativa 1 par
     totalItems: 0,
     itemsPerPage: rutasPorPagina
   });
+  const { usuario } = useAuth();
 
   // 🔄 Recargar rutas desde el servidor con paginación por cooperativa
   const recargarRutas = useCallback(async (page = currentPage) => {
     setLoading(true);
     try {
       // Usar endpoint por cooperativa
-      const response = await axios.get(`${API_URL_Rutas}/cooperativa/${cooperativaId}?page=${page}&limit=${rutasPorPagina}`);
+      const response = await axios.get(`${API_URL_Rutas}/cooperativa/${usuario.id}?page=${page}&limit=${rutasPorPagina}`);
       if (response.data.success) {
         setRutas(response.data.data);
         setPagination(response.data.pagination);
-        console.log(`Rutas cargadas para cooperativa ${cooperativaId}: ${response.data.data.length} de ${response.data.pagination.totalItems}`);
+        console.log(`Rutas cargadas para cooperativa ${usuario.id}: ${response.data.data.length} de ${response.data.pagination.totalItems}`);
       } else {
         setRutas([]);
         console.error('Error en la respuesta:', response.data.message);
@@ -50,19 +52,6 @@ const RutasPanel = ({ cooperativaId = 1 }) => { // Por defecto cooperativa 1 par
       console.error('Error al cargar rutas:', error);
       setRutas([]);
       // Mostrar datos de ejemplo si falla la conexión
-      setRutas([
-        {
-          id: 1,
-          numeroRuta: "R-001",
-          ciudadOrigen: "Quito",
-          terminalOrigen: "Terminal Terrestre Quitumbe",
-          ciudadDestino: "Guayaquil",
-          terminalDestino: "Terminal Terrestre",
-          horaSalida: "08:00",
-          horaLlegada: "16:00",
-          paradas: ["Santo Domingo", "Quevedo", "Babahoyo"]
-        }
-      ]);
     } finally {
       setLoading(false);
     }
@@ -109,7 +98,7 @@ const RutasPanel = ({ cooperativaId = 1 }) => { // Por defecto cooperativa 1 par
     recargarRutas(1);
     //cargarTerminales();
     cargarCooperativas();
-  }, [cooperativaId]); // Recargar cuando cambie la cooperativa
+  }, [usuario.id]); // Recargar cuando cambie la cooperativa
 
   // Guardar nueva ruta o editar ruta existente
   const handleSaveRuta = async (nuevaRuta) => {
@@ -125,7 +114,7 @@ const RutasPanel = ({ cooperativaId = 1 }) => { // Por defecto cooperativa 1 par
           terminalDestinoId: nuevaRuta.terminalDestinoId,
           horaSalida: nuevaRuta.horaSalida,
           horaLlegada: nuevaRuta.horaLlegada,
-          cooperativaId: cooperativaId // Usar el ID de la cooperativa actual
+          cooperativaId: usuario.id // Usar el ID de la cooperativa actual
         };
 
         const response = await axios.post(API_URL_Rutas, rutaData);
@@ -145,9 +134,17 @@ const RutasPanel = ({ cooperativaId = 1 }) => { // Por defecto cooperativa 1 par
           terminalOrigenId: nuevaRuta.terminalOrigenId,
           terminalDestinoId: nuevaRuta.terminalDestinoId,
           horaSalida: nuevaRuta.horaSalida,
-          horaLlegada: nuevaRuta.horaLlegada,
-          paradas: Array.isArray(nuevaRuta.paradas) ? nuevaRuta.paradas : nuevaRuta.paradas.split(',').map(p => p.trim())
+          horaLlegada: nuevaRuta.horaLlegada
         };
+
+        // Solo incluir paradas si existen y no son undefined
+        if (nuevaRuta.paradas !== undefined && nuevaRuta.paradas !== null) {
+          if (Array.isArray(nuevaRuta.paradas)) {
+            rutaData.paradas = nuevaRuta.paradas;
+          } else if (typeof nuevaRuta.paradas === 'string') {
+            rutaData.paradas = nuevaRuta.paradas.split(',').map(p => p.trim());
+          }
+        }
 
         const response = await axios.put(`${API_URL_Rutas}/${rutaEdit.id}`, rutaData);
         if (response.data.success) {

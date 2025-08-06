@@ -1,7 +1,7 @@
 const ConductoresController = require('../controllers/conductores.controller');
 
 module.exports = (app) => {
-    // Obtener todos los conductores
+    // Obtener todos los conductores -- FUNCIONA
     app.get('/conductores', ConductoresController.getAllConductores);
     
     // Obtener conductor por ID

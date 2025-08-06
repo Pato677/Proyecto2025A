@@ -29,7 +29,7 @@ const getAllUnidades = async (req, res) => {
     }
 };
 
-// Obtener unidad por ID
+// Obtener unidad por ID por cooperativa
 const getUnidadById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -64,9 +64,9 @@ const getUnidadById = async (req, res) => {
     }
 };
 
-// Crear nueva unidad
+// Crear nueva unidad para una cooperativa específica
 const createUnidad = async (req, res) => {
-    try {
+    /*try {
         const { placa, numeroUnidad, pisos, asientos, imagen, cooperativaId, conductorId, controladorId } = req.body;
         
         const nuevaUnidad = await Unidad.create({
@@ -88,35 +88,27 @@ const createUnidad = async (req, res) => {
         } else {
             res.status(500).json({ error: 'Error interno del servidor' });
         }
-    }
-};
-
-// Actualizar unidad
-const updateUnidad = async (req, res) => {
+    }*/
     try {
-        const { id } = req.params;
-        const { placa, numeroUnidad, pisos, asientos, imagen, cooperativaId, conductorId, controladorId, estado } = req.body;
+        const { placa, numeroUnidad, imagen, cooperativaId, conductorId, controladorId } = req.body;
         
-        const unidad = await Unidad.findByPk(id);
-        if (!unidad) {
-            return res.status(404).json({ error: 'Unidad no encontrada' });
+        // Validar que todos los campos requeridos estén presentes
+        if (!placa || !numeroUnidad || !cooperativaId || !conductorId || !controladorId) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
         }
         
-        await unidad.update({
+        const nuevaUnidad = await Unidad.create({
             placa,
-            numeroUnidad,
-            pisos,
-            asientos,
-            imagen,
-            cooperativaId,
-            conductorId,
-            controladorId,
-            estado
+            numero_unidad: numeroUnidad,
+            imagen_path: imagen,
+            cooperativa_id: cooperativaId,
+            conductor_id: conductorId,
+            controlador_id: controladorId
         });
         
-        res.json(unidad);
+        res.status(201).json(nuevaUnidad);
     } catch (error) {
-        console.error('Error al actualizar unidad:', error);
+        console.error('Error al crear unidad:', error);
         if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
             res.status(400).json({ error: error.message });
         } else {
@@ -124,6 +116,39 @@ const updateUnidad = async (req, res) => {
         }
     }
 };
+
+// Actualizar unidad POR ID DE UNIDAD
+// Se espera que el ID de la unidad se pase como parámetro en la URL
+const updateUnidad = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { placa, numeroUnidad, imagen, cooperativaId, conductorId, controladorId } = req.body;
+
+    const unidad = await Unidad.findByPk(id);
+    if (!unidad) {
+      return res.status(404).json({ error: 'Unidad no encontrada' });
+    }
+
+    await unidad.update({
+      placa,
+      numero_unidad: numeroUnidad,
+      imagen_path: imagen,
+      cooperativa_id: cooperativaId,
+      conductor_id: conductorId,
+      controlador_id: controladorId
+    });
+
+    res.json(unidad);
+  } catch (error) {
+    console.error('Error al actualizar unidad:', error);
+    if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  }
+};
+
 
 // Eliminar unidad
 const deleteUnidad = async (req, res) => {

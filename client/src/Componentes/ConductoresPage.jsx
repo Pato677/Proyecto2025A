@@ -14,7 +14,7 @@ function ConductoresPage() {
   const conductoresPorPagina = 8;
 
   // URL base consistente
-  const API_URL = 'http://localhost:3000';
+  const API_URL = 'http://localhost:8000';
 
   // Cargar conductores al inicio
   useEffect(() => {

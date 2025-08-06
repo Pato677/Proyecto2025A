@@ -1,23 +1,36 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Estilos/UnidadModal.css';
 
 const initialState = {
   placa: '',
   numeroUnidad: '',
-  conductor: '',
-  controlador: '',
-  pisos: '',
-  asientos: '',
+  conductor_id: '',
+  controlador_id: '',
   imagen: ''
 };
 
 const UnidadModal = ({ open, onClose, onSave, initialData, mode }) => {
   const [form, setForm] = useState(initialData || initialState);
   const [errores, setErrores] = useState({});
+  const [conductores, setConductores] = useState([]);
 
   useEffect(() => {
-    if (initialData) setForm(initialData);
-    else setForm(initialState);
+    axios.get('http://localhost:8000/conductores')
+      .then(res => setConductores(res.data))
+      .catch(() => setConductores([]));
+  }, []);
+
+  useEffect(() => {
+    if (initialData) {
+      setForm({
+        ...initialData,
+        conductor_id: initialData.conductor_id || '',
+        controlador_id: initialData.controlador_id || ''
+      });
+    } else {
+      setForm(initialState);
+    }
   }, [initialData, open]);
 
   if (!open) return null;
@@ -42,17 +55,11 @@ const UnidadModal = ({ open, onClose, onSave, initialData, mode }) => {
     if (!form.numeroUnidad || isNaN(form.numeroUnidad)) {
       errs.numeroUnidad = 'Ingrese un número de unidad válido';
     }
-    if (!form.conductor) {
-      errs.conductor = 'Ingrese el nombre del conductor';
+    if (!form.conductor_id) {
+      errs.conductor_id = 'Seleccione un conductor';
     }
-    if (!form.controlador) {
-      errs.controlador = 'Ingrese el nombre del controlador';
-    }
-    if (!form.pisos || isNaN(form.pisos)) {
-      errs.pisos = 'Ingrese el número de pisos';
-    }
-    if (!form.asientos || isNaN(form.asientos)) {
-      errs.asientos = 'Ingrese el número de asientos';
+    if (!form.controlador_id) {
+      errs.controlador_id = 'Seleccione un controlador';
     }
     if (!form.imagen) {
       errs.imagen = 'Ingrese la URL o path de la imagen';
@@ -61,7 +68,12 @@ const UnidadModal = ({ open, onClose, onSave, initialData, mode }) => {
     setErrores(errs);
 
     if (Object.keys(errs).length === 0) {
-      onSave(form);
+      onSave({
+        ...form,
+        numeroUnidad: Number(form.numeroUnidad),
+        conductor_id: Number(form.conductor_id),
+        controlador_id: Number(form.controlador_id)
+      });
       setForm(initialState);
       setErrores({});
     }
@@ -95,52 +107,29 @@ const UnidadModal = ({ open, onClose, onSave, initialData, mode }) => {
             />
             {errores.numeroUnidad && <span className="error">{errores.numeroUnidad}</span>}
           </label>
+
           <label>
             Conductor*
-            <input
-              name="conductor"
-              type="text"
-              value={form.conductor}
-              onChange={handleChange}
-              placeholder="Nombre del conductor"
-            />
-            {errores.conductor && <span className="error">{errores.conductor}</span>}
+            <select name="conductor_id" value={form.conductor_id} onChange={handleChange}>
+              <option value="">Seleccione un conductor</option>
+              {conductores.map(c => (
+                <option key={c.id} value={c.id}>{c.nombre}</option>
+              ))}
+            </select>
+            {errores.conductor_id && <span className="error">{errores.conductor_id}</span>}
           </label>
+
           <label>
             Controlador*
-            <input
-              name="controlador"
-              type="text"
-              value={form.controlador}
-              onChange={handleChange}
-              placeholder="Nombre del controlador"
-            />
-            {errores.controlador && <span className="error">{errores.controlador}</span>}
+            <select name="controlador_id" value={form.controlador_id} onChange={handleChange}>
+              <option value="">Seleccione un controlador</option>
+              {conductores.map(c => (
+                <option key={c.id} value={c.id}>{c.nombre}</option>
+              ))}
+            </select>
+            {errores.controlador_id && <span className="error">{errores.controlador_id}</span>}
           </label>
-          <label>
-            N° de pisos*
-            <input
-              name="pisos"
-              type="number"
-              min={1}
-              value={form.pisos}
-              onChange={handleChange}
-              placeholder="Ej: 2"
-            />
-            {errores.pisos && <span className="error">{errores.pisos}</span>}
-          </label>
-          <label>
-            Nro de asientos*
-            <input
-              name="asientos"
-              type="number"
-              min={1}
-              value={form.asientos}
-              onChange={handleChange}
-              placeholder="Ej: 54"
-            />
-            {errores.asientos && <span className="error">{errores.asientos}</span>}
-          </label>
+
           <label>
             Imagen (URL o path)*
             <input
