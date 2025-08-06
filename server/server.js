@@ -36,9 +36,10 @@ const ciudadesTerminalesRoutes = require('./routes/ciudadesTerminales.routes');
 
 // Aplicar rutas
 app.use('/usuarios', usuariosRoutes);
-app.use('/api/compras', comprasRoutes);
+//app.use('/api/compras', comprasRoutes);
 
 // Rutas con funciones
+comprasRoutes(app);
 rutasRoutes(app);
 viajesRoutes(app);
 unidadesRoutes(app);
