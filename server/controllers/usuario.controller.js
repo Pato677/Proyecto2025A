@@ -58,6 +58,15 @@ const getAllUsuarios = async (req, res) => {
 const getUsuarioById = async (req, res) => {
     try {
         const { id } = req.params;
+
+        // Verificar permisos: el usuario puede ver su propia información o ser superuser
+        if (req.user && req.user.id !== parseInt(id) && req.user.rol !== 'superuser') {
+            return res.status(403).json({
+                success: false,
+                message: 'No tienes permisos para ver este usuario'
+            });
+        }
+
         const usuario = await Usuario.findByPk(id, {
             attributes: { exclude: ['contrasena'] },
             include: [
@@ -191,6 +200,14 @@ const updateUsuario = async (req, res) => {
             datosUsuarioFinal,
             datosCooperativa
         } = req.body;
+
+        // Verificar permisos: el usuario puede actualizar su propia cuenta o ser superuser
+        if (req.user && req.user.id !== parseInt(id) && req.user.rol !== 'superuser') {
+            return res.status(403).json({
+                success: false,
+                message: 'No tienes permisos para actualizar este usuario'
+            });
+        }
         
         const usuario = await Usuario.findByPk(id);
         if (!usuario) {
@@ -258,6 +275,14 @@ const updateUsuario = async (req, res) => {
 const deleteUsuario = async (req, res) => {
     try {
         const { id } = req.params;
+
+        // Verificar permisos: el usuario puede eliminar su propia cuenta o ser superuser
+        if (req.user && req.user.id !== parseInt(id) && req.user.rol !== 'superuser') {
+            return res.status(403).json({
+                success: false,
+                message: 'No tienes permisos para eliminar este usuario'
+            });
+        }
         
         const usuario = await Usuario.findByPk(id);
         if (!usuario) {

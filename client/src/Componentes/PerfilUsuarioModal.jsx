@@ -11,6 +11,11 @@ import {
 
 const PerfilUsuarioModal = ({ cerrar }) => {
   const { logout, usuario } = useAuth();
+  
+  // Debug: Log para verificar datos del usuario
+  console.log('🔍 PerfilUsuarioModal - Usuario del contexto:', usuario);
+  console.log('🔍 PerfilUsuarioModal - Usuario del localStorage:', localStorage.getItem('usuario'));
+  
   const [usuarioState, setUsuarioState] = useState({
     id: "",
     nombres: "",
@@ -26,69 +31,191 @@ const PerfilUsuarioModal = ({ cerrar }) => {
   const [errores, setErrores] = useState({});
   const [mensaje, setMensaje] = useState("");
 
-  // Verificar si es superuser y bloquear acceso
-  useEffect(() => {
-    if (usuario && usuario.rol === 'superuser') {
-      alert('⚠️ El perfil del Superadministrador está protegido y no puede ser modificado por seguridad.');
-      cerrar();
-      return;
-    }
-  }, [usuario, cerrar]);
-
   useEffect(() => {
     const cargarUsuario = async () => {
       try {
-        const usuarioStorage = JSON.parse(localStorage.getItem('usuario'));
-        if (!usuarioStorage || !usuarioStorage.id) {
+        // Primero intentar obtener del contexto, luego del localStorage
+        let usuarioActual = usuario;
+        if (!usuarioActual) {
+          const usuarioStorage = localStorage.getItem('usuario');
+          if (usuarioStorage) {
+            try {
+              usuarioActual = JSON.parse(usuarioStorage);
+            } catch (error) {
+              console.error('Error al parsear usuario del localStorage:', error);
+              cerrar();
+              return;
+            }
+          }
+        }
+
+        if (!usuarioActual || !usuarioActual.id) {
+          console.error("No se pudo obtener datos del usuario");
           cerrar();
           return;
         }
 
-        const response = await UsuarioCrud.obtenerUsuarioPorId(usuarioStorage.id);
+        // Verificar si es superuser y bloquear acceso
+        if (usuarioActual.rol === 'superuser') {
+          alert('⚠️ El perfil del Superadministrador está protegido y no puede ser modificado por seguridad.');
+          cerrar();
+          return;
+        }
+
+        // Obtener datos frescos del servidor
+        console.log('🔍 Consultando servidor con ID:', usuarioActual.id);
+        const response = await UsuarioCrud.obtenerUsuarioPorId(usuarioActual.id);
+        console.log('🔍 Respuesta del servidor:', response);
+        
         if (response.success && response.data) {
-          const usuario = response.data;
+          const usuarioCompleto = response.data;
+          console.log('🔍 Usuario completo del servidor:', usuarioCompleto);
           
           // Obtener datos específicos según el rol
           let datosEspecificos = {};
-          if (usuario.rol === 'final' && usuario.UsuarioFinal) {
+          if (usuarioCompleto.rol === 'final' && usuarioCompleto.UsuarioFinal) {
+            console.log('🔍 Procesando usuario final:', usuarioCompleto.UsuarioFinal);
             datosEspecificos = {
-              nombres: usuario.UsuarioFinal.nombres || "",
-              apellidos: usuario.UsuarioFinal.apellidos || "",
-              fechaNacimiento: usuario.UsuarioFinal.fecha_nacimiento || "",
-              cedula: usuario.UsuarioFinal.cedula || ""
+              nombres: usuarioCompleto.UsuarioFinal.nombres || "",
+              apellidos: usuarioCompleto.UsuarioFinal.apellidos || "",
+              fechaNacimiento: usuarioCompleto.UsuarioFinal.fecha_nacimiento || "",
+              cedula: usuarioCompleto.UsuarioFinal.cedula || ""
             };
-          } else if (usuario.rol === 'cooperativa' && usuario.UsuarioCooperativa) {
+          } else if (usuarioCompleto.rol === 'cooperativa' && usuarioCompleto.UsuarioCooperativa) {
+            console.log('🔍 Procesando cooperativa:', usuarioCompleto.UsuarioCooperativa);
             datosEspecificos = {
-              nombres: usuario.UsuarioCooperativa.razon_social || "",
+              nombres: usuarioCompleto.UsuarioCooperativa.razon_social || "",
               apellidos: "",
               fechaNacimiento: "",
-              cedula: usuario.UsuarioCooperativa.ruc || ""
+              cedula: usuarioCompleto.UsuarioCooperativa.ruc || ""
             };
+          } else {
+            console.log('🔍 Rol no reconocido o datos faltantes. Rol:', usuarioCompleto.rol);
+            console.log('🔍 UsuarioFinal:', usuarioCompleto.UsuarioFinal);
+            console.log('🔍 UsuarioCooperativa:', usuarioCompleto.UsuarioCooperativa);
           }
 
-          setUsuarioState({
-            id: usuario.id,
+          console.log('🔍 Datos específicos extraídos:', datosEspecificos);
+          
+          const nuevoEstado = {
+            id: usuarioCompleto.id,
             ...datosEspecificos,
-            correo: usuario.correo || "",
-            telefono: usuario.telefono || "",
+            correo: usuarioCompleto.correo || "",
+            telefono: usuarioCompleto.telefono || "",
             contrasena: "",
             confirmarContrasena: ""
-          });
+          };
+          
+          console.log('🔍 Nuevo estado que se va a aplicar:', nuevoEstado);
+          setUsuarioState(nuevoEstado);
         } else {
-          console.error("Error: No se pudo obtener los datos del usuario");
-          cerrar();
+          console.error("Error: No se pudo obtener los datos del usuario desde el servidor");
+          console.error("Response completa:", response);
+          
+          // Fallback: usar datos del localStorage si el servidor falla
+          console.log('🔍 Usando fallback con datos del localStorage');
+          let datosEspecificosFallback = {};
+          
+          if (usuarioActual.rol === 'final') {
+            // Intentar extraer datos del usuario final
+            const usuarioFinal = usuarioActual.UsuarioFinal || usuarioActual;
+            datosEspecificosFallback = {
+              nombres: usuarioFinal.nombres || usuarioActual.nombres || "",
+              apellidos: usuarioFinal.apellidos || usuarioActual.apellidos || "",
+              fechaNacimiento: usuarioFinal.fecha_nacimiento || usuarioActual.fecha_nacimiento || "",
+              cedula: usuarioFinal.cedula || usuarioActual.cedula || ""
+            };
+          } else if (usuarioActual.rol === 'cooperativa') {
+            // Intentar extraer datos de la cooperativa
+            const usuarioCooperativa = usuarioActual.UsuarioCooperativa || usuarioActual;
+            datosEspecificosFallback = {
+              nombres: usuarioCooperativa.razon_social || usuarioActual.razon_social || "",
+              apellidos: "",
+              fechaNacimiento: "",
+              cedula: usuarioCooperativa.ruc || usuarioActual.ruc || ""
+            };
+          }
+          
+          const estadoFallback = {
+            id: usuarioActual.id,
+            ...datosEspecificosFallback,
+            correo: usuarioActual.correo || "",
+            telefono: usuarioActual.telefono || "",
+            contrasena: "",
+            confirmarContrasena: ""
+          };
+          
+          console.log('🔍 Estado fallback aplicado:', estadoFallback);
+          setUsuarioState(estadoFallback);
+          setMensaje("Datos cargados desde caché local (conexión con servidor limitada)");
         }
       } catch (error) {
         console.error("Error al cargar usuario:", error);
-        cerrar();
+        
+        // Si hay error de red, intentar usar datos del localStorage como fallback
+        console.log('🔍 Error capturado, usando fallback del localStorage');
+        
+        try {
+          let usuarioActual = usuario;
+          if (!usuarioActual) {
+            const usuarioStorage = localStorage.getItem('usuario');
+            if (usuarioStorage) {
+              usuarioActual = JSON.parse(usuarioStorage);
+            }
+          }
+          
+          if (usuarioActual && usuarioActual.id) {
+            let datosEspecificosFallback = {};
+            
+            if (usuarioActual.rol === 'final') {
+              const usuarioFinal = usuarioActual.UsuarioFinal || usuarioActual;
+              datosEspecificosFallback = {
+                nombres: usuarioFinal.nombres || usuarioActual.nombres || "",
+                apellidos: usuarioFinal.apellidos || usuarioActual.apellidos || "",
+                fechaNacimiento: usuarioFinal.fecha_nacimiento || usuarioActual.fecha_nacimiento || "",
+                cedula: usuarioFinal.cedula || usuarioActual.cedula || ""
+              };
+            } else if (usuarioActual.rol === 'cooperativa') {
+              const usuarioCooperativa = usuarioActual.UsuarioCooperativa || usuarioActual;
+              datosEspecificosFallback = {
+                nombres: usuarioCooperativa.razon_social || usuarioActual.razon_social || "",
+                apellidos: "",
+                fechaNacimiento: "",
+                cedula: usuarioCooperativa.ruc || usuarioActual.ruc || ""
+              };
+            }
+            
+            const estadoFallback = {
+              id: usuarioActual.id,
+              ...datosEspecificosFallback,
+              correo: usuarioActual.correo || "",
+              telefono: usuarioActual.telefono || "",
+              contrasena: "",
+              confirmarContrasena: ""
+            };
+            
+            console.log('🔍 Estado fallback de error aplicado:', estadoFallback);
+            setUsuarioState(estadoFallback);
+            setMensaje("Datos cargados desde caché local (error de conexión)");
+          } else {
+            setMensaje("Error al cargar los datos del perfil - no hay datos disponibles");
+          }
+        } catch (fallbackError) {
+          console.error("Error en fallback:", fallbackError);
+          setMensaje("Error al cargar los datos del perfil");
+        }
       }
     };
 
     cargarUsuario();
-  }, [cerrar]);
+  }, [usuario, cerrar]);
 
-  // Si es cooperativa, mostrar el modal específico
-  if (usuario && usuario.rol === 'cooperativa') {
+  // Si es cooperativa, mostrar el modal específico - verificar tanto contexto como localStorage
+  const esCooperativa = usuario?.rol === 'cooperativa' || 
+    (localStorage.getItem('usuario') && 
+     JSON.parse(localStorage.getItem('usuario'))?.rol === 'cooperativa');
+  
+  if (esCooperativa) {
     return <PerfilCooperativaModal cerrar={cerrar} />;
   }
 
@@ -111,8 +238,7 @@ const PerfilUsuarioModal = ({ cerrar }) => {
     if (!usuarioState.apellidos.trim()) nuevosErrores.apellidos = "Apellidos son requeridos";
     if (!usuarioState.fechaNacimiento) nuevosErrores.fechaNacimiento = "Fecha de nacimiento es requerida";
     if (!usuarioState.cedula.trim()) nuevosErrores.cedula = "Cédula es requerida";
-    if (!usuarioState.correo.trim()) nuevosErrores.correo = "Correo es requerido";
-    else if (!/^\S+@\S+\.\S+$/.test(usuarioState.correo)) nuevosErrores.correo = "Correo no válido";
+    // Correo removido de validación ya que está deshabilitado
     if (!usuarioState.telefono.trim()) nuevosErrores.telefono = "Teléfono es requerido";
 
     if (usuarioState.contrasena || usuarioState.confirmarContrasena) {
@@ -224,11 +350,11 @@ const PerfilUsuarioModal = ({ cerrar }) => {
             { label: "Apellidos", name: "apellidos", icon: <FaUser />, type: "text", placeholder: "Ingrese sus apellidos" },
             { label: "Fecha de nacimiento", name: "fechaNacimiento", icon: <FaCalendarAlt />, type: "date" },
             { label: "Número de cédula", name: "cedula", icon: <FaIdCard />, type: "text", placeholder: "Ingrese su número de cédula" },
-            { label: "Correo electrónico", name: "correo", icon: <FaEnvelope />, type: "email", placeholder: "Ingrese su correo electrónico" },
+            { label: "Correo electrónico", name: "correo", icon: <FaEnvelope />, type: "email", placeholder: "Ingrese su correo electrónico", disabled: true },
             { label: "Número de teléfono", name: "telefono", icon: <FaPhoneAlt />, type: "tel", placeholder: "Ingrese su número" },
             { label: "Nueva contraseña (dejar en blanco para no cambiar)", name: "contrasena", icon: <FaLock />, type: "password", placeholder: "Ingrese su nueva contraseña" },
             { label: "Confirmar nueva contraseña", name: "confirmarContrasena", icon: <FaLock />, type: "password", placeholder: "Confirme su nueva contraseña" }
-          ].map(({ label, name, icon, type, placeholder }) => (
+          ].map(({ label, name, icon, type, placeholder, disabled = false }) => (
             <div key={name}>
               <label>{label}</label>
               <div className="campo">
@@ -239,8 +365,15 @@ const PerfilUsuarioModal = ({ cerrar }) => {
                   placeholder={placeholder}
                   value={usuarioState[name]}
                   onChange={handleChange}
+                  disabled={disabled}
+                  style={disabled ? { backgroundColor: '#f5f5f5', color: '#666' } : {}}
                 />
               </div>
+              {name === 'correo' && (
+                <small style={{color: '#666', fontSize: '0.85em', display: 'block', marginTop: '4px'}}>
+                  El correo no se puede modificar por seguridad
+                </small>
+              )}
               {errores[name] && <span className="error-message">{errores[name]}</span>}
             </div>
           ))}

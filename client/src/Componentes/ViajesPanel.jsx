@@ -70,6 +70,13 @@ const ViajesPanel = () => {
         console.log('Respuesta completa del servidor:', res.data);
         // El controlador devuelve los viajes vigentes filtrados en el backend
         if (res.data.success && res.data.data) {
+          console.log('📅 Fechas de viajes RECIBIDOS desde el backend:', res.data.data.map(viaje => ({
+            id: viaje.id,
+            fecha_salida: viaje.fecha_salida,
+            fecha_llegada: viaje.fecha_llegada,
+            tipo_fecha_salida: typeof viaje.fecha_salida,
+            tipo_fecha_llegada: typeof viaje.fecha_llegada
+          })));
           setViajes(res.data.data);
           console.log('Viajes vigentes cargados desde backend:', res.data.data.length);
           // Cargar asientos ocupados para cada viaje
@@ -153,9 +160,20 @@ const ViajesPanel = () => {
 
   // Crear nuevo viaje
   const handleSaveViaje = (nuevoViaje) => {
+    console.log('📅 Fechas ANTES de enviar al backend:', {
+      fecha_salida: nuevoViaje.fecha_salida,
+      fecha_llegada: nuevoViaje.fecha_llegada,
+      tipo_fecha_salida: typeof nuevoViaje.fecha_salida,
+      tipo_fecha_llegada: typeof nuevoViaje.fecha_llegada
+    });
+    
     axios.post(API_URL_Viajes_CRUD, nuevoViaje)
       .then(res => {
         console.log('Viaje creado exitosamente:', res.data);
+        console.log('📅 Fechas DESPUÉS del backend:', {
+          fecha_salida: res.data.data?.fecha_salida,
+          fecha_llegada: res.data.data?.fecha_llegada
+        });
         recargarViajes();
         setShowModal(false);
       })
@@ -183,6 +201,12 @@ const ViajesPanel = () => {
       }
 
       console.log(`Creando ${rutasValidas.length} viajes...`);
+      console.log('📅 Fechas ANTES de crear múltiples viajes:', {
+        fecha_salida: fecha_salida,
+        fecha_llegada: fecha_llegada,
+        tipo_fecha_salida: typeof fecha_salida,
+        tipo_fecha_llegada: typeof fecha_llegada
+      });
       
       // Crear un viaje para cada ruta (sin asignar unidades)
       const promesasViajes = rutasValidas.map((ruta) => {        
@@ -194,6 +218,11 @@ const ViajesPanel = () => {
           ruta_id: ruta.id
           // No incluir unidad_id - se asignará después
         };
+        
+        console.log(`📅 Viaje para ruta ${ruta.id} con fechas:`, {
+          fecha_salida: nuevoViaje.fecha_salida,
+          fecha_llegada: nuevoViaje.fecha_llegada
+        });
         
         return axios.post(API_URL_Viajes_CRUD, nuevoViaje);
       });

@@ -108,6 +108,50 @@ export const AuthService = {
   },
 };
 
+export const UserService = {
+  // Obtener datos del usuario por ID
+  getUserById: async (id, token) => {
+    try {
+      const response = await api.get(`/usuarios/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Error al obtener datos del usuario');
+    }
+  },
+
+  // Actualizar usuario
+  updateUser: async (id, userData, token) => {
+    try {
+      const response = await api.put(`/usuarios/${id}`, userData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Error al actualizar usuario');
+    }
+  },
+
+  // Eliminar usuario
+  deleteUser: async (id, token) => {
+    try {
+      const response = await api.delete(`/usuarios/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Error al eliminar usuario');
+    }
+  },
+};
+
 export const TripService = {
   // Buscar viajes por fecha y filtros
   searchTrips: async (params) => {
