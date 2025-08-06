@@ -15,6 +15,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LoginModal from '../components/LoginModal';
 import RegisterModal from '../components/RegisterModal';
+import AutocompleteInput from '../components/AutocompleteInput'; // Componente de autocomplete
 import { useAuth } from '../context/AuthContext';
 import { LocationService } from '../services/api';
 
@@ -28,6 +29,10 @@ const HomeScreen = ({ navigation }) => {
   const [showRegister, setShowRegister] = useState(false);
   const [cities, setCities] = useState([]);
   const [terminals, setTerminals] = useState([]);
+  
+  // Estados para las selecciones de autocomplete
+  const [selectedOrigin, setSelectedOrigin] = useState(null);
+  const [selectedDestination, setSelectedDestination] = useState(null);
 
   // Cargar datos iniciales desde la base de datos
   useEffect(() => {
@@ -38,11 +43,16 @@ const HomeScreen = ({ navigation }) => {
     try {
       // Cargar ciudades
       const citiesResponse = await LocationService.getCities();
-      if (citiesResponse.success) {
-        setCities(citiesResponse.data);
+      
+      // El API retorna directamente el array de ciudades, no un objeto con success
+      if (Array.isArray(citiesResponse)) {
+        setCities(citiesResponse);
+      } else {
+        console.warn('Unexpected cities response format:', citiesResponse);
       }
     } catch (error) {
       console.error('Error loading initial data:', error);
+      Alert.alert('Error', 'No se pudieron cargar las ciudades. Verifica tu conexión a internet.');
     }
   };
 
@@ -65,17 +75,32 @@ const HomeScreen = ({ navigation }) => {
     );
   };
 
+  // Manejar selección de origen
+  const handleOriginSelect = (item) => {
+    setSelectedOrigin(item);
+  };
+
+  // Manejar selección de destino
+  const handleDestinationSelect = (item) => {
+    setSelectedDestination(item);
+  };
+
   const handleSearch = () => {
     // Validar campos antes de buscar
     if (!origin || !destination) {
-      alert('Por favor completa todos los campos');
+      Alert.alert('Error', 'Por favor completa los campos de origen y destino');
       return;
     }
     
+    if (!selectedOrigin || !selectedDestination) {
+      Alert.alert('Error', 'Por favor selecciona origen y destino de las opciones disponibles');
+      return;
+    }
+
     // Navegar a la pantalla de resultados
     navigation.navigate('TripSelection', {
-      origin,
-      destination,
+      origin: selectedOrigin,
+      destination: selectedDestination,
       date,
       passengers
     });
@@ -132,28 +157,28 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.searchForm}>
             {/* Origen */}
             <View style={styles.inputGroup}>
-              <View style={styles.inputContainer}>
-                <Icon name="location-on" size={20} color="#666" style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Escribe ciudad o terminal"
-                  value={origin}
-                  onChangeText={setOrigin}
-                />
-              </View>
+              <Text style={styles.inputLabel}>Origen</Text>
+              <AutocompleteInput
+                placeholder="Escribe ciudad o terminal de origen"
+                value={origin}
+                onChangeText={setOrigin}
+                cities={cities}
+                icon="my-location"
+                onItemSelect={handleOriginSelect}
+              />
             </View>
 
             {/* Destino */}
             <View style={styles.inputGroup}>
-              <View style={styles.inputContainer}>
-                <Icon name="location-on" size={20} color="#666" style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Escribe ciudad o terminal"
-                  value={destination}
-                  onChangeText={setDestination}
-                />
-              </View>
+              <Text style={styles.inputLabel}>Destino</Text>
+              <AutocompleteInput
+                placeholder="Escribe ciudad o terminal de destino"
+                value={destination}
+                onChangeText={setDestination}
+                cities={cities}
+                icon="location-on"
+                onItemSelect={handleDestinationSelect}
+              />
             </View>
 
             {/* Fecha y Pasajeros */}
@@ -209,6 +234,8 @@ const HomeScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
+
+     
 
         {/* Track Ticket Section */}
         <View style={styles.trackSection}>
@@ -318,6 +345,12 @@ const styles = StyleSheet.create({
   },
   inputGroup: {
     marginBottom: 15,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 8,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -457,6 +490,26 @@ const styles = StyleSheet.create({
     color: '#ccc',
     fontSize: 10,
     textAlign: 'center',
+  },
+  // TEMPORAL: Estilos de debug
+  debugInfo: {
+    backgroundColor: '#fff3cd',
+    padding: 10,
+    margin: 15,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ffeaa7',
+  },
+  debugTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#856404',
+  },
+  debugText: {
+    fontSize: 12,
+    color: '#856404',
+    marginBottom: 2,
   },
 });
 

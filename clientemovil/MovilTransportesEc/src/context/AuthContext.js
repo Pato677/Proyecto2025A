@@ -23,15 +23,20 @@ export const AuthProvider = ({ children }) => {
 
   const loadStoredAuth = async () => {
     try {
+      console.log('📱 AuthContext: Loading stored auth data...');
       const storedUser = await AsyncStorage.getItem('user');
       const storedToken = await AsyncStorage.getItem('token');
       
       if (storedUser && storedToken) {
-        setUser(JSON.parse(storedUser));
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
         setToken(storedToken);
+        console.log('✅ AuthContext: Stored auth data loaded successfully', userData.correo);
+      } else {
+        console.log('ℹ️ AuthContext: No stored auth data found');
       }
     } catch (error) {
-      console.error('Error loading stored auth:', error);
+      console.error('❌ AuthContext: Error loading stored auth:', error);
     } finally {
       setLoading(false);
     }
@@ -39,6 +44,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (userData, userToken) => {
     try {
+      console.log('🔐 AuthContext: Saving user data...', userData);
+      
       // Guardar en el estado
       setUser(userData);
       setToken(userToken);
@@ -47,9 +54,10 @@ export const AuthProvider = ({ children }) => {
       await AsyncStorage.setItem('user', JSON.stringify(userData));
       await AsyncStorage.setItem('token', userToken);
       
+      console.log('✅ AuthContext: User data saved successfully');
       return true;
     } catch (error) {
-      console.error('Error saving auth data:', error);
+      console.error('❌ AuthContext: Error saving auth data:', error);
       return false;
     }
   };

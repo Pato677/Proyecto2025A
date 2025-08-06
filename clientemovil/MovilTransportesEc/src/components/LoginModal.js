@@ -37,39 +37,46 @@ const LoginModal = ({ visible, onClose, onOpenRegister }) => {
     setLoading(true);
     
     try {
+      console.log('Attempting login with:', credentials.correo); // Debug log
       const response = await AuthService.login(credentials.correo, credentials.contrasena);
+      console.log('Login response:', response); // Debug log
       
       if (response.success) {
         // Solo permitir usuarios finales en la app móvil
-        if (response.configuracion?.dashboard !== 'usuario') {
+        if (response.usuario?.rol !== 'final') {
           Alert.alert('Error', 'Esta aplicación es solo para usuarios finales. Use la aplicación web para otros tipos de usuario.');
           setLoading(false);
           return;
         }
 
         // Guardar en el contexto de autenticación
-        await login(response.usuario, response.token);
+        const loginSuccess = await login(response.usuario, response.token);
         
-        Alert.alert('Éxito', response.mensajeBienvenida || 'Inicio de sesión exitoso', [
-          {
-            text: 'OK',
-            onPress: () => {
-              handleClose();
+        if (loginSuccess) {
+          Alert.alert('Éxito', response.message || 'Inicio de sesión exitoso', [
+            {
+              text: 'OK',
+              onPress: () => {
+                handleClose();
+              }
             }
-          }
-        ]);
-        
-        // Limpiar formulario
-        setCredentials({
-          correo: '',
-          contrasena: '',
-        });
+          ]);
+          
+          // Limpiar formulario
+          setCredentials({
+            correo: '',
+            contrasena: '',
+          });
+        } else {
+          Alert.alert('Error', 'Error al guardar los datos de sesión');
+        }
       } else {
-        Alert.alert('Error', 'Credenciales incorrectas');
+        Alert.alert('Error', response.message || 'Credenciales incorrectas');
       }
       
     } catch (error) {
-      Alert.alert('Error', error.message || 'Error al iniciar sesión');
+      console.error('Login error:', error); // Debug log
+      Alert.alert('Error', error.message || 'Error al iniciar sesión. Verifica tu conexión a internet.');
     } finally {
       setLoading(false);
     }
