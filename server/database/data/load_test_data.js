@@ -864,132 +864,84 @@ async function cargarDatosPrueba() {
     const crearFechaLlegada = (fechaSalida, horaSalida, horaLlegada) => {
       const fechaStr = fechaSalida.toISOString().split('T')[0];
       const fechaLlegada = new Date(`${fechaStr}T${horaLlegada}`);
-      
-      // Si la hora de llegada es menor que la de salida, es al día siguiente
       const salida = new Date(`${fechaStr}T${horaSalida}`);
       if (fechaLlegada < salida) {
         fechaLlegada.setDate(fechaLlegada.getDate() + 1);
       }
-      
       return fechaLlegada;
     };
 
-    // Generar viajes para los próximos 7 días
-    for (let dia = 1; dia <= 7; dia++) {
-      const fechaViaje = generarFechaFutura(dia);
-      
-      // Viajes Quito-Guayaquil (múltiples horarios)
-      viajes.push(
-        {
-          fecha_salida: crearFechaHora(fechaViaje, '13:30:00'),
-          fecha_llegada: crearFechaLlegada(fechaViaje, '13:30:00', '21:30:00'),
-          numero_asientos_ocupados: 0,
-          precio: 12.25,
-          ruta_id: rutas[0].id,
-          unidad_id: unidades[0].id
-        },
-        {
-          fecha_salida: crearFechaHora(fechaViaje, '14:20:00'),
-          fecha_llegada: crearFechaLlegada(fechaViaje, '14:20:00', '22:30:00'),
-          numero_asientos_ocupados: 0,
-          precio: 14.83,
-          ruta_id: rutas[1].id,
-          unidad_id: unidades[1].id
-        },
-        {
-          fecha_salida: crearFechaHora(fechaViaje, '15:30:00'),
-          fecha_llegada: crearFechaLlegada(fechaViaje, '15:30:00', '23:30:00'),
-          numero_asientos_ocupados: 0,
-          precio: 17.85,
-          ruta_id: rutas[2].id,
-          unidad_id: unidades[2].id
-        }
-      );
+    // Horarios para los 12 viajes diarios Quito(Quitumbe) - Guayaquil
+    const horariosQuitoGuayaquil = [
+      { salida: '05:00:00', llegada: '13:00:00', precio: 12.25 },
+      { salida: '06:00:00', llegada: '14:00:00', precio: 12.50 },
+      { salida: '07:00:00', llegada: '15:00:00', precio: 13.00 },
+      { salida: '08:00:00', llegada: '16:00:00', precio: 13.25 },
+      { salida: '09:00:00', llegada: '17:00:00', precio: 13.50 },
+      { salida: '10:00:00', llegada: '18:00:00', precio: 13.75 },
+      { salida: '11:00:00', llegada: '19:00:00', precio: 14.00 },
+      { salida: '12:00:00', llegada: '20:00:00', precio: 14.25 },
+      { salida: '13:30:00', llegada: '21:30:00', precio: 14.50 },
+      { salida: '15:00:00', llegada: '23:00:00', precio: 14.75 },
+      { salida: '16:30:00', llegada: '00:30:00', precio: 15.00 },
+      { salida: '18:00:00', llegada: '02:00:00', precio: 15.25 }
+    ];
 
-      // Viajes Quito-Cuenca
-      viajes.push(
-        {
-          fecha_salida: crearFechaHora(fechaViaje, '12:15:00'),
-          fecha_llegada: crearFechaLlegada(fechaViaje, '12:15:00', '19:20:00'),
-          numero_asientos_ocupados: 0,
-          precio: 15.75,
-          ruta_id: rutas[3].id,
-          unidad_id: unidades[4].id
-        },
-        {
-          fecha_salida: crearFechaHora(fechaViaje, '10:00:00'),
-          fecha_llegada: crearFechaLlegada(fechaViaje, '10:00:00', '17:30:00'),
-          numero_asientos_ocupados: 0,
-          precio: 13.40,
-          ruta_id: rutas[4].id,
-          unidad_id: unidades[5].id
-        }
-      );
+    // Día específico para los 12 viajes (ejemplo: hoy)
+    const fechaViaje = new Date(); // hoy
 
-      // Viajes especiales (precios más variados)
-      if (dia % 2 === 0) { // Solo días pares
-        viajes.push(
-          {
-            fecha_salida: crearFechaHora(fechaViaje, '07:03:00'),
-            fecha_llegada: crearFechaLlegada(fechaViaje, '07:03:00', '15:03:00'),
-            numero_asientos_ocupados: 0,
-            precio: 6.64, // Precio más bajo
-            ruta_id: rutas[5].id,
-            unidad_id: unidades[6].id
-          },
-          {
-            fecha_salida: crearFechaHora(fechaViaje, '15:54:00'),
-            fecha_llegada: crearFechaLlegada(fechaViaje, '15:54:00', '01:54:00'), // Llegada al día siguiente
-            numero_asientos_ocupados: 0,
-            precio: 32.00, // Precio más alto para viaje nocturno largo
-            ruta_id: rutas[6].id,
-            unidad_id: unidades[7].id
-          }
-        );
+    const viajesExtra = [
+      { salida: '05:10:00', llegada: '13:10:00', precio: 12.35, asientos: 2, unidad: unidades[0].id },
+      { salida: '06:15:00', llegada: '14:15:00', precio: 12.60, asientos: 5, unidad: unidades[1].id },
+      { salida: '07:20:00', llegada: '15:20:00', precio: 13.10, asientos: 8, unidad: unidades[2].id },
+      { salida: '08:25:00', llegada: '16:25:00', precio: 13.35, asientos: 12, unidad: unidades[3].id },
+      { salida: '09:30:00', llegada: '17:30:00', precio: 13.60, asientos: 15, unidad: unidades[4].id },
+      { salida: '10:35:00', llegada: '18:35:00', precio: 13.85, asientos: 18, unidad: unidades[5].id },
+      { salida: '11:40:00', llegada: '19:40:00', precio: 14.10, asientos: 21, unidad: unidades[6].id },
+      { salida: '12:45:00', llegada: '20:45:00', precio: 14.35, asientos: 24, unidad: unidades[7].id },
+      { salida: '13:50:00', llegada: '21:50:00', precio: 14.60, asientos: 27, unidad: unidades[8].id },
+      { salida: '15:05:00', llegada: '23:05:00', precio: 14.85, asientos: 30, unidad: unidades[9].id },
+      { salida: '16:40:00', llegada: '00:40:00', precio: 15.10, asientos: 33, unidad: unidades[0].id },
+      { salida: '18:05:00', llegada: '02:05:00', precio: 15.35, asientos: 36, unidad: unidades[1].id }
+    ];
+
+    for (const v of viajesExtra) {
+      viajes.push({
+        fecha_salida: crearFechaHora(fechaViaje, v.salida),
+        fecha_llegada: crearFechaLlegada(fechaViaje, v.salida, v.llegada),
+        numero_asientos_ocupados: v.asientos,
+        precio: v.precio,
+        ruta_id: rutas[0].id, // Quito(Quitumbe) - Guayaquil
+        unidad_id: v.unidad
+      });
+    }
+
+    // Generar viajes para los próximos 4 días, incluyendo hoy (dia = 0)
+    for (let dia = 0; dia < 4; dia++) {
+      const fechaViaje = generarFechaFutura(dia); // dia=0 es hoy
+
+      // 12 viajes diarios SOLO para la ruta Quito(Quitumbe) - Guayaquil (rutas[0], id=1)
+      for (let i = 0; i < horariosQuitoGuayaquil.length; i++) {
+        viajes.push({
+          fecha_salida: crearFechaHora(fechaViaje, horariosQuitoGuayaquil[i].salida),
+          fecha_llegada: crearFechaLlegada(fechaViaje, horariosQuitoGuayaquil[i].salida, horariosQuitoGuayaquil[i].llegada),
+          numero_asientos_ocupados: 0,
+          precio: horariosQuitoGuayaquil[i].precio,
+          ruta_id: rutas[0].id, // Quito(Quitumbe) - Guayaquil
+          unidad_id: unidades[i % unidades.length].id // alterna unidades
+        });
       }
 
-      // Viajes de regreso
-      viajes.push(
-        {
-          fecha_salida: crearFechaHora(fechaViaje, '09:00:00'),
-          fecha_llegada: crearFechaLlegada(fechaViaje, '09:00:00', '17:00:00'),
-          numero_asientos_ocupados: 0,
-          precio: 13.00,
-          ruta_id: rutas[7].id,
-          unidad_id: unidades[8].id
-        },
-        {
-          fecha_salida: crearFechaHora(fechaViaje, '08:15:00'),
-          fecha_llegada: crearFechaLlegada(fechaViaje, '08:15:00', '16:15:00'),
-          numero_asientos_ocupados: 0,
-          precio: 16.50,
-          ruta_id: rutas[8].id,
-          unidad_id: unidades[9].id
-        }
-      );
-
-      // Agregar más viajes variados para tener más datos
-      if (dia <= 5) { // Solo los primeros 5 días para no saturar
-        viajes.push(
-          {
-            fecha_salida: crearFechaHora(fechaViaje, '06:28:00'),
-            fecha_llegada: crearFechaLlegada(fechaViaje, '06:28:00', '12:28:00'),
-            numero_asientos_ocupados: 0,
-            precio: 18.90,
-            ruta_id: rutas[9].id,
-            unidad_id: unidades[Math.floor(Math.random() * unidades.length)].id
-          },
-          // Viaje económico adicional
-          {
-            fecha_salida: crearFechaHora(fechaViaje, '11:00:00'),
-            fecha_llegada: crearFechaLlegada(fechaViaje, '11:00:00', '18:30:00'),
-            numero_asientos_ocupados: 0,
-            precio: 5.50, // Precio aún más bajo
-            ruta_id: rutas[Math.floor(Math.random() * 5)].id,
-            unidad_id: unidades[Math.floor(Math.random() * unidades.length)].id
-          }
-        );
-      }
+      // Si quieres viajes para otras rutas, agrégalos aquí (pero no 12 por día)
+      // Ejemplo: solo 1 viaje por día para otras rutas
+      // viajes.push({
+      //   fecha_salida: crearFechaHora(fechaViaje, '12:15:00'),
+      //   fecha_llegada: crearFechaLlegada(fechaViaje, '12:15:00', '19:20:00'),
+      //   numero_asientos_ocupados: 0,
+      //   precio: 15.75,
+      //   ruta_id: rutas[3].id,
+      //   unidad_id: unidades[4].id
+      // });
     }
 
     console.log(`📊 Total de viajes a crear: ${viajes.length}`);
