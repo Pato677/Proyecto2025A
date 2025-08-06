@@ -16,17 +16,43 @@ const SeleccionAsientosPage = () => {
   const { usuario, logout } = useAuth();
   const params = new URLSearchParams(location.search);
   
-  // Obtener datos de los pasajeros desde localStorage
-  const pasajerosData = localStorage.getItem('pasajerosData') 
-    ? JSON.parse(localStorage.getItem('pasajerosData')) 
-    : [];
+  // Función para decodificar datos de pasajeros desde URL
+  const decodificarDatosPasajeros = () => {
+    const datosEncoded = params.get('datosP');
+    if (datosEncoded) {
+      try {
+        const datosDecoded = decodeURIComponent(datosEncoded);
+        return JSON.parse(datosDecoded);
+      } catch (error) {
+        console.error('Error al decodificar datos de pasajeros:', error);
+        return [];
+      }
+    }
+    return [];
+  };
+
+  // Función para decodificar asientos seleccionados desde URL
+  const decodificarAsientosSeleccionados = () => {
+    const asientosEncoded = params.get('asientos');
+    if (asientosEncoded) {
+      try {
+        const asientosDecoded = decodeURIComponent(asientosEncoded);
+        return JSON.parse(asientosDecoded);
+      } catch (error) {
+        console.error('Error al decodificar asientos seleccionados:', error);
+        return [];
+      }
+    }
+    return [];
+  };
+
+  // Obtener datos de los pasajeros desde URL
+  const pasajerosData = decodificarDatosPasajeros();
   const numeroPasajeros = pasajerosData.length;
   const viajeId = params.get('viajeId');
   
-  // Obtener asientos previamente seleccionados desde localStorage
-  const asientosYaSeleccionados = localStorage.getItem('asientosSeleccionados') 
-    ? JSON.parse(localStorage.getItem('asientosSeleccionados')) 
-    : [];
+  // Obtener asientos previamente seleccionados desde URL
+  const asientosYaSeleccionados = decodificarAsientosSeleccionados();
 
   // Estado para el precio del viaje
   const [precioViaje, setPrecioViaje] = useState(0.00);
@@ -35,20 +61,53 @@ const SeleccionAsientosPage = () => {
   const [mostrarLogin, setMostrarLogin] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Cargar datos del viaje
+  // Estado para mapear IDs a numeraciones de asientos
+  const [asientosMap, setAsientosMap] = useState({});
+  const [asientosOcupados, setAsientosOcupados] = useState([]);
+
+  // Cargar datos del viaje y asientos
   useEffect(() => {
-    if (viajeId) {
-      axios.get(`http://localhost:8000/viajes/${viajeId}`)
-        .then(res => {
-          if (res.data.success && res.data.data) {
-            setPrecioViaje(parseFloat(res.data.data.precio) || 0);
+    const cargarDatos = async () => {
+      try {
+        // Cargar precio del viaje
+        if (viajeId) {
+          const viajeRes = await axios.get(`http://localhost:8000/viajes/${viajeId}`);
+          if (viajeRes.data.success && viajeRes.data.data) {
+            setPrecioViaje(parseFloat(viajeRes.data.data.precio) || 0);
           }
-        })
-        .catch(error => {
-          console.error('Error al cargar precio del viaje:', error);
-        });
-    }
+        }
+
+        // Cargar todos los asientos para crear el mapa ID -> numeración
+        const asientosRes = await axios.get('http://localhost:8000/asientos');
+        if (asientosRes.data.success && asientosRes.data.data) {
+          const mapa = {};
+          asientosRes.data.data.forEach(asiento => {
+            mapa[asiento.id] = asiento.numeracion;
+          });
+          setAsientosMap(mapa);
+          console.log('Mapa de asientos creado:', mapa);
+        }
+
+        // Cargar asientos ocupados del viaje específico
+        if (viajeId) {
+          const ocupadosRes = await axios.get(`http://localhost:8000/asientos/ocupados/${viajeId}`);
+          if (ocupadosRes.data.success && ocupadosRes.data.data) {
+            console.log('Numeraciones de asientos ocupados:', ocupadosRes.data.data);
+            setAsientosOcupados(ocupadosRes.data.data);
+          }
+        }
+      } catch (error) {
+        console.error('Error al cargar datos:', error);
+      }
+    };
+
+    cargarDatos();
   }, [viajeId]);
+
+  // Los asientos ocupados ya vienen como numeraciones del backend
+  const asientosOcupadosNumeraciones = asientosOcupados;
+  
+  console.log('Numeraciones de asientos ocupados que se enviarán al SeatSelector:', asientosOcupadosNumeraciones);
   
   // Estado para los asientos seleccionados - inicializar con asientos previos si existen
   const [asientosSeleccionados, setAsientosSeleccionados] = useState(asientosYaSeleccionados);
@@ -96,22 +155,60 @@ const SeleccionAsientosPage = () => {
   };
 
   const handleAtras = () => {
-    // Guardar los asientos actuales en localStorage antes de navegar hacia atrás
-    localStorage.setItem('asientosSeleccionados', JSON.stringify(asientosSeleccionados));
+    // Crear nueva URL con todos los parámetros necesarios incluyendo asientos seleccionados
+    const nuevosParams = new URLSearchParams(location.search);
     
-    // Mantener solo el viajeId y otros parámetros necesarios en la URL
-    const allParams = new URLSearchParams(location.search);
-    navigate(`/RegistroPasajerosPage?${allParams.toString()}`);
+    // Codificar datos de pasajeros en la URL
+    if (pasajerosData.length > 0) {
+      try {
+        const datosString = JSON.stringify(pasajerosData);
+        const datosEncoded = encodeURIComponent(datosString);
+        nuevosParams.set('datosP', datosEncoded);
+      } catch (error) {
+        console.error('Error al codificar datos de pasajeros:', error);
+      }
+    }
+
+    // Codificar asientos seleccionados en la URL
+    if (asientosSeleccionados.length > 0) {
+      try {
+        const asientosString = JSON.stringify(asientosSeleccionados);
+        const asientosEncoded = encodeURIComponent(asientosString);
+        nuevosParams.set('asientos', asientosEncoded);
+      } catch (error) {
+        console.error('Error al codificar asientos seleccionados:', error);
+      }
+    }
+    
+    navigate(`/RegistroPasajerosPage?${nuevosParams.toString()}`);
   };
 
   const handleAceptar = () => {
     if (asientosSeleccionados.length === numeroPasajeros) {
-      // Guardar los asientos seleccionados en localStorage
-      localStorage.setItem('asientosSeleccionados', JSON.stringify(asientosSeleccionados));
+      // Crear nueva URL con todos los parámetros necesarios incluyendo asientos seleccionados
+      const nuevosParams = new URLSearchParams(location.search);
       
-      // Pasar solo el viajeId por URL
-      const allParams = new URLSearchParams(location.search);
-      navigate(`/FormasDePagoPage?${allParams.toString()}`);
+      // Codificar datos de pasajeros en la URL
+      if (pasajerosData.length > 0) {
+        try {
+          const datosString = JSON.stringify(pasajerosData);
+          const datosEncoded = encodeURIComponent(datosString);
+          nuevosParams.set('datosP', datosEncoded);
+        } catch (error) {
+          console.error('Error al codificar datos de pasajeros:', error);
+        }
+      }
+
+      // Codificar asientos seleccionados en la URL
+      try {
+        const asientosString = JSON.stringify(asientosSeleccionados);
+        const asientosEncoded = encodeURIComponent(asientosString);
+        nuevosParams.set('asientos', asientosEncoded);
+      } catch (error) {
+        console.error('Error al codificar asientos seleccionados:', error);
+      }
+      
+      navigate(`/FormasDePagoPage?${nuevosParams.toString()}`);
     } else {
       alert(`Debe seleccionar ${numeroPasajeros} asientos para todos los pasajeros.`);
     }
@@ -235,6 +332,7 @@ const SeleccionAsientosPage = () => {
               asientosSeleccionados={asientosSeleccionados}
               numeroPasajeros={numeroPasajeros}
               viajeId={viajeId}
+              asientosOcupadosNumeraciones={asientosOcupadosNumeraciones}
             />
           </div>
 

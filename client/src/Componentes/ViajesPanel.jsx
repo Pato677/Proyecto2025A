@@ -3,16 +3,16 @@ import ViajesTable from './ViajesTable';
 import ActionButtons from './ActionButtons';
 import ViajeModal from './ViajeModal';
 import ViajeUpdateModal from './ViajeUpdateModal';
+import { useAuth } from './AuthContext';
 import './Estilos/ViajesPanel.css';
 import axios from 'axios';
 
 const viajesPorPagina = 4;
-// Rutas de la API
-const API_URL_Viajes = "http://localhost:8000/viajes/cooperativa/1/vigentes"; // Usar endpoint que filtra viajes vigentes
-const API_URL_Viajes_CRUD = "http://localhost:8000/viajes"; // Para crear, actualizar y eliminar
-const COOPERATIVA_ID = 1; // ID de la cooperativa para pruebas
 
 const ViajesPanel = () => {
+  const { usuario } = useAuth(); // Obtener el usuario del contexto
+  
+  // Todos los hooks deben ir antes de cualquier early return
   const [viajes, setViajes] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -22,6 +22,13 @@ const ViajesPanel = () => {
   const [rutas, setRutas] = useState([]);
   const [unidades, setUnidades] = useState([]);
   const [asientosOcupados, setAsientosOcupados] = useState({});
+  
+  // Obtener el ID de la cooperativa del usuario logueado
+  const cooperativaId = usuario?.cooperativa_id;
+  
+  // Rutas de la API usando el ID dinámico de la cooperativa
+  const API_URL_Viajes = cooperativaId ? `http://localhost:8000/viajes/cooperativa/${cooperativaId}/vigentes` : null;
+  const API_URL_Viajes_CRUD = "http://localhost:8000/viajes"; // Para crear, actualizar y eliminar
 
   // 🪑 Cargar asientos ocupados para todos los viajes
   const cargarAsientosOcupados = useCallback(async (viajesData) => {
@@ -56,6 +63,8 @@ const ViajesPanel = () => {
 
   // 🔄 Recargar viajes desde el servidor
   const recargarViajes = useCallback(() => {
+    if (!API_URL_Viajes) return; // Si no hay URL, no hacer nada
+    
     axios.get(API_URL_Viajes)
       .then(res => {
         console.log('Respuesta completa del servidor:', res.data);
@@ -76,19 +85,21 @@ const ViajesPanel = () => {
         setViajes([]);
         setAsientosOcupados({});
       });
-  }, [cargarAsientosOcupados]);
+  }, [API_URL_Viajes, cargarAsientosOcupados]);
 
   // Cargar viajes, rutas y unidades al inicio
   useEffect(() => {
+    if (!cooperativaId) return; // Si no hay cooperativaId, no hacer nada
+    
     recargarViajes();
 
     // Cargar rutas específicas de la cooperativa
-    axios.get(`http://localhost:8000/rutas/cooperativa/${COOPERATIVA_ID}`)
+    axios.get(`http://localhost:8000/rutas/cooperativa/${cooperativaId}`)
       .then(res => {
         console.log('Respuesta de rutas por cooperativa:', res.data);
         if (res.data.success && res.data.data) {
           setRutas(res.data.data);
-          console.log(`Rutas cargadas para cooperativa ${COOPERATIVA_ID}:`, res.data.data.length);
+          console.log(`Rutas cargadas para cooperativa ${cooperativaId}:`, res.data.data.length);
         } else {
           console.log('No hay rutas para esta cooperativa');
           setRutas([]);
@@ -100,12 +111,12 @@ const ViajesPanel = () => {
       });
 
     // Cargar unidades específicas de la cooperativa
-    axios.get(`http://localhost:8000/unidades/cooperativa/${COOPERATIVA_ID}`)
+    axios.get(`http://localhost:8000/unidades/cooperativa/${cooperativaId}`)
       .then(res => {
         console.log('Respuesta de unidades por cooperativa:', res.data);
         if (res.data.success && res.data.data) {
           setUnidades(res.data.data);
-          console.log(`Unidades cargadas para cooperativa ${COOPERATIVA_ID}:`, res.data.data.length);
+          console.log(`Unidades cargadas para cooperativa ${cooperativaId}:`, res.data.data.length);
         } else {
           console.log('No hay unidades para esta cooperativa');
           setUnidades([]);
@@ -115,7 +126,21 @@ const ViajesPanel = () => {
         console.error('Error al cargar unidades de la cooperativa:', error);
         setUnidades([]);
       });
-  }, [recargarViajes]); // Agregada la dependencia recargarViajes
+  }, [recargarViajes, cooperativaId]); // Agregada la dependencia cooperativaId
+  
+  // Verificar que el usuario sea de tipo cooperativa y tenga ID
+  if (!cooperativaId) {
+    return (
+      <div className="viajes-panel-container">
+        <main className="viajes-panel-main">
+          <section className="viajes-panel">
+            <h1 className="viajes-title">Viajes</h1>
+            <p>Error: No se pudo obtener el ID de la cooperativa. Asegúrese de estar logueado como cooperativa.</p>
+          </section>
+        </main>
+      </div>
+    );
+  }
 
   const totalPaginas = Math.ceil(viajes.length / viajesPorPagina);
   const startIdx = (currentPage - 1) * viajesPorPagina;
@@ -329,6 +354,7 @@ const ViajesPanel = () => {
         onSaveMultiple={handleSaveMultipleViajes}
         rutas={rutas}
         unidades={unidades}
+        cooperativaId={cooperativaId}
       />
 
       {/* Modal para actualizar viaje (solo precio y unidad) */}
@@ -340,6 +366,7 @@ const ViajesPanel = () => {
         }}
         onSave={handleUpdateViaje}
         initialData={viajeEdit}
+        cooperativaId={cooperativaId}
       />
     </div>
   );

@@ -80,6 +80,7 @@ boletosRoutes(app);
 ciudadesTerminalesRoutes(app);
 pasajerosRoutes(app);
 comprasRoutes(app);
+usuariosRoutes(app);
 console.log('Todas las rutas cargadas exitosamente!');
 
 

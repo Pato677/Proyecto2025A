@@ -29,7 +29,7 @@ const ResultadoCompraModal = ({
     return (parseFloat(precioBase) * totalPasajeros).toFixed(2);
   };
 
-  const handleAceptar = () => {
+  const handleNavegacion = () => {
     // Limpiar localStorage antes de navegar
     localStorage.removeItem('pasajerosData');
     localStorage.removeItem('asientosSeleccionados');
@@ -40,14 +40,15 @@ const ResultadoCompraModal = ({
     } else {
       console.error('No se encontró el ID de compra');
       console.log('datosCompra disponible:', datosCompra);
-      onCerrar();
+      // Navegar a TicketPage aunque no tenga ID
+      navigate('/TicketPage');
     }
   };
 
   return (
     <div className="resultado-modal-bg">
       <div className="resultado-modal-content">
-        <button className="resultado-modal-close" onClick={onCerrar}>×</button>
+        <button className="resultado-modal-close" onClick={handleNavegacion}>×</button>
         
         <div className="resultado-icon">
           ✅
@@ -94,15 +95,16 @@ const ResultadoCompraModal = ({
           )}
 
           <div className="resultado-warning">
-            <p><strong>Importante:</strong> Guarde el código de compra para futuras referencias. 
-            Este código le permitirá consultar su boleto y realizar check-in.</p>
+            <p>
+              <strong>Importante:</strong> Recuerde que puede consultar el estado de su viaje y descargar sus boletos en cualquier momento usando su número de boleto. Además, este código será necesario para realizar el check-in antes de abordar.
+            </p>
           </div>
         </div>
 
         <div className="resultado-modal-btns">
           <button 
             type="button" 
-            onClick={handleAceptar} 
+            onClick={handleNavegacion} 
             className="resultado-modal-accept"
           >
             Aceptar

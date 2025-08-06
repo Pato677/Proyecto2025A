@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import './Estilos/ViajeUpdateModal.css';
 import axios from 'axios';
 
-const ViajeUpdateModal = ({ open, onClose, onSave, initialData }) => {
+const ViajeUpdateModal = ({ open, onClose, onSave, initialData, cooperativaId }) => {
   const [formData, setFormData] = useState({
     precio: '',
     unidad_id: ''
   });
   const [unidades, setUnidades] = useState([]);
 
-  // Cargar unidades de la cooperativa 1 al abrir el modal
+  // Cargar unidades de la cooperativa al abrir el modal
   useEffect(() => {
-    if (open) {
-      axios.get('http://localhost:8000/unidades/cooperativa/1')
+    if (open && cooperativaId) {
+      axios.get(`http://localhost:8000/unidades/cooperativa/${cooperativaId}`)
         .then(res => {
           // Si la respuesta tiene estructura con data, usar res.data.data, sino res.data
           const unidadesData = res.data.data || res.data;
@@ -23,7 +23,7 @@ const ViajeUpdateModal = ({ open, onClose, onSave, initialData }) => {
           setUnidades([]);
         });
     }
-  }, [open]);
+  }, [open, cooperativaId]);
 
   // Llenar el formulario con los datos iniciales cuando se abre para editar
   useEffect(() => {

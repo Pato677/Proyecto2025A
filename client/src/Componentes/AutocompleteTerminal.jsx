@@ -16,13 +16,10 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
   const cargarTerminales = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('🔄 Cargando terminales desde /ciudades-terminales...');
       
       const response = await fetch('http://localhost:8000/ciudades-terminales');
       const data = await response.json();
       
-      console.log('📡 Respuesta del servidor:', data);
-
       if (data.success && Array.isArray(data.data)) {
         // Estructura: [{ ciudad: 'Quito', terminales: [{ id: 1, nombre: 'Quitumbe' }, ...] }, ...]
         const terminalData = data.data.map(ciudad => ({
@@ -32,9 +29,7 @@ const AutocompleteTerminal = forwardRef(({ value, onChange, nextInputRef }, ref)
             nombre: terminal.nombre
           }))
         }));
-        
-        console.log('✅ Terminales procesados:', terminalData);
-        setAllTerminales(terminalData);
+          setAllTerminales(terminalData);
       } else {
         console.warn('⚠️ Respuesta no válida del servidor:', data);
         setAllTerminales([]);

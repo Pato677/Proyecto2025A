@@ -249,22 +249,35 @@ const Inicio = () => {
             const response = await fetch('http://localhost:8000/viajes/precio/min');
             const data = await response.json();
 
-            if (data.success && data.data) {
-                const viaje = data.data;
-                const params = new URLSearchParams({
-                    origenCiudad: viaje.ruta?.terminalOrigen?.ciudad?.nombre || '',
-                    origenTerminal: viaje.ruta?.terminalOrigen?.id || '', 
-                    destinoCiudad: viaje.ruta?.terminalDestino?.ciudad?.nombre || '',
-                    destinoTerminal: viaje.ruta?.terminalDestino?.id || '',
-                    fecha: viaje.fecha_salida?.slice(0, 10) || '',
-                    pasajeros: 1,
-                    viajeId: viaje.id
-                }).toString();
+            if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+                // Buscar la fecha más próxima (>= hoy)
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+                const fechasValidas = data.data
+                    .map(v => new Date(v.fecha_salida))
+                    .filter(d => d >= hoy)
+                    .sort((a, b) => a - b);
+
+                let fechaSeleccionada = '';
+                if (fechasValidas.length > 0) {
+                    const fechaProxima = fechasValidas[0];
+                    const yyyy = fechaProxima.getFullYear();
+                    const mm = String(fechaProxima.getMonth() + 1).padStart(2, '0');
+                    const dd = String(fechaProxima.getDate()).padStart(2, '0');
+                    fechaSeleccionada = `${yyyy}-${mm}-${dd}`;
+                }
+
                 setMostrandoLoader(false);
-                navigate(`/SeleccionViaje?${params}`);
+
+                // Redirige a SeleccionViaje con el parámetro precio-min y la fecha más próxima
+                if (fechaSeleccionada) {
+                    navigate(`/SeleccionViaje?precio-min=true&fecha=${fechaSeleccionada}`);
+                } else {
+                    // Si no hay fechas válidas, solo precio-min
+                    navigate(`/SeleccionViaje?precio-min=true`);
+                }
             } else {
                 setMostrandoLoader(false);
-                // Si no hay viaje mínimo, ejecuta búsqueda normal
                 handleBuscar();
             }
         } catch (error) {

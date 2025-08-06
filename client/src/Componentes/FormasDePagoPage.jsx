@@ -20,6 +20,36 @@ const FormasDePagoPage = () => {
   const { usuario, logout } = useAuth();
   const params = new URLSearchParams(location.search);
   
+  // Función para decodificar datos de pasajeros desde URL
+  const decodificarDatosPasajeros = () => {
+    const datosEncoded = params.get('datosP');
+    if (datosEncoded) {
+      try {
+        const datosDecoded = decodeURIComponent(datosEncoded);
+        return JSON.parse(datosDecoded);
+      } catch (error) {
+        console.error('Error al decodificar datos de pasajeros:', error);
+        return [];
+      }
+    }
+    return [];
+  };
+
+  // Función para decodificar asientos seleccionados desde URL
+  const decodificarAsientosSeleccionados = () => {
+    const asientosEncoded = params.get('asientos');
+    if (asientosEncoded) {
+      try {
+        const asientosDecoded = decodeURIComponent(asientosEncoded);
+        return JSON.parse(asientosDecoded);
+      } catch (error) {
+        console.error('Error al decodificar asientos seleccionados:', error);
+        return [];
+      }
+    }
+    return [];
+  };
+  
   // Estado para la forma de pago seleccionada
   const [formaPagoSeleccionada, setFormaPagoSeleccionada] = useState('');
   const [procesandoPago, setProcesandoPago] = useState(false);
@@ -34,13 +64,9 @@ const FormasDePagoPage = () => {
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
   
-  // Obtener datos desde localStorage
-  const pasajerosData = localStorage.getItem('pasajerosData') 
-    ? JSON.parse(localStorage.getItem('pasajerosData')) 
-    : [];
-  const asientosSeleccionados = localStorage.getItem('asientosSeleccionados') 
-    ? JSON.parse(localStorage.getItem('asientosSeleccionados')) 
-    : [];
+  // Obtener datos desde URL
+  const pasajerosData = decodificarDatosPasajeros();
+  const asientosSeleccionados = decodificarAsientosSeleccionados();
   
   const viajeId = params.get('viajeId');
   const origenCiudad = params.get('origenCiudad');
@@ -139,10 +165,33 @@ const FormasDePagoPage = () => {
   });
 
   const handleAtras = () => {
+    // Crear nueva URL con todos los parámetros necesarios
+    const nuevosParams = new URLSearchParams(location.search);
+    
+    // Codificar datos de pasajeros en la URL
+    if (pasajerosData.length > 0) {
+      try {
+        const datosString = JSON.stringify(pasajerosData);
+        const datosEncoded = encodeURIComponent(datosString);
+        nuevosParams.set('datosP', datosEncoded);
+      } catch (error) {
+        console.error('Error al codificar datos de pasajeros:', error);
+      }
+    }
+
+    // Codificar asientos seleccionados en la URL
+    if (asientosSeleccionados.length > 0) {
+      try {
+        const asientosString = JSON.stringify(asientosSeleccionados);
+        const asientosEncoded = encodeURIComponent(asientosString);
+        nuevosParams.set('asientos', asientosEncoded);
+      } catch (error) {
+        console.error('Error al codificar asientos seleccionados:', error);
+      }
+    }
+    
     // Regresar a selección de asientos manteniendo todos los parámetros
-    const allParams = new URLSearchParams(location.search);
-    // Mantener los asientos seleccionados para que se muestren como referencia
-    navigate(`/SeleccionAsientosPage?${allParams.toString()}`);
+    navigate(`/SeleccionAsientosPage?${nuevosParams.toString()}`);
   };
 
   // Calcular el total de la compra
@@ -195,10 +244,12 @@ const FormasDePagoPage = () => {
       // Realizar petición POST al backend
       const response = await axios.post('http://localhost:8000/compras', datosCompra);
 
-      if (response.data.success) {
+      // Manejar respuesta exitosa - verificar tanto success como status code
+      if (response.status === 201 && (response.data.success === true || response.data.message === 'Compra creada exitosamente')) {
         const datosRespuesta = response.data.data;
         
         console.log('Datos respuesta del backend:', datosRespuesta);
+        console.log('Compra creada exitosamente');
         
         // Agregar información de pasajeros con precios para mostrar en el modal
         const datosCompraCompletos = {
@@ -212,7 +263,13 @@ const FormasDePagoPage = () => {
         setDatosCompraExitosa(datosCompraCompletos);
         setShowResultadoModal(true);
       } else {
+<<<<<<< HEAD
         alert('Error al procesar la compra: ' + response.data.message);
+=======
+        // Manejar respuesta no exitosa del backend
+        console.log('Error al procesar la compra:', response.data.error || response.data.message || 'Error desconocido');
+        console.log('Respuesta completa del servidor:', response.data);
+>>>>>>> c4e2f1afcc4c1d2caf08e945c4b904e780430505
       }
 
     } catch (error) {
@@ -221,17 +278,47 @@ const FormasDePagoPage = () => {
       if (error.response) {
         // Error del servidor
         const errorData = error.response.data;
+<<<<<<< HEAD
         if (errorData.asientosOcupados) {
           alert(`Error: Algunos asientos ya están ocupados: ${errorData.asientosOcupados.join(', ')}\nPor favor, seleccione otros asientos.`);
+=======
+        const statusCode = error.response.status;
+        
+        console.log(`Error del servidor (${statusCode}):`, errorData);
+        
+        // Manejar diferentes tipos de errores del servidor
+        if (statusCode === 400) {
+          // Errores de validación
+          console.log('Error de validación:', errorData.error || 'Datos inválidos');
+          if (errorData.asientosOcupados) {
+            console.log(`Asientos ocupados: ${errorData.asientosOcupados.join(', ')}`);
+            console.log('Se requiere seleccionar otros asientos');
+          }
+        } else if (statusCode === 404) {
+          console.log('Recurso no encontrado:', errorData.error || 'Viaje no encontrado');
+        } else if (statusCode === 500) {
+          console.log('Error interno del servidor:', errorData.error || errorData.details || 'Error desconocido');
+          if (errorData.details) {
+            console.log('Detalles del error:', errorData.details);
+          }
+>>>>>>> c4e2f1afcc4c1d2caf08e945c4b904e780430505
         } else {
           alert('Error al procesar la compra: ' + (errorData.error || errorData.message || 'Error desconocido'));
         }
       } else if (error.request) {
         // Error de red
+<<<<<<< HEAD
         alert('Error de conexión. Verifique su conexión a internet.');
       } else {
         // Otro tipo de error
         alert('Error inesperado: ' + error.message);
+=======
+        console.log('Error de conexión: No se pudo conectar con el servidor');
+        console.log('Verifica tu conexión a internet y que el servidor esté ejecutándose');
+      } else {
+        // Otro tipo de error
+        console.log('Error inesperado al configurar la petición:', error.message);
+>>>>>>> c4e2f1afcc4c1d2caf08e945c4b904e780430505
       }
     } finally {
       setProcesandoPago(false);
@@ -245,11 +332,8 @@ const FormasDePagoPage = () => {
   const handleCerrarResultado = () => {
     setShowResultadoModal(false);
     setDatosCompraExitosa(null);
-    // Limpiar localStorage al finalizar la compra
-    localStorage.removeItem('pasajerosData');
-    localStorage.removeItem('asientosSeleccionados');
     // NO redirigir al home, mantener en la misma página para permitir nuevas compras
-    console.log('Modal cerrado, localStorage limpiado');
+    console.log('Modal cerrado');
   };
   return (
     <div className="pago-resumen-page">

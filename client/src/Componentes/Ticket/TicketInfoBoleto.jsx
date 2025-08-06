@@ -1,7 +1,7 @@
 import React from 'react';
 import '../Estilos/TicketInfo.css';
 
-function TicketInfo({ datosViaje}) {
+function TicketInfoBoleto({ datosViaje}) {
   // Formatear fecha para mostrar
   const formatearFecha = (fechaStr) => {
     if (!fechaStr) return '';
@@ -29,5 +29,5 @@ function TicketInfo({ datosViaje}) {
   );
 }
 
-export default TicketInfo;
+export default TicketInfoBoleto;
 
